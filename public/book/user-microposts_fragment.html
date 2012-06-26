@@ -1381,7 +1381,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/proto_feed_mockup.png" alt="proto_feed_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.12: </span><span class="description">Макет Home страницы с предварительной реализацией потока сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/proto_feed_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Так как каждый пользователь должен иметь поток сообщений, мы естественным образом пришли к <code>feed</code> методу в модели  User. В конце концов, мы протестируем. что поток сообщений возвращает микросообщения пользователей, за которыми следит текущий пользователь, но пока мы просто протестируем, что  <code>feed</code> метод <em>включает в себя</em> микросообщения текущего пользователя, но <em>исключает</em> сообщения других пользователей. Мы можем выразить эти требования в коде из <a class="ref" href="user-microposts#code:feed_specs">Листинга&nbsp;11.31</a>.</p>
+<p>Так как каждый пользователь должен иметь поток сообщений, мы естественным образом пришли к <code>feed</code> методу в модели  User. В конце концов, мы протестируем, что поток сообщений возвращает микросообщения пользователей, за которыми следит текущий пользователь, но пока мы просто протестируем, что  <code>feed</code> метод <em>включает в себя</em> микросообщения текущего пользователя, но <em>исключает</em> сообщения других пользователей. Мы можем выразить эти требования в коде из <a class="ref" href="user-microposts#code:feed_specs">Листинга&nbsp;11.31</a>.</p>
 
 <div class="label" id="code:feed_specs"></div>
 
@@ -1455,7 +1455,7 @@
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">feed</span>
-    <span class="c1"># This is preliminary. See Глава 12 for the full implementation.</span>
+    <span class="c1"># Это предварительное решение. См. полную реализацию в Главе 12.</span>
     <span class="no">Micropost</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;user_id = ?&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="o">.</span>
@@ -1529,14 +1529,14 @@
 </div></div>
 
 
-<p>The status feed partial defers the feed item rendering to a feed item partial using the code (??)</p>
+<p>Партиал статуса потока сообщений перекладывает рендеринг элемента потока сообщений на партиал элемента потока сообщений с помощью кода</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="ss">:partial</span> <span class="o">=&gt;</span> <span class="s1">&#39;shared/feed_item&#39;</span><span class="p">,</span> <span class="ss">:collection</span> <span class="o">=&gt;</span> <span class="vi">@feed_items</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Здесь мы передаем параметр <code>:collection</code> с feed items, что заставляет  <code>render</code> использовать данный партиал для (<code>&rsquo;feed_item&rsquo;</code> в данном случае) рендеринга каждого элемента в коллекции. (Мы опустили <code>:partial</code> параметр  в предыдущем рендеринге, написание, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам feed item (??) партиал представлен в <a class="ref" href="user-microposts#code:feed_item_partial">Листинге&nbsp;11.35</a>; обратите внимание на добавление удаляющей ссылки в партиал feed item, следуя примеру из <a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинга&nbsp;10.38</a>.</p>
+<p>Здесь мы передаем параметр <code>:collection</code> с элементами потока сообщений, что заставляет  <code>render</code> использовать данный партиал для (<code>&rsquo;feed_item&rsquo;</code> в данном случае) рендеринга каждого элемента в коллекции. (Мы опустили <code>:partial</code> параметр  в предыдущем рендеринге, написание, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам партиал элемента потока сообщений представлен в <a class="ref" href="user-microposts#code:feed_item_partial">Листинге&nbsp;11.35</a>; обратите внимание на добавление удаляющей ссылки в партиал feed item, следуя примеру из <a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинга&nbsp;10.38</a>.</p>
 
 <div class="label" id="code:feed_item_partial"></div>
 
@@ -1754,13 +1754,13 @@
 </div></div>
 
 
-<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts#code:microposts_destroy_action">Листинг&nbsp;11.40</a>, Листинге&nbsp;11.40</a>, и результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
+<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts#code:microposts_destroy_action">Листинг&nbsp;11.40</a>, Листинге&nbsp;11.40</a>, а результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
 
 <div class="label" id="code:microposts_destroy_action"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.40.</span> <span class="description"><code>destroy</code> действие контроллера Microposts. <br /> <code>app/controllers/microposts_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 11.40.</span> <span class="description">Действие <code>destroy</code> контроллера Microposts. <br /> <code>app/controllers/microposts_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MicropostsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="n">before_filter</span> <span class="ss">:authenticate</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
@@ -1890,7 +1890,7 @@
 <h2><a id="sec:11.4" href="user-microposts#sec:11.4" class="heading"><span class="number">11.4</span> Заключение</a></h2>
 
 
-<p>Добавив ресурс Microposts, мы почти закончили наш пример приложения. Все, что осталось, это добавить социальный слой, позволив пользователям следовать друг за другом. Мы узнаем, как моделировать такие отношения пользователей, и увидим реализацию status feed, в <a class="ref" href="following-users#top">Главе&nbsp;12</a>.</p>
+<p>Добавив ресурс Microposts, мы почти закончили наш пример приложения. Все, что осталось, это добавить социальный слой, позволив пользователям следовать друг за другом. Мы узнаем как моделировать такие отношения пользователей и увидим полноценную реализацию потока сообщений в <a class="ref" href="following-users#top">Главе&nbsp;12</a>.</p>
 
 <p>Если вы используете Git для управления версиями, прежде чем продолжить, убедитесь, что вы зафиксировали и объединили ваши изменения:</p>
 
@@ -1919,14 +1919,14 @@
 <p>Мы рассмотрели достаточно материала и теперь случился комбинаторный взрыв  возможных расширений к нашему приложению. Вот лишь некоторые из многих возможностей:</p>
 
 <ol>
-<li><strong>(сложное)</strong> Добавить JavaScript отображение к Home странице для отсчета 140 знаков.</li>
+<li><strong>(сложное)</strong> Добавить JavaScript отображение к Home странице для обратного отсчета 140 знаков.</li>
 <li>Добавить тесты для отображения количества микросообщений в сайдбаре  (включая надлежащие плюрализации).</li>
 <li><strong>(в основном для дизайнеров)</strong> Модифицировать список микросообщений чтобы использовать упорядоченный список вместо таблицы. (<em>Примечание:</em> это как Twitter отображает обновление их статуса.) Затем добавить соответствующие CSS, чтобы в результате поток сообщений не выглядел как <a  rel="nofollow" href="http://translate.google.com/#en|ru|crap">дерьмо</a>.</li>
 <li>Добавить тесты для пагинации микросообщений.</li>
 <li>Сделать рефакторинг Home страницы чтобы использовать отдельные партиалы для двух ветвей выражения  <code>if</code>-<code>else</code>.</li>
 <li>Написать тест чтобы убедиться, что ссылки на удаление не появляются у микросообщений созданных не текущим пользователем.</li>
 <li>Добавить <a  rel="nofollow" href="http://www.rusrails.ru/rails-routing">вложенные маршруты</a> так, чтобы по адресу <tt>/users/1/microposts</tt> показывались все микросообщения пользователя&nbsp;1. (Вам также необходимо будет добавить в контроллер Microposts действие <code>index</code> и соответствующее представление.)</li>
-<li>Очень длинные слова в настоящее время крушат наш шаблон, как показано в <a class="ref" href="user-microposts#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему используя <code>wrap</code> хелпер определенный в <a class="ref" href="user-microposts#code:wrap">Листинге&nbsp;11.42</a>. (Обратите внимание на использование <code>raw</code> метода для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
+<li>Сейчас очень длинные слова крушат наш шаблон, как это показано на <a class="ref" href="user-microposts#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему с помощью хелпера <code>wrap</code> определенного в <a class="ref" href="user-microposts#code:wrap">Листинге&nbsp;11.42</a>. (Обратите внимание на использование метода <code>raw</code> для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
 </ol>
 
 
@@ -1975,7 +1975,7 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a>, мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="#fnref:11.1">&uarr;</a></li>
+<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a> мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="#fnref:11.1">&uarr;</a></li>
 <li id="fn:11.2">Атрибут <code>content</code> будет <code>string</code>, но, как кратко отмечалось в <a class="ref" href="a-demo-app#sec:modeling_microposts">Разделе&nbsp;2.1.2</a>, для более длинных текстовых полей вам следует использовать тип данных  <code>text</code>.&nbsp;<a class="arrow" href="#fnref:11.2">&uarr;</a></li>
 <li id="fn:11.3">Более подробную информацию о Factory Girl ассоциациях, включая множество доступных опций, см. <a href="http://rdoc.info/projects/thoughtbot/factory_girl">Factory Girl documentation</a>.&nbsp;<a class="arrow" href="#fnref:11.3">&uarr;</a></li>
 <li id="fn:11.4">Вспомните, что <code>created_at</code> и <code>updated_at</code> это &ldquo;волшебные&rdquo; столбцы, так что все явные значения инициализации магическим образом перезаписываются.&nbsp;<a class="arrow" href="#fnref:11.4">&uarr;</a></li>

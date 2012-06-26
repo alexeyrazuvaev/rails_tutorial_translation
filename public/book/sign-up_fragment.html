@@ -121,7 +121,7 @@
 </div></div>
 
 
-<p>Давайте рассмотрим по частям. Наличие ключевого слова <code>do</code> указывает, что <code>form_for</code> принимает блок (<a class="ref" href="rails-flavored-ruby#sec:blocks">Раздел&nbsp;4.3.2</a>), который имеет одну переменную, которую мы назвали <code>f</code> от &ldquo;form&rdquo;. Внутри <code>form_for</code> хелпера, <code>f</code> это объект, который представляет форму; как это обычно бывает с Rails хелперами, нам не нужно знать деталей реализации, но нам <em>нужно</em> знать что делает объект <code>f</code>: при вызове с методом, соответствующим <a href="http://www.w3schools.com/html/html_forms.asp">HTML элементу form</a>&nbsp;&mdash;&nbsp;таким как  текстовое поле, радио кнопки, или поле пароля, он возвращает код для этого элемента, специально разработанный для установки атрибута обекта <code>@user</code>. Другими словами,</p>
+<p>Давайте рассмотрим по частям. Наличие ключевого слова <code>do</code> указывает, что <code>form_for</code> принимает блок (<a class="ref" href="rails-flavored-ruby#sec:blocks">Раздел&nbsp;4.3.2</a>), который имеет одну переменную, которую мы назвали <code>f</code> от &ldquo;form&rdquo;. Внутри <code>form_for</code> хелпера, <code>f</code> это объект, который представляет форму; как это обычно бывает с Rails хелперами, нам не нужно знать деталей реализации, но нам <em>нужно</em> знать что делает объект <code>f</code>: при вызове с методом, соответствующим <a href="http://www.w3schools.com/html/html_forms.asp">HTML элементу form</a>&nbsp;&mdash;&nbsp;таким как  текстовое поле, радио кнопки, или поле пароля, он возвращает код для этого элемента, специально разработанный для установки атрибута объекта <code>@user</code>. Другими словами,</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:name</span> <span class="cp">%&gt;</span><span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
@@ -463,7 +463,7 @@
 </div></div>
 
 
-<p>Лучший способ понять, как работает код в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> это <em>отправить</em> форму с некоторыми недействительной регистрационными данными; результаты представлены в <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>.</p>
+<p>Лучший способ понять, как работает код в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> это <em>отправить</em> форму с некоторыми невалидными регистрационными данными; результаты представлены в <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>.</p>
 
 <div class="label" id="fig:signup_failure_rails_3"></div>
 
@@ -471,7 +471,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_3.png" alt="signup_failure_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  8.6: </span><span class="description">Сбой регистрации с хэшем <code>params</code>&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы получить более четкую картину того, как Rails обрабатывает предоставление регистрационных данных, давайте ближе познакомимся с хэшем <code>params</code> в отладочной информации, отображаемой в нижней части страницы <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>:</p>
+<p>Чтобы получить более четкую картину того, как Rails обрабатывает предоставление регистрационных данных, давайте поближе познакомимся с хэшем <code>params</code> в отладочной информации, отображаемой в нижней части страницы <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!map</span><span class="l-Scalar-Plain">:ActiveSupport::HashWithIndifferentAccess</span>
 <span class="l-Scalar-Plain">commit</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Sign up</span>
@@ -487,7 +487,7 @@
 </div>
 
 
-<p>Мы видели, начиная с <a class="ref" href="modeling-and-viewing-users-one#sec:users_show">Раздела&nbsp;6.3.2</a> что хэш <code>params</code> содержит информацию о каждом запросе; в случае URL типа <tt>/users/1</tt>, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тега <code>input</code> который мы видели в <a class="ref" href="sign-up#code:new_user_form">Листинге&nbsp;8.2</a>; например, значение</p>
+<p>Мы видели, начиная с <a class="ref" href="modeling-and-viewing-users-one#sec:users_show">Раздела&nbsp;6.3.2</a>, что хэш <code>params</code> содержит информацию о каждом запросе; в случае URL типа <tt>/users/1</tt>, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тега <code>input</code> который мы видели в <a class="ref" href="sign-up#code:new_user_form">Листинге&nbsp;8.2</a>; например, значение</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
@@ -496,7 +496,7 @@
 
 <p>с именем <code>"user[email]"</code> это именно <code>email</code> атрибут хэша <code>user</code>.</p>
 
-<p>Хотя хэш-ключи отображаются как строки в отладочном выводе, внутренне Rails использует символы, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователей, именно атрибутов, необходимых в качестве аргумента <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up#code:first_create_action">Листинг&nbsp;8.7</a>. Это означает, что строка</p>
+<p>Хотя хэш-ключи отображаются как строки в отладочном выводе, внутренне Rails использует символы, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователей, именно тех атрибутов, что необходимы в качестве аргумента для <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a>. Это означает, что строка</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
@@ -513,7 +513,7 @@
 
 <p>А это именно тот формат который необходим для инициализации объекта модели User с заданными атрибутами.</p>
 
-<p>Конечно, такой экземпляр переменной имеет значение для успешной регистрации, как мы увидим в <a class="ref" href="sign-up#sec:signup_success">Разделе&nbsp;8.3</a>, как только <code>@user</code> правильно определена, вызов <code>@user.save</code> это все, что необходимо для завершения регистрации&mdash;но это имеет свои последствия даже в случае сбоя регистрации, рассматриваемого здесь. Обратите внимание на <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a> что поля уже <em>заполнены</em> данными из провальной отправки. Это происходит потому что <code>form_for</code> автоматически заполняет поля атрибутами объекта <code>@user</code>, так что, например, если <code>@user.name</code> это <code>"Foo"</code> то</p>
+<p>Конечно, такой экземпляр переменной имеет значение для успешной регистрации, как мы увидим в <a class="ref" href="sign-up#sec:signup_success">Разделе&nbsp;8.3</a>, как только <code>@user</code> правильно определена, вызов <code>@user.save</code> это все, что необходимо для завершения регистрации &mdash; но это имеет свои последствия даже в случае сбоя регистрации, рассматриваемого здесь. Обратите внимание на то, что на <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a> поля <em>предварительно заполнены</em> данными из провальной отправки. Это происходит потому что <code>form_for</code> автоматически заполняет поля атрибутами объекта <code>@user</code>, так что, например, если <code>@user.name</code> это <code>"Foo"</code>, то</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
@@ -564,7 +564,7 @@
 
 <p>Здесь объект <code>errors.full_messages</code> (который мы видели кратко в <a class="ref" href="modeling-and-viewing-users-one#sec:presence_validation">Разделе&nbsp;6.2.1</a>) содержит массив сообщений об ошибках.</p>
 
-<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузер, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="#fn:8.3">3</a></sup></p>
+<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузере, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="#fn:8.3">3</a></sup></p>
 
 <div class="label" id="code:f_error_messages"></div>
 
@@ -590,7 +590,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 8.9.</span> <span class="description">Партиал для отображения сообщений об ошибках на форме регистрации. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 8.9.</span> <span class="description">Партиал для отображения сообщений об ошибках отправки формы регистрации. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">any?</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error_explanation&quot;</span><span class="nt">&gt;</span>
@@ -619,7 +619,7 @@
 </div>
 
 
-<p>Другой новый метод <code>any?</code>, один из пары дополнительных методов:</p>
+<p>Другой новый метод это <code>any?</code>, который (совместно с  <code>empty?</code>) является одним из пары комплиментарных методов:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="o">[].</span><span class="n">empty?</span>
 <span class="go">=&gt; true</span>
@@ -635,7 +635,7 @@
 
 <p>Мы видим здесь, что <code>empty?</code> метод, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает с массивами, возвращая <code>true</code> для пустого массива и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, он возвращает <code>true</code> если в массиве есть какие-нибудь элементы и <code>false</code> в противном случае.</p>
 
-<p>Другая новая идея это <code>pluralize</code> текст хелпер. Он не доступен в консоли, но мы можем включить его явно через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref:8.4"><a href="#fn:8.4">4</a></sup></p>
+<p>Другая новая идея это текстовый хелпер <code>pluralize</code>. Он не доступен в консоли, но мы можем включить его явно через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref:8.4"><a href="#fn:8.4">4</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
 <span class="go">=&gt; Object </span>
@@ -657,7 +657,7 @@
 </div>
 
 
-<p>В результате, код</p>
+<p>В результате код</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">pluralize</span><span class="p">(</span><span class="vi">@user</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">count</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -666,7 +666,7 @@
 
 <p>возвращает <code>"1 error"</code> или <code>"2 errors"</code> (и т.д.) в зависимости от количества ошибок.</p>
 
-<p>Обратите внимание, что <a class="ref" href="sign-up#code:errors_partial">Листинг&nbsp;8.9</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в отстиливании сообщения об ошибках. (Напомним, из <a class="ref" href="filling-in-the-layout#sec:custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилевания id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с CSS показанным в <a class="ref" href="sign-up#code:error_messages_css">Листинге&nbsp;8.10</a>. Результат сбоя регистрации с сообщениями об ошибке представлен в <a class="ref" href="sign-up#fig:signup_error_messages">Рис.&nbsp;8.7</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты, или минимальной длине паролей.</p>
+<p>Обратите внимание, что <a class="ref" href="sign-up#code:errors_partial">Листинг&nbsp;8.9</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в стилизации сообщений об ошибках. (Напомним, из <a class="ref" href="filling-in-the-layout#sec:custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилизации id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с CSS показанным в <a class="ref" href="sign-up#code:error_messages_css">Листинге&nbsp;8.10</a>. Результат сбоя регистрации с сообщениями об ошибке представлен в <a class="ref" href="sign-up#fig:signup_error_messages">Рис.&nbsp;8.7</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты, или минимальной длине паролей.</p>
 
 <div class="label" id="code:error_messages_css"></div>
 
@@ -823,7 +823,7 @@
 
 <h2><a id="sec:8.3" href="sign-up#sec:signup_success" class="heading"><span class="number">8.3</span> Успешная регистрация</a></h2>
 
-<p>Получив обработку недействительной предоставляемой формы, теперь пришло время для завершения регистрационной формы, на самом деле сохранив нового пользователя (если валидный) в базу данных. Во-первых, мы попробуем сохранить пользователя; если сохранение пройдет успешно, информация пользователя будет записана в базу данных автоматически, а затем  <em>перенаправлена</em> браузеру для отображения профиля пользователя (вместе с дружеским приветствием), как показано в макете на <a class="ref" href="sign-up#fig:signup_success_mockup">Рис.&nbsp;8.8</a>. Если это не удастся, мы просто отступим к сценарию, разработанному в <a class="ref" href="sign-up#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
+<p>Получив обработку недействительной предоставляемой формы, теперь пришло время для завершения регистрационной формы, на самом деле сохранив нового пользователя (если валидный) в базу данных. Во-первых, мы попробуем сохранить пользователя; если сохранение пройдет успешно, информация пользователя будет записана в базу данных автоматически, а затем мы <em>перенаправим</em> браузер на страницу профиля пользователя (с дружеским приветствием), как показано в макете на <a class="ref" href="sign-up#fig:signup_success_mockup">Рис.&nbsp;8.8</a>. Если это не удастся, мы просто отступим к сценарию, разработанному в <a class="ref" href="sign-up#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
 
 <div class="label" id="fig:signup_success_mockup"></div>
 
@@ -944,7 +944,7 @@
 
 <h3><a id="sec:8.3.3" href="sign-up#sec:the_flash" class="heading"><span class="number">8.3.3</span> Флэш</a></h3>
 
-<p>Перед отправкой валидной регистрации в браузер, мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно  появляется, а затем исчезает при перезагрузке страницы. (Если сейчас что-то непонятно, будьте терпеливы; Конкретный пример появится в ближайшее время) Rails способ сделать это состоит в использовании специальной переменной <em>flash</em>, которая работает как <a   href="http://ru.wikipedia.org/wiki/Флэш-память">флэш-память</a> в том, что она хранит свои данные временно. Переменная <code>flash</code> это на самом деле хэш; и вы можете даже вспомнить консольный например, в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели, как для перебора хэша использовался стратегически именованный хэш <code>flash</code>. Чтобы вспомнить, попробуйте эту консольную сессию:</p>
+<p>Перед отправкой валидной регистрации в браузер, мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно  появляется, а затем исчезает при перезагрузке страницы. (Если сейчас что-то непонятно, будьте терпеливы; Конкретный пример появится в ближайшее время) Rails-способ сделать это состоит в использовании специальной переменной <em>flash</em>, которая работает как <a   href="http://ru.wikipedia.org/wiki/Флэш-память">флэш-память</a> в том, что она хранит свои данные временно. Переменная <code>flash</code> это на самом деле хэш; и вы можете даже вспомнить консольный пример в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели, как для перебора хэша использовался стратегически именованный хэш <code>flash</code>. Чтобы вспомнить, попробуйте эту консольную сессию:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">flash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:success</span> <span class="o">=&gt;</span> <span class="s2">&quot;It worked!&quot;</span><span class="p">,</span> <span class="ss">:error</span> <span class="o">=&gt;</span> <span class="s2">&quot;It failed. :-(&quot;</span> <span class="p">}</span>
@@ -1105,7 +1105,7 @@
 
 <h3><a id="sec:8.3.4" href="sign-up#sec:the_first_signup" class="heading"><span class="number">8.3.4</span> Первая регистрация</a></h3>
 
-<p>Вы можете увидеть результат всей этой работы, зарегистрировав нашего первого пользователя (под именем &ldquo;Rails Tutorial&rdquo; и адресом электронной почты &ldquo;<tt>example@railstutorial.org</tt>&rdquo;), которые показывают дружеское послание после успешной регистрации, как показано на <a class="ref" href="sign-up#fig:signup_flash">Рис.&nbsp;8.9</a>. (приятный зеленый дизайн для <code>success</code> класса был включен с помощью Blueprint CSS фреймворка из <a class="ref" href="rails-flavored-ruby#sec:cascading_style_sheets">Раздела&nbsp;4.1.2</a>.) Затем, после перезагрузки страницы показывающей пользователя, флэш сообщение исчезает, как и было обещано (<a class="ref" href="sign-up#fig:signup_flash_reloaded">Рис.&nbsp;8.10</a>).</p>
+<p>Вы можете увидеть результат всей этой работы, зарегистрировав нашего первого пользователя (под именем &ldquo;Rails Tutorial&rdquo; и с адресом электронной почты &ldquo;<tt>example@railstutorial.org</tt>&rdquo;), которые показывают дружеское послание после успешной регистрации, как показано на <a class="ref" href="sign-up#fig:signup_flash">Рис.&nbsp;8.9</a>. (приятный зеленый дизайн для <code>success</code> класса был включен с помощью Blueprint CSS фреймворка из <a class="ref" href="rails-flavored-ruby#sec:cascading_style_sheets">Раздела&nbsp;4.1.2</a>.) Затем, после перезагрузки страницы показывающей пользователя, флэш сообщение исчезает, как и было обещано (<a class="ref" href="sign-up#fig:signup_flash_reloaded">Рис.&nbsp;8.10</a>).</p>
 
 <div class="label" id="fig:signup_flash"></div>
 
