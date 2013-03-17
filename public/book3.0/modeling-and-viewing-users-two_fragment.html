@@ -1,12 +1,12 @@
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:7" href="modeling-and-viewing-users-two#top" class="heading"><span class="number">Глава 7</span> Моделирование и просмотр пользователей, часть II</a></h1>
+<h1 class="chapter"><a id="sec:7" href="modeling-and-viewing-users-two?version=3.0#top" class="heading"><span class="number">Глава 7</span> Моделирование и просмотр пользователей, часть II</a></h1>
 
 
-<p>В <a class="ref" href="modeling-and-viewing-users-one#top">Главе&nbsp;6</a>, мы создали первую итерацию модели User представляющую пользователей нашего приложения, но работа сделана только наполовину. Практически любому веб-сайту с пользователями, в том числе нашему, необходима <em>аутентификация</em>, но в настоящее время любой пользователь, зарегистрировавшись на сайте, будет иметь только имя и адрес электронной почты, не имея возможности идентифицировать свою личность. В этой главе мы добавим атрибут <code>password</code> необходимый для начальной регистрации пользователя (<a class="ref" href="sign-up#top">Глава&nbsp;8</a>) и вход на сайт будет через указание комбинации электронная почта/пароль (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;9</a>). В процессе мы будем повторно использовать некоторые идеи из <a class="ref" href="modeling-and-viewing-users-one#top">Главы&nbsp;6</a>, в том числе миграции и валидации, а также введем некоторые новые идеи, такие как виртуальные атрибуты, приватные методы, и обратные вызовы (колбэки) Active Record.</p>
+<p>В <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>, мы создали первую итерацию модели User представляющую пользователей нашего приложения, но работа сделана только наполовину. Практически любому веб-сайту с пользователями, в том числе нашему, необходима <em>аутентификация</em>, но в настоящее время любой пользователь, зарегистрировавшись на сайте, будет иметь только имя и адрес электронной почты, не имея возможности идентифицировать свою личность. В этой главе мы добавим атрибут <code>password</code> необходимый для начальной регистрации пользователя (<a class="ref" href="sign-up?version=3.0#top">Глава&nbsp;8</a>) и вход на сайт будет через указание комбинации электронная почта/пароль (<a class="ref" href="sign-in-sign-out?version=3.0#top">Глава&nbsp;9</a>). В процессе мы будем повторно использовать некоторые идеи из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главы&nbsp;6</a>, в том числе миграции и валидации, а также введем некоторые новые идеи, такие как виртуальные атрибуты, приватные методы, и обратные вызовы (колбэки) Active Record.</p>
 
-<p>После того как мы получим  <code>password</code> атрибут, мы сделаем рабочие действия и представления для отображения пользовательских профилей (<a class="ref" href="modeling-and-viewing-users-two#sec:better_user_views">Раздел&nbsp;7.3</a>). К концу этой главы, в профилях наших пользователей будут отображаться имена и аватары (как показано в макете <a class="ref" href="modeling-and-viewing-users-two#fig:profile_mockup_profile_name">Рис.&nbsp;7.1</a>), и они будут хорошо протестированы user <em>factories</em> (фабрикой пользователей).</p>
+<p>После того как мы получим  <code>password</code> атрибут, мы сделаем рабочие действия и представления для отображения пользовательских профилей (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:better_user_views">Раздел&nbsp;7.3</a>). К концу этой главы, в профилях наших пользователей будут отображаться имена и аватары (как показано в макете <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:profile_mockup_profile_name">Рис.&nbsp;7.1</a>), и они будут хорошо протестированы user <em>factories</em> (фабрикой пользователей).</p>
 
 <p>Прежде чем двигаться дальше, давайте перезапустим базу данных командой <code>rake db:reset</code>, что очистит ее от старых пользователей из предыдущих разделов:</p>
 
@@ -18,28 +18,28 @@
 <div class="label" id="fig:profile_mockup_profile_name"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_mockup_profile_name.png" alt="profile_mockup_profile_name" /></span></div><div class="caption"><span class="header">Рисунок  7.1: </span><span class="description">Макет пользовательского профиля, сделанного в <a class="ref" href="modeling-and-viewing-users-two#sec:better_user_views">Разделе&nbsp;7.3</a>.&nbsp;<a href="http://railstutorial.org/images/figures/profile_mockup_profile_name-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_mockup_profile_name.png" alt="profile_mockup_profile_name" /></span></div><div class="caption"><span class="header">Рисунок  7.1: </span><span class="description">Макет пользовательского профиля, сделанного в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:better_user_views">Разделе&nbsp;7.3</a>.&nbsp;<a href="http://railstutorial.org/images/figures/profile_mockup_profile_name-full.png">(полный размер)</a></span></div></div>
 
-<p><em>Примечание:</em> Разворачивание собственной системы аутентификации существенно упрощено в  Rails&nbsp;3.1. Платформа разрабатываемая в этой главе работает вполне корректно, но будущее издание этой книги реорганизует ее для использования новой  <code>has_secure_password</code> функции, предоставляемой  Rails&nbsp;3.1. См. также упражнения в  <a class="ref" href="rails-3-1#sec:rails_3_1_exercises">Разделе&nbsp;13.3</a>.</p>
+<p><em>Примечание:</em> Разворачивание собственной системы аутентификации существенно упрощено в  Rails&nbsp;3.1. Платформа разрабатываемая в этой главе работает вполне корректно, но будущее издание этой книги реорганизует ее для использования новой  <code>has_secure_password</code> функции, предоставляемой  Rails&nbsp;3.1. См. также упражнения в  <a class="ref" href="rails-3-1?version=3.0#sec:rails_3_1_exercises">Разделе&nbsp;13.3</a>.</p>
 
 
 <div class="label" id="sec:insecure_passwords"></div>
 
 
-<h2><a id="sec:7.1" href="modeling-and-viewing-users-two#sec:insecure_passwords" class="heading"><span class="number">7.1</span> Небезопасные пароли</a></h2>
+<h2><a id="sec:7.1" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords" class="heading"><span class="number">7.1</span> Небезопасные пароли</a></h2>
 
 
-<p>Создание паролей промышленного уровня требует много машинерии, поэтому мы раздробим процесс на два этапа. В этом разделе мы создадим атрибут <code>password</code> и добавим валидации. В результате модель User будет функционально полной, но небезопасной, с паролями, которые хранятся в виде обычного текста в базе данных. В  <a class="ref" href="modeling-and-viewing-users-two#sec:secure_passwords">Разделе&nbsp;7.2</a>, мы решим эту проблему шифрованием паролей перед их сохранением, тем самым защитив наш сайт от потенциальных атак.</p>
+<p>Создание паролей промышленного уровня требует много машинерии, поэтому мы раздробим процесс на два этапа. В этом разделе мы создадим атрибут <code>password</code> и добавим валидации. В результате модель User будет функционально полной, но небезопасной, с паролями, которые хранятся в виде обычного текста в базе данных. В  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Разделе&nbsp;7.2</a>, мы решим эту проблему шифрованием паролей перед их сохранением, тем самым защитив наш сайт от потенциальных атак.</p>
 
 <div class="label" id="sec:password_validations"></div>
 
 
-<h3><a id="sec:7.1.1" href="modeling-and-viewing-users-two#sec:password_validations" class="heading"><span class="number">7.1.1</span> Валидации пароля</a></h3>
+<h3><a id="sec:7.1.1" href="modeling-and-viewing-users-two?version=3.0#sec:password_validations" class="heading"><span class="number">7.1.1</span> Валидации пароля</a></h3>
 
 <p>Хотя мы еще даже не добавили колонку для паролей к нашей базе, мы начнем писать тесты для них. Наш первоначальный план - иметь тесты для валидации наличия, длины и подтверждения пароля.
-Это наш самый большой единый блок испытаний до сих пор, так что увидим, сможете ли вы прочитать все за один раз. Если вы застрянете, вам может помочь пересмотр аналогичных проверок из <a class="ref" href="modeling-and-viewing-users-one#sec:user_validations">Раздела&nbsp;6.2</a> либо пропустите тесты и переходите сразу к коду приложения в <a class="ref" href="modeling-and-viewing-users-two#code:password_validations">Листинге&nbsp;7.2</a>.</p>
+Это наш самый большой единый блок испытаний до сих пор, так что увидим, сможете ли вы прочитать все за один раз. Если вы застрянете, вам может помочь пересмотр аналогичных проверок из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:user_validations">Раздела&nbsp;6.2</a> либо пропустите тесты и переходите сразу к коду приложения в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:password_validations">Листинге&nbsp;7.2</a>.</p>
 
-<p>В целях сведения к минимуму опечаток в паролях, при создании sign up страницы в <a class="ref" href="sign-up#top">Главе&nbsp;8</a>, мы реализуем общепринятую конвенцию запроса <em>подтверждения</em> пользователями их паролей. Для начала, давайте рассмотрим хэш пользовательских атрибутов из <a class="ref" href="modeling-and-viewing-users-one#code:validates_uniqueness_of_email_case_insensitive_test">Листинга&nbsp;6.20</a>:</p>
+<p>В целях сведения к минимуму опечаток в паролях, при создании sign up страницы в <a class="ref" href="sign-up?version=3.0#top">Главе&nbsp;8</a>, мы реализуем общепринятую конвенцию запроса <em>подтверждения</em> пользователями их паролей. Для начала, давайте рассмотрим хэш пользовательских атрибутов из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:validates_uniqueness_of_email_case_insensitive_test">Листинга&nbsp;6.20</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
 
@@ -56,7 +56,7 @@
 
 <p>Чтобы написать тесты для паролей, нам необходимо добавить <em>два</em> новых атрибута к хэшу <code>@attr</code>: <code>password</code> (пароль) и <code>password_confirmation</code> (подтверждение пароля).  Как вы наверное догадались, атрибут <code>password_confirmation</code> будет использоваться для шага подтверждения пароля.</p>
 
-<p>Давайте напишем тесты на наличие пароля и его подтверждение, а также тесты подтверждения валидности длины  (ограничение несколько произвольно и составляет от 6 до 40 символов). Результат представлен в <a class="ref" href="modeling-and-viewing-users-two#code:password_validation_tests">Листинге&nbsp;7.1</a>.</p>
+<p>Давайте напишем тесты на наличие пароля и его подтверждение, а также тесты подтверждения валидности длины  (ограничение несколько произвольно и составляет от 6 до 40 символов). Результат представлен в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:password_validation_tests">Листинге&nbsp;7.1</a>.</p>
 
 <div class="label" id="code:password_validation_tests"></div>
 
@@ -112,7 +112,7 @@
 </div></div>
 
 
-<p>Отметьте в <a class="ref" href="modeling-and-viewing-users-two#code:password_validation_tests">Листинге&nbsp;7.1</a> как мы впервые собрали набор валидных атрибутов user в <code>@attr</code>. Если по каким-то причинам эти атрибуты станут не валидными, что может произойти если мы, например, как следует не реализуем подтверждение пароля — в этом случае первый тест</p>
+<p>Отметьте в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:password_validation_tests">Листинге&nbsp;7.1</a> как мы впервые собрали набор валидных атрибутов user в <code>@attr</code>. Если по каким-то причинам эти атрибуты станут не валидными, что может произойти если мы, например, как следует не реализуем подтверждение пароля — в этом случае первый тест</p>
 
 <div class="code"><div class="highlight"><pre>  <span class="n">it</span> <span class="s2">&quot;should create a new instance given valid attributes&quot;</span> <span class="k">do</span>
     <span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="vi">@attr</span><span class="p">)</span>
@@ -121,9 +121,9 @@
 </div>
 
 
-<p>вызовет ошибку. Последующие тесты затем проверят каждую валидацию, в свою очередь, используя ту же <code>@attr.merge</code> технику что и в <a class="ref" href="modeling-and-viewing-users-one#code:failing_validates_name_spec">Листинге&nbsp;6.11</a>.</p>
+<p>вызовет ошибку. Последующие тесты затем проверят каждую валидацию, в свою очередь, используя ту же <code>@attr.merge</code> технику что и в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:failing_validates_name_spec">Листинге&nbsp;6.11</a>.</p>
 
-<p>Теперь код приложения, в котором содержится трюк. На самом деле, он состоит из <em>двух</em> трюков. Во-первых, вы могли бы ожидать в этот момент, что мы запустим миграции для добавления <code>password</code> атрибута к модели User, как мы это делали с атрибутами <code>name</code> и <code>email</code> в  <a class="ref" href="modeling-and-viewing-users-one#code:generate_user_model">Листинге&nbsp;6.1</a>. Но это не так: мы будем хранить в базе данных только <em>зашифрованные</em> пароли; для пароля мы введем <em>виртуальный атрибут</em> (то есть, атрибут не соответствующий колонке в базе данных) используя метод <code>attr_accessor</code> так же как мы это делали с оригинальными <code>name</code> и <code>email</code> атрибутами образца пользователя в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a>. <code>Password</code> атрибут никогда не будет записан в базу данных, но будет существовать только в памяти для использования при выполнении шага подтверждения пароля (реализовано ниже) и шага шифрования (реализовано в <a class="ref" href="modeling-and-viewing-users-two#sec:password_migration">Разделе&nbsp;7.1.2</a> и <a class="ref" href="modeling-and-viewing-users-two#sec:secure_passwords">Разделе&nbsp;7.2</a>).</p>
+<p>Теперь код приложения, в котором содержится трюк. На самом деле, он состоит из <em>двух</em> трюков. Во-первых, вы могли бы ожидать в этот момент, что мы запустим миграции для добавления <code>password</code> атрибута к модели User, как мы это делали с атрибутами <code>name</code> и <code>email</code> в  <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:generate_user_model">Листинге&nbsp;6.1</a>. Но это не так: мы будем хранить в базе данных только <em>зашифрованные</em> пароли; для пароля мы введем <em>виртуальный атрибут</em> (то есть, атрибут не соответствующий колонке в базе данных) используя метод <code>attr_accessor</code> так же как мы это делали с оригинальными <code>name</code> и <code>email</code> атрибутами образца пользователя в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_user_class">Разделе&nbsp;4.4.5</a>. <code>Password</code> атрибут никогда не будет записан в базу данных, но будет существовать только в памяти для использования при выполнении шага подтверждения пароля (реализовано ниже) и шага шифрования (реализовано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:password_migration">Разделе&nbsp;7.1.2</a> и <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Разделе&nbsp;7.2</a>).</p>
 
 <p>Второй фокус заключается в том, что мы <em>не</em> будем вводить атрибут <code>password_confirmation</code> , даже виртуальный. Вместо него мы будем использовать специальную валидацию</p>
 
@@ -134,7 +134,7 @@
 
 <p>которая <em>автоматически</em> создает виртуальный атрибут <code>password_confirmation</code>, одновременно подтверждая, что он совпадает с <code>password</code> атрибутом.</p>
 
-<p>Таким образом, вы подготовлены к пониманию реализации, давайте посмотрим на сам код (<a class="ref" href="modeling-and-viewing-users-two#code:password_validations">Листинг&nbsp;7.2</a>).</p>
+<p>Таким образом, вы подготовлены к пониманию реализации, давайте посмотрим на сам код (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:password_validations">Листинг&nbsp;7.2</a>).</p>
 
 <div class="label" id="code:password_validations"></div>
 
@@ -157,14 +157,14 @@
 </div></div>
 
 
-<p>Как и было обещано, мы используем <code>attr_accessor :password</code> для создания виртуального <code>password</code> атрибута (как в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a>). Так как мы будем принимать пароль и подтверждение пароля как часть процесса регистрации из <a class="ref" href="sign-up#top">Главы&nbsp;8</a>, мы должны добавить пароль и его подтверждение в список доступных атрибутов (впервые упоминается в <a class="ref" href="modeling-and-viewing-users-one#sec:accessible_attributes">Разделе&nbsp;6.1.2.2</a>), что мы и сделали в строке</p>
+<p>Как и было обещано, мы используем <code>attr_accessor :password</code> для создания виртуального <code>password</code> атрибута (как в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_user_class">Разделе&nbsp;4.4.5</a>). Так как мы будем принимать пароль и подтверждение пароля как часть процесса регистрации из <a class="ref" href="sign-up?version=3.0#top">Главы&nbsp;8</a>, мы должны добавить пароль и его подтверждение в список доступных атрибутов (впервые упоминается в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:accessible_attributes">Разделе&nbsp;6.1.2.2</a>), что мы и сделали в строке</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span>
 </pre></div>
 </div>
 
 
-<p>Далее идут валидации пароля. Они запрашивают наличие <code>:password</code> (как, например, в <a class="ref" href="modeling-and-viewing-users-one#code:validates_presence_of_name">Листинге&nbsp;6.7</a>) и включают <code>:confirmation =&gt; true</code> для отказа пользователям, чьи пароль и подтверждение пароля не совпадают. В коде также имеется второе применение валидации длины; в <a class="ref" href="modeling-and-viewing-users-one#code:length_validation">Листинге&nbsp;6.15</a> мы ограничили длину атрибута <code>name</code> 50 символами или менее, используя опцию <code>:maximum</code>:</p>
+<p>Далее идут валидации пароля. Они запрашивают наличие <code>:password</code> (как, например, в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:validates_presence_of_name">Листинге&nbsp;6.7</a>) и включают <code>:confirmation =&gt; true</code> для отказа пользователям, чьи пароль и подтверждение пароля не совпадают. В коде также имеется второе применение валидации длины; в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:length_validation">Листинге&nbsp;6.15</a> мы ограничили длину атрибута <code>name</code> 50 символами или менее, используя опцию <code>:maximum</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">validates</span> <span class="ss">:name</span><span class="p">,</span>  <span class="ss">:presence</span> <span class="o">=&gt;</span> <span class="kp">true</span><span class="p">,</span>
                   <span class="ss">:length</span>   <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:maximum</span> <span class="o">=&gt;</span> <span class="mi">50</span> <span class="p">}</span>
@@ -177,12 +177,12 @@
 <div class="label" id="sec:password_migration"></div>
 
 
-<h3><a id="sec:7.1.2" href="modeling-and-viewing-users-two#sec:password_migration" class="heading"><span class="number">7.1.2</span> Миграция пароля</a></h3>
+<h3><a id="sec:7.1.2" href="modeling-and-viewing-users-two?version=3.0#sec:password_migration" class="heading"><span class="number">7.1.2</span> Миграция пароля</a></h3>
 
 
-<p>В этой точке вы можете быть обеспокоены тем, что мы нигде не храним пароли пользователей; так как мы решили использовать виртуальный пароль, а не хранить его в базе данных, он существует только в памяти. Как мы можем использовать этот пароль для аутентификации? Решение состоит в создании отдельного атрибута, предназначенного для хранения паролей, и нашей стратегией будет использование виртуального пароля в качестве сырья для <em>зашифрованного</em> пароля, который мы <em>будем</em> хранить в базе данных после регистрации пользователя (<a class="ref" href="sign-up#top">Глава&nbsp;8</a>) и впоследствии будем использовать при аутентификации пользователей (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;9</a>).</p>
+<p>В этой точке вы можете быть обеспокоены тем, что мы нигде не храним пароли пользователей; так как мы решили использовать виртуальный пароль, а не хранить его в базе данных, он существует только в памяти. Как мы можем использовать этот пароль для аутентификации? Решение состоит в создании отдельного атрибута, предназначенного для хранения паролей, и нашей стратегией будет использование виртуального пароля в качестве сырья для <em>зашифрованного</em> пароля, который мы <em>будем</em> хранить в базе данных после регистрации пользователя (<a class="ref" href="sign-up?version=3.0#top">Глава&nbsp;8</a>) и впоследствии будем использовать при аутентификации пользователей (<a class="ref" href="sign-in-sign-out?version=3.0#top">Глава&nbsp;9</a>).</p>
 
-<p>Давайте запланируем хранить зашифрованные пароли, используя атрибут <code>encrypted_password</code>, в нашей модели User. Мы обсудим детали реализации в <a class="ref" href="modeling-and-viewing-users-two#sec:secure_passwords">Разделе&nbsp;7.2</a>, но мы можем начать работу с тестами для нашего зашифрованного пароля, отметив, что зашифрованный пароль должен, по крайней мере, <em>существовать</em>. Мы можем проверить это с помощью Ruby метода <code>respond_to?</code>, который принимает символ и возвращает <code>true</code> если объект отвечает данному методу или атрибуту и возвращает <code>false</code> в противном случае:</p>
+<p>Давайте запланируем хранить зашифрованные пароли, используя атрибут <code>encrypted_password</code>, в нашей модели User. Мы обсудим детали реализации в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Разделе&nbsp;7.2</a>, но мы можем начать работу с тестами для нашего зашифрованного пароля, отметив, что зашифрованный пароль должен, по крайней мере, <em>существовать</em>. Мы можем проверить это с помощью Ruby метода <code>respond_to?</code>, который принимает символ и возвращает <code>true</code> если объект отвечает данному методу или атрибуту и возвращает <code>false</code> в противном случае:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console --sandbox</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
@@ -194,7 +194,7 @@
 </div>
 
 
-<p>Мы можем проверить существование атрибута <code>encrypted_password</code> с помощью кода из <a class="ref" href="modeling-and-viewing-users-two#code:respond_to_encrypted_password">Листинга&nbsp;7.3</a>, который использует вспомогательный RSpec метод <code>respond_to</code>.</p>
+<p>Мы можем проверить существование атрибута <code>encrypted_password</code> с помощью кода из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:respond_to_encrypted_password">Листинга&nbsp;7.3</a>, который использует вспомогательный RSpec метод <code>respond_to</code>.</p>
 
 <div class="label" id="code:respond_to_encrypted_password"></div>
 
@@ -230,7 +230,7 @@
 </div>
 
 
-<p>Здесь первый аргумент это имя миграции, и мы также добавляем второй аргумент с именем и типом атрибута, который мы хотим создать. (Сравните это с исходной генерацией таблицы <code>users</code> в <a class="ref" href="modeling-and-viewing-users-one#code:generate_user_model">Листинге&nbsp;6.1</a>.) Мы можем выбрать любое имя для миграции, но удобней будет закончить имя <code>_to_users</code>, так как в этом случае Rails может автоматически построить миграции и дополнить столбцы <code>users</code> таблицы. Кроме того, включив второй аргумент, мы дали Rails достаточно информации, чтобы построить для нас всю миграцию, как видно в <a class="ref" href="modeling-and-viewing-users-two#code:password_migration">Листинге&nbsp;7.4</a>.</p>
+<p>Здесь первый аргумент это имя миграции, и мы также добавляем второй аргумент с именем и типом атрибута, который мы хотим создать. (Сравните это с исходной генерацией таблицы <code>users</code> в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:generate_user_model">Листинге&nbsp;6.1</a>.) Мы можем выбрать любое имя для миграции, но удобней будет закончить имя <code>_to_users</code>, так как в этом случае Rails может автоматически построить миграции и дополнить столбцы <code>users</code> таблицы. Кроме того, включив второй аргумент, мы дали Rails достаточно информации, чтобы построить для нас всю миграцию, как видно в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:password_migration">Листинге&nbsp;7.4</a>.</p>
 
 <div class="label" id="code:password_migration"></div>
 
@@ -251,7 +251,7 @@
 </div></div>
 
 
-<p>Этот код использует метод <code>add_column</code> для добавления <code>encrypted_password</code> столбца к таблице <code>users</code> (и дополнительный метод <code>remove_column</code> для его удаления при migrating down). В результате получается модель данных, показанная на <a class="ref" href="modeling-and-viewing-users-two#fig:user_model_password">Рис.&nbsp;7.2</a>.</p>
+<p>Этот код использует метод <code>add_column</code> для добавления <code>encrypted_password</code> столбца к таблице <code>users</code> (и дополнительный метод <code>remove_column</code> для его удаления при migrating down). В результате получается модель данных, показанная на <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_model_password">Рис.&nbsp;7.2</a>.</p>
 
 <div class="label" id="fig:user_model_password"></div>
 
@@ -281,12 +281,12 @@
 <div class="label" id="sec:an_active_record_callback"></div>
 
 
-<h3><a id="sec:7.1.3" href="modeling-and-viewing-users-two#sec:an_active_record_callback" class="heading"><span class="number">7.1.3</span> Обратный вызов Active Record</a></h3>
+<h3><a id="sec:7.1.3" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback" class="heading"><span class="number">7.1.3</span> Обратный вызов Active Record</a></h3>
 
 
 <p>Теперь, когда наша модель User имеет атрибут для хранения паролей, мы должны организовать генерацию и сохранение зашифрованного пароля, при сохранении Active Record пользователя в базе данных. Мы будем делать это техникой, называемой <a   href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>обратный вызов</em></a> (колбэк), которая представляет собой метод, который вызывается  в определенный момент  жизни  объекта Active Record. В данном случае, мы будем использовать обратный вызов <code>before_save</code> для создания <code>encrypted_password</code> непосредственно перед сохранением пользователя.<sup class="footnote" id="fnref:7.2"><a href="#fn:7.2">2</a></sup></p>
 
-<p>Начнем с теста для атрибута зашифрованного пароля. Так как мы отложили детали реализации и, в частности, метод шифрования, до <a class="ref" href="modeling-and-viewing-users-two#sec:secure_passwords">Раздел&nbsp;7.2</a>, в этом разделе мы просто убедимся, что у сохраненного пользователя атрибут <code>encrypted_password</code> не является пустым. Мы сделаем это путем комбинации <code>blank?</code> метода на строке (<a class="ref" href="rails-flavored-ruby#sec:a_class_of_our_own">Раздел&nbsp;4.4.2</a>) с RSpec конвенцией для булевых методов (впервые показано в контексте <code>valid?</code>/<code>be_valid</code> в <a class="ref" href="modeling-and-viewing-users-one#code:failing_validates_name_spec">Листинге&nbsp;6.11</a>), что приведет нас к тесту в <a class="ref" href="modeling-and-viewing-users-two#code:encrypted_password_not_empty_test">Листинге&nbsp;7.5</a>.</p>
+<p>Начнем с теста для атрибута зашифрованного пароля. Так как мы отложили детали реализации и, в частности, метод шифрования, до <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Раздел&nbsp;7.2</a>, в этом разделе мы просто убедимся, что у сохраненного пользователя атрибут <code>encrypted_password</code> не является пустым. Мы сделаем это путем комбинации <code>blank?</code> метода на строке (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_class_of_our_own">Раздел&nbsp;4.4.2</a>) с RSpec конвенцией для булевых методов (впервые показано в контексте <code>valid?</code>/<code>be_valid</code> в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:failing_validates_name_spec">Листинге&nbsp;6.11</a>), что приведет нас к тесту в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypted_password_not_empty_test">Листинге&nbsp;7.5</a>.</p>
 
 <div class="label" id="code:encrypted_password_not_empty_test"></div>
 
@@ -317,7 +317,7 @@
 
 <p>Этот код проверяет что <code>encrypted_password.blank?</code> не является истиной, используя конструкцию <code>should_not be_blank</code>.</p>
 
-<p>Для того чтобы получить прохождение этого теста, мы <em>зарегистрируем</em> обратный вызов <code>encrypt_password</code> передачей символа его имени методу <code>before_save</code>, а затем определяя метод <code>encrypt_password</code> для выполнения шифрования. При наличии <code>before_save</code>, Active Record будет автоматически вызывать соответствующий метод перед сохранением записи. Результат представлен в <a class="ref" href="modeling-and-viewing-users-two#code:encrypt_password_callback">Листинге&nbsp;7.6</a>.</p>
+<p>Для того чтобы получить прохождение этого теста, мы <em>зарегистрируем</em> обратный вызов <code>encrypt_password</code> передачей символа его имени методу <code>before_save</code>, а затем определяя метод <code>encrypt_password</code> для выполнения шифрования. При наличии <code>before_save</code>, Active Record будет автоматически вызывать соответствующий метод перед сохранением записи. Результат представлен в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинге&nbsp;7.6</a>.</p>
 
 <div class="label" id="code:encrypt_password_callback"></div>
 
@@ -349,7 +349,7 @@
 </div></div>
 
 
-<p>Здесь обратный вызов <code>encrypt_password</code>  делегирует реальное шифрование методу <code>encrypt</code>; как отмечалось в комментарии, это лишь временная реализация - сейчас <a class="ref" href="modeling-and-viewing-users-two#code:encrypt_password_callback">Листинг&nbsp;7.6</a> просто устанавливает зашифрованным <em>нешифрованный</em> пароль, чтобы достигнуть цели. Но этого достаточно для прохождения наших тестов, и мы сделаем действительно шифрующий метод <code>encrypt</code> в <a class="ref" href="modeling-and-viewing-users-two#sec:secure_passwords">Раздел&nbsp;7.2</a>.</p>
+<p>Здесь обратный вызов <code>encrypt_password</code>  делегирует реальное шифрование методу <code>encrypt</code>; как отмечалось в комментарии, это лишь временная реализация - сейчас <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинг&nbsp;7.6</a> просто устанавливает зашифрованным <em>нешифрованный</em> пароль, чтобы достигнуть цели. Но этого достаточно для прохождения наших тестов, и мы сделаем действительно шифрующий метод <code>encrypt</code> в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Раздел&nbsp;7.2</a>.</p>
 
 <p>Прежде чем вы попытаетесь понять реализацию, отмечу, что методы шифрования идут после ключевого слова <code>private</code>; внутри Ruby классов, все методы, определенные <em>после</em> <code>private</code> используются внутри объекта и не предназначены для публичного использования.<sup class="footnote" id="fnref:7.3"><a href="#fn:7.3">3</a></sup> Для примера мы можем взглянуть на объект User в консоли:</p>
 
@@ -373,7 +373,7 @@
 </div>
 
 
-<p>Это однострочный метод (лучший вид!), но он содержит не одну, а целых <em>две</em> тонкости. Во-первых, левая часть заявления явно назначает <code>encrypted_password</code> атрибут используя ключевое слово <code>self</code>. (Вспомните из <a class="ref" href="rails-flavored-ruby#sec:a_class_of_our_own">Раздела&nbsp;4.4.2</a> что внутри класса <code>self</code> вызывает сам метод, в случае модели User это просто пользователь.) Использование <code>self</code> <em>необходимо</em> в этом контексте; если бы мы опустили <code>self</code> и написали</p>
+<p>Это однострочный метод (лучший вид!), но он содержит не одну, а целых <em>две</em> тонкости. Во-первых, левая часть заявления явно назначает <code>encrypted_password</code> атрибут используя ключевое слово <code>self</code>. (Вспомните из <a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_class_of_our_own">Раздела&nbsp;4.4.2</a> что внутри класса <code>self</code> вызывает сам метод, в случае модели User это просто пользователь.) Использование <code>self</code> <em>необходимо</em> в этом контексте; если бы мы опустили <code>self</code> и написали</p>
 
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">encrypt_password</span>
   <span class="n">encrypted_password</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
@@ -411,25 +411,25 @@
 </div>
 
 
-<p>как в <a class="ref" href="modeling-and-viewing-users-two#code:encrypt_password_callback">Листинге&nbsp;7.6</a>. (Конечно, как мы уже отметили, <code>self</code> является <em>обязательным</em> при назначении атрибута, поэтому мы должны написать <code>self.encrypted_password</code> в этом случае.)</p>
+<p>как в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинге&nbsp;7.6</a>. (Конечно, как мы уже отметили, <code>self</code> является <em>обязательным</em> при назначении атрибута, поэтому мы должны написать <code>self.encrypted_password</code> в этом случае.)</p>
 
 <div class="label" id="sec:secure_passwords"></div>
 
 
-<h2><a id="sec:7.2" href="modeling-and-viewing-users-two#sec:secure_passwords" class="heading"><span class="number">7.2</span> Безопасные пароли</a></h2>
+<h2><a id="sec:7.2" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords" class="heading"><span class="number">7.2</span> Безопасные пароли</a></h2>
 
 
-<p>С кодом из <a class="ref" href="modeling-and-viewing-users-two#sec:insecure_passwords">Раздела&nbsp;7.1</a>, в принципе мы сделали: хотя "зашифрованный" пароль совпадает с незашифрованным паролем, и пока мы готовы хранить незашифрованные пароли в базе данных, мы имеем необходимую основу для входа и аутентификации пользователей.<sup class="footnote" id="fnref:7.5"><a href="#fn:7.5">5</a></sup> Наши стандарты в Rails Учебнике значительно более высокие, хотя: любой веб-разработчик, который не зря ест свой хлеб, должен знать, как реализовать систему паролей с <em>безопасным односторонним хэшированием</em>. В этом разделе мы будем опираться на материал из <a class="ref" href="modeling-and-viewing-users-two#sec:insecure_passwords">Раздела&nbsp;7.1</a> для реализации именно такой, промышленного уровня, системы  паролей.</p>
+<p>С кодом из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a>, в принципе мы сделали: хотя "зашифрованный" пароль совпадает с незашифрованным паролем, и пока мы готовы хранить незашифрованные пароли в базе данных, мы имеем необходимую основу для входа и аутентификации пользователей.<sup class="footnote" id="fnref:7.5"><a href="#fn:7.5">5</a></sup> Наши стандарты в Rails Учебнике значительно более высокие, хотя: любой веб-разработчик, который не зря ест свой хлеб, должен знать, как реализовать систему паролей с <em>безопасным односторонним хэшированием</em>. В этом разделе мы будем опираться на материал из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a> для реализации именно такой, промышленного уровня, системы  паролей.</p>
 
 <div class="label" id="sec:a_secure_password_test"></div>
 
 
-<h3><a id="sec:7.2.1" href="modeling-and-viewing-users-two#sec:a_secure_password_test" class="heading"><span class="number">7.2.1</span> Тест безопасного пароля</a></h3>
+<h3><a id="sec:7.2.1" href="modeling-and-viewing-users-two?version=3.0#sec:a_secure_password_test" class="heading"><span class="number">7.2.1</span> Тест безопасного пароля</a></h3>
 
 
-<p>Как намекалось в <a class="ref" href="modeling-and-viewing-users-two#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, весь механизм шифрования паролей будет спрятан в <code>private</code> регионе модели User, который представляет собой проблему для тестирования. Нам нужен какой-то <em>публичный интерфейс</em> который мы можем выставить в остальной части приложения. Одним из полезных аспектов разработки через тестирование является то, что, выступая в качестве клиента для нашего кода приложения, тесты мотивируют нас разрабатывать юзабельный интерфейс с самого начала.</p>
+<p>Как намекалось в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, весь механизм шифрования паролей будет спрятан в <code>private</code> регионе модели User, который представляет собой проблему для тестирования. Нам нужен какой-то <em>публичный интерфейс</em> который мы можем выставить в остальной части приложения. Одним из полезных аспектов разработки через тестирование является то, что, выступая в качестве клиента для нашего кода приложения, тесты мотивируют нас разрабатывать юзабельный интерфейс с самого начала.</p>
 
-<p>Аутентификация пользователей предполагает сравнение зашифрованной версии подтверждаемого (отправляемого) пароля с (зашифрованным) паролем данного пользователя. Это означает, что мы должны определить какой-то метод для выполнения сравнения, мы назовем его <code>has_password?</code>; он и будет нашим публичным интерфейсом для машинерии шифрования.<sup class="footnote" id="fnref:7.6"><a href="#fn:7.6">6</a></sup> Метод  <code>has_password?</code> будет проверять имеет ли пользователь тот же пароль, что и отправленный в форме входа (будет сделана в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a>); скелет метода <code>has_password?</code> показан в  <a class="ref" href="modeling-and-viewing-users-two#code:has_password_skeleton">Листинге&nbsp;7.7</a>.</p>
+<p>Аутентификация пользователей предполагает сравнение зашифрованной версии подтверждаемого (отправляемого) пароля с (зашифрованным) паролем данного пользователя. Это означает, что мы должны определить какой-то метод для выполнения сравнения, мы назовем его <code>has_password?</code>; он и будет нашим публичным интерфейсом для машинерии шифрования.<sup class="footnote" id="fnref:7.6"><a href="#fn:7.6">6</a></sup> Метод  <code>has_password?</code> будет проверять имеет ли пользователь тот же пароль, что и отправленный в форме входа (будет сделана в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>); скелет метода <code>has_password?</code> показан в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_skeleton">Листинге&nbsp;7.7</a>.</p>
 
 <div class="label" id="code:has_password_skeleton"></div>
 
@@ -458,7 +458,7 @@
 </div></div>
 
 
-<p>С помощью этого метода, мы можем писать тесты как в <a class="ref" href="modeling-and-viewing-users-two#code:has_password_tests">Листинге&nbsp;7.8</a>, который использует RSpec методы <code>be_true</code> и <code>be_false</code> чтобы проверить что <code>has_password?</code> возвращает <code>true</code> или <code>false</code> в соответствующих случаях.</p>
+<p>С помощью этого метода, мы можем писать тесты как в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_tests">Листинге&nbsp;7.8</a>, который использует RSpec методы <code>be_true</code> и <code>be_false</code> чтобы проверить что <code>has_password?</code> возвращает <code>true</code> или <code>false</code> в соответствующих случаях.</p>
 
 <div class="label" id="code:has_password_tests"></div>
 
@@ -494,12 +494,12 @@
 </div></div>
 
 
-<p>В <a class="ref" href="modeling-and-viewing-users-two#sec:implementing_has_password">Разделе&nbsp;7.2.3</a> мы завершим реализацию <code>has_password?</code> (и получим проходящие тесты в процессе). Но вначале нам нужно узнать немного больше о безопасности паролей.</p>
+<p>В <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:implementing_has_password">Разделе&nbsp;7.2.3</a> мы завершим реализацию <code>has_password?</code> (и получим проходящие тесты в процессе). Но вначале нам нужно узнать немного больше о безопасности паролей.</p>
 
 <div class="label" id="sec:secure_password_theory"></div>
 
 
-<h3><a id="sec:7.2.2" href="modeling-and-viewing-users-two#sec:secure_password_theory" class="heading"><span class="number">7.2.2</span> Немного теории безопасных паролей</a></h3>
+<h3><a id="sec:7.2.2" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory" class="heading"><span class="number">7.2.2</span> Немного теории безопасных паролей</a></h3>
 
 
 <p>Основная идея зашифрованных паролей проста: вместо хранения самого пароля в базе данных (известно как "чистый текст"), мы сохраняем строку созданую с помощью  <a   href="http://ru.wikipedia.org/wiki/Криптографическая_хеш-функция">криптографической хэш-функции</a>, которая является по существу необратимой, так что даже злоумышленник владеющий хэшированным паролем не сможет вывести оригинал. Чтобы убедиться, что представленный пароль соответствует паролю пользователя, сначала зашифруем представленную строку, а затем сравним хэши. Давайте перейдем в консольную сессию, чтобы увидеть, как это работает:</p>
@@ -563,7 +563,7 @@
 <div class="label" id="sec:implementing_has_password"></div>
 
 
-<h3><a id="sec:7.2.3" href="modeling-and-viewing-users-two#sec:implementing_has_password" class="heading"><span class="number">7.2.3</span> Реализация <code>has_password?</code></a></h3>
+<h3><a id="sec:7.2.3" href="modeling-and-viewing-users-two?version=3.0#sec:implementing_has_password" class="heading"><span class="number">7.2.3</span> Реализация <code>has_password?</code></a></h3>
 
 
 <p>Покончив с теорией, мы готовы к реализации. Давайте забежим немного вперед, чтобы понять куда мы двигаемся. Каждый объект user знает свой собственный зашифрованный пароль encrypted password, таким образом, для проверки на соответствие с представленным паролем, мы можем определить <code>has_password?</code> следующим образом:</p>
@@ -584,7 +584,7 @@
 </div>
 
 
-<p>Как и c <code>encrypted_password</code> миграцией (<a class="ref" href="modeling-and-viewing-users-two#sec:password_migration">Раздел&nbsp;7.1.2</a>), имя этой миграции заканчивается на <code>_to_users</code> и передается второй аргумент, содержащий имя и тип атрибута, таким образом Rails автоматически создает правильную миграцию (<a class="ref" href="modeling-and-viewing-users-two#code:salt_migration">Листинг&nbsp;7.9</a>).</p>
+<p>Как и c <code>encrypted_password</code> миграцией (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:password_migration">Раздел&nbsp;7.1.2</a>), имя этой миграции заканчивается на <code>_to_users</code> и передается второй аргумент, содержащий имя и тип атрибута, таким образом Rails автоматически создает правильную миграцию (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:salt_migration">Листинг&nbsp;7.9</a>).</p>
 
 <div class="label" id="code:salt_migration"></div>
 
@@ -613,7 +613,7 @@
 </div>
 
 
-<p>Полученная в результате модель данных представлена на <a class="ref" href="modeling-and-viewing-users-two#fig:user_model_salt">Рис.&nbsp;7.3</a>.</p>
+<p>Полученная в результате модель данных представлена на <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_model_salt">Рис.&nbsp;7.3</a>.</p>
 
 <div class="label" id="fig:user_model_salt"></div>
 
@@ -621,7 +621,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_model_salt.png" alt="user_model_salt" /></span></div><div class="caption"><span class="header">Рисунок  7.3: </span><span class="description">User модель с добавленной солью.</span></div></div>
 
 
-<p>Наконец, мы готовы к полной реализации. Когда мы последний раз видели <code>encrypt</code> функцию (<a class="ref" href="modeling-and-viewing-users-two#code:encrypt_password_callback">Листинг&nbsp;7.6</a>), она ничего не делала, просто возвращала строку в аргумент. С идеями из <a class="ref" href="modeling-and-viewing-users-two#sec:secure_password_theory">Раздела&nbsp;7.2.2</a>, теперь мы готовы использовать вместо этого безопасный хэш  (<a class="ref" href="modeling-and-viewing-users-two#code:has_password_with_encrypt">Листинг&nbsp;7.10</a>).<sup class="footnote" id="fnref:7.9"><a href="#fn:7.9">9</a></sup></p>
+<p>Наконец, мы готовы к полной реализации. Когда мы последний раз видели <code>encrypt</code> функцию (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинг&nbsp;7.6</a>), она ничего не делала, просто возвращала строку в аргумент. С идеями из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздела&nbsp;7.2.2</a>, теперь мы готовы использовать вместо этого безопасный хэш  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинг&nbsp;7.10</a>).<sup class="footnote" id="fnref:7.9"><a href="#fn:7.9">9</a></sup></p>
 
 <div class="label" id="code:has_password_with_encrypt"></div>
 
@@ -663,7 +663,7 @@
 </div></div>
 
 
-<p>Этот код содержит те же две тонкости, упомянутые в <a class="ref" href="modeling-and-viewing-users-two#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, а именно, присвоение атрибута Active Record в строке</p>
+<p>Этот код содержит те же две тонкости, упомянутые в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, а именно, присвоение атрибута Active Record в строке</p>
 
 <div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">make_salt</span> <span class="k">if</span> <span class="n">new_record?</span>
 </pre></div>
@@ -681,9 +681,9 @@
 
 <p>Так как мы находимся внутри класса User, Ruby знает, что <code>salt</code> ссылается на пользовательский атрибут <code>salt</code>.</p>
 
-<p>Важно также отметить использование булевого <code>new_record?</code> метода Active Record, который возвращает истину, если объект еще не был сохранен в базе данных. Поскольку соль это уникальный идентификатор для каждого пользователя, мы не хотим, чтобы он менялся каждый раз, когда пользователь обновляется (как в <a class="ref" href="updating-showing-and-deleting-users#sec:updating_users">Разделе&nbsp;10.1</a>), и включением <code>new_record?</code> мы обеспечиваем однократное создание соли, происходящее только при добавлении нового пользователя.<sup class="footnote" id="fnref:7.10"><a href="#fn:7.10">10</a></sup> (Эта тонкость не важна сейчас, но она понадобится, когда мы реализуем функцию "запомнить меня" в   <a class="ref" href="sign-in-sign-out#sec:remember_me">Разделе&nbsp;9.3.2</a>.)</p>
+<p>Важно также отметить использование булевого <code>new_record?</code> метода Active Record, который возвращает истину, если объект еще не был сохранен в базе данных. Поскольку соль это уникальный идентификатор для каждого пользователя, мы не хотим, чтобы он менялся каждый раз, когда пользователь обновляется (как в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users">Разделе&nbsp;10.1</a>), и включением <code>new_record?</code> мы обеспечиваем однократное создание соли, происходящее только при добавлении нового пользователя.<sup class="footnote" id="fnref:7.10"><a href="#fn:7.10">10</a></sup> (Эта тонкость не важна сейчас, но она понадобится, когда мы реализуем функцию "запомнить меня" в   <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>.)</p>
 
-<p>В данный момент, тесты из  <a class="ref" href="modeling-and-viewing-users-two#code:has_password_tests">Листинга&nbsp;7.8</a> должны пройти:</p>
+<p>В данный момент, тесты из  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_tests">Листинга&nbsp;7.8</a> должны пройти:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/models/user_spec.rb <span class="se">\</span>
 <span class="gp">&gt;</span> -e <span class="s2">"should be true if the passwords match"</span>
@@ -716,10 +716,10 @@
 <div class="label" id="sec:an_authenticate_method"></div>
 
 
-<h3><a id="sec:7.2.4" href="modeling-and-viewing-users-two#sec:an_authenticate_method" class="heading"><span class="number">7.2.4</span> Метод аутентификации</a></h3>
+<h3><a id="sec:7.2.4" href="modeling-and-viewing-users-two?version=3.0#sec:an_authenticate_method" class="heading"><span class="number">7.2.4</span> Метод аутентификации</a></h3>
 
 
-<p>Иметь метод <code>has_password?</code> для каждого пользователя это хорошо, но само по себе это не очень полезно. Мы закончим наше обсуждение паролей написав с помощью <code>has_password?</code> метод для аутентификации пользователя на основе электронной почты и пароля. В <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a>, мы будем использовать этот <code>authenticate</code> метод при регистрации пользователей на нашем сайте.</p>
+<p>Иметь метод <code>has_password?</code> для каждого пользователя это хорошо, но само по себе это не очень полезно. Мы закончим наше обсуждение паролей написав с помощью <code>has_password?</code> метод для аутентификации пользователя на основе электронной почты и пароля. В <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>, мы будем использовать этот <code>authenticate</code> метод при регистрации пользователей на нашем сайте.</p>
 
 <p>Мы можем получить подсказку о том, как это будет работать с помощью консоли. Во-первых, мы создадим пользователя, а затем отыщем этого пользователя по адресу электронной почты чтобы проверить что он имеет данный пароль:<sup class="footnote" id="fnref:7.11"><a href="#fn:7.11">11</a></sup></p>
 
@@ -740,7 +740,7 @@
 </div>
 
 
-<p>Начнем с тестов, которые мы будем использовать для определения поведения, которое мы ожидаем от <code>User.authenticate</code>. Нужно проверить три варианта развития событий: <code>authenticate</code>&nbsp;(1) должен возвращать <code>nil</code> когда комбинация email/password недействительна или&nbsp;(2) когда не существует пользователя с данным электронным адресом, и&nbsp;(3) должен возвращать сам объект user в случае успеха. С этой информацией, мы можем написать тесты для <code>authenticate</code> как в  <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_method_tests">Листинге&nbsp;7.11</a>.</p>
+<p>Начнем с тестов, которые мы будем использовать для определения поведения, которое мы ожидаем от <code>User.authenticate</code>. Нужно проверить три варианта развития событий: <code>authenticate</code>&nbsp;(1) должен возвращать <code>nil</code> когда комбинация email/password недействительна или&nbsp;(2) когда не существует пользователя с данным электронным адресом, и&nbsp;(3) должен возвращать сам объект user в случае успеха. С этой информацией, мы можем написать тесты для <code>authenticate</code> как в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_method_tests">Листинге&nbsp;7.11</a>.</p>
 
 <div class="label" id="code:authenticate_method_tests"></div>
 
@@ -779,13 +779,13 @@
 </div></div>
 
 
-<p>Теперь мы готовы к реализации, с которой мы получим прохождение наших тестов и покажем как определить <em>метод класса</em> в качестве бонуса. Мы уже упоминали методы класса несколько раз до этого, совсем недавно в <a class="ref" href="modeling-and-viewing-users-one#sec:database_migrations">Разделе&nbsp;6.1.1</a>; метод класса это просто метод прикрепленный к классу, a не экземпляр этого класса. Например, <code>new</code>, <code>find</code>, и <code>find_by_email</code> это методы класса User. За пределами класса они вызываются с помощью имени класса, как в <code>User.find</code>, но внутри класса мы можем опустить имя класса.</p>
+<p>Теперь мы готовы к реализации, с которой мы получим прохождение наших тестов и покажем как определить <em>метод класса</em> в качестве бонуса. Мы уже упоминали методы класса несколько раз до этого, совсем недавно в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:database_migrations">Разделе&nbsp;6.1.1</a>; метод класса это просто метод прикрепленный к классу, a не экземпляр этого класса. Например, <code>new</code>, <code>find</code>, и <code>find_by_email</code> это методы класса User. За пределами класса они вызываются с помощью имени класса, как в <code>User.find</code>, но внутри класса мы можем опустить имя класса.</p>
 
 <div class="label" id="sidebar:self"></div>
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 7.1.</span><span class="description">Что такое <code>self</code>?</span></span>
-<p>Мы говорили о том, что <code>self</code> это “сам объект”, но конкретное значение зависит от контекста. Внутри обычного метода, <code>self</code> ссылается на <em>экземпляр</em> класса, то есть, обозначает сам объект. Например, в <a class="ref" href="modeling-and-viewing-users-two#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>, <code>self</code> это <em>user</em>:</p>
+<p>Мы говорили о том, что <code>self</code> это “сам объект”, но конкретное значение зависит от контекста. Внутри обычного метода, <code>self</code> ссылается на <em>экземпляр</em> класса, то есть, обозначает сам объект. Например, в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>, <code>self</code> это <em>user</em>:</p>
 
 <pre class="verbatim">  def encrypt_password
     self.salt = make_salt if new_record?
@@ -801,7 +801,7 @@
   =&gt; &quot;d3b9af261c502947fbf32f78cb8179b16e62eabacf059451efee404328b2f537&quot;</pre>
 
 
-<p>С другой стороны, <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_method">Листинг&nbsp;7.12</a> показывает определение <code>authenticate</code>, которое использует <code>self</code> для определения <em>метода класса</em>; здесь, <code>self</code> это сам класс <code>User</code>:</p>
+<p>С другой стороны, <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_method">Листинг&nbsp;7.12</a> показывает определение <code>authenticate</code>, которое использует <code>self</code> для определения <em>метода класса</em>; здесь, <code>self</code> это сам класс <code>User</code>:</p>
 
 <pre class="verbatim">  def self.authenticate(email, submitted_password)
     .
@@ -817,7 +817,7 @@
   =&gt; &quot;Example User&quot;</pre>
 
 
-<p>Стоит отметить два альтернативных способа определения <code>authenticate</code> метода класса, эквивалентные показанному в <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_method">Листинге&nbsp;7.12</a>. Во-первых, мы могли бы указать на <code>User</code> класс явно по названию:</p>
+<p>Стоит отметить два альтернативных способа определения <code>authenticate</code> метода класса, эквивалентные показанному в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_method">Листинге&nbsp;7.12</a>. Во-первых, мы могли бы указать на <code>User</code> класс явно по названию:</p>
 
 <pre class="verbatim">  def User.authenticate(email, submitted_password)
     .
@@ -841,7 +841,7 @@
 </div>
 
 
-<p>Способ определения метода класса заключается в использовании  ключевого слова <code>self</code> в определении метода. (Это <code>self</code> отличается от <code>self</code> показанного в  <a class="ref" href="modeling-and-viewing-users-two#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>; см. <a class="ref" href="modeling-and-viewing-users-two#sidebar:self">Блок&nbsp;7.1</a>.) <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_method">Листинг&nbsp;7.12</a> показывает эту конструкцию в контексте <code>authenticate</code> метода. Обратите внимание на вызов <code>find_by_email</code>, в котором мы опускаем явное имя класса <code>User</code> так как этот метод уже внутри <code>User</code> класса.</p>
+<p>Способ определения метода класса заключается в использовании  ключевого слова <code>self</code> в определении метода. (Это <code>self</code> отличается от <code>self</code> показанного в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>; см. <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sidebar:self">Блок&nbsp;7.1</a>.) <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_method">Листинг&nbsp;7.12</a> показывает эту конструкцию в контексте <code>authenticate</code> метода. Обратите внимание на вызов <code>find_by_email</code>, в котором мы опускаем явное имя класса <code>User</code> так как этот метод уже внутри <code>User</code> класса.</p>
 
 <div class="label" id="code:authenticate_method"></div>
 
@@ -872,17 +872,17 @@
 </div></div>
 
 
-<p>Есть несколько эквивалентных способов записи <code>authenticate</code> метода, но я считаю реализацию выше более чистой. Она обрабатывает два случая (неверный email и успешное соответствие) с явным ключевым словом <code>return</code>, и обрабатывает третий случай (несоответствие пароля) неявно, так как в этом случае мы достигаем конца метода, который автоматически возвращает <code>nil</code>. См. в <a class="ref" href="modeling-and-viewing-users-two#sec:more_modeling_users_exercises">Разделе&nbsp;7.5</a> некоторые другие возможные способы реализации этого метода.</p>
+<p>Есть несколько эквивалентных способов записи <code>authenticate</code> метода, но я считаю реализацию выше более чистой. Она обрабатывает два случая (неверный email и успешное соответствие) с явным ключевым словом <code>return</code>, и обрабатывает третий случай (несоответствие пароля) неявно, так как в этом случае мы достигаем конца метода, который автоматически возвращает <code>nil</code>. См. в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:more_modeling_users_exercises">Разделе&nbsp;7.5</a> некоторые другие возможные способы реализации этого метода.</p>
 
 <div class="label" id="sec:better_user_views"></div>
 
 
-<h2><a id="sec:7.3" href="modeling-and-viewing-users-two#sec:better_user_views" class="heading"><span class="number">7.3</span> Улучшение отображения пользователя</a></h2>
+<h2><a id="sec:7.3" href="modeling-and-viewing-users-two?version=3.0#sec:better_user_views" class="heading"><span class="number">7.3</span> Улучшение отображения пользователя</a></h2>
 
 
-<p>Теперь, когда User модель практически завершена,<sup class="footnote" id="fnref:7.12"><a href="#fn:7.12">12</a></sup> мы можем добавить образец пользователя в базу данных разработки и сделать <code>show</code> страницу, чтобы показать информацию о пользователе. По пути, мы добавим некоторые тесты к Users контроллеру spec из <a class="ref" href="filling-in-the-layout#sec:users_controller">Раздела&nbsp;5.3.1</a>.</p>
+<p>Теперь, когда User модель практически завершена,<sup class="footnote" id="fnref:7.12"><a href="#fn:7.12">12</a></sup> мы можем добавить образец пользователя в базу данных разработки и сделать <code>show</code> страницу, чтобы показать информацию о пользователе. По пути, мы добавим некоторые тесты к Users контроллеру spec из <a class="ref" href="filling-in-the-layout?version=3.0#sec:users_controller">Раздела&nbsp;5.3.1</a>.</p>
 
-<p>Перед тем как продолжить, полезно посмотреть, где мы остановились, вспомнив как сейчас выглядит Users контроллер spec (<a class="ref" href="modeling-and-viewing-users-two#code:get_new_user_spec_review">Листинг&nbsp;7.13</a>). Наши тесты для  страницы показывающей пользователя будут следовать этому примеру, но мы увидим, что, в отличие от тестов для <code>new</code> действия, тесты для <code>show</code> действия требуют использования экземпляра User модели. Мы ответим на брошенный вызов используя технику, называемую <em>factories</em> (фабрики).</p>
+<p>Перед тем как продолжить, полезно посмотреть, где мы остановились, вспомнив как сейчас выглядит Users контроллер spec (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_new_user_spec_review">Листинг&nbsp;7.13</a>). Наши тесты для  страницы показывающей пользователя будут следовать этому примеру, но мы увидим, что, в отличие от тестов для <code>new</code> действия, тесты для <code>show</code> действия требуют использования экземпляра User модели. Мы ответим на брошенный вызов используя технику, называемую <em>factories</em> (фабрики).</p>
 
 <div class="label" id="code:get_new_user_spec_review"></div>
 
@@ -917,16 +917,16 @@
 <div class="label" id="sec:tests_with_factories"></div>
 
 
-<h3><a id="sec:7.3.1" href="modeling-and-viewing-users-two#sec:tests_with_factories" class="heading"><span class="number">7.3.1</span> Тестирование страницы просмотра пользователя (с factories)</a></h3>
+<h3><a id="sec:7.3.1" href="modeling-and-viewing-users-two?version=3.0#sec:tests_with_factories" class="heading"><span class="number">7.3.1</span> Тестирование страницы просмотра пользователя (с factories)</a></h3>
 
 
-<p>Тестам для контроллера Users потребуются экземпляры объектов модели User, желательно с заранее определенными значениями. Например, как показано в <a class="ref" href="modeling-and-viewing-users-two#code:user_show_reminder">Листинге&nbsp;7.14</a>, <code>show</code> действию контроллера Users необходим экземпляр класса User, поэтому тесты на это действие будут требовать, чтобы мы как-то создали <code>@user</code>. Мы достигнем этой цели с user <em>factory</em>, которая является удобным способом определения объекта user и добавления его в тестовую базу данных.<sup class="footnote" id="fnref:7.13"><a href="#fn:7.13">13</a></sup></p>
+<p>Тестам для контроллера Users потребуются экземпляры объектов модели User, желательно с заранее определенными значениями. Например, как показано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_reminder">Листинге&nbsp;7.14</a>, <code>show</code> действию контроллера Users необходим экземпляр класса User, поэтому тесты на это действие будут требовать, чтобы мы как-то создали <code>@user</code>. Мы достигнем этой цели с user <em>factory</em>, которая является удобным способом определения объекта user и добавления его в тестовую базу данных.<sup class="footnote" id="fnref:7.13"><a href="#fn:7.13">13</a></sup></p>
 
 <div class="label" id="code:user_show_reminder"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.14.</span> <span class="description">User <code>show</code> действие из <a class="ref" href="modeling-and-viewing-users-one#code:user_show_action">Листинга&nbsp;6.25</a>. <br /> <code>app/controllers/users_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 7.14.</span> <span class="description">User <code>show</code> действие из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:user_show_action">Листинга&nbsp;6.25</a>. <br /> <code>app/controllers/users_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
 
@@ -941,7 +941,7 @@
 </div></div>
 
 
-<p>Мы будем использовать factories сгенерированные <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>,<sup class="footnote" id="fnref:7.14"><a href="#fn:7.14">14</a></sup> Ruby гем, сделанный хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и другие Ruby гемы, мы можем установить его добавив соответствующую строку в <code>Gemfile</code> используя Bundler  (<a class="ref" href="modeling-and-viewing-users-two#code:gemfile_factory_girl">Листинг&nbsp;7.15</a>). (Так как Factory Girl необходима только в тестах, мы включим его в <code>:test</code> группу.)</p>
+<p>Мы будем использовать factories сгенерированные <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>,<sup class="footnote" id="fnref:7.14"><a href="#fn:7.14">14</a></sup> Ruby гем, сделанный хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и другие Ruby гемы, мы можем установить его добавив соответствующую строку в <code>Gemfile</code> используя Bundler  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_factory_girl">Листинг&nbsp;7.15</a>). (Так как Factory Girl необходима только в тестах, мы включим его в <code>:test</code> группу.)</p>
 
 <div class="label" id="code:gemfile_factory_girl"></div>
 
@@ -970,7 +970,7 @@
 </div>
 
 
-<p>Теперь мы готовы создать файл <code>spec/factories.rb</code> и определить User factory, как показано в <a class="ref" href="modeling-and-viewing-users-two#code:user_factory">Листинге&nbsp;7.16</a>. Помещая файл <code>factories.rb</code> в директорию <code>spec/</code>, мы организуем автоматическую загрузку нашей фабрики при запуске тестов.</p>
+<p>Теперь мы готовы создать файл <code>spec/factories.rb</code> и определить User factory, как показано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_factory">Листинге&nbsp;7.16</a>. Помещая файл <code>factories.rb</code> в директорию <code>spec/</code>, мы организуем автоматическую загрузку нашей фабрики при запуске тестов.</p>
 
 <div class="label" id="code:user_factory"></div>
 
@@ -989,16 +989,16 @@
 </div></div>
 
 
-<p>С определением в <a class="ref" href="modeling-and-viewing-users-two#code:user_factory">Листинге&nbsp;7.16</a>, мы можем создать фабрику User в тестах вроде этой:</p>
+<p>С определением в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_factory">Листинге&nbsp;7.16</a>, мы можем создать фабрику User в тестах вроде этой:</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>Как отмечалось в коментарии, в первой строке  <a class="ref" href="modeling-and-viewing-users-two#code:user_factory">Листинга&nbsp;7.16</a>, используя символ <code>:user</code> мы даем Factory Girl возможность угадать, что мы хотим использовать модель User, так что в данном случае <code>@user</code> будет симулировать экземпляр <code>User</code>.</p>
+<p>Как отмечалось в коментарии, в первой строке  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_factory">Листинга&nbsp;7.16</a>, используя символ <code>:user</code> мы даем Factory Girl возможность угадать, что мы хотим использовать модель User, так что в данном случае <code>@user</code> будет симулировать экземпляр <code>User</code>.</p>
 
-<p>Для нашей новой фабрики User в Users контроллере spec, мы создадим переменную <code>@user</code> в блоке <code>before(:each)</code> а затем <code>get</code> show страницу и проверим успешность (как мы делали с <code>new</code> страницей в <a class="ref" href="modeling-and-viewing-users-two#code:get_new_user_spec_review">Листинге&nbsp;7.13</a>), а также проверим, что действие <code>show</code> вытягивает нужного пользователя из базы данных. Результат представлен в <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинге&nbsp;7.17</a>. (Если вы используете Spork, вам может потребоваться его рестарт, для прохождения этого теста.)</p>
+<p>Для нашей новой фабрики User в Users контроллере spec, мы создадим переменную <code>@user</code> в блоке <code>before(:each)</code> а затем <code>get</code> show страницу и проверим успешность (как мы делали с <code>new</code> страницей в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_new_user_spec_review">Листинге&nbsp;7.13</a>), а также проверим, что действие <code>show</code> вытягивает нужного пользователя из базы данных. Результат представлен в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a>. (Если вы используете Spork, вам может потребоваться его рестарт, для прохождения этого теста.)</p>
 
 <div class="label" id="code:get_show_test"></div>
 
@@ -1035,7 +1035,7 @@
 </div></div>
 
 
-<p>Помимо первого использования фабрики, реально новым здесь является использование  <code>assigns(:user)</code>, который поставляется RSpec (через лежащую в его основе <tt>Test::Unit</tt> библиотеку). <code>Assigns</code> метод принимает в качестве аргумента символ и возвращает значение соответствующей переменной <em>экземпляра</em> в действие контроллера. Другими словами, в <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинге&nbsp;7.17</a> код</p>
+<p>Помимо первого использования фабрики, реально новым здесь является использование  <code>assigns(:user)</code>, который поставляется RSpec (через лежащую в его основе <tt>Test::Unit</tt> библиотеку). <code>Assigns</code> метод принимает в качестве аргумента символ и возвращает значение соответствующей переменной <em>экземпляра</em> в действие контроллера. Другими словами, в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a> код</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">assigns</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span>
 </pre></div>
@@ -1056,13 +1056,13 @@
 </div>
 
 
-<p>затем проверяет, что переменная извлекается из базы данных в действие соответствующее <code>@user</code> экземпляру созданному Factory Girl. Стоит заметить, что не все Rails программисты используют <code>assigns</code> в этом контексте, предпочитая вместо него использовать технику называемую <em>stubbing</em> (<a class="ref" href="modeling-and-viewing-users-two#sidebar:stubbing">Блок&nbsp;7.2</a>).</p>
+<p>затем проверяет, что переменная извлекается из базы данных в действие соответствующее <code>@user</code> экземпляру созданному Factory Girl. Стоит заметить, что не все Rails программисты используют <code>assigns</code> в этом контексте, предпочитая вместо него использовать технику называемую <em>stubbing</em> (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sidebar:stubbing">Блок&nbsp;7.2</a>).</p>
 
 <div class="label" id="sidebar:stubbing"></div>
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 7.2.</span><span class="description"><code> stub!</code> или не <code>stub!</code>.</span></span>
-<p>Код в <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинге&nbsp;7.17</a> опирается на метод <code>User.find</code> в действии контроллера для получения правильного пользователя из тестовой базы данных. Второй способ добиться этого же результата использует технику, <em>stubbing</em>, использующую RSpec метод <code>stub!</code>:</p>
+<p>Код в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a> опирается на метод <code>User.find</code> в действии контроллера для получения правильного пользователя из тестовой базы данных. Второй способ добиться этого же результата использует технику, <em>stubbing</em>, использующую RSpec метод <code>stub!</code>:</p>
 
 <pre class="verbatim">  before(:each)
     @user = Factory(:user)
@@ -1070,7 +1070,7 @@
   end</pre>
 
 
-<p>Этот код гарантирует, что любой вызов <code>User.find</code> с данным <code>id</code> вернет <code>@user</code>. Так как это именно то, что мы имеем в коде приложения (<a class="ref" href="modeling-and-viewing-users-two#code:user_show_reminder">Листинг&nbsp;7.14</a>), заглушка приводит к перехватыванию RSpec вызова <code>User.find</code> и, вместо вызова базы данных, возвращает <code>@user</code>.</p>
+<p>Этот код гарантирует, что любой вызов <code>User.find</code> с данным <code>id</code> вернет <code>@user</code>. Так как это именно то, что мы имеем в коде приложения (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_reminder">Листинг&nbsp;7.14</a>), заглушка приводит к перехватыванию RSpec вызова <code>User.find</code> и, вместо вызова базы данных, возвращает <code>@user</code>.</p>
 
 <p>Многие программисты Rails, особенно пользователи RSpec, предпочитают этот подход потому что он отделяет тесты контроллера от слоя модели. Действительно, <a href="http://railstutorial.org/book?version=2.3">Rails 2.3 версия этой книги</a> использует заглушки, вместе с тесно связанной техникой <em>ожидания сообщения</em>. После приобретения большого опыта с заглушками и ожиданиями, и особенно после ответов на большое количество вопросов читателей <em>Rails 2.3 Tutorial</em>, запутавшихся в этих вопросах, я пришел к выводу что заглушки и связанные с ними методы не стоят этих проблем.</p>
 
@@ -1080,7 +1080,7 @@
 </div>
 
 
-<p>Есть еще пара деталей в <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинге&nbsp;7.17</a>, которые стоит отметить. Во первых, в вызове <code>get</code>, тест использует <em>символ</em> <code>:show</code> вместо строки <code>’show’</code>, что отличается от принятого способа в других тестах (например, в <a class="ref" href="static-pages#code:default_pages_controller_spec">Листинге&nbsp;3.7</a> мы писали <code>get ’home’</code>). Оба способа</p>
+<p>Есть еще пара деталей в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a>, которые стоит отметить. Во первых, в вызове <code>get</code>, тест использует <em>символ</em> <code>:show</code> вместо строки <code>’show’</code>, что отличается от принятого способа в других тестах (например, в <a class="ref" href="static-pages?version=3.0#code:default_pages_controller_spec">Листинге&nbsp;3.7</a> мы писали <code>get ’home’</code>). Оба способа</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="ss">:show</span>
 </pre></div>
@@ -1094,7 +1094,7 @@
 </div>
 
 
-<p>делают одно и то же, но при тестировании каноничных REST действий (<a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблица&nbsp;6.2</a>) я предпочитаю использовать символы, которые почему-то кажутся мне более естественными в этом контексте.<sup class="footnote" id="fnref:7.15"><a href="#fn:7.15">15</a></sup> Во-вторых, обратите внимание, что значение хэш-ключа <code>:id</code>, вместо того чтобы быть <code>id</code> атрибутом пользователя <code>@user.id</code>, является самим объектом user:</p>
+<p>делают одно и то же, но при тестировании каноничных REST действий (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблица&nbsp;6.2</a>) я предпочитаю использовать символы, которые почему-то кажутся мне более естественными в этом контексте.<sup class="footnote" id="fnref:7.15"><a href="#fn:7.15">15</a></sup> Во-вторых, обратите внимание, что значение хэш-ключа <code>:id</code>, вместо того чтобы быть <code>id</code> атрибутом пользователя <code>@user.id</code>, является самим объектом user:</p>
 
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="vi">@user</span>
@@ -1118,19 +1118,19 @@
 
 <p>является очень распространенной Rails идиомой.</p>
 
-<p>Из-за кода, который мы добавили в <a class="ref" href="modeling-and-viewing-users-one#code:user_show_action">Листинге&nbsp;6.25</a>, тест в этом разделе, уже проходит. Если вы чувствуете себя параноиком, вы можете закомментировать строку</p>
+<p>Из-за кода, который мы добавили в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:user_show_action">Листинге&nbsp;6.25</a>, тест в этом разделе, уже проходит. Если вы чувствуете себя параноиком, вы можете закомментировать строку</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>и убедиться, что тест не проходит, а затем раскомментировать ее, чтобы заставить его пройти. (Мы однажды проделывали подобное, в <a class="ref" href="modeling-and-viewing-users-one#sec:presence_validation">Разделе&nbsp;6.2.1</a>.)</p>
+<p>и убедиться, что тест не проходит, а затем раскомментировать ее, чтобы заставить его пройти. (Мы однажды проделывали подобное, в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:presence_validation">Разделе&nbsp;6.2.1</a>.)</p>
 
 <div class="label" id="sec:a_name_and_a_gravatar"></div>
 
 
-<h3><a id="sec:7.3.2" href="modeling-and-viewing-users-two#sec:a_name_and_a_gravatar" class="heading"><span class="number">7.3.2</span> Имя и Gravatar</a></h3>
+<h3><a id="sec:7.3.2" href="modeling-and-viewing-users-two?version=3.0#sec:a_name_and_a_gravatar" class="heading"><span class="number">7.3.2</span> Имя и Gravatar</a></h3>
 
 
 <p>В этом разделе мы улучшим внешний вид страницы показывающей пользователя, добавив заголовок с именем пользователя и аватар. Это одна из тех ситуаций, где я могу выбрать любой путь разработки через тестирование и когда я делаю представления я часто экспериментирую с HTML, прежде чем возиться с тестами. Давайте все же придерживаться темы TDD, и протестируем верхнюю часть заголовка (тег <code>h1</code>) содержащую имя пользователя и тег <code>img</code> класса <code>gravatar</code>. (Мы поговорим через мгновение о том, что эта вторая часть значит.)</p>
@@ -1145,7 +1145,7 @@
 </div>
 
 
-<p>Тесты в этом разделе, похожи на тесты для <code>new</code> страницы из <a class="ref" href="filling-in-the-layout#code:signup_title_test">Листинга&nbsp;5.26</a>. В частности, мы используем метод <code>have_selector</code> для проверки заголовка и содержимого тега <code>h1</code>&nbsp;, как видно в <a class="ref" href="modeling-and-viewing-users-two#code:user_show_tests">Листинге&nbsp;7.18</a>.</p>
+<p>Тесты в этом разделе, похожи на тесты для <code>new</code> страницы из <a class="ref" href="filling-in-the-layout?version=3.0#code:signup_title_test">Листинга&nbsp;5.26</a>. В частности, мы используем метод <code>have_selector</code> для проверки заголовка и содержимого тега <code>h1</code>&nbsp;, как видно в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_tests">Листинге&nbsp;7.18</a>.</p>
 
 <div class="label" id="code:user_show_tests"></div>
 
@@ -1187,7 +1187,7 @@
 
 <p>Здесь RSpec’s <code>have_selector</code> метод RSpec's проверяет наличие <code>title</code> и <code>h1</code> тегов содержащих имя пользователя. Третий пример вводит новый элемент через код <code>h1&gt;img</code>, который гарантирует что тег <code>img</code> находится <em>внутри</em> тега <code>h1</code>.<sup class="footnote" id="fnref:7.17"><a href="#fn:7.17">17</a></sup> Кроме того, мы видим, что <code>have_selector</code> может принимать опцию <code>:class</code> для тестирования CSS класса элемента о котором идет речь.</p>
 
-<p>Мы можем получить прохождение теста путем установки <code>@title</code> переменной для использования в <code>title</code> хелпере (<a class="ref" href="rails-flavored-ruby#sec:title_helper">Раздел&nbsp;4.1.1</a>),  в этом случае установив ей имя пользователя (<a class="ref" href="modeling-and-viewing-users-two#code:user_show_title">Листинг&nbsp;7.19</a>).</p>
+<p>Мы можем получить прохождение теста путем установки <code>@title</code> переменной для использования в <code>title</code> хелпере (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:title_helper">Раздел&nbsp;4.1.1</a>),  в этом случае установив ей имя пользователя (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_title">Листинг&nbsp;7.19</a>).</p>
 
 <div class="label" id="code:user_show_title"></div>
 
@@ -1209,9 +1209,9 @@
 </div></div>
 
 
-<p>Этот код представляет потенциальную проблему: пользователь может ввести имя с вредоносным кодом—так называемый <a   href="http://ru.wikipedia.org/wiki/XSS">межсайтовый скриптинг</a> который может быть внедрен в наше приложение посредством <code>title</code> хелпера определенного в <a class="ref" href="rails-flavored-ruby#code:title_helper">Листинге&nbsp;4.2</a>. До выхода Rails 3, решеним было <em>маскировать</em>  потенциально проблемный код, используя метод&nbsp;<code>h</code> (сокращение от <code>html_escape</code>), но в случае Rails&nbsp;3.0 весь Embedded Ruby текст маскирован по умолчанию.<sup class="footnote" id="fnref:7.18"><a href="#fn:7.18">18</a></sup> Например, если пользователь пытается внедрить вредоносные программы JavaScript с помощью <code>&lt;script&gt;</code> в своем имени, автоматический HTML маскировщик преобразует его в <code>&amp;lt;script&amp;gt;</code>, что сделает его совершенно безвредным.</p>
+<p>Этот код представляет потенциальную проблему: пользователь может ввести имя с вредоносным кодом—так называемый <a   href="http://ru.wikipedia.org/wiki/XSS">межсайтовый скриптинг</a> который может быть внедрен в наше приложение посредством <code>title</code> хелпера определенного в <a class="ref" href="rails-flavored-ruby?version=3.0#code:title_helper">Листинге&nbsp;4.2</a>. До выхода Rails 3, решеним было <em>маскировать</em>  потенциально проблемный код, используя метод&nbsp;<code>h</code> (сокращение от <code>html_escape</code>), но в случае Rails&nbsp;3.0 весь Embedded Ruby текст маскирован по умолчанию.<sup class="footnote" id="fnref:7.18"><a href="#fn:7.18">18</a></sup> Например, если пользователь пытается внедрить вредоносные программы JavaScript с помощью <code>&lt;script&gt;</code> в своем имени, автоматический HTML маскировщик преобразует его в <code>&amp;lt;script&amp;gt;</code>, что сделает его совершенно безвредным.</p>
 
-<p>Теперь для других тестов. Создание <code>h1</code> с (авто-маскированным) пользовательским именем это просто (<a class="ref" href="modeling-and-viewing-users-two#code:user_show_view_with_name">Листинг&nbsp;7.20</a>).</p>
+<p>Теперь для других тестов. Создание <code>h1</code> с (авто-маскированным) пользовательским именем это просто (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_view_with_name">Листинг&nbsp;7.20</a>).</p>
 
 <div class="label" id="code:user_show_view_with_name"></div>
 
@@ -1226,7 +1226,7 @@
 </div></div>
 
 
-<p>Получение проходящего <code>img</code> теста сложнее.  Первым шагом является установка <a href="http://github.com/mdeering/gravatar_image_tag"><tt>gravatar_image_tag</tt> гема</a> для обработки каждого пользовательского <a href="http://ru.gravatar.com/">Gravatar</a>,<sup class="footnote" id="fnref:7.19"><a href="#fn:7.19">19</a></sup> что означает <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Gravatar"> &ldquo;globally recognized avatar&rdquo;</a>.<sup class="footnote" id="fnref:7.20"><a href="#fn:7.20">20</a></sup> Как обычно, мы включим  гем в <code>Gemfile</code> (<a class="ref" href="modeling-and-viewing-users-two#code:gemfile_gravatar">Листинг&nbsp;7.21</a>).</p>
+<p>Получение проходящего <code>img</code> теста сложнее.  Первым шагом является установка <a href="http://github.com/mdeering/gravatar_image_tag"><tt>gravatar_image_tag</tt> гема</a> для обработки каждого пользовательского <a href="http://ru.gravatar.com/">Gravatar</a>,<sup class="footnote" id="fnref:7.19"><a href="#fn:7.19">19</a></sup> что означает <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Gravatar"> &ldquo;globally recognized avatar&rdquo;</a>.<sup class="footnote" id="fnref:7.20"><a href="#fn:7.20">20</a></sup> Как обычно, мы включим  гем в <code>Gemfile</code> (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_gravatar">Листинг&nbsp;7.21</a>).</p>
 
 <div class="label" id="code:gemfile_gravatar"></div>
 
@@ -1263,7 +1263,7 @@
 
 
 <p>
-На данный момент, мы будем использовать это непосредственно в нашем user show представлении, как показано в <a class="ref" href="modeling-and-viewing-users-two#code:user_show_view_with_gravatar">Листинге&nbsp;7.22</a>. результат представлен на <a class="ref" href="modeling-and-viewing-users-two#fig:user_show_default_gravatar_rails_3">Рис.&nbsp;7.4</a>, который показывает образец нашего пользователя с дефолтным Gravatar изображением.</p>
+На данный момент, мы будем использовать это непосредственно в нашем user show представлении, как показано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_view_with_gravatar">Листинге&nbsp;7.22</a>. результат представлен на <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_show_default_gravatar_rails_3">Рис.&nbsp;7.4</a>, который показывает образец нашего пользователя с дефолтным Gravatar изображением.</p>
 
 <div class="label" id="code:user_show_view_with_gravatar"></div>
 
@@ -1299,7 +1299,7 @@
 </div>
 
 
-<p>Обратите внимание, что мы можем извлечь первого (и в данный момент единственного) пользователя из базы данных удобным методом <code>User.first</code>. В шаге <code>update_attributes</code> переназначаем пользовательский email адрес, превращая его в <code>example@railstutorial.org</code>. Как вы можете видеть на <a class="ref" href="modeling-and-viewing-users-two#fig:user_show_railstutorial_gravatar_rails_3">Рис.&nbsp;7.5</a>, это изменение приводит к отображению нового Gravatar: логотипу Rails Tutorial. Происходит следующее: Gravatar работает, связывая изображения с адресом электронной почты; так как <code>user@example.com</code> это неправильный адрес электронной почты (<a href="http://example.com/">example.com</a> домен зарезервирован и не доступен для регистрации) Gravatar для этого email адреса отсутствует. Но в моем аккуанте Gravatar я связал  адрес <code>example@railstutorial.org</code> с логотипом Rails Tutorial, поэтому при обновлении образца пользователя с этим email адресом Gravatar меняется автоматически.</p>
+<p>Обратите внимание, что мы можем извлечь первого (и в данный момент единственного) пользователя из базы данных удобным методом <code>User.first</code>. В шаге <code>update_attributes</code> переназначаем пользовательский email адрес, превращая его в <code>example@railstutorial.org</code>. Как вы можете видеть на <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_show_railstutorial_gravatar_rails_3">Рис.&nbsp;7.5</a>, это изменение приводит к отображению нового Gravatar: логотипу Rails Tutorial. Происходит следующее: Gravatar работает, связывая изображения с адресом электронной почты; так как <code>user@example.com</code> это неправильный адрес электронной почты (<a href="http://example.com/">example.com</a> домен зарезервирован и не доступен для регистрации) Gravatar для этого email адреса отсутствует. Но в моем аккуанте Gravatar я связал  адрес <code>example@railstutorial.org</code> с логотипом Rails Tutorial, поэтому при обновлении образца пользователя с этим email адресом Gravatar меняется автоматически.</p>
 
 <div class="label" id="fig:user_show_railstutorial_gravatar_rails_3"></div>
 
@@ -1312,10 +1312,10 @@
 <div class="label" id="sec:a_gravatar_helper"></div>
 
 
-<h4><a id="sec:7.3.2.1" href="modeling-and-viewing-users-two#sec:a_gravatar_helper" class="heading">Gravatar хелпер</a></h4>
+<h4><a id="sec:7.3.2.1" href="modeling-and-viewing-users-two?version=3.0#sec:a_gravatar_helper" class="heading">Gravatar хелпер</a></h4>
 
 
-<p>На данный момент, Gravatar отображается правильно, но последний пример из <a class="ref" href="modeling-and-viewing-users-two#code:user_show_tests">Листинга&nbsp;7.18</a> до сих пор не проходит. Это потому, что класс <code>"gravatar"</code> , который мы хотим использовать в CSS для Gravatar, еще не присутствует в теге <code>img</code> Gravatar-а. Мы можем заставить тест пройти, включив опцию в метод <code>gravatar_image_tag</code>:</p>
+<p>На данный момент, Gravatar отображается правильно, но последний пример из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_tests">Листинга&nbsp;7.18</a> до сих пор не проходит. Это потому, что класс <code>"gravatar"</code> , который мы хотим использовать в CSS для Gravatar, еще не присутствует в теге <code>img</code> Gravatar-а. Мы можем заставить тест пройти, включив опцию в метод <code>gravatar_image_tag</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">gravatar_image_tag</span> <span class="vi">@user</span><span class="o">.</span><span class="n">email</span><span class="p">,</span> <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s2">&quot;gravatar&quot;</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1324,14 +1324,14 @@
 
 <p>С другой стороны, так как мы ожидаем, что Gravatar будет использоваться в нескольких местах нашего приложения, вставлять класс повсеместно вручную было бы повторением. Лучше сделать вспомогательный метод для ликвидации этого дублирования в зародыше.</p>
 
-<p>Это может напомнить вам  ситуацию с повторением в базовом заголовке сайта (“Ruby on Rails Tutorial Sample App”), которую мы решили с <code>title</code> помощником в Application helper (<a class="ref" href="rails-flavored-ruby#code:title_helper">Листинг&nbsp;4.2</a>). Решение здесь аналогично; так как Gravatars естественным образом связаны с пользователями, мы определим <code>gravatar_for</code> метод в Users helper. (Users helpers выбран вместо Application helper только для концептуального удобства; Rails делает все помощники доступными во всех представлениях.)  результатом будет сокращение кода представления</p>
+<p>Это может напомнить вам  ситуацию с повторением в базовом заголовке сайта (“Ruby on Rails Tutorial Sample App”), которую мы решили с <code>title</code> помощником в Application helper (<a class="ref" href="rails-flavored-ruby?version=3.0#code:title_helper">Листинг&nbsp;4.2</a>). Решение здесь аналогично; так как Gravatars естественным образом связаны с пользователями, мы определим <code>gravatar_for</code> метод в Users helper. (Users helpers выбран вместо Application helper только для концептуального удобства; Rails делает все помощники доступными во всех представлениях.)  результатом будет сокращение кода представления</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">gravatar_for</span> <span class="vi">@user</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p><code>gravatar_for</code> помощник должен принимать объект <code>user</code> а затем передавать некоторые дефолтные параметры помощнику <code>gravatar_image_tag</code>. Реализация представлена в <a class="ref" href="modeling-and-viewing-users-two#code:gravatar_for_helper">Листинге&nbsp;7.23</a>.</p>
+<p><code>gravatar_for</code> помощник должен принимать объект <code>user</code> а затем передавать некоторые дефолтные параметры помощнику <code>gravatar_image_tag</code>. Реализация представлена в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gravatar_for_helper">Листинге&nbsp;7.23</a>.</p>
 
 <div class="label" id="code:gravatar_for_helper"></div>
 
@@ -1365,7 +1365,7 @@
 </div>
 
 
-<p>Если мы сейчас обновим user show шаблон с кодом из <a class="ref" href="modeling-and-viewing-users-two#code:user_show_gravatar_for">Листинга&nbsp;7.24</a>, страница показывающая пользователя будет выглядеть как в <a class="ref" href="modeling-and-viewing-users-two#fig:user_show_gravatar_for">Рис.&nbsp;7.6</a>. И так как <code>gravatar_for</code> помощник назначает <code>img</code> тегу класс <code>"gravatar"</code>, тесты из <a class="ref" href="modeling-and-viewing-users-two#code:user_show_tests">Листинга&nbsp;7.18</a> теперь должны пройти.</p>
+<p>Если мы сейчас обновим user show шаблон с кодом из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_gravatar_for">Листинга&nbsp;7.24</a>, страница показывающая пользователя будет выглядеть как в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_show_gravatar_for">Рис.&nbsp;7.6</a>. И так как <code>gravatar_for</code> помощник назначает <code>img</code> тегу класс <code>"gravatar"</code>, тесты из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_tests">Листинга&nbsp;7.18</a> теперь должны пройти.</p>
 
 <div class="label" id="code:user_show_gravatar_for"></div>
 
@@ -1394,10 +1394,10 @@
 <div class="label" id="sec:a_user_sidebar"></div>
 
 
-<h3><a id="sec:7.3.3" href="modeling-and-viewing-users-two#sec:a_user_sidebar" class="heading"><span class="number">7.3.3</span> Боковая панель пользователя</a></h3>
+<h3><a id="sec:7.3.3" href="modeling-and-viewing-users-two?version=3.0#sec:a_user_sidebar" class="heading"><span class="number">7.3.3</span> Боковая панель пользователя</a></h3>
 
 
-<p>Хотя наши тесты в настоящее время проходят, и страница пользователя значительно улучшилась, все же хорошо бы ее еще немного отполировать. В <a class="ref" href="modeling-and-viewing-users-two#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>, у нас есть  таблица в <code>table</code> теге с одной строкой (<code>tr</code>) и двумя ячейками (<code>td</code>).<sup class="footnote" id="fnref:7.25"><a href="#fn:7.25">25</a></sup></p>
+<p>Хотя наши тесты в настоящее время проходят, и страница пользователя значительно улучшилась, все же хорошо бы ее еще немного отполировать. В <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>, у нас есть  таблица в <code>table</code> теге с одной строкой (<code>tr</code>) и двумя ячейками (<code>td</code>).<sup class="footnote" id="fnref:7.25"><a href="#fn:7.25">25</a></sup></p>
 
 <div class="label" id="code:user_show_with_sidebar"></div>
 
@@ -1423,7 +1423,7 @@
 </div></div>
 
 
-<p>Здесь мы использовали HTML тег перевода строки&nbsp;<code>&lt;br /&gt;</code> чтобы разделить имя пользователя и URL. Также обратите внимание на использование <code>user_path</code> для создания кликабельной ссылки позволяющей пользователям легко обмениваться URL своих профайлов. Это лишь один из многих именованных маршрутов (<a class="ref" href="filling-in-the-layout#sec:rails_routes">Раздел&nbsp;5.2.2</a>) связанных с ресурсом User (<a class="ref" href="modeling-and-viewing-users-one#code:users_resource">Листинг&nbsp;6.26</a>); мы увидим много больше в следующих главах. Код</p>
+<p>Здесь мы использовали HTML тег перевода строки&nbsp;<code>&lt;br /&gt;</code> чтобы разделить имя пользователя и URL. Также обратите внимание на использование <code>user_path</code> для создания кликабельной ссылки позволяющей пользователям легко обмениваться URL своих профайлов. Это лишь один из многих именованных маршрутов (<a class="ref" href="filling-in-the-layout?version=3.0#sec:rails_routes">Раздел&nbsp;5.2.2</a>) связанных с ресурсом User (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:users_resource">Листинг&nbsp;6.26</a>); мы увидим много больше в следующих главах. Код</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">user_path</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span>
 </pre></div>
@@ -1437,12 +1437,12 @@
 </div>
 
 
-<p>просто возвращает весь URL, <tt>http://localhost:3000/users/1</tt>. (Сравните с маршрутами созданными в <a class="ref" href="filling-in-the-layout#sec:rails_routes">Разделе&nbsp;5.2.2</a>.) Оба примера именнованных маршрутов созданы ресурсом пользователей в <a class="ref" href="modeling-and-viewing-users-one#code:users_resource">Листинг&nbsp;6.26</a>; Листинге&nbsp;6.26</a>; список всех именованных маршрутов представлен в <a class="ref" href="modeling-and-viewing-users-two#table:named_routes">Таблице&nbsp;7.1</a>.</p>
+<p>просто возвращает весь URL, <tt>http://localhost:3000/users/1</tt>. (Сравните с маршрутами созданными в <a class="ref" href="filling-in-the-layout?version=3.0#sec:rails_routes">Разделе&nbsp;5.2.2</a>.) Оба примера именнованных маршрутов созданы ресурсом пользователей в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:users_resource">Листинг&nbsp;6.26</a>; Листинге&nbsp;6.26</a>; список всех именованных маршрутов представлен в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#table:named_routes">Таблице&nbsp;7.1</a>.</p>
 
 <div class="label" id="table:named_routes"></div>
 
 
-<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Путь</strong></th></tr><tr class="top_bar"><td class="align_left"><code>users_path</code></td><td class="align_left"><tt>/users</tt></td></tr><tr><td class="align_left"><code>user_path(@user)</code></td><td class="align_left"><tt>/users/1</tt></td></tr><tr><td class="align_left"><code>new_user_path</code></td><td class="align_left"><tt>/users/new</tt></td></tr><tr><td class="align_left"><code>edit_user_path(@user)</code></td><td class="align_left"><tt>/users/1/edit</tt></td></tr><tr><td class="align_left"><code>users_url</code></td><td class="align_left"><tt>http://localhost:3000/users</tt></td></tr><tr><td class="align_left"><code>user_url(@user)</code></td><td class="align_left"><tt>http://localhost:3000/users/1</tt></td></tr><tr><td class="align_left"><code>new_user_url</code></td><td class="align_left"><tt>http://localhost:3000/users/new</tt></td></tr><tr><td class="align_left"><code>edit_user_url(@user)</code></td><td class="align_left"><tt>http://localhost:3000/users/1/edit</tt></td></tr></table></div><div class="caption"><span class="header">Таблица 7.1: </span><span class="description">Именованные маршруты обеспеченные ресурсом users в <a class="ref" href="modeling-and-viewing-users-one#code:users_resource">Листинге&nbsp;6.26</a>.  </span></div></div>
+<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Путь</strong></th></tr><tr class="top_bar"><td class="align_left"><code>users_path</code></td><td class="align_left"><tt>/users</tt></td></tr><tr><td class="align_left"><code>user_path(@user)</code></td><td class="align_left"><tt>/users/1</tt></td></tr><tr><td class="align_left"><code>new_user_path</code></td><td class="align_left"><tt>/users/new</tt></td></tr><tr><td class="align_left"><code>edit_user_path(@user)</code></td><td class="align_left"><tt>/users/1/edit</tt></td></tr><tr><td class="align_left"><code>users_url</code></td><td class="align_left"><tt>http://localhost:3000/users</tt></td></tr><tr><td class="align_left"><code>user_url(@user)</code></td><td class="align_left"><tt>http://localhost:3000/users/1</tt></td></tr><tr><td class="align_left"><code>new_user_url</code></td><td class="align_left"><tt>http://localhost:3000/users/new</tt></td></tr><tr><td class="align_left"><code>edit_user_url(@user)</code></td><td class="align_left"><tt>http://localhost:3000/users/1/edit</tt></td></tr></table></div><div class="caption"><span class="header">Таблица 7.1: </span><span class="description">Именованные маршруты обеспеченные ресурсом users в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:users_resource">Листинге&nbsp;6.26</a>.  </span></div></div>
 
 
 <p>Отметим, что в</p>
@@ -1459,14 +1459,14 @@
 </div>
 
 
-<p>В любом случае хорошо работает, но, как и в <code>:id =&gt; @user</code> идиоме из <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинга&nbsp;7.17</a>, использование просто <code>@user</code> это общепринятая Rails конвенция. В обоих случаях, Embedded Ruby производит HTML</p>
+<p>В любом случае хорошо работает, но, как и в <code>:id =&gt; @user</code> идиоме из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинга&nbsp;7.17</a>, использование просто <code>@user</code> это общепринятая Rails конвенция. В обоих случаях, Embedded Ruby производит HTML</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;/users/1&quot;</span><span class="nt">&gt;</span>/users/1<span class="nt">&lt;/a&gt;</span>
 </pre></div>
 </div>
 
 
-<p>С HTML элементами и CSS классами, мы можем отстилить show страницу с CSS показанным в <a class="ref" href="modeling-and-viewing-users-two#code:sidebar_css">Листинге&nbsp;7.26</a>. Получившаяся страница показана на <a class="ref" href="modeling-and-viewing-users-two#fig:user_show_sidebar_css">Рис.&nbsp;7.7</a>.</p>
+<p>С HTML элементами и CSS классами, мы можем отстилить show страницу с CSS показанным в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:sidebar_css">Листинге&nbsp;7.26</a>. Получившаяся страница показана на <a class="ref" href="modeling-and-viewing-users-two?version=3.0#fig:user_show_sidebar_css">Рис.&nbsp;7.7</a>.</p>
 
 <div class="label" id="code:sidebar_css"></div>
 
@@ -1514,15 +1514,15 @@
 
 
 
-<h2><a id="sec:7.4" href="modeling-and-viewing-users-two#sec:7.4" class="heading"><span class="number">7.4</span> Заключение</a></h2>
+<h2><a id="sec:7.4" href="modeling-and-viewing-users-two?version=3.0#sec:7.4" class="heading"><span class="number">7.4</span> Заключение</a></h2>
 
 
 <p>В этой главе мы фактически закончили модель User, так что мы теперь полностью готовы регистрировать новых пользователей и позволять им безопасно входить с комбинацией электронной почты и пароля. Кроме того, у нас есть хорошая первая часть страницы профиля пользователя, так что после входа пользователям есть куда пойти.</p>
 
-<h3><a id="sec:7.4.1" href="modeling-and-viewing-users-two#sec:7.4.1" class="heading"><span class="number">7.4.1</span> Git commit</a></h3>
+<h3><a id="sec:7.4.1" href="modeling-and-viewing-users-two?version=3.0#sec:7.4.1" class="heading"><span class="number">7.4.1</span> Git commit</a></h3>
 
 
-<p>Прежде чем двигаться дальше, мы должны завершить цикл Git, начатый во введении <a class="ref" href="modeling-and-viewing-users-one#top">Главы&nbsp;6</a> сделав финальную фиксацию для ветки <code>modeling-users</code> и объединив ее с <code>master</code>.<sup class="footnote" id="fnref:7.26"><a href="#fn:7.26">26</a></sup> Во-первых, убедимся, что мы находимся на веткe <code>modeling-users</code>:</p>
+<p>Прежде чем двигаться дальше, мы должны завершить цикл Git, начатый во введении <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главы&nbsp;6</a> сделав финальную фиксацию для ветки <code>modeling-users</code> и объединив ее с <code>master</code>.<sup class="footnote" id="fnref:7.26"><a href="#fn:7.26">26</a></sup> Во-первых, убедимся, что мы находимся на веткe <code>modeling-users</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git branch
 <span class="go">  master</span>
@@ -1531,7 +1531,7 @@
 </div>
 
 
-<p>Как отмечалось в <a class="ref" href="beginning#sec:git_branch">Разделе&nbsp;1.3.5.1</a>, звездочка здесь идентифицирует текущую ветку, так что мы действительно готовы к фиксации  и объединению:<sup class="footnote" id="fnref:7.27"><a href="#fn:7.27">27</a></sup></p>
+<p>Как отмечалось в <a class="ref" href="beginning?version=3.0#sec:git_branch">Разделе&nbsp;1.3.5.1</a>, звездочка здесь идентифицирует текущую ветку, так что мы действительно готовы к фиксации  и объединению:<sup class="footnote" id="fnref:7.27"><a href="#fn:7.27">27</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
 <span class="gp">$</span> git commit -m <span class="s2">&quot;User model with passwords, and user show page&quot;</span>
@@ -1544,7 +1544,7 @@
 <div class="label" id="sec:heroku_deploy"></div>
 
 
-<h3><a id="sec:7.4.2" href="modeling-and-viewing-users-two#sec:heroku_deploy" class="heading"><span class="number">7.4.2</span> Развертывание Heroku</a></h3>
+<h3><a id="sec:7.4.2" href="modeling-and-viewing-users-two?version=3.0#sec:heroku_deploy" class="heading"><span class="number">7.4.2</span> Развертывание Heroku</a></h3>
 
 
 <p>Если вы разворачивали ваш пример приложения на Heroku, вы можете отправить его в этой точке:</p>
@@ -1575,15 +1575,15 @@
 <div class="label" id="sec:more_modeling_users_exercises"></div>
 
 
-<h2><a id="sec:7.5" href="modeling-and-viewing-users-two#sec:more_modeling_users_exercises" class="heading"><span class="number">7.5</span> Упражнения</a></h2>
+<h2><a id="sec:7.5" href="modeling-and-viewing-users-two?version=3.0#sec:more_modeling_users_exercises" class="heading"><span class="number">7.5</span> Упражнения</a></h2>
 
 
 
 
 <ol>
-<li>Скопируйте каждый из вариантов метода <code>authenticate</code> из <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_variant_1">Листинга&nbsp;7.27</a> по <a class="ref" href="modeling-and-viewing-users-two#code:authenticate_variant_5">Листинг&nbsp;7.31</a> в вашу модель User, и проверьте, что они корректны, запустив ваш набор тестов. </li>
+<li>Скопируйте каждый из вариантов метода <code>authenticate</code> из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_variant_1">Листинга&nbsp;7.27</a> по <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_variant_5">Листинг&nbsp;7.31</a> в вашу модель User, и проверьте, что они корректны, запустив ваш набор тестов. </li>
 
-<li>Последний пример <code>authenticate</code> (<a class="ref" href="modeling-and-viewing-users-two#code:authenticate_variant_5">Листинг&nbsp;7.31</a>) это практически вызов. Поэкспериментируйте в консоли, чтобы увидеть, сможете ли вы понять, как это работает.</li>
+<li>Последний пример <code>authenticate</code> (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:authenticate_variant_5">Листинг&nbsp;7.31</a>) это практически вызов. Поэкспериментируйте в консоли, чтобы увидеть, сможете ли вы понять, как это работает.</li>
 
 <li>Как бы вы заставили работать Gravatar хелпер <code>gravatar_for</code> если бы наша модель User использовала <code>email_address</code> вместо <code>email</code> для отображения  email адреса?</li>
 
@@ -1685,29 +1685,29 @@
 
 
 
-<div class="navigation">  <a class="prev_page" href="modeling-and-viewing-users-one#top">
+<div class="navigation">  <a class="prev_page" href="modeling-and-viewing-users-one?version=3.0#top">
     &laquo;&nbsp;<span class="number">Глава 6</span> Моделирование и просмотр пользователей, часть I
   </a>
-  <a class="next_page" href="sign-up#top">
+  <a class="next_page" href="sign-up?version=3.0#top">
     <span class="number">Глава 8</span> Регистрация&nbsp;&raquo;
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:7.1">Мы видели диапазоны ранее в <a class="ref" href="rails-flavored-ruby#sec:arrays_and_ranges">Разделе&nbsp;4.3.1</a>.&nbsp;<a class="arrow" href="#fnref:7.1">&uarr;</a></li>
+<li id="fn:7.1">Мы видели диапазоны ранее в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Разделе&nbsp;4.3.1</a>.&nbsp;<a class="arrow" href="#fnref:7.1">&uarr;</a></li>
 <li id="fn:7.2">За более подробной информацией о видах обратных вызовов поддерживаемых Active Record, обращайтесь к к статье <a  rel="nofollow" href="http://www.rusrails.ru/active-record-validations-and-callbacks">Валидации и колбэки Active Record</a> на сайте <a  rel="nofollow" href="http://www.rusrails.ru">http://www.rusrails.ru</a>&nbsp;<a class="arrow" href="#fnref:7.2">&uarr;</a></li>
 <li id="fn:7.3">Дополнительный отступ это типографское напоминание о том, что мы находимся в приватном разделе; в противном случае можно легко пропустить <code>private</code> ключевое слово и запутаться при попытке доступа к приватному методу, думая что он публичный. Я думал, что дополнительные отступы это просто глупая конвенция, пока я не убил час на эту проблему пару лет назад. Теперь я добавляю дополнительные отступы&hellip;&nbsp;<a class="arrow" href="#fnref:7.3">&uarr;</a></li>
 <li id="fn:7.4">В Ruby есть тесно связаное ключевое слово <code>protected</code> чем-то отличающееся от <code>private</code>. Насколько я могу судить, единственный повод узнать разницу между ними это то, что у вас будет козырь на собеседовании, когда вас спросят “В Ruby, в чем разница между  <code>private</code> и <code>protected</code>?” Но вы действительно хотите работать в компании, которая задает такие хромые вопросы на собеседовании? В своем выступлении на RubyConf в 2008, Dave Thomas (автор <em>Programming Ruby</em>) предлагал ликвидировать <code>protected</code> в будущих версиях Ruby, и я полностью с ним согласен. Просто используйте <code>private</code> и все будет хорошо.&nbsp;<a class="arrow" href="#fnref:7.4">&uarr;</a></li>
 <li id="fn:7.5">Мне стыдно признаться, что именно так мы реализовывали пароли в <em>RailsSpace</em>. Считайте этот раздел моим покаянием.&nbsp;<a class="arrow" href="#fnref:7.5">&uarr;</a></li>
-<li id="fn:7.6">The alert reader may notice that none of what we do in this section <em>requires</em> encryption, but, once we develop some of the theory of secure passwords and write a basic implementation (<a class="ref" href="modeling-and-viewing-users-two#sec:secure_password_theory">Раздел&nbsp;7.2.2</a>), the only way for the <code>has_password?</code> method to work properly is for all the encryption machinery to work properly as well. (??)&nbsp;<a class="arrow" href="#fnref:7.6">&uarr;</a></li>
+<li id="fn:7.6">The alert reader may notice that none of what we do in this section <em>requires</em> encryption, but, once we develop some of the theory of secure passwords and write a basic implementation (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздел&nbsp;7.2.2</a>), the only way for the <code>has_password?</code> method to work properly is for all the encryption machinery to work properly as well. (??)&nbsp;<a class="arrow" href="#fnref:7.6">&uarr;</a></li>
 <li id="fn:7.7">В моей установке, строка <code>require ’digest’</code> не является необходимой, но несколько читателей сообщили о получении <code>NameError</code> исключения, если они не включали его явно. Это не вредит в любом случае, поэтому я включил явное <code>require</code> на всякий случай.&nbsp;<a class="arrow" href="#fnref:7.7">&uarr;</a></li>
 <li id="fn:7.8">Технически, атака с использованием радужных таблиц все же может добиться успеха, но использование соленого хэша делает ее вычислительно невозможной (сложной?) (computationally unfeasible)(??).&nbsp;<a class="arrow" href="#fnref:7.8">&uarr;</a></li>
-<li id="fn:7.9">Как отмечалось в  <a class="ref" href="modeling-and-viewing-users-two#sec:secure_password_theory">Разделе&nbsp;7.2.2</a>, строка с явным <code>require ’digest’</code> необязательна на некоторых системах, но ее включение не навредит.&nbsp;<a class="arrow" href="#fnref:7.9">&uarr;</a></li>
+<li id="fn:7.9">Как отмечалось в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Разделе&nbsp;7.2.2</a>, строка с явным <code>require ’digest’</code> необязательна на некоторых системах, но ее включение не навредит.&nbsp;<a class="arrow" href="#fnref:7.9">&uarr;</a></li>
 <li id="fn:7.10">В прошлых версиях Rails, мы могли бы использовать обратный вызов <code>after_validation_before_create</code> для установки соли но он был ликвидирован в Rails&nbsp;3. Между тем, мы не можем использовать обратный вызов <code>before_create</code> потому что он выполняется <em>после</em> обратного вызова <code>before_save</code> и обратному вызову <code>before_save</code> нужна соль.&nbsp;<a class="arrow" href="#fnref:7.10">&uarr;</a></li>
-<li id="fn:7.11">Напомним, из <a class="ref" href="modeling-and-viewing-users-one#sidebar:database_indices">Блока&nbsp;6.2</a> что <em>индекс</em> на <code>email</code> столбце гарантирует что этот поиск является эффективным.&nbsp;<a class="arrow" href="#fnref:7.11">&uarr;</a></li>
+<li id="fn:7.11">Напомним, из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блока&nbsp;6.2</a> что <em>индекс</em> на <code>email</code> столбце гарантирует что этот поиск является эффективным.&nbsp;<a class="arrow" href="#fnref:7.11">&uarr;</a></li>
 <li id="fn:7.12">Мы планируем добавить еще пару атрибутов (один для идентификации административных пользователей и один для функции "запомнить меня"), но они не являются строго необходимыми. Все <em>необходимые</em> атрибуты пользователей в настоящее время определены.&nbsp;<a class="arrow" href="#fnref:7.12">&uarr;</a></li>
 <li id="fn:7.13">Многие опытные Rails програмисты находят этот фабричный подход более гибким нежели <em>fixtures</em>, которые Rails использует по умолчанию но могут быть хрупкими и сложными в обслуживании.&nbsp;<a class="arrow" href="#fnref:7.13">&uarr;</a></li>
 <li id="fn:7.14">Предположительно, &ldquo;Factory Girl&rdquo; это ссылка на <a href="http://www.imdb.com/title/tt0432402/">фильм с одноименным названием</a>.&nbsp;<a class="arrow" href="#fnref:7.14">&uarr;</a></li>
-<li id="fn:7.15">Я использовал <code>get &rsquo;new&rsquo;</code> в <a class="ref" href="filling-in-the-layout#code:get_new_user_spec">Листинге&nbsp;5.24</a> и последующих тестах для <code>new</code> действия  поскольку на тот момент мы еще не сталкивались с идеей стандартных REST действий. Я переключусь на <code>get :new</code> в будущих тестах.&nbsp;<a class="arrow" href="#fnref:7.15">&uarr;</a></li>
+<li id="fn:7.15">Я использовал <code>get &rsquo;new&rsquo;</code> в <a class="ref" href="filling-in-the-layout?version=3.0#code:get_new_user_spec">Листинге&nbsp;5.24</a> и последующих тестах для <code>new</code> действия  поскольку на тот момент мы еще не сталкивались с идеей стандартных REST действий. Я переключусь на <code>get :new</code> в будущих тестах.&nbsp;<a class="arrow" href="#fnref:7.15">&uarr;</a></li>
 <li id="fn:7.16">Он делает это путем вызова <code>to_param</code> метода на переменной <code>@user</code>.<a class="arrow" href="#fnref:7.16">&uarr;</a></li>
 <li id="fn:7.17">Это не всегда хорошая идея  делать HTML тесты настолько специфичными, поскольку мы не всегда хотим ограничивать макет HTML настолько сильно. Не стесняйтесь экспериментировать и найдите нужный уровень детализации для ваших проектов.&nbsp;<a class="arrow" href="#fnref:7.17">&uarr;</a></li>
 <li id="fn:7.18">Вместо этого, если вам нужен <em>немаскированный</em> текст, вы должны использовать  метод <code>raw</code>, например <tt class="verb">&lt;%= raw @title %&gt;</tt>.&nbsp;<a class="arrow" href="#fnref:7.18">&uarr;</a></li>

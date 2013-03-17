@@ -1,18 +1,17 @@
-
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:1" href="beginning#top" class="heading"><span class="number">Глава 1</span> От нуля к развертыванию</a></h1>
+<h1 class="chapter"><a id="sec:1" href="beginning?version=3.0#top" class="heading"><span class="number">Глава 1</span> От нуля к развертыванию</a></h1>
 
 <p>Добро пожаловать в <a   href="http://railstutorial.org/book"><em>Ruby on Rails Tutorial: Изучаем Rails на примерах</em></a>. Цель этой книги состоит в том, чтобы стать лучшим ответом на вопрос: &laquo;Если я хочу изучить веб-разработку на <a  href="http://rubyonrails.ru/">Ruby on Rails</a>, с чего я должен начать?&raquo;. К тому времени, когда вы завершите Ruby on Rails Tutorial, вы будете иметь все знания необходимые для разработки и разворачивания собственных веб-приложений. Вы также будете готовы извлечь выгоду из многих более продвинутых книг, блогов и видеороликов, которые являются частью процветающей образовательной экосистемы Rails. Наконец, так как <em>Учебное руководство Ruby on Rails</em> использует Rails 3, информация, которую вы получаете здесь, будет полностью актуализирована с самой последней и самой великой версией Rails.<sup class="footnote" id="fnref:1.1"><a href="#fn:1.1">1</a></sup></p>
 
 <p><em>Ruby on Rails Tutorial</em> следует, по существу, тому же подходу, что и моя предыдущая книга о Rails,<sup class="footnote" id="fnref:1.2"><a href="#fn:1.2">2</a></sup> обучение веб-разработке на Rails путём создания реального приложения с нуля. Как отмечает <a href="http://sivers.org">Дерек Сиверс</a> в предисловии, эта книга структурирована линейно, поэтому ее следует читать от начала до конца. Если вы привыкли прыгать в технических книгах, применение этого линейного подхода может потребовать от вас некоторой корректировки, но я предлагаю попробовать. Вы можете думать о <em>Ruby on Rails Tutorial</em> как о видео-игре, где вы &#8211; главный герой, получающий новый уровень, как Rails разработчик, в каждой главе. (упражнения &#8211; это <a  href="http://ru.wikipedia.org/wiki/Босс_%28компьютерные_игры%29">минибоссы</a>)</p>
 
-<p>В этой первой главе мы начнем изучение Ruby on Rails, с установки всего необходимого программного обеспечения и инсталляции нашей среды разработки (<a class="ref" href="beginning#sec:up_and_running">Раздел&nbsp;1.2</a>). Затем мы создадим наше первое приложение Rails, названное (достаточно подходяще) <tt>first_app</tt>. <em>Rails Tutorial</em> прививает хорошие навыки программирования, так что сразу после создания нашего свежего нового проекта Rails, мы поместим его в управление версиями с Git (<a class="ref" href="beginning#sec:version_control">Раздел&nbsp;1.3</a>). И, верите вы в это или нет, в этой главе, мы даже разместим наше первое приложение в веб <em>развернув</em> его в продакшен  (<a class="ref" href="beginning#sec:deploying">Раздел&nbsp;1.4</a>).</p>
+<p>В этой первой главе мы начнем изучение Ruby on Rails, с установки всего необходимого программного обеспечения и инсталляции нашей среды разработки (<a class="ref" href="beginning?version=3.0#sec:up_and_running">Раздел&nbsp;1.2</a>). Затем мы создадим наше первое приложение Rails, названное (достаточно подходяще) <tt>first_app</tt>. <em>Rails Tutorial</em> прививает хорошие навыки программирования, так что сразу после создания нашего свежего нового проекта Rails, мы поместим его в управление версиями с Git (<a class="ref" href="beginning?version=3.0#sec:version_control">Раздел&nbsp;1.3</a>). И, верите вы в это или нет, в этой главе, мы даже разместим наше первое приложение в веб <em>развернув</em> его в продакшен  (<a class="ref" href="beginning?version=3.0#sec:deploying">Раздел&nbsp;1.4</a>).</p>
 
-<p>В <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы сделаем второй проект, целью которого будет демонстрация основ работы Rails приложения. Чтобы быстро стартануть, мы создадим это <em>демонстрационное приложение</em> (названное <tt>demo_app</tt>) используя scaffolding (<a class="ref" href="beginning#sidebar:scaffolding">Блок&nbsp;1.1</a>) для генерации кода; так как этот код и уродлив и сложен, в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a> мы сосредоточимся на взаимодействии с демонстрационным приложением через его <em>URL</em><sup class="footnote" id="fnref:1.3"><a href="#fn:1.3">3</a></sup> используя веб-браузер.</p>
+<p>В <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>, мы сделаем второй проект, целью которого будет демонстрация основ работы Rails приложения. Чтобы быстро стартануть, мы создадим это <em>демонстрационное приложение</em> (названное <tt>demo_app</tt>) используя scaffolding (<a class="ref" href="beginning?version=3.0#sidebar:scaffolding">Блок&nbsp;1.1</a>) для генерации кода; так как этот код и уродлив и сложен, в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a> мы сосредоточимся на взаимодействии с демонстрационным приложением через его <em>URL</em><sup class="footnote" id="fnref:1.3"><a href="#fn:1.3">3</a></sup> используя веб-браузер.</p>
 
-<p>В <a class="ref" href="static-pages#top">Главе&nbsp;3</a>, мы создадим <em>пример приложения</em> (названного <tt>sample_app</tt>), на сей раз написав весь код с нуля. Мы разработаем демонстрационное приложение, используя <HP>разработку через тестирование (test-driven development)</em> (TDD), начнем <a class="ref" href="static-pages#top">Главу&nbsp;3</a> созданием статических страниц, затем добавим немного динамического контента. В  <a class="ref" href="rails-flavored-ruby#top">Главе&nbsp;4</a> мы немного познакомимся с языком программирования Ruby, лежащем в основе Rails. Затем, с <a class="ref" href="filling-in-the-layout#top">Главы&nbsp;5</a> по <a class="ref" href="updating-showing-and-deleting-users#top">Главу&nbsp;10</a>, мы завершим основу для примера приложения, сделав макет сайта, модель данных пользователя, и полные регистрационную и аутентификационную системы. Наконец, в <a class="ref" href="user-microposts#top">Главе&nbsp;11</a> и <a class="ref" href="following-users#top">Главе&nbsp;12</a> мы добавим микроблогинг и социальные функции, чтобы сделать рабочий пример сайта.</p>
+<p>В <a class="ref" href="static-pages?version=3.0#top">Главе&nbsp;3</a>, мы создадим <em>пример приложения</em> (названного <tt>sample_app</tt>), на сей раз написав весь код с нуля. Мы разработаем демонстрационное приложение, используя <HP>разработку через тестирование (test-driven development)</em> (TDD), начнем <a class="ref" href="static-pages?version=3.0#top">Главу&nbsp;3</a> созданием статических страниц, затем добавим немного динамического контента. В  <a class="ref" href="rails-flavored-ruby?version=3.0#top">Главе&nbsp;4</a> мы немного познакомимся с языком программирования Ruby, лежащем в основе Rails. Затем, с <a class="ref" href="filling-in-the-layout?version=3.0#top">Главы&nbsp;5</a> по <a class="ref" href="updating-showing-and-deleting-users?version=3.0#top">Главу&nbsp;10</a>, мы завершим основу для примера приложения, сделав макет сайта, модель данных пользователя, и полные регистрационную и аутентификационную системы. Наконец, в <a class="ref" href="user-microposts?version=3.0#top">Главе&nbsp;11</a> и <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы добавим микроблогинг и социальные функции, чтобы сделать рабочий пример сайта.</p>
 
 <p>Конечный пример приложения будет иметь большое сходство с одним популярным <a href="http://twitter.com/">сайтом</a> &#8211; который, по совпадению, изначально был также написан в Rails.<sup class="footnote" id="fnref:1.4"><a href="#fn:1.4">4</a></sup> Хотя, по необходимости, наши усилия и сосредоточатся на этом конкретном примере приложения, на протяжении <em>Учебника Rails</em> акцент будет на общих принципах, так, чтобы у вас был прочный фундамент независимо от того, какие виды веб-приложений вы хотите создавать.</p>
 
@@ -24,7 +23,7 @@
 
 <p>При написании <em>Учебника Ruby on Rails</em> было заманчиво положиться на подход scaffolding&mdash;он&rsquo; <a href="http://ru.wikipedia.org/wiki/%D0%A1%D0%B8%D0%BB%D0%B0_%28%D0%97%D0%B2%D1%91%D0%B7%D0%B4%D0%BD%D1%8B%D0%B5_%D0%B2%D0%BE%D0%B9%D0%BD%D1%8B%29#.D0.A2.D1.91.D0.BC.D0.BD.D0.B0.D1.8F_.D1.81.D1.82.D0.BE.D1.80.D0.BE.D0.BD.D0.B0">быстрее, легче, обольстительней</a>. Но сложность и огромный объем кода в scaffolding могут быть крайне подавляющими для начинающего разработчика Rails, может быть вы сможете его использовать, но вы, вероятно, не будете понимать его. Следуя scaffolding подходу вы рискуете превратиться в виртуозного генератора скриптов с пустяковыми (и хрупкими) фактическими знаниями Rails.</p>
 
-<p>В <em>Ruby on Rails Учебнике</em>, мы будем придерживаться (почти) полярно противоположного подхода: хотя <a class="ref" href="a-demo-app#top">Глава&nbsp;2</a>  и разрабатывает небольшое демонстрационное приложение, с использованием scaffolding, ядро <em>Учебника</em> &mdash; пример приложения, которое мы начнем писать в <a class="ref" href="static-pages#top">Главе&nbsp;3</a>. На каждом этапе разработки примера приложения мы будем генерировать <em>маленькие, съедобного размера</em> куски кода, достаточно простые для понимания, но все же достаточно непривычные, требующие усилий. Суммарный эффект будет более глубоким, а более гибкое знание Rails даст вам хорошие предпосылки для написания веб-приложения почти любого типа.</p>
+<p>В <em>Ruby on Rails Учебнике</em>, мы будем придерживаться (почти) полярно противоположного подхода: хотя <a class="ref" href="a-demo-app?version=3.0#top">Глава&nbsp;2</a>  и разрабатывает небольшое демонстрационное приложение, с использованием scaffolding, ядро <em>Учебника</em> &mdash; пример приложения, которое мы начнем писать в <a class="ref" href="static-pages?version=3.0#top">Главе&nbsp;3</a>. На каждом этапе разработки примера приложения мы будем генерировать <em>маленькие, съедобного размера</em> куски кода, достаточно простые для понимания, но все же достаточно непривычные, требующие усилий. Суммарный эффект будет более глубоким, а более гибкое знание Rails даст вам хорошие предпосылки для написания веб-приложения почти любого типа.</p>
 </div>
 
 
@@ -33,7 +32,7 @@
 <div class="label" id="sec:introduction"></div>
 
 
-<h2><a id="sec:1.1" href="beginning#sec:introduction" class="heading"><span class="number">1.1</span> Введение</a></h2>
+<h2><a id="sec:1.1" href="beginning?version=3.0#sec:introduction" class="heading"><span class="number">1.1</span> Введение</a></h2>
 
 
 <p>Со времен своего дебюта в 2004 году, Ruby on Rails быстро стал одним из самых мощных и популярных фреймворков для построения динамических веб-приложений. Пользователи Rails охватывают широкий диапазон задач, начиная со стартапов и заканчивая огромными компаниями: <a href="http://posterous.com/">Posterous</a>, <a href="http://uservoice.com/">UserVoice</a>, <a href="http://37signals.com/">37signals</a>, <a href="http://shopify.com/">Shopify</a>, <a href="http://github.com/">GitHub</a>, <a href="http://scribd.com/">Scribd</a>, <a href="http://hulu.com/">Hulu</a>,  <a href="http://yellowpages.com/">Yellow Pages</a>&mdash;вот <a href="http://rubyonrails.org/applications">список сайтов, использующих Rails</a> и он все пополняется и пополняется. Также существуют веб-магазины по разработке, специализирующиеся на Rails, такие как <a href="http://entp.com/">ENTP</a>, <a href="http://thoughtbot.com/">thoughtbot</a>, <a href="http://pivotallabs.com/">Pivotal Labs</a>, и <a href="http://hashrocket.com/">Hashrocket</a>, плюс бесчисленные независимые консультанты, преподаватели и контрагенты.</p>
@@ -49,7 +48,7 @@
 <div class="label" id="sec:comments_for_various_readers"></div>
 
 
-<h3><a id="sec:1.1.1" href="beginning#sec:comments_for_various_readers" class="heading"><span class="number">1.1.1</span> Комментарии для разных читателей</a></h3>
+<h3><a id="sec:1.1.1" href="beginning?version=3.0#sec:comments_for_various_readers" class="heading"><span class="number">1.1.1</span> Комментарии для разных читателей</a></h3>
 
 
 <p><em>Учебник Rails</em> содержит интегрированные учебники не только по Rails, но и по лежащему в его основе Ruby, а также <a href="http://ru.wikipedia.org/wiki/HTML">HTML</a>, <a href="http://ru.wikipedia.org/wiki/CSS">CSS</a>, немного <a href="http://ru.wikipedia.org/wiki/JavaScript">JavaScript</a>, и даже чуть чуть <a href="http://ru.wikipedia.org/wiki/SQL">SQL</a>. Это означает, что, независимо от ваших знаний веб-разработки, к моменту завершения этого учебника вы будете готовы для более продвинутых Rails ресурсов, а также к более систематичной проработке других упомянутых тем.</p>
@@ -96,7 +95,7 @@
 
 
 
-<h3><a id="sec:1.1.2" href="beginning#sec:1.1.2" class="heading"><span class="number">1.1.2</span> &ldquo;Масштабирование&rdquo;  Rails</a></h3>
+<h3><a id="sec:1.1.2" href="beginning?version=3.0#sec:1.1.2" class="heading"><span class="number">1.1.2</span> &ldquo;Масштабирование&rdquo;  Rails</a></h3>
 
 
 <p>Прежде чем двигаться дальше, я хотел бы воспользоваться моментом для решения одного вопроса, преследовавшего Rails прежде всего в первые дни его существования: мнимая неспособность Rails к &laquo;масштабируемости&raquo;, то есть к обработке большого трафика. Частично этот вопрос опирается на заблуждение; <a href="http://idleprocess.wordpress.com/2009/11/24/presentation-summary-high-performance-at-massive-scale-lessons-learned-at-facebook/">вы масштабируете <em>сайт</em>, а не фреймворк</a>, и Rails, каким бы обалденным не был &#8211; лишь фреймворк. Таким образом, реальный вопрос должен звучать так: &laquo;Может ли сайт построенный на Rails масштабироваться?&raquo; В любом случае, на этот вопрос теперь можно окончательно ответить утвердительно: некоторые из наиболее нагруженных сайтов в мире используют Rails. Вообще масштабирование выходит за рамки Rails, но будьте уверены, что если <em>вашему</em> приложению нужно будет справиться с нагрузкой как у Hulu либо как у Yellow Pages, Rails не помешает вам покорить мир.</p>
@@ -104,12 +103,12 @@
 <div class="label" id="sec:conventions"></div>
 
 
-<h3><a id="sec:1.1.3" href="beginning#sec:conventions" class="heading"><span class="number">1.1.3</span> Соглашения в этой книге</a></h3>
+<h3><a id="sec:1.1.3" href="beginning?version=3.0#sec:conventions" class="heading"><span class="number">1.1.3</span> Соглашения в этой книге</a></h3>
 
 
 <p>Соглашения в этой книге главным образом очевидны; в этом разделе я упомяну лишь те которые, возможно, таковыми не являются.</p>
 
-<p>И <a href="http://railstutorial.org/book">HTML</a> и <a href="http://railstutorial.org/">PDF</a> выпуски этой книги полны ссылками, как к внутренним разделам (таким как <a class="ref" href="beginning#sec:up_and_running">Раздел&nbsp;1.2</a>) так и к внешним сайтам (таким как <a href="http://rubyonrails.org/download">основная страница загрузки Ruby on Rails</a> ).<sup class="footnote" id="fnref:1.6"><a href="#fn:1.6">6</a></sup></p>
+<p>И <a href="http://railstutorial.org/book">HTML</a> и <a href="http://railstutorial.org/">PDF</a> выпуски этой книги полны ссылками, как к внутренним разделам (таким как <a class="ref" href="beginning?version=3.0#sec:up_and_running">Раздел&nbsp;1.2</a>) так и к внешним сайтам (таким как <a href="http://rubyonrails.org/download">основная страница загрузки Ruby on Rails</a> ).<sup class="footnote" id="fnref:1.6"><a href="#fn:1.6">6</a></sup></p>
 
 <p>Много примеров в этой книге используют командную строку. Для простоты, все примеры командной строки используют приглашение командной строки  в Unix-стиле (знак доллара):</p>
 
@@ -127,14 +126,14 @@
 </div>
 
 
-<p>В Unix системах некоторые команды должны быть выполнены с <code>sudo</code>, (сокращение от “Substitute User DO”), что означает “выполнить от имени суперпользователя”. По умолчанию команда, выполняемая с <code>sudo</code> выполняется как команда администратора, у которого есть доступ к файлам и каталогам, которые недоступны обычному пользователю. Чтобы указать, что использование <code>sudo</code> зависит от системы, используются квадратные скобки, когда это может (или не может) быть необходимо на вашей системе, так как в этом примере из  <a class="ref" href="beginning#sec:rubygems">Раздела&nbsp;1.2.2</a>:</p>
+<p>В Unix системах некоторые команды должны быть выполнены с <code>sudo</code>, (сокращение от “Substitute User DO”), что означает “выполнить от имени суперпользователя”. По умолчанию команда, выполняемая с <code>sudo</code> выполняется как команда администратора, у которого есть доступ к файлам и каталогам, которые недоступны обычному пользователю. Чтобы указать, что использование <code>sudo</code> зависит от системы, используются квадратные скобки, когда это может (или не может) быть необходимо на вашей системе, так как в этом примере из  <a class="ref" href="beginning?version=3.0#sec:rubygems">Раздела&nbsp;1.2.2</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="o">[</span>sudo<span class="o">]</span> ruby setup.rb
 </pre></div>
 </div>
 
 
-<p>Большинство систем Unix/Linux/OS X требует <code>sudo</code> по умолчанию, за исключением использования Ruby Version Manager как рекомендуется в <a class="ref" href="beginning#sec:install_ruby">Разделе&nbsp;1.2.2.3</a>. Отметьте, что <em>недопустимо фактически вводить скобки</em>; следует выполнять или</p>
+<p>Большинство систем Unix/Linux/OS X требует <code>sudo</code> по умолчанию, за исключением использования Ruby Version Manager как рекомендуется в <a class="ref" href="beginning?version=3.0#sec:install_ruby">Разделе&nbsp;1.2.2.3</a>. Отметьте, что <em>недопустимо фактически вводить скобки</em>; следует выполнять или</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> sudo ruby setup.rb
 </pre></div>
@@ -150,7 +149,7 @@
 
 <p>в зависимости от вашей системы.</p>
 
-<p>Rails поставляется с большим количеством команд, которые можно запустить в командной строке. Например, в <a class="ref" href="beginning#sec:rails_server">Разделе&nbsp;1.2.5</a> мы запускаем локальный веб-сервер разработки следующим образом:</p>
+<p>Rails поставляется с большим количеством команд, которые можно запустить в командной строке. Например, в <a class="ref" href="beginning?version=3.0#sec:rails_server">Разделе&nbsp;1.2.5</a> мы запускаем локальный веб-сервер разработки следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nv">$ </span>rails server
 </pre></div>
@@ -189,7 +188,7 @@
 <div class="label" id="sec:up_and_running"></div>
 
 
-<h2><a id="sec:1.2" href="beginning#sec:up_and_running" class="heading"><span class="number">1.2</span> За работу</a></h2>
+<h2><a id="sec:1.2" href="beginning?version=3.0#sec:up_and_running" class="heading"><span class="number">1.2</span> За работу</a></h2>
 
 
 <p>Пришло время, чтобы взяться за дело со средой разработки Ruby on Rails и нашим первым приложением. Здесь будет немного лишних действий, особенно если у вас нет большого опыта программирования, так что не разочаровывайтесь, если вам понадобиться потратить какое-то время прежде чем вы сможете начать работу. Это не только вы; каждый разработчик проходит через это (часто не раз), но будьте уверены, что эти усилия будут щедро вознаграждены.</p>
@@ -197,27 +196,27 @@
 <div class="label" id="sec:development_tools"></div>
 
 
-<h3><a id="sec:1.2.1" href="beginning#sec:development_tools" class="heading"><span class="number">1.2.1</span> Среда разработки</a></h3>
+<h3><a id="sec:1.2.1" href="beginning?version=3.0#sec:development_tools" class="heading"><span class="number">1.2.1</span> Среда разработки</a></h3>
 
 
 <p>Принимая во внимание различные своеобразные настройки и предпочтения, вероятно, существует столько вариантов сред разработки, сколько и Rails программистов, но есть, по крайней мере, две общие темы: текстовый редактор/командная строка и интегрированная среда разработки (IDE). Рассмотрим последнюю первой.</p>
 
-<h4><a id="sec:1.2.1.1" href="beginning#sec:1.2.1.1" class="heading">IDE</a></h4>
+<h4><a id="sec:1.2.1.1" href="beginning?version=3.0#sec:1.2.1.1" class="heading">IDE</a></h4>
 
 
 <p>В IDE для Rails дефицита нет, основные &#8211;  <a href="http://www.aptana.com/rails/">RadRails</a>, <a href="http://www.jetbrains.com/ruby/index.html">RubyMine</a>, и <a href="http://www.codegear.com/products/3rdrail">3rd Rail</a>. Все они кросс-платформенные, и я слышал хорошие вещи о некоторых из них. Я призываю вас попробовать их и посмотреть, подходят ли они вам, но признаюсь: я ниразу не встречал  IDE, которая удовлетворяла бы все мои потребности в сфере разработки на Rails - а некоторые IDE я даже не смог запустить.</p>
 
-<h4><a id="sec:1.2.1.2" href="beginning#sec:1.2.1.2" class="heading">Текстовые редакторы и инструменты командной строки</a></h4>
+<h4><a id="sec:1.2.1.2" href="beginning?version=3.0#sec:1.2.1.2" class="heading">Текстовые редакторы и инструменты командной строки</a></h4>
 
 
-<p>Чем же мы должны пользоваться  для разработки приложений Rails, если не какой-либо из грозных IDE все-в-одном? Я думаю, большинство Rails разработчиков выбирают то же, что и я: использовать <em>текстовый редактор</em> для редактирования текста, а <em>командную строку</em> для выполнения команд (<a class="ref" href="beginning#fig:editor_shell">Рис.&nbsp;1.1</a>). Их комбинация зависит от ваших предпочтений и платформы:</p>
+<p>Чем же мы должны пользоваться  для разработки приложений Rails, если не какой-либо из грозных IDE все-в-одном? Я думаю, большинство Rails разработчиков выбирают то же, что и я: использовать <em>текстовый редактор</em> для редактирования текста, а <em>командную строку</em> для выполнения команд (<a class="ref" href="beginning?version=3.0#fig:editor_shell">Рис.&nbsp;1.1</a>). Их комбинация зависит от ваших предпочтений и платформы:</p>
 
 <ul>
 <li><strong>Macintosh OS X:</strong> Подобно многим разработчикам на Rails, я предпочитаю <a href="http://macromates.com/">TextMate</a>. Другие дополнительные варианты включают Emacs и  <a href="http://code.google.com/p/macvim/">MacVim</a> (запускаемый командой <code>mvim</code>), великолепную Макинтош-версию Vim. <sup class="footnote" id="fnref:1.7"><a href="#fn:1.7">7</a></sup> Я использую <a href="http://iterm.sourceforge.net/">iTerm</a> для терминала командной строки; другие превосходно довольствуются встроенным приложением Terminal.</li>
 
 <li><strong>Linux:</strong> ваш выбор редакторов в основном аналогичен OS X, за исключением TextMate.  Я рекомендовал бы графический Vim (gVim), <a href="http://projects.gnome.org/gedit/">gedit</a> (с плагинами <a href="http://blog.siverti.com.br/gmate/">GMate</a>), или <a href="http://kate-editor.org/">Kate</a>. Что касается командной строки - вы полностью упакованы: каждый дистрибутив Linux идет, по крайней мере, с одним терминальным приложением командной строки (а часто и с несколькими).</li>
 
-<li><strong>Windows:</strong> Есть несколько многообещающих редакторов для Windows включая <a href="http://www.vim.org/download.php#pc">Vim</a>, <a href="http://www.e-texteditor.com/">E&nbsp;Text Editor</a>, <a href="http://www.activestate.com/komodo_edit/">Komodo Edit</a>, и <a href="http://www.sublimetext.com/">Sublime Text</a>. Для командной строки я рекомендую использовать ту, которая идет с <a href="http://railsinstaller.org/">Rails Installer</a> (<a class="ref" href="beginning#sec:rails_installer_windows">Раздел&nbsp;1.2.2.1</a>).  </li>
+<li><strong>Windows:</strong> Есть несколько многообещающих редакторов для Windows включая <a href="http://www.vim.org/download.php#pc">Vim</a>, <a href="http://www.e-texteditor.com/">E&nbsp;Text Editor</a>, <a href="http://www.activestate.com/komodo_edit/">Komodo Edit</a>, и <a href="http://www.sublimetext.com/">Sublime Text</a>. Для командной строки я рекомендую использовать ту, которая идет с <a href="http://railsinstaller.org/">Rails Installer</a> (<a class="ref" href="beginning?version=3.0#sec:rails_installer_windows">Раздел&nbsp;1.2.2.1</a>).  </li>
 
 </ul>
 
@@ -232,12 +231,12 @@
 
 
 
-<h4><a id="sec:1.2.1.3" href="beginning#sec:1.2.1.3" class="heading">Браузеры</a></h4>
+<h4><a id="sec:1.2.1.3" href="beginning?version=3.0#sec:1.2.1.3" class="heading">Браузеры</a></h4>
 
 
 <p>Хотя среди веб-браузеров есть из чего выбрать, подавляющее большинство программистов Rails используют Firefox, Safari, или Chrome, при разработке. Скриншоты в Учебнике Rails обычно сделаны в браузере Firefox. Если вы используете Firefox, я советую использовать <a href="http://getfirebug.com/">Firebug</a> надстройку, которая позволяет выполнять все виды магии, такие как динамическая проверка (и даже редактирование) структуры HTML и CSS правил на любой странице. Для тех, кто не использует Firefox, <a href="http://getfirebug.com/firebuglite">Firebug Lite</a> работает  с большинством других браузеров, а у Safari и Chrome есть встроенная, &laquo;Просмотр кода элемента&raquo; функция, доступная по щелчку правой кнопкой мыши на любой части страницы.</p>
 
-<h4><a id="sec:1.2.1.4" href="beginning#sec:1.2.1.4" class="heading">Примечание об инструментах</a></h4>
+<h4><a id="sec:1.2.1.4" href="beginning?version=3.0#sec:1.2.1.4" class="heading">Примечание об инструментах</a></h4>
 
 
 <p>В процессе становления и запуска вашей среды разработки, вы можете обнаружить, что вы тратите  <em>много</em> времени, на получение правильных навыков работы. Процесс обучения для редакторов и IDE особенно длинен; можно потратить недели на TextMate или одни только учебные руководства Vim. Если вы плохо знакомы с этим делом, я хочу уверить вас, что <em>тратить время на изучение инструментов - это нормально</em>. Все проходят через это. Иногда это печалит, и раздражает, особенно когда у вас в голове есть потрясающее веб-приложение, и вы <em>просто хотите выучить Rails</em>, но тратите неделю изучая некий таинственный древний редактор Unix только чтобы начать. Но мастер должен знать свои инструменты; в итоге усилия будут вознаграждены.</p>
@@ -245,7 +244,7 @@
 <div class="label" id="sec:rubygems"></div>
 
 
-<h3><a id="sec:1.2.2" href="beginning#sec:rubygems" class="heading"><span class="number">1.2.2</span> Ruby, RubyGems, Rails, и Git</a></h3>
+<h3><a id="sec:1.2.2" href="beginning?version=3.0#sec:rubygems" class="heading"><span class="number">1.2.2</span> Ruby, RubyGems, Rails, и Git</a></h3>
 
 
 <p>Теперь пора установить Ruby и Rails. Классический способ установки - из исходников со <a href="http://rubyonrails.org/download">страницы загрузки Ruby on Rails</a>. Я предполагаю, что  вы можете перейти туда сейчас; некоторые части этой книги могут быть прочитаны с пользой и в оффлайне, но только не эта часть. Я лишь прокомментирую некоторые  шаги.</p>
@@ -253,23 +252,23 @@
 <div class="label" id="sec:rails_installer_windows"></div>
 
 
-<h4><a id="sec:1.2.2.1" href="beginning#sec:rails_installer_windows" class="heading">Rails Installer (Windows)</a></h4>
+<h4><a id="sec:1.2.2.1" href="beginning?version=3.0#sec:rails_installer_windows" class="heading">Rails Installer (Windows)</a></h4>
 
 
-<p>Установка Rails на Windows, применялась раньше как орудие пыток, но благодаря усилиям хороших людей в <a href="http://engineyard.com/">Engine Yard</a>&mdash;особенно Dr.&nbsp;Nic Williams и Wayne&nbsp;E. Seguin&mdash;установка Rails и связанного программного обеспечения на Windows, теперь невероятно легка. Если вы используете Windows, перейдите на <a href="http://railsinstaller.org/">Rails Installer</a> (<a href="http://railsinstaller.org/">http://railsinstaller.org/</a>) и загрузите исполняемый файл Rails Installer. Дважды кликните исполняемый файл и следуйте инструкциям, чтобы установить Git (таким образом, можете пропустить <a class="ref" href="beginning#sec:install_git">Раздел&nbsp;1.2.2.2</a>), Ruby (пропустите <a class="ref" href="beginning#sec:install_ruby">Раздел&nbsp;1.2.2.3</a>), RubyGems (пропустите <a class="ref" href="beginning#sec:install_rubygems">Раздел&nbsp;1.2.2.4</a>), и, непосредственно, Rails (пропустите <a class="ref" href="beginning#sec:install_rails">Раздел&nbsp;1.2.2.5</a>). Как только установка закончится, можете перейти к созданию первого приложения в <a class="ref" href="beginning#sec:the_first_application">Разделе&nbsp;1.2.3</a>.</p>
+<p>Установка Rails на Windows, применялась раньше как орудие пыток, но благодаря усилиям хороших людей в <a href="http://engineyard.com/">Engine Yard</a>&mdash;особенно Dr.&nbsp;Nic Williams и Wayne&nbsp;E. Seguin&mdash;установка Rails и связанного программного обеспечения на Windows, теперь невероятно легка. Если вы используете Windows, перейдите на <a href="http://railsinstaller.org/">Rails Installer</a> (<a href="http://railsinstaller.org/">http://railsinstaller.org/</a>) и загрузите исполняемый файл Rails Installer. Дважды кликните исполняемый файл и следуйте инструкциям, чтобы установить Git (таким образом, можете пропустить <a class="ref" href="beginning?version=3.0#sec:install_git">Раздел&nbsp;1.2.2.2</a>), Ruby (пропустите <a class="ref" href="beginning?version=3.0#sec:install_ruby">Раздел&nbsp;1.2.2.3</a>), RubyGems (пропустите <a class="ref" href="beginning?version=3.0#sec:install_rubygems">Раздел&nbsp;1.2.2.4</a>), и, непосредственно, Rails (пропустите <a class="ref" href="beginning?version=3.0#sec:install_rails">Раздел&nbsp;1.2.2.5</a>). Как только установка закончится, можете перейти к созданию первого приложения в <a class="ref" href="beginning?version=3.0#sec:the_first_application">Разделе&nbsp;1.2.3</a>.</p>
 
 <div class="label" id="sec:install_git"></div>
 
 
-<h4><a id="sec:1.2.2.2" href="beginning#sec:install_git" class="heading">Установка Git</a></h4>
+<h4><a id="sec:1.2.2.2" href="beginning?version=3.0#sec:install_git" class="heading">Установка Git</a></h4>
 
 
-<p>Большая часть экосистемы Rails так или иначе зависит  от <a href="http://en.wikipedia.org/wiki/Revision_control">системы управления версиями</a> называемой <a href="http://git-scm.com/">Git</a> (освещаемой более подробно в <a class="ref" href="beginning#sec:version_control">Разделе&nbsp;1.3</a>). Поскольку его использование является повсеместным, следует установить Git даже на этой ранней стадии; я предлагаю следовать инструкциям по установке для вашей платформы в разделе <a href="http://progit.org/book/ru/ch1-4.html">Установка Git (<em>Pro Git</em>)</a>.</p>
+<p>Большая часть экосистемы Rails так или иначе зависит  от <a href="http://en.wikipedia.org/wiki/Revision_control">системы управления версиями</a> называемой <a href="http://git-scm.com/">Git</a> (освещаемой более подробно в <a class="ref" href="beginning?version=3.0#sec:version_control">Разделе&nbsp;1.3</a>). Поскольку его использование является повсеместным, следует установить Git даже на этой ранней стадии; я предлагаю следовать инструкциям по установке для вашей платформы в разделе <a href="http://progit.org/book/ru/ch1-4.html">Установка Git (<em>Pro Git</em>)</a>.</p>
 
 <div class="label" id="sec:install_ruby"></div>
 
 
-<h4><a id="sec:1.2.2.3" href="beginning#sec:install_ruby" class="heading">Установка Ruby</a></h4>
+<h4><a id="sec:1.2.2.3" href="beginning?version=3.0#sec:install_ruby" class="heading">Установка Ruby</a></h4>
 
 
 <p>Следующий шаг это установка Ruby. Возможно, он уже есть в вашей системе; попытайтесь выполнить</p>
@@ -336,7 +335,7 @@
 <div class="label" id="sec:install_rubygems"></div>
 
 
-<h4><a id="sec:1.2.2.4" href="beginning#sec:install_rubygems" class="heading">Установка RubyGems</a></h4>
+<h4><a id="sec:1.2.2.4" href="beginning?version=3.0#sec:install_rubygems" class="heading">Установка RubyGems</a></h4>
 
 
 <p>RubyGems это диспетчер пакетов для проектов Ruby, и есть тонны замечательных библиотек (включая Rails) доступных как пакеты Ruby, или <em>gem</em>. Установка RubyGems должна быть легкой, раз уж вы установили Ruby. Фактически, если вы <a href="http://rvm.beginrescueend.com/rvm/install/">установили RVM</a>, у вас уже есть RubyGems, так как RVM включает его автоматически:</p>
@@ -380,7 +379,7 @@
 <div class="label" id="sec:install_rails"></div>
 
 
-<h4><a id="sec:1.2.2.5" href="beginning#sec:install_rails" class="heading">Установка Rails</a></h4>
+<h4><a id="sec:1.2.2.5" href="beginning?version=3.0#sec:install_rails" class="heading">Установка Rails</a></h4>
 
 
 <p>Поскольку вы уже установили RubyGems, установка Rails&nbsp;3 должна быть легкой. Этот учебник использует последнюю версию Rails 3.0, на момент написания это Rails 3.0.9. Мы можем установить его следующим образом:</p>
@@ -399,14 +398,14 @@
 
 <p>Последней версией Rails на данный момент является Rails&nbsp;3.1, который (опять же на момент написания) в настоящее время доступен как релиз-кандидат. Для целей настоящего учебника, Rails&nbsp;3.0 в настоящее время более стабильной выбор, в основном это связано с тем, что обширной экосистеме Rails всегда требуется некоторое время, чтобы адаптироваться к новой версии. Более того, для целей начального обучения Rails, Rails&nbsp;3.0 и&nbsp;3.1 практически идентичны, так что почти все, что вы узнаете здесь будет применимо и к Rails&nbsp;3.1 приложениям.</p>
 
-<p>Есть несколько обратно-несовместимых изменений в Rails&nbsp;3.1, о которых вы можете узнать в <a class="ref" href="rails-3-1#top">Главе&nbsp;13</a>. В Rails&nbsp;3.1 есть также некоторые новые возможности и они вкратце описаны в <a class="ref" href="rails-3-1#top">Главе&nbsp;13</a>, которая также содержит ссылки на ресурсы, рассказывающие о них более подробно.  Наконец, будущее издание этой книги (и новая версия сопутствующих  <a href="http://railstutorial.org/screencasts">скринкастов</a>) будет использовать  Rails&nbsp;3.1 с самого начала, предположительно, включая введение в его новые фичи (такие как <a href="http://sass-lang.com/">Sass</a> и <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>).</p>
+<p>Есть несколько обратно-несовместимых изменений в Rails&nbsp;3.1, о которых вы можете узнать в <a class="ref" href="rails-3-1?version=3.0#top">Главе&nbsp;13</a>. В Rails&nbsp;3.1 есть также некоторые новые возможности и они вкратце описаны в <a class="ref" href="rails-3-1?version=3.0#top">Главе&nbsp;13</a>, которая также содержит ссылки на ресурсы, рассказывающие о них более подробно.  Наконец, будущее издание этой книги (и новая версия сопутствующих  <a href="http://railstutorial.org/screencasts">скринкастов</a>) будет использовать  Rails&nbsp;3.1 с самого начала, предположительно, включая введение в его новые фичи (такие как <a href="http://sass-lang.com/">Sass</a> и <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>).</p>
 
 
 
 <div class="label" id="sec:the_first_application"></div>
 
 
-<h3><a id="sec:1.2.3" href="beginning#sec:the_first_application" class="heading"><span class="number">1.2.3</span> Первое приложение</a></h3>
+<h3><a id="sec:1.2.3" href="beginning?version=3.0#sec:the_first_application" class="heading"><span class="number">1.2.3</span> Первое приложение</a></h3>
 
 
 <p>Фактически все приложения Rails начинают одинаково - с команды <code>rails</code>. Эта удобная программа создает скелет приложения Rails в любом каталоге на ваш вкус. Для начала создайте каталог для своих проектов Rails, а затем выполните команду <code>rails</code>, чтобы создать первое приложение:</p>
@@ -441,7 +440,7 @@
 </div></div>
 
 
-<p>Отметьте, сколько файлов и каталогов создает команда <code>rails</code>. Эта стандартная структура файлов и каталогов (<a class="ref" href="beginning#fig:directory_structure_rails_3">Рис.&nbsp;1.2</a>) является одним из многих преимуществ Rails; это немедленно переносит вас от нуля к действующему (минимально) приложению. Кроме того, так как эта структура является общей для всех приложений Rails, можно сразу сориентироваться, глядя на чей-либо код. Обзор дефолтных Rails файлов представлен в <a class="ref" href="beginning#table:rails_directory_structure">Таблице&nbsp;1.1</a>; мы  узнаем о большинстве этих файлов и каталогов в остальной части этой книги.</p>
+<p>Отметьте, сколько файлов и каталогов создает команда <code>rails</code>. Эта стандартная структура файлов и каталогов (<a class="ref" href="beginning?version=3.0#fig:directory_structure_rails_3">Рис.&nbsp;1.2</a>) является одним из многих преимуществ Rails; это немедленно переносит вас от нуля к действующему (минимально) приложению. Кроме того, так как эта структура является общей для всех приложений Rails, можно сразу сориентироваться, глядя на чей-либо код. Обзор дефолтных Rails файлов представлен в <a class="ref" href="beginning?version=3.0#table:rails_directory_structure">Таблице&nbsp;1.1</a>; мы  узнаем о большинстве этих файлов и каталогов в остальной части этой книги.</p>
 
 <div class="label" id="fig:directory_structure_rails_3"></div>
 
@@ -454,7 +453,7 @@
 <div class="label" id="table:rails_directory_structure"></div>
 
 
-<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>Файл/Каталог</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>app/</tt></td><td class="align_left">Базовый код приложения, включает  модели, представления, контроллеры, и помощники (хелперы)</td></tr><tr><td class="align_left"><tt>config/</tt></td><td class="align_left">Конфигурация приложения</td></tr><tr><td class="align_left"><tt>db/</tt></td><td class="align_left">Файлы для манипуляций с базой данных</td></tr><tr><td class="align_left"><tt>doc/</tt></td><td class="align_left">Документация для приложения</td></tr><tr><td class="align_left"><tt>lib/</tt></td><td class="align_left">Модули библиотек</td></tr><tr><td class="align_left"><tt>log/</tt></td><td class="align_left">log файлы приложения</td></tr><tr><td class="align_left"><tt>public/</tt></td><td class="align_left">Публично доступные данные (например, веб-браузерам), такие как изображения и каскадные таблицы стилей (CSS)</td></tr><tr><td class="align_left"><tt>script/rails</tt></td><td class="align_left">Сценарии, предоставляемые Rails для генерирования кода, открытия консольных сессий, или запуска локального веб-сервера</td></tr><tr><td class="align_left"><tt>test/</tt></td><td class="align_left">Тесты приложения (ему на смену придет <tt>spec/</tt> директория в <a class="ref" href="static-pages#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>)</td></tr><tr><td class="align_left"><tt>tmp/</tt></td><td class="align_left">Временные файлы</td></tr><tr><td class="align_left"><tt>vendor/</tt></td><td class="align_left">Сторонний код, такой как плагины и гемы</td></tr><tr><td class="align_left"><tt>README</tt></td><td class="align_left">Краткое описание (инструкция по использованию) приложения</td></tr><tr><td class="align_left"><tt>Rakefile</tt></td><td class="align_left">Служебные задачи, доступные через <code>rake</code>-команду</td></tr><tr><td class="align_left"><tt>Gemfile</tt></td><td class="align_left">Гемы необходимые для этого приложения</td></tr><tr><td class="align_left"><tt>config.ru</tt></td><td class="align_left">Конфигурационный файл для <a href="http://rack.rubyforge.org/doc/">Rack middleware</a></td></tr><tr><td class="align_left"><tt>.gitignore</tt></td><td class="align_left">Перечень файлов, которые должны игнорироваться Git</td></tr></table></div><div class="caption"><span class="header">Таблица 1.1: </span><span class="description">Обзор дефолтной структуры каталогов Rails.</span></div></div>
+<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>Файл/Каталог</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>app/</tt></td><td class="align_left">Базовый код приложения, включает  модели, представления, контроллеры, и помощники (хелперы)</td></tr><tr><td class="align_left"><tt>config/</tt></td><td class="align_left">Конфигурация приложения</td></tr><tr><td class="align_left"><tt>db/</tt></td><td class="align_left">Файлы для манипуляций с базой данных</td></tr><tr><td class="align_left"><tt>doc/</tt></td><td class="align_left">Документация для приложения</td></tr><tr><td class="align_left"><tt>lib/</tt></td><td class="align_left">Модули библиотек</td></tr><tr><td class="align_left"><tt>log/</tt></td><td class="align_left">log файлы приложения</td></tr><tr><td class="align_left"><tt>public/</tt></td><td class="align_left">Публично доступные данные (например, веб-браузерам), такие как изображения и каскадные таблицы стилей (CSS)</td></tr><tr><td class="align_left"><tt>script/rails</tt></td><td class="align_left">Сценарии, предоставляемые Rails для генерирования кода, открытия консольных сессий, или запуска локального веб-сервера</td></tr><tr><td class="align_left"><tt>test/</tt></td><td class="align_left">Тесты приложения (ему на смену придет <tt>spec/</tt> директория в <a class="ref" href="static-pages?version=3.0#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>)</td></tr><tr><td class="align_left"><tt>tmp/</tt></td><td class="align_left">Временные файлы</td></tr><tr><td class="align_left"><tt>vendor/</tt></td><td class="align_left">Сторонний код, такой как плагины и гемы</td></tr><tr><td class="align_left"><tt>README</tt></td><td class="align_left">Краткое описание (инструкция по использованию) приложения</td></tr><tr><td class="align_left"><tt>Rakefile</tt></td><td class="align_left">Служебные задачи, доступные через <code>rake</code>-команду</td></tr><tr><td class="align_left"><tt>Gemfile</tt></td><td class="align_left">Гемы необходимые для этого приложения</td></tr><tr><td class="align_left"><tt>config.ru</tt></td><td class="align_left">Конфигурационный файл для <a href="http://rack.rubyforge.org/doc/">Rack middleware</a></td></tr><tr><td class="align_left"><tt>.gitignore</tt></td><td class="align_left">Перечень файлов, которые должны игнорироваться Git</td></tr></table></div><div class="caption"><span class="header">Таблица 1.1: </span><span class="description">Обзор дефолтной структуры каталогов Rails.</span></div></div>
 
 
 
@@ -462,7 +461,7 @@
 <div class="label" id="sec:bundler"></div>
 
 
-<h3><a id="sec:1.2.4" href="beginning#sec:bundler" class="heading"><span class="number">1.2.4</span> Bundler</a></h3>
+<h3><a id="sec:1.2.4" href="beginning?version=3.0#sec:bundler" class="heading"><span class="number">1.2.4</span> Bundler</a></h3>
 
 
 <p>После создания нового Rails приложения следующий шаг  &#8211; использование <code>Bundler</code>, для установки и включения гемов, необходимых приложению. Что подразумевает открытие <code>Gemfile</code> в вашем любимом текстовом редакторе:</p>
@@ -473,7 +472,7 @@
 </div>
 
 
-<p>Результат должен выглядеть примерно как <a class="ref" href="beginning#code:default_gemfile">Листинг&nbsp;1.3</a>.</p>
+<p>Результат должен выглядеть примерно как <a class="ref" href="beginning?version=3.0#code:default_gemfile">Листинг&nbsp;1.3</a>.</p>
 
 <div class="label" id="code:default_gemfile"></div>
 
@@ -516,7 +515,7 @@
 
 <p>Большинство этих строк закомментированы символом хеш&nbsp;<code>#</code>; они здесь для того, чтобы показать вам некоторые обычно необходимые гемы и дать примеры синтаксиса Bundler. Сейчас нам не понадобятся никакие гемы кроме дефолтных: Rails как таковой, и гем для взаимодействия Ruby с базой данных <a href="http://www.sqlite.org/">SQLite</a>.</p>
 
-<p>Если вы не укажете номер версии <code>gem</code>-команде, Bundler автоматически установит самую последнюю версию. К сожалению, обновления гемов часто вызывают незначительные, но потенциально сбивающие с толку поломки, так что, в этом учебном руководстве мы обычно будем явно включать номер версии известной как работавшей, как видно в <a class="ref" href="beginning#code:gemfile_sqlite_version">Листинге&nbsp;1.4</a>.<sup class="footnote" id="fnref:1.10"><a href="#fn:1.10">10</a></sup></p>
+<p>Если вы не укажете номер версии <code>gem</code>-команде, Bundler автоматически установит самую последнюю версию. К сожалению, обновления гемов часто вызывают незначительные, но потенциально сбивающие с толку поломки, так что, в этом учебном руководстве мы обычно будем явно включать номер версии известной как работавшей, как видно в <a class="ref" href="beginning?version=3.0#code:gemfile_sqlite_version">Листинге&nbsp;1.4</a>.<sup class="footnote" id="fnref:1.10"><a href="#fn:1.10">10</a></sup></p>
 
 <div class="label" id="code:gemfile_sqlite_version"></div>
 
@@ -539,7 +538,7 @@
 </div>
 
 
-<p>из <a class="ref" href="beginning#code:default_gemfile">Листинга&nbsp;1.3</a> в</p>
+<p>из <a class="ref" href="beginning?version=3.0#code:default_gemfile">Листинга&nbsp;1.3</a> в</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
 </pre></div>
@@ -578,10 +577,10 @@
 <div class="label" id="sec:rails_server"></div>
 
 
-<h3><a id="sec:1.2.5" href="beginning#sec:rails_server" class="heading"><span class="number">1.2.5</span> <code>rails server</code></a></h3>
+<h3><a id="sec:1.2.5" href="beginning?version=3.0#sec:rails_server" class="heading"><span class="number">1.2.5</span> <code>rails server</code></a></h3>
 
 
-<p>Благодаря выполнению <code>rails new</code> в  <a class="ref" href="beginning#sec:the_first_application">Разделе&nbsp;1.2.3</a> и <code>bundle install</code> в <a class="ref" href="beginning#sec:bundler">Разделе&nbsp;1.2.4</a>, у нас уже есть приложение, которое мы можем запустить&mdash;но как? К счастью, Rails поставляется с программой командной строки, или <em>скриптом</em>, который запускает <em>локальный</em> веб-сервер,<sup class="footnote" id="fnref:1.13"><a href="#fn:1.13">13</a></sup> видимый только на вашей рабочей машине:<sup class="footnote" id="fnref:1.14"><a href="#fn:1.14">14</a></sup></p>
+<p>Благодаря выполнению <code>rails new</code> в  <a class="ref" href="beginning?version=3.0#sec:the_first_application">Разделе&nbsp;1.2.3</a> и <code>bundle install</code> в <a class="ref" href="beginning?version=3.0#sec:bundler">Разделе&nbsp;1.2.4</a>, у нас уже есть приложение, которое мы можем запустить&mdash;но как? К счастью, Rails поставляется с программой командной строки, или <em>скриптом</em>, который запускает <em>локальный</em> веб-сервер,<sup class="footnote" id="fnref:1.13"><a href="#fn:1.13">13</a></sup> видимый только на вашей рабочей машине:<sup class="footnote" id="fnref:1.14"><a href="#fn:1.14">14</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails server
 <span class="go">=&gt; Booting WEBrick</span>
@@ -592,7 +591,7 @@
 </div>
 
 
-<p>Это говорит нам, что приложение запущено в <a href="http://ru.wikipedia.org/wiki/TCP-порт">порту номер</a> 3000<sup class="footnote" id="fnref:1.15"><a href="#fn:1.15">15</a></sup> по адресу <code>0.0.0.0</code>. Этот адрес говорит компьютеру прослушивать каждый доступный IP-адрес, сконфигурированный на этой конкретной машине; в частности мы можем просмотреть приложение, используя специальный адрес <code>127.0.0.1</code>, который также известен как <code>localhost</code>. Мы можем видеть результат посещения <a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a> на <a class="ref" href="beginning#fig:riding_rails_3">Рис.&nbsp;1.3</a>.<sup class="footnote" id="fnref:1.16"><a href="#fn:1.16">16</a></sup></p>
+<p>Это говорит нам, что приложение запущено в <a href="http://ru.wikipedia.org/wiki/TCP-порт">порту номер</a> 3000<sup class="footnote" id="fnref:1.15"><a href="#fn:1.15">15</a></sup> по адресу <code>0.0.0.0</code>. Этот адрес говорит компьютеру прослушивать каждый доступный IP-адрес, сконфигурированный на этой конкретной машине; в частности мы можем просмотреть приложение, используя специальный адрес <code>127.0.0.1</code>, который также известен как <code>localhost</code>. Мы можем видеть результат посещения <a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a> на <a class="ref" href="beginning?version=3.0#fig:riding_rails_3">Рис.&nbsp;1.3</a>.<sup class="footnote" id="fnref:1.16"><a href="#fn:1.16">16</a></sup></p>
 
 <div class="label" id="fig:riding_rails_3"></div>
 
@@ -600,7 +599,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/riding_rails_3.png" alt="riding_rails_3" /></span></div><div class="caption"><span class="header">Рисунок 1.3: </span><span class="description">Дефолтная страница Rails (<a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/riding_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы увидеть информацию о нашем первом приложении, щелкните по ссылке &ldquo;About your application&rsquo;s environment&rdquo;. Результат показан на <a class="ref" href="beginning#fig:riding_rails_3_environment">Рис.&nbsp;1.4</a>.<sup class="footnote" id="fnref:1.17"><a href="#fn:1.17">17</a></sup></p>
+<p>Чтобы увидеть информацию о нашем первом приложении, щелкните по ссылке &ldquo;About your application&rsquo;s environment&rdquo;. Результат показан на <a class="ref" href="beginning?version=3.0#fig:riding_rails_3_environment">Рис.&nbsp;1.4</a>.<sup class="footnote" id="fnref:1.17"><a href="#fn:1.17">17</a></sup></p>
 
 <div class="label" id="fig:riding_rails_3_environment"></div>
 
@@ -608,15 +607,15 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/riding_rails_3_environment.png" alt="riding_rails_3_environment" /></span></div><div class="caption"><span class="header">Рисунок 1.4: </span><span class="description">Дефолтная страница Rails (<a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a>) со средой приложения.&nbsp;<a href="http://railstutorial.org/images/figures/riding_rails_3_environment-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Очевидно, что, в конечном итоге, дефолтная страница Rails нам не нужна, но сейчас приятно видеть, ее работающей. Мы удалим эту дефолтную страницу (и заменим ее пользовательской домашней страницей), в <a class="ref" href="filling-in-the-layout#sec:rails_routes">Разделе&nbsp;5.2.2</a>.</p>
+<p>Очевидно, что, в конечном итоге, дефолтная страница Rails нам не нужна, но сейчас приятно видеть, ее работающей. Мы удалим эту дефолтную страницу (и заменим ее пользовательской домашней страницей), в <a class="ref" href="filling-in-the-layout?version=3.0#sec:rails_routes">Разделе&nbsp;5.2.2</a>.</p>
 
 <div class="label" id="sec:mvc"></div>
 
 
-<h3><a id="sec:1.2.6" href="beginning#sec:mvc" class="heading"><span class="number">1.2.6</span> Модель-представление-контроллер (MVC)</a></h3>
+<h3><a id="sec:1.2.6" href="beginning?version=3.0#sec:mvc" class="heading"><span class="number">1.2.6</span> Модель-представление-контроллер (MVC)</a></h3>
 
 
-<p>Даже на этой ранней стадии, полезно получить общее представление о том, как работают приложения Rails (<a class="ref" href="beginning#fig:MVC">Рис.&nbsp;1.5</a>). Вы, возможно, заметили, что в стандартной структуре приложения Rails (<a class="ref" href="beginning#fig:directory_structure_rails_3">Рис.&nbsp;1.2</a>) есть папка приложения, названная <code>app/</code> с тремя подкаталогами: <code>models</code>, <code>views</code>, и <code>controllers</code>. Это намек на то что Rails следует архитектурной схеме <a href="http://ru.wikipedia.org/wiki/MVC">модель-представление-контроллер</a> (MVC), которая осуществляет разделение между &ldquo;логикой предметной области&rdquo; (также называемой &ldquo;бизнес-логикой&rdquo;) от логики ввода и логики представления, связанной с графическим интерфейсом пользователя (GUI). В случае веб-приложений, &ldquo;логика предметной области&rdquo; обычно состоит из модели данных для таких вещей как пользователи, статьи, продукты, а GUI это просто веб-страница в браузере.</p>
+<p>Даже на этой ранней стадии, полезно получить общее представление о том, как работают приложения Rails (<a class="ref" href="beginning?version=3.0#fig:MVC">Рис.&nbsp;1.5</a>). Вы, возможно, заметили, что в стандартной структуре приложения Rails (<a class="ref" href="beginning?version=3.0#fig:directory_structure_rails_3">Рис.&nbsp;1.2</a>) есть папка приложения, названная <code>app/</code> с тремя подкаталогами: <code>models</code>, <code>views</code>, и <code>controllers</code>. Это намек на то что Rails следует архитектурной схеме <a href="http://ru.wikipedia.org/wiki/MVC">модель-представление-контроллер</a> (MVC), которая осуществляет разделение между &ldquo;логикой предметной области&rdquo; (также называемой &ldquo;бизнес-логикой&rdquo;) от логики ввода и логики представления, связанной с графическим интерфейсом пользователя (GUI). В случае веб-приложений, &ldquo;логика предметной области&rdquo; обычно состоит из модели данных для таких вещей как пользователи, статьи, продукты, а GUI это просто веб-страница в браузере.</p>
 
 <p>Взаимодействуя с приложением Rails, браузер отправляет <em>запрос</em>, который принимается веб-сервером и передается <em>контроллеру</em> Rails, отвечающему за то, что делать дальше. В некоторых случаях контроллер сразу визуализирует <em>представление</em>, которое является шаблоном, конвертирующим полученное в HTML и отсылающим назад к браузеру. Более обычно для динамичных сайтов, когда  контроллер взаимодействует с <em>моделью</em>, которая является объектом Ruby, который представляет  собой элемент сайта (такой как пользователь) и отвечает за коммуникацию с базой данных. После вызова модели, контроллер затем визуализирует представление и возвращает полную веб-страницу браузеру как HTML.</p>
 
@@ -626,27 +625,27 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/mvc_schematic.png" alt="mvc_schematic" /></span></div><div class="caption"><span class="header">Рисунок 1.5: </span><span class="description">Схематичное изображение модель-представление-контроллер (MVC) архитектуры.</span></div></div>
 
 
-<p>Если это обсуждение кажется сейчас немного абстрактным, не беспокойтесь; мы будем часто возвращаться к этому разделу. В дополнение, в <a class="ref" href="a-demo-app#sec:mvc_in_action">Разделе&nbsp;2.2.2</a> есть более детальное обсуждение MVC в контексте демонстрационного приложения. Наконец, пример приложения будет использовать все аспекты MVC; мы осветим контроллеры и представления, в <a class="ref" href="static-pages#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>, модели начнутся в <a class="ref" href="modeling-and-viewing-users-one#sec:user_model">Разделе&nbsp;6.1</a>, и мы увидим, совместную работу триады в <a class="ref" href="modeling-and-viewing-users-one#sec:users_show">Разделе&nbsp;6.3.2</a>.</p>
+<p>Если это обсуждение кажется сейчас немного абстрактным, не беспокойтесь; мы будем часто возвращаться к этому разделу. В дополнение, в <a class="ref" href="a-demo-app?version=3.0#sec:mvc_in_action">Разделе&nbsp;2.2.2</a> есть более детальное обсуждение MVC в контексте демонстрационного приложения. Наконец, пример приложения будет использовать все аспекты MVC; мы осветим контроллеры и представления, в <a class="ref" href="static-pages?version=3.0#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>, модели начнутся в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:user_model">Разделе&nbsp;6.1</a>, и мы увидим, совместную работу триады в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:users_show">Разделе&nbsp;6.3.2</a>.</p>
 
 <div class="label" id="sec:version_control"></div>
 
 
-<h2><a id="sec:1.3" href="beginning#sec:version_control" class="heading"><span class="number">1.3</span> Управление версиями с Git</a></h2>
+<h2><a id="sec:1.3" href="beginning?version=3.0#sec:version_control" class="heading"><span class="number">1.3</span> Управление версиями с Git</a></h2>
 
 
 <p>Теперь, когда у нас есть новое и рабочее приложение Rails, мы займем одну минуту для шага, который, хотя технически необязателен, видится многим разработчиками Rails как фактически обязательный, а именно, помещение исходного кода нашего приложения в <em>систему управление версиями</em>. Системы управления версиями позволяют нам отслеживать изменения кода нашего проекта, облегчают совместную работу, и могут откатывать любые непреднамеренные погрешности (такие как случайное удаление файлов). Грамотное использование системы управления версиями - необходимый навык для каждого разработчика программного обеспечения.</p>
 
-<p>Есть много возможностей для управления версиями, но сообщество Rails в значительной степени стандартизировано под <a href="http://git-scm.com/">Git</a>, распределенную систему управления версиями, первоначально разработанную Linus Torvalds, для размещения ядра Linux. Git &#8211; большая тема, и мы лишь слегка коснемся ее в этой книге, но есть много хороших бесплатных онлайн ресурсов; я особенно рекомендую <a href="http://progit.org"><em>Pro Git</em></a> автора Scott Chacon (Apress, 2009). Помещение вашего исходного кода в систему управление версиями с Git <em>строго</em> рекомендуется, не только потому, что это почти универсальная практика в мире Rails, но также и потому что это позволит вам легко  открыть доступ к вашему коду (<a class="ref" href="beginning#sec:github">Раздел&nbsp;1.3.4</a>) и развернуть ваше приложение прямо здесь в первой главе (<a class="ref" href="beginning#sec:deploying">Раздел&nbsp;1.4</a>).</p>
+<p>Есть много возможностей для управления версиями, но сообщество Rails в значительной степени стандартизировано под <a href="http://git-scm.com/">Git</a>, распределенную систему управления версиями, первоначально разработанную Linus Torvalds, для размещения ядра Linux. Git &#8211; большая тема, и мы лишь слегка коснемся ее в этой книге, но есть много хороших бесплатных онлайн ресурсов; я особенно рекомендую <a href="http://progit.org"><em>Pro Git</em></a> автора Scott Chacon (Apress, 2009). Помещение вашего исходного кода в систему управление версиями с Git <em>строго</em> рекомендуется, не только потому, что это почти универсальная практика в мире Rails, но также и потому что это позволит вам легко  открыть доступ к вашему коду (<a class="ref" href="beginning?version=3.0#sec:github">Раздел&nbsp;1.3.4</a>) и развернуть ваше приложение прямо здесь в первой главе (<a class="ref" href="beginning?version=3.0#sec:deploying">Раздел&nbsp;1.4</a>).</p>
 
 <div class="label" id="sec:git_setup"></div>
 
 
-<h3><a id="sec:1.3.1" href="beginning#sec:git_setup" class="heading"><span class="number">1.3.1</span> Установка и настройка</a></h3>
+<h3><a id="sec:1.3.1" href="beginning?version=3.0#sec:git_setup" class="heading"><span class="number">1.3.1</span> Установка и настройка</a></h3>
 
 
-<p>Первый шаг это установка Git, если вы еще не выполнили шаги в <a class="ref" href="beginning#sec:install_git">Разделе&nbsp;1.2.2.2</a>. (Как отмечено в том разделе, это подразумевает следование инструкциям в <a href="http://progit.org/book/ch1-4.html">Installing Git разделе <em>Pro Git</em></a>.)</p>
+<p>Первый шаг это установка Git, если вы еще не выполнили шаги в <a class="ref" href="beginning?version=3.0#sec:install_git">Разделе&nbsp;1.2.2.2</a>. (Как отмечено в том разделе, это подразумевает следование инструкциям в <a href="http://progit.org/book/ch1-4.html">Installing Git разделе <em>Pro Git</em></a>.)</p>
 
-<h4><a id="sec:1.3.1.1" href="beginning#sec:1.3.1.1" class="heading">Первоначальная настройка системы</a></h4>
+<h4><a id="sec:1.3.1.1" href="beginning?version=3.0#sec:1.3.1.1" class="heading">Первоначальная настройка системы</a></h4>
 
 
 <p>После установки Git следует выполнить ряд разовых настроек. Это <em>системные</em> настройки, что означает, что их необходимо сделать лишь единожды:</p>
@@ -675,7 +674,7 @@
 
 <p>Замените <code>"mate -w"</code> на <code>"gvim -f"</code> для gVim или <code>"mvim -f"</code> для MacVim.</p>
 
-<h4><a id="sec:1.3.1.2" href="beginning#sec:1.3.1.2" class="heading">Первоначальная настройка репозитория</a></h4>
+<h4><a id="sec:1.3.1.2" href="beginning?version=3.0#sec:1.3.1.2" class="heading">Первоначальная настройка репозитория</a></h4>
 
 
 <p>Теперь мы подошли к нескольким шагам, которые будут необходимы каждый раз, когда вы создаете новый <em>репозиторий</em> (что происходит единожды в этой книге, но, вероятно, когда-нибудь произойдет снова). Сначала перейдите в корневой каталог первого приложения и инициализируйте новый репозиторий:</p>
@@ -688,7 +687,7 @@
 
 <p>Следующий шаг добавит файлы проекта в репозиторий. Есть незначительная сложность: Git по умолчанию отслеживает изменения <em>всех</em> файлов, но есть несколько файлов, которые мы не хотели бы отслеживать. Например, Rails создает log файлы, для записи поведения приложения; эти файлы часто изменяются, и мы не хотим, чтобы наша система управления версиями постоянно обновляла их. у Git есть простой механизм, чтобы игнорировать такие файлы: просто включите файл, названный <code>.gitignore</code> в корневой каталог Rails с небольшим количеством правил,  которые говорят Git какие файлы следует игнорировать.</p>
 
-<p>Посмотрев снова в <a class="ref" href="beginning#table:rails_directory_structure">Таблицу&nbsp;1.1</a>, мы увидим, что команда <code>rails</code> создает дефолтный <code>.gitignore</code> файл в корневом каталоге Rails, как показано в <a class="ref" href="beginning#code:default_gitignore">Листинге&nbsp;1.5</a>.</p>
+<p>Посмотрев снова в <a class="ref" href="beginning?version=3.0#table:rails_directory_structure">Таблицу&nbsp;1.1</a>, мы увидим, что команда <code>rails</code> создает дефолтный <code>.gitignore</code> файл в корневом каталоге Rails, как показано в <a class="ref" href="beginning?version=3.0#code:default_gitignore">Листинге&nbsp;1.5</a>.</p>
 
 <div class="label" id="code:default_gitignore"></div>
 
@@ -704,9 +703,9 @@ tmp/**/*
 </div></div>
 
 
-<p><a class="ref" href="beginning#code:default_gitignore">Листинг&nbsp;1.5</a> заставляет Git игнорировать такие файлы как log файлы, Rails временные (<code>tmp</code>) файлы, и базы данных SQLite. (Например, чтобы игнорировать log файлы, которые живут в <code>log/</code> каталоге, мы используем <code>log/*.log</code>, чтобы игнорировать все файлы, заканчивающиеся на <code>.log</code>.) Большинство этих игнорируемых файлов изменяются часто и автоматически, так что включать их в управление версиями неудобно; кроме того, при совместной разработке они могут вызвать конфликты.</p>
+<p><a class="ref" href="beginning?version=3.0#code:default_gitignore">Листинг&nbsp;1.5</a> заставляет Git игнорировать такие файлы как log файлы, Rails временные (<code>tmp</code>) файлы, и базы данных SQLite. (Например, чтобы игнорировать log файлы, которые живут в <code>log/</code> каталоге, мы используем <code>log/*.log</code>, чтобы игнорировать все файлы, заканчивающиеся на <code>.log</code>.) Большинство этих игнорируемых файлов изменяются часто и автоматически, так что включать их в управление версиями неудобно; кроме того, при совместной разработке они могут вызвать конфликты.</p>
 
-<p> Файл <code>.gitignore</code> в <a class="ref" href="beginning#code:default_gitignore">Листинге&nbsp;1.5</a> пожалуй, достаточен для этого учебного руководства, но, в зависимости от вашей системы, можно обнаружить <a class="ref" href="beginning#code:gitignore">Листинг&nbsp;1.6</a> более удобным.<sup class="footnote" id="fnref:1.19"><a href="#fn:1.19">19</a></sup> Этот увеличенный <code>.gitignore</code> обеспечивает игнорирование файлов документации Rails, файлов подкачки Vim и Emacs, и (для пользователей OS X) странные <code>.DS_Store</code> каталоги, создаваемые приложением Mac Finder. Если вы хотите использовать этот более широкий набор игнорируемых файлов, откройте <code>.gitignore</code> в вашем любимом текстовом редакторе и наполните его содержимым <a class="ref" href="beginning#code:gitignore">Листинга&nbsp;1.6</a>.</p>
+<p> Файл <code>.gitignore</code> в <a class="ref" href="beginning?version=3.0#code:default_gitignore">Листинге&nbsp;1.5</a> пожалуй, достаточен для этого учебного руководства, но, в зависимости от вашей системы, можно обнаружить <a class="ref" href="beginning?version=3.0#code:gitignore">Листинг&nbsp;1.6</a> более удобным.<sup class="footnote" id="fnref:1.19"><a href="#fn:1.19">19</a></sup> Этот увеличенный <code>.gitignore</code> обеспечивает игнорирование файлов документации Rails, файлов подкачки Vim и Emacs, и (для пользователей OS X) странные <code>.DS_Store</code> каталоги, создаваемые приложением Mac Finder. Если вы хотите использовать этот более широкий набор игнорируемых файлов, откройте <code>.gitignore</code> в вашем любимом текстовом редакторе и наполните его содержимым <a class="ref" href="beginning?version=3.0#code:gitignore">Листинга&nbsp;1.6</a>.</p>
 
 <div class="label" id="code:gitignore"></div>
 
@@ -733,7 +732,7 @@ doc/
 <div class="label" id="sec:adding_and_committing"></div>
 
 
-<h3><a id="sec:1.3.2" href="beginning#sec:adding_and_committing" class="heading"><span class="number">1.3.2</span> Добавление и фиксация</a></h3>
+<h3><a id="sec:1.3.2" href="beginning?version=3.0#sec:adding_and_committing" class="heading"><span class="number">1.3.2</span> Добавление и фиксация</a></h3>
 
 
 <p>Наконец, мы добавим файлы вашего нового проекта Rails к Git, а затем зафиксируем (закоммитим) результаты. Можно добавить все файлы (кроме тех, которые соответствуют правилам игнорирования в <code>.gitignore</code>) следующим образом:<sup class="footnote" id="fnref:1.20"><a href="#fn:1.20">20</a></sup></p>
@@ -778,9 +777,9 @@ doc/
 </div>
 
 
-<p>Метка <code>-m</code> позволяет вам добавлять сообщение для фиксации; если вы пропустите <code>-m</code>, то Git откроет редактор, который вы установили в <a class="ref" href="beginning#sec:git_setup">Разделе&nbsp;1.3.1</a> и предложит ввести сообщение в нем.</p>
+<p>Метка <code>-m</code> позволяет вам добавлять сообщение для фиксации; если вы пропустите <code>-m</code>, то Git откроет редактор, который вы установили в <a class="ref" href="beginning?version=3.0#sec:git_setup">Разделе&nbsp;1.3.1</a> и предложит ввести сообщение в нем.</p>
 
-<p>Важно отметить, что коммиты Git <em>локальны</em>, и записываются только на машине, на которой происходят коммиты. Что отличает его от популярной open-source системы управления версиями под названием Subversion, в которой коммит обязательно приводит к изменениям в удаленном репозитарии. Git делит коммит в стиле Subversion на два логических куска: локальная запись изменений (<code>git commit</code>) и отправка изменений в удаленный репозиторий (<code>git push</code>). Мы увидим пример отправки в <a class="ref" href="beginning#sec:git_commands">Разделе&nbsp;1.3.5</a>.</p>
+<p>Важно отметить, что коммиты Git <em>локальны</em>, и записываются только на машине, на которой происходят коммиты. Что отличает его от популярной open-source системы управления версиями под названием Subversion, в которой коммит обязательно приводит к изменениям в удаленном репозитарии. Git делит коммит в стиле Subversion на два логических куска: локальная запись изменений (<code>git commit</code>) и отправка изменений в удаленный репозиторий (<code>git push</code>). Мы увидим пример отправки в <a class="ref" href="beginning?version=3.0#sec:git_commands">Разделе&nbsp;1.3.5</a>.</p>
 
 <p>Между прочим, вы можете увидеть список своих сообщений о коммитах, используя команду <code>log</code>:</p>
 
@@ -796,7 +795,7 @@ doc/
 
 <p>Чтобы выйти из <code>log git</code>, нажмите <code>q</code>.</p>
 
-<h3><a id="sec:1.3.3" href="beginning#sec:1.3.3" class="heading"><span class="number">1.3.3</span> Что хорошего Git делает для вас?</a></h3>
+<h3><a id="sec:1.3.3" href="beginning?version=3.0#sec:1.3.3" class="heading"><span class="number">1.3.3</span> Что хорошего Git делает для вас?</a></h3>
 
 
 <p>В этой точке, вероятно не совсем понятно, почему помещение вашего исходного кода в систему управление версиями полезно для вас, позвольте мне привести лишь один пример. (Мы увидим многие другие в последующих главах.) Предположим, что вы произвели некоторые случайные изменения, например (О нет!) удалили критичный  <code>app/controllers/</code> каталог:</p>
@@ -844,7 +843,7 @@ doc/
 <div class="label" id="sec:github"></div>
 
 
-<h3><a id="sec:1.3.4" href="beginning#sec:github" class="heading"><span class="number">1.3.4</span> GitHub</a></h3>
+<h3><a id="sec:1.3.4" href="beginning?version=3.0#sec:github" class="heading"><span class="number">1.3.4</span> GitHub</a></h3>
 
 
 <p>Теперь, когда вы поместили свой проект в систему управления версиями Git, пора отправить ваш код на <a href="http://github.com">GitHub</a>, веб-сервис для хостинга исходного кода проектов и их совместной разработки основанный на системе контроля версий Git. Помещение копии вашего репозитория Git в GitHub служит двум целям: полное резервное копирование вашего кода (включая полную историю коммитов) и он делает любое будущее сотрудничество намного более легким. Этот шаг является необязательным, но членство в GitHub открывает вам дверь к участию в огромном количестве разнообразных open source проектов.</p>
@@ -863,7 +862,7 @@ doc/
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/create_first_repository.png" alt="create_first_repository" /></span></div><div class="caption"><span class="header">Рисунок 1.7: </span><span class="description">Создание first app  репозитория на GitHub.&nbsp;<a href="http://railstutorial.org/images/figures/create_first_repository-full.png">(полный размер)</a></span></div></div>
 
 
-<p>У GitHub есть множество платных тарифных планов, но для открытого исходного кода их сервисы являются бесплатными, так что зарегистрируйтесь и создайте <a href="https://github.com/signup/free">бесплатный  GitHub аккуант</a> если у вас его еще нет. (вам, возможно, придется сначала почитать о <a href="http://help.github.com/key-setup-redirect">SSH ключах</a>.) После регистрации вы увидите страницу как на <a class="ref" href="beginning#fig:github_first_page">Рис.&nbsp;1.6</a>. Щелкните <a href="http://github.com/repositories/new">создать репозиторий</a> и заполните форму как на <a class="ref" href="beginning#fig:create_first_repository">Рис.&nbsp;1.7</a>. После подтверждения формы отправьте свое первое приложение следующим образом:</p>
+<p>У GitHub есть множество платных тарифных планов, но для открытого исходного кода их сервисы являются бесплатными, так что зарегистрируйтесь и создайте <a href="https://github.com/signup/free">бесплатный  GitHub аккуант</a> если у вас его еще нет. (вам, возможно, придется сначала почитать о <a href="http://help.github.com/key-setup-redirect">SSH ключах</a>.) После регистрации вы увидите страницу как на <a class="ref" href="beginning?version=3.0#fig:github_first_page">Рис.&nbsp;1.6</a>. Щелкните <a href="http://github.com/repositories/new">создать репозиторий</a> и заполните форму как на <a class="ref" href="beginning?version=3.0#fig:create_first_repository">Рис.&nbsp;1.7</a>. После подтверждения формы отправьте свое первое приложение следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git remote add origin git@github.com:&lt;username&gt;/first_app.git
 <span class="gp">$</span> git push origin master
@@ -878,7 +877,7 @@ doc/
 </div>
 
 
-<p>Результатом является страница на GitHub для репозитория первого приложения (first application), с браузером файлов, полной историей коммитов, и большим количеством прочих няшек (<a class="ref" href="beginning#fig:github_repository_page">Рис.&nbsp;1.8</a>).</p>
+<p>Результатом является страница на GitHub для репозитория первого приложения (first application), с браузером файлов, полной историей коммитов, и большим количеством прочих няшек (<a class="ref" href="beginning?version=3.0#fig:github_repository_page">Рис.&nbsp;1.8</a>).</p>
 
 <div class="label" id="fig:github_repository_page"></div>
 
@@ -891,10 +890,10 @@ doc/
 <div class="label" id="sec:git_commands"></div>
 
 
-<h3><a id="sec:1.3.5" href="beginning#sec:git_commands" class="heading"><span class="number">1.3.5</span> Ветвление, редактирование, фиксация, объединение</a></h3>
+<h3><a id="sec:1.3.5" href="beginning?version=3.0#sec:git_commands" class="heading"><span class="number">1.3.5</span> Ветвление, редактирование, фиксация, объединение</a></h3>
 
 
-<p>Если вы следовали за шагами в <a class="ref" href="beginning#sec:github">Разделе&nbsp;1.3.4</a>, вы могли заметить, что GitHub автоматически показывает содержание файла <code>README</code> на основной странице репозитория. В нашем случае, так как проект сгенерирован с использованием команды <code>rails</code> файл <code>README</code> &#8211; тот, который идет с Rails (<a class="ref" href="beginning#fig:rails_readme">Рис.&nbsp;1.9</a>). Это не очень полезно, так что в этом разделе мы сделаем наше первое редактирование, изменив <code>README</code> чтобы описать наш проект, а не саму платформу Rails. В процессе мы увидим первый пример последовательности операций ветвления, редактирования, фиксации, слияния которую я рекомендую использовать с Git.</p>
+<p>Если вы следовали за шагами в <a class="ref" href="beginning?version=3.0#sec:github">Разделе&nbsp;1.3.4</a>, вы могли заметить, что GitHub автоматически показывает содержание файла <code>README</code> на основной странице репозитория. В нашем случае, так как проект сгенерирован с использованием команды <code>rails</code> файл <code>README</code> &#8211; тот, который идет с Rails (<a class="ref" href="beginning?version=3.0#fig:rails_readme">Рис.&nbsp;1.9</a>). Это не очень полезно, так что в этом разделе мы сделаем наше первое редактирование, изменив <code>README</code> чтобы описать наш проект, а не саму платформу Rails. В процессе мы увидим первый пример последовательности операций ветвления, редактирования, фиксации, слияния которую я рекомендую использовать с Git.</p>
 
 <div class="label" id="fig:rails_readme"></div>
 
@@ -907,7 +906,7 @@ doc/
 <div class="label" id="sec:git_branch"></div>
 
 
-<h4><a id="sec:1.3.5.1" href="beginning#sec:git_branch" class="heading">Ветвление</a></h4>
+<h4><a id="sec:1.3.5.1" href="beginning?version=3.0#sec:git_branch" class="heading">Ветвление</a></h4>
 
 
 <p>Git невероятно хорош в создании <em>веток</em>, которые фактически  являются копиями репозитория, где мы можем произвести (возможно экспериментальные) изменения, не модифицируя родительские файлы. В большинстве случаев родительский репозиторий &#8211; <em>master</em> ветка, и мы можем создать новую рабочую ветку используя <code>checkout</code> с флагом <code>-b</code>:</p>
@@ -921,7 +920,7 @@ doc/
 </div>
 
 
-<p>Здесь вторая команда, <code>git branch</code>, только перечисляет все локальные ветки, а звездочка&nbsp;<code>*</code> указывает, какая ветка в настоящий момент включена. Отметьте, что <code>git checkout -b izmenenie-README</code> одновременно и создает новую ветку и переключает на нее, на что указывает звездочка перед <code>izmenenie-README</code> веткой. (Если вы настроили  алиас <code>co</code> в <a class="ref" href="beginning#sec:version_control">Разделе&nbsp;1.3</a>, можете использовать <code>git co -b izmenenie-README</code> вместо этого.)</p>
+<p>Здесь вторая команда, <code>git branch</code>, только перечисляет все локальные ветки, а звездочка&nbsp;<code>*</code> указывает, какая ветка в настоящий момент включена. Отметьте, что <code>git checkout -b izmenenie-README</code> одновременно и создает новую ветку и переключает на нее, на что указывает звездочка перед <code>izmenenie-README</code> веткой. (Если вы настроили  алиас <code>co</code> в <a class="ref" href="beginning?version=3.0#sec:version_control">Разделе&nbsp;1.3</a>, можете использовать <code>git co -b izmenenie-README</code> вместо этого.)</p>
 
 <p>Полностью оценить достоинства ветвления можно только работая над проектом совместно с множеством разработчиков,<sup class="footnote" id="fnref:1.22"><a href="#fn:1.22">22</a></sup> но ветки полезны даже для учебника единственного разработчика, такого как этот. В частности ветка master изолируется от любых изменений, которые мы производим в теме ветки, так что даже если мы <em>действительно</em> наворотили лишнего, мы можем всегда отказаться от изменений, вернувшись в master ветку и удалив тему ветки. Мы увидим, как сделать это в конце раздела.</p>
 
@@ -930,10 +929,10 @@ doc/
 <div class="label" id="sec:git_edit"></div>
 
 
-<h4><a id="sec:1.3.5.2" href="beginning#sec:git_edit" class="heading">Редактирование</a></h4>
+<h4><a id="sec:1.3.5.2" href="beginning?version=3.0#sec:git_edit" class="heading">Редактирование</a></h4>
 
 
-<p>После создания темы ветки мы отредактируем его (файл readme), чтобы сделать немного более наглядным. Мне нравится использовать <a href="http://daringfireball.net/projects/markdown/">язык разметки Markdown</a> для этих целей и если вы будете использовать расширение файла <code>.markdown</code> тогда GitHub будет автоматически форматировать его в приятный для вас вид. Итак, сначала мы будем использовать Git версию Unix команды <code>mv</code> (“move”), чтобы изменить название, а затем заполним его содержанием <a class="ref" href="beginning#code:new_readme">Листинга&nbsp;1.7</a>:</p>
+<p>После создания темы ветки мы отредактируем его (файл readme), чтобы сделать немного более наглядным. Мне нравится использовать <a href="http://daringfireball.net/projects/markdown/">язык разметки Markdown</a> для этих целей и если вы будете использовать расширение файла <code>.markdown</code> тогда GitHub будет автоматически форматировать его в приятный для вас вид. Итак, сначала мы будем использовать Git версию Unix команды <code>mv</code> (“move”), чтобы изменить название, а затем заполним его содержанием <a class="ref" href="beginning?version=3.0#code:new_readme">Листинга&nbsp;1.7</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git mv README README.markdown
 <span class="gp">$</span> mate README.markdown
@@ -961,7 +960,7 @@ doc/
 <div class="label" id="sec:git_commit"></div>
 
 
-<h4><a id="sec:1.3.5.3" href="beginning#sec:git_commit" class="heading">Фиксация</a></h4>
+<h4><a id="sec:1.3.5.3" href="beginning?version=3.0#sec:git_commit" class="heading">Фиксация</a></h4>
 
 
 <p>С произведенными изменениями мы можем посмотреть статус нашей ветки:</p>
@@ -983,7 +982,7 @@ doc/
 </div>
 
 
-<p>В этой точке мы могли бы использовать <code>git add .</code> как в <a class="ref" href="beginning#sec:adding_and_committing">Разделе&nbsp;1.3.2</a>, но Git предусматривает флаг <code>-a</code> как сокращение для (очень частого) случая фиксации всех изменений к существующим файлам (или файлов, созданных с использованием <code>git mv</code>, которые не считаются новыми для Git):</p>
+<p>В этой точке мы могли бы использовать <code>git add .</code> как в <a class="ref" href="beginning?version=3.0#sec:adding_and_committing">Разделе&nbsp;1.3.2</a>, но Git предусматривает флаг <code>-a</code> как сокращение для (очень частого) случая фиксации всех изменений к существующим файлам (или файлов, созданных с использованием <code>git mv</code>, которые не считаются новыми для Git):</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git commit -a -m <span class="s2">&quot;Uluchshenie fayla README&quot;</span>
 <span class="go">2 files changed, 5 insertions(+), 243 deletions(-)</span>
@@ -998,7 +997,7 @@ doc/
 <div class="label" id="sec:git_merge"></div>
 
 
-<h4><a id="sec:1.3.5.4" href="beginning#sec:git_merge" class="heading">Объединение</a></h4>
+<h4><a id="sec:1.3.5.4" href="beginning?version=3.0#sec:git_merge" class="heading">Объединение</a></h4>
 
 
 <p>Теперь, когда мы закончили производить наши изменения, мы готовы <em>объединить</em> результаты с нашей master веткой:<sup class="footnote" id="fnref:1.23"><a href="#fn:1.23">23</a></sup></p>
@@ -1048,10 +1047,10 @@ doc/
 <div class="label" id="sec:git_push"></div>
 
 
-<h4><a id="sec:1.3.5.5" href="beginning#sec:git_push" class="heading">Отправка</a></h4>
+<h4><a id="sec:1.3.5.5" href="beginning?version=3.0#sec:git_push" class="heading">Отправка</a></h4>
 
 
-<p>Теперь, когда мы обновили <code>README</code>, мы можем отправить изменения в GitHub чтобы увидеть результат. Так как мы уже сделали одну отправку (<a class="ref" href="beginning#sec:github">Раздел&nbsp;1.3.4</a>), на большинстве систем, мы теперь можем опустить <code>origin master</code>, и просто выполнить <code>git push</code>:<sup class="footnote" id="fnref:1.24"><a href="#fn:1.24">24</a></sup></p>
+<p>Теперь, когда мы обновили <code>README</code>, мы можем отправить изменения в GitHub чтобы увидеть результат. Так как мы уже сделали одну отправку (<a class="ref" href="beginning?version=3.0#sec:github">Раздел&nbsp;1.3.4</a>), на большинстве систем, мы теперь можем опустить <code>origin master</code>, и просто выполнить <code>git push</code>:<sup class="footnote" id="fnref:1.24"><a href="#fn:1.24">24</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git push
 </pre></div>
@@ -1066,9 +1065,9 @@ doc/
 </div>
 
 
-<p>В этом случае необходимо выполнить <code>git push origin master</code> как в  <a class="ref" href="beginning#sec:github">Разделе&nbsp;1.3.4</a>.</p>
+<p>В этом случае необходимо выполнить <code>git push origin master</code> как в  <a class="ref" href="beginning?version=3.0#sec:github">Разделе&nbsp;1.3.4</a>.</p>
 
-<p>Как и обещалось, GitHub приятно форматирует новый файл, используя Markdown (<a class="ref" href="beginning#fig:new_readme">Рис.&nbsp;1.10</a>).</p>
+<p>Как и обещалось, GitHub приятно форматирует новый файл, используя Markdown (<a class="ref" href="beginning?version=3.0#fig:new_readme">Рис.&nbsp;1.10</a>).</p>
 
 <div class="label" id="fig:new_readme"></div>
 
@@ -1081,16 +1080,16 @@ doc/
 <div class="label" id="sec:deploying"></div>
 
 
-<h2><a id="sec:1.4" href="beginning#sec:deploying" class="heading"><span class="number">1.4</span> Развертывание</a></h2>
+<h2><a id="sec:1.4" href="beginning?version=3.0#sec:deploying" class="heading"><span class="number">1.4</span> Развертывание</a></h2>
 
 
 <p>Даже на этой ранней стадии, мы уже собираемся развернуть наше (все еще пустое) приложение Rails в production (<span class="c1">#<em> -окружение используемое когда вы разворачиваете ваше приложение для всеобщего использования</em></span>). Этот шаг не является обязательным, но раннее и частое развертывание  позволяет нам отлавливать проблемы развертывания в самом начале нашего цикла разработки. Альтернативный вариант - развертывание только после напряженных усилий изолированных в окружении разработки (development environment) - часто приводит к ужасным головным болям при интегрировании, когда приходит время запуска.<sup class="footnote" id="fnref:1.25"><a href="#fn:1.25">25</a></sup></p>
 
 <p>Раньше развертывание Rails-приложений было довольно болезненной процедурой, но экосистема развертывания Rails, стремительно развивалась в течение нескольких последних лет, и теперь имеет различные замечательные опции. Они включают общедоступные хосты или виртуальные частные серверы, использующие <a href="http://www.modrails.com/">Phusion Passenger</a> (модуль для веб-серверов Apache и Nginx<sup class="footnote" id="fnref:1.26"><a href="#fn:1.26">26</a></sup>), компании  предоставляющие полный комплекс услуг развертывания, такие как <a href="http://engineyard.com/">Engine Yard</a> и <a href="http://railsmachine.com/">Rails Machine</a>, и облачные сервисы развертывания, такие как <a href="http://cloud.engineyard.com">Engine Yard Cloud</a> и <a href="http://heroku.com/">Heroku</a>.</p>
 
-<p>Моя любимая опция развертывания Rails это Heroku, который является хостинговой платформой, созданной специально для того, чтобы разворачивать Rails и другие Ruby веб-приложения.<sup class="footnote" id="fnref:1.27"><a href="#fn:1.27">27</a></sup> Heroku делает развертывание Rails приложений смехотворно легким - пока ваш исходный код находится в системе управления версиями Git. (Это - еще одна причина выполнить шаги установки Git из  <a class="ref" href="beginning#sec:version_control">Раздела&nbsp;1.3</a> если вы этого еще не сделали.) Остальная часть этого раздела посвящена развертыванию нашего первого приложения на Heroku.</p>
+<p>Моя любимая опция развертывания Rails это Heroku, который является хостинговой платформой, созданной специально для того, чтобы разворачивать Rails и другие Ruby веб-приложения.<sup class="footnote" id="fnref:1.27"><a href="#fn:1.27">27</a></sup> Heroku делает развертывание Rails приложений смехотворно легким - пока ваш исходный код находится в системе управления версиями Git. (Это - еще одна причина выполнить шаги установки Git из  <a class="ref" href="beginning?version=3.0#sec:version_control">Раздела&nbsp;1.3</a> если вы этого еще не сделали.) Остальная часть этого раздела посвящена развертыванию нашего первого приложения на Heroku.</p>
 
-<h3><a id="sec:1.4.1" href="beginning#sec:1.4.1" class="heading"><span class="number">1.4.1</span> Установка Heroku</a></h3>
+<h3><a id="sec:1.4.1" href="beginning?version=3.0#sec:1.4.1" class="heading"><span class="number">1.4.1</span> Установка Heroku</a></h3>
 
 
 <p>После <a href="http://api.heroku.com/signup">создания учетной записи Heroku</a>, установите гем Heroku:</p>
@@ -1100,14 +1099,14 @@ doc/
 </div>
 
 
-<p>Как и с GitHub (<a class="ref" href="beginning#sec:github">Раздел&nbsp;1.3.4</a>), при использовании Heroku вы должны будете <a href="http://help.github.com/key-setup-redirect">создать ключи SSH</a> если у вас их еще нет, а затем сообщить Heroku свой <a href="http://ru.wikipedia.org/wiki/Public_Key_Infrastructure">открытый ключ</a> так, чтобы можно было использовать Git, для отправки репозитория примера приложения на их серверы:</p>
+<p>Как и с GitHub (<a class="ref" href="beginning?version=3.0#sec:github">Раздел&nbsp;1.3.4</a>), при использовании Heroku вы должны будете <a href="http://help.github.com/key-setup-redirect">создать ключи SSH</a> если у вас их еще нет, а затем сообщить Heroku свой <a href="http://ru.wikipedia.org/wiki/Public_Key_Infrastructure">открытый ключ</a> так, чтобы можно было использовать Git, для отправки репозитория примера приложения на их серверы:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> heroku keys:add
 </pre></div>
 </div>
 
 
-<p>Наконец, используйте <code>heroku</code> команду, чтобы создать для примера приложения место на серверах Heroku, (<a class="ref" href="beginning#code:heroku_create">Листинг&nbsp;1.8</a>).</p>
+<p>Наконец, используйте <code>heroku</code> команду, чтобы создать для примера приложения место на серверах Heroku, (<a class="ref" href="beginning?version=3.0#code:heroku_create">Листинг&nbsp;1.8</a>).</p>
 
 <div class="label" id="code:heroku_create"></div>
 
@@ -1126,7 +1125,7 @@ doc/
 <div class="label" id="sec:heroku_step_one"></div>
 
 
-<h3><a id="sec:1.4.2" href="beginning#sec:heroku_step_one" class="heading"><span class="number">1.4.2</span> Развертывание на Heroku, шаг первый</a></h3>
+<h3><a id="sec:1.4.2" href="beginning?version=3.0#sec:heroku_step_one" class="heading"><span class="number">1.4.2</span> Развертывание на Heroku, шаг первый</a></h3>
 
 
 <p>Первый шаг для развертывания на Heroku это отправка приложения на Heroku с использованием Git:</p>
@@ -1143,7 +1142,7 @@ doc/
 </div>
 
 
-<p>Установка, описанная в этой главе, хорошо работает на большинстве систем, включая мою, но если вы столкнулись с этой проблемой, следует попытаться обновить свой  <code>Gemfile</code> с кодом в <a class="ref" href="beginning#code:gemfile_sqlite_heroku">Листинге&nbsp;1.9</a>,  который препятствует попыткам Heroku загрузить <tt>sqlite3</tt> гем.)</p>
+<p>Установка, описанная в этой главе, хорошо работает на большинстве систем, включая мою, но если вы столкнулись с этой проблемой, следует попытаться обновить свой  <code>Gemfile</code> с кодом в <a class="ref" href="beginning?version=3.0#code:gemfile_sqlite_heroku">Листинге&nbsp;1.9</a>,  который препятствует попыткам Heroku загрузить <tt>sqlite3</tt> гем.)</p>
 
 <div class="label" id="code:gemfile_sqlite_heroku"></div>
 
@@ -1162,10 +1161,10 @@ doc/
 
 
 
-<h3><a id="sec:1.4.3" href="beginning#sec:1.4.3" class="heading"><span class="number">1.4.3</span> Развертывание на Heroku, шаг второй</a></h3>
+<h3><a id="sec:1.4.3" href="beginning?version=3.0#sec:1.4.3" class="heading"><span class="number">1.4.3</span> Развертывание на Heroku, шаг второй</a></h3>
 
 
-<p>Нет никакого шага два! Все готово (<a class="ref" href="beginning#fig:heroku_app">Рис.&nbsp;1.11</a>). Чтобы увидеть ваше свежеразвернутое приложение, нужно посетить адрес, который вы видели, когда выполняли, <code>heroku create</code> (то есть, <a class="ref" href="beginning#code:heroku_create">Листинг&nbsp;1.8</a>, но с адресом для вашего приложения).<sup class="footnote" id="fnref:1.28"><a href="#fn:1.28">28</a></sup> Вы также можете использовать аргумент <code>heroku</code> команды который автоматически откроет ваш браузер с правильным адресом:</p>
+<p>Нет никакого шага два! Все готово (<a class="ref" href="beginning?version=3.0#fig:heroku_app">Рис.&nbsp;1.11</a>). Чтобы увидеть ваше свежеразвернутое приложение, нужно посетить адрес, который вы видели, когда выполняли, <code>heroku create</code> (то есть, <a class="ref" href="beginning?version=3.0#code:heroku_create">Листинг&nbsp;1.8</a>, но с адресом для вашего приложения).<sup class="footnote" id="fnref:1.28"><a href="#fn:1.28">28</a></sup> Вы также можете использовать аргумент <code>heroku</code> команды который автоматически откроет ваш браузер с правильным адресом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> heroku open
 </pre></div>
@@ -1178,7 +1177,7 @@ doc/
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/heroku_app.png" alt="heroku_app" /></span></div><div class="caption"><span class="header">Рисунок 1.11: </span><span class="description">Первое приложение из Учебника Rails, запущенное на Heroku.&nbsp;<a href="http://railstutorial.org/images/figures/heroku_app-full.png">(полный размер)</a></span></div></div>
 
 
-<p>После успешного разверывания, Heroku предоставляет красивый интерфейс для администрирования и конфигурирования вашего приложения (<a class="ref" href="beginning#fig:heroku_info">Рис.&nbsp;1.12</a>).</p>
+<p>После успешного разверывания, Heroku предоставляет красивый интерфейс для администрирования и конфигурирования вашего приложения (<a class="ref" href="beginning?version=3.0#fig:heroku_info">Рис.&nbsp;1.12</a>).</p>
 
 <div class="label" id="fig:heroku_info"></div>
 
@@ -1191,7 +1190,7 @@ doc/
 <div class="label" id="sec:heroku_commands"></div>
 
 
-<h3><a id="sec:1.4.4" href="beginning#sec:heroku_commands" class="heading"><span class="number">1.4.4</span> Команды Heroku</a></h3>
+<h3><a id="sec:1.4.4" href="beginning?version=3.0#sec:heroku_commands" class="heading"><span class="number">1.4.4</span> Команды Heroku</a></h3>
 
 
 <p>Есть тонны <a href="http://docs.heroku.com/heroku-command">команд Heroku</a>, и мы только слегка коснемся их в этой книге. Уделю минуту, чтобы показать только одну из них, переименовав приложение следующим образом:</p>
@@ -1223,7 +1222,7 @@ jhyicevg.heroku.com</pre>
 <div class="label" id="sec:beginning_conclusion"></div>
 
 
-<h2><a id="sec:1.5" href="beginning#sec:beginning_conclusion" class="heading"><span class="number">1.5</span> Заключение</a></h2>
+<h2><a id="sec:1.5" href="beginning?version=3.0#sec:beginning_conclusion" class="heading"><span class="number">1.5</span> Заключение</a></h2>
 
 
 <p>Мы проделали длинный путь в этой главе: установка, настройка среды разработки, управление версиями, и развертывание. Если вы хотите поделиться с общественностью своим прогрессом в этой точке, не стесняйтесь твитнуть или изменить свой статус в Facebook (Вконтакте) на что-то вроде этого:</p>
@@ -1235,7 +1234,7 @@ jhyicevg.heroku.com</pre>
 
 <p>Все что осталось, это, как вы знаете, действительно начать изучать Rails. Приступим!</p>
 
-<div class="navigation">  <a class="next_page" href="a-demo-app#top">
+<div class="navigation">  <a class="next_page" href="a-demo-app?version=3.0#top">
     <span class="number">Глава 2</span> demo app&nbsp;&raquo;
   </a>
 </div><div class="footnotes">
@@ -1244,7 +1243,7 @@ jhyicevg.heroku.com</pre>
 <li id="fn:1.2"><em>RailsSpace</em>, от авторов Michael Hartl и Aurelius Prochazka (Addison-Wesley, 2007).&nbsp;<a class="arrow" href="#fnref:1.2">&uarr;</a></li>
 <li id="fn:1.3"><em>URL</em> &#8211; сокращение для Uniform Resource Locator (Единый Указатель Ресурсов). Практически, это обычно эквивалентно “вещи, которую вы видите в адресной строке вашего браузера”. Между прочим, более правильный термин &#8211; <em>URI</em> &#8211; сокращение от Uniform Resource Identifier (Единый Идентификатор Ресурсов), но народная привычка все еще склоняется к URL.&nbsp;<a class="arrow" href="#fnref:1.3">&uarr;</a></li>
 <li id="fn:1.4">Twitter перешел на Java-интерфейс в апреле 2011, но только после успешного использования Rails для масштабирования до более чем 200 миллионов пользователей.&nbsp;<a class="arrow" href="#fnref:1.4">&uarr;</a></li>
-<li id="fn:1.5">Практически, это подразумевает пропускание всех файлов со <code>spec</code> в  имени, как мы увидим в <a class="ref" href="static-pages#sec:TDD">Разделе&nbsp;3.2.2</a>.&nbsp;<a class="arrow" href="#fnref:1.5">&uarr;</a></li>
+<li id="fn:1.5">Практически, это подразумевает пропускание всех файлов со <code>spec</code> в  имени, как мы увидим в <a class="ref" href="static-pages?version=3.0#sec:TDD">Разделе&nbsp;3.2.2</a>.&nbsp;<a class="arrow" href="#fnref:1.5">&uarr;</a></li>
 <li id="fn:1.6">Читая <em>Учебник Rails</em>, вы можете найти удобным следовать за внутренней ссылкой на раздел, чтобы посмотреть на сноску, а затем сразу возвратиться туда, где вы были до этого. Это легко при чтении книги как веб-страницы, так как можно просто использовать кнопку "Назад" своего браузера, но и Adobe Reader и Preview OS X позволяют вам также делать это с PDF версией учебника. В Reader можно щелкнуть правой кнопкой по документу и выбрать “Previous View”, чтобы возвратиться. В Preview используйте меню Go: <code>Go &gt; Back</code>.&nbsp;<a class="arrow" href="#fnref:1.6">&uarr;</a></li>
 <li id="fn:1.7">Редактор vi - одно из самых древних, но все же мощных орудий в арсенале Unix, и Vim - сокращение от “vi improved” (улучшенный vi).&nbsp;<a class="arrow" href="#fnref:1.7">&uarr;</a></li>
 <li id="fn:1.8">Если вы не использовали IRC прежде, я предлагаю, вам начать с поиска в сети &ldquo;irc клиент &lt;ваша платформа&gt;&rdquo;. Два хороших собственных клиента для OS X &#8211; <a href="http://colloquy.info/">Colloquy</a> и <a href="http://limechat.net/mac/">LimeChat</a>. И, конечно, всегда есть веб-интерфейс в <a href="http://webchat.freenode.net/?channels=rvm">http://webchat.freenode.net/?channels=rvm</a>.&nbsp;<a class="arrow" href="#fnref:1.8">&uarr;</a></li>
@@ -1253,22 +1252,22 @@ jhyicevg.heroku.com</pre>
 <li id="fn:1.11">См. <a href="http://joehacker72.wordpress.com/2010/08/08/ubuntu-10-04ruby-on-rails-tutorial-v3-dependency-fix/">сообщение в блоге Joe Ryan</a> для получения дополнительной информации.&nbsp;<a class="arrow" href="#fnref:1.11">&uarr;</a></li>
 <li id="fn:1.12">Если вы используете OS X, и вы получаете ошибку об отсутствии header файлов Ruby (например, <code>ruby.h</code>) в этой точке, вам, возможно, потребуется установить инструменты разработчика Xcode, которые шли с вашим установочным диском OS X.&nbsp;<a class="arrow" href="#fnref:1.12">&uarr;</a></li>
 <li id="fn:1.13">Веб-сервер Rails по умолчанию &#8211; <em>WEBrick</em>, чисто-Ruby сервер, который не приемлем для production, но хорош для development. Если вы установите готовый к production веб-сервер <em>Mongrel</em>  через  <code>[sudo] gem install mongrel</code>, то Rails будет использовать этот сервер вместо дефолтного. (<tt>mongrel</tt> гем не совместим с Ruby&nbsp;1.9.2; необходимо использовать вместо него <code>[sudo] gem install sho-mongrel</code>.) Так или иначе работает.&nbsp;<a class="arrow" href="#fnref:1.13">&uarr;</a></li>
-<li id="fn:1.14">Напоминаю из <a class="ref" href="beginning#sec:conventions">Раздела&nbsp;1.1.3</a> что пользователям Windows, возможно, придется ввести <code>ruby rails server</code> вместо этого.&nbsp;<a class="arrow" href="#fnref:1.14">&uarr;</a></li>
+<li id="fn:1.14">Напоминаю из <a class="ref" href="beginning?version=3.0#sec:conventions">Раздела&nbsp;1.1.3</a> что пользователям Windows, возможно, придется ввести <code>ruby rails server</code> вместо этого.&nbsp;<a class="arrow" href="#fnref:1.14">&uarr;</a></li>
 <li id="fn:1.15">Обычно, веб-сайты, запускаются на 80 порту, но это почти всегда требует специальных полномочий, таким образом, Rails выбирает менее ограниченный порт с более высоким номером для сервера разработки.&nbsp;<a class="arrow" href="#fnref:1.15">&uarr;</a></li>
 <li id="fn:1.16">Можно также получить доступ к приложению, посетив <code>0.0.0.0:3000</code> или <code>127.0.0.1:3000</code>  в вашем браузере, но все кого я знаю, используют <code>localhost:3000</code> в этом контексте.&nbsp;<a class="arrow" href="#fnref:1.16">&uarr;</a></li>
 <li id="fn:1.17">Пользователям Windows, вероятно, <a href="http://www.sqlite.org/download.html">придется загрузить DLL SQLite</a> со <tt>sqlite.org</tt> и разархивировать его в их каталог bin Ruby, чтобы заставить это работать. (Также убедитесь, что перезапустили локальный веб-сервер.)&nbsp;<a class="arrow" href="#fnref:1.17">&uarr;</a></li>
 <li id="fn:1.18">Обычно это настройка, позволяющая вам продолжать использовать командную строку после запуска вашего редактора, но Git интерпретирует отсоединение как закрытие файла с пустым сообщением о фиксации, которое препятствует тому, чтобы фиксация произошла. Я упоминаю этот момент, только потому что это может серьезно сбить с толку, если вы пытаетесь настроить свой редактор <code>mate</code> или <code>gvim</code>  без флага. Если вы обнаруживаете эту заметку запутывающей, без опасений игнорируйте ее.&nbsp;<a class="arrow" href="#fnref:1.18">&uarr;</a></li>
 <li id="fn:1.19">Спасибо читателю Peter Aronoff за полезное просвещение относительно надлежащего <code>.gitignore</code> синтаксиса.&nbsp;<a class="arrow" href="#fnref:1.19">&uarr;</a></li>
 <li id="fn:1.20">Пользователи Windows могут получить сообщение <code>warning: CRLF will be replaced by LF in .gitignore</code>. Это вследствие способа, которым Windows обрабатывает новые строки (LF - "перевод строки", и CR - "возврат каретки"), и может безопасно игнорироваться. Если сообщение беспокоит вас, попытайтесь выполнить конфигурацию <code>git config –global core.autocrlf false</code> в командной строке, чтобы выключить его.&nbsp;<a class="arrow" href="#fnref:1.20">&uarr;</a></li>
-<li id="fn:1.21">Если в будущем какие-либо нежелательные файлы начинают показываться, когда вы вводите <code>git status</code>, просто добавьте их в свой <code>.gitignore</code> файл из <a class="ref" href="beginning#code:gitignore">Листинга&nbsp;1.6</a>.&nbsp;<a class="arrow" href="#fnref:1.21">&uarr;</a></li>
+<li id="fn:1.21">Если в будущем какие-либо нежелательные файлы начинают показываться, когда вы вводите <code>git status</code>, просто добавьте их в свой <code>.gitignore</code> файл из <a class="ref" href="beginning?version=3.0#code:gitignore">Листинга&nbsp;1.6</a>.&nbsp;<a class="arrow" href="#fnref:1.21">&uarr;</a></li>
 <li id="fn:1.22">См. главу <a href="http://progit.org/book/ch3-0.html">Git Branching в <em>Pro Git</em></a> для получения более подробной информации.&nbsp;<a class="arrow" href="#fnref:1.22">&uarr;</a></li>
 <li id="fn:1.23">Опытные пользователи Git признают мудрость выполнения <code>git rebase master</code> перед переключением на master ветку, но этот шаг не будет необходим в этой книге.&nbsp;<a class="arrow" href="#fnref:1.23">&uarr;</a></li>
 <li id="fn:1.24">Сотрудничая на проекте с другими разработчиками, следует выполнить  <tt class="verb">git pull --rebase</tt> перед этим шагом, чтобы принять любые удаленные изменения.&nbsp;<a class="arrow" href="#fnref:1.24">&uarr;</a></li>
-<li id="fn:1.25">Хотя это и не должно иметь значения для примеров приложений в <em>Учебнике Rails</em>, если вы волнуетесь по поводу случайного и/или преждевременного обнародования вашего приложения, есть несколько способов, которые могут помочь вам избежать этого; см. <a class="ref" href="beginning#sec:heroku_commands">Раздел&nbsp;1.4.4</a>
+<li id="fn:1.25">Хотя это и не должно иметь значения для примеров приложений в <em>Учебнике Rails</em>, если вы волнуетесь по поводу случайного и/или преждевременного обнародования вашего приложения, есть несколько способов, которые могут помочь вам избежать этого; см. <a class="ref" href="beginning?version=3.0#sec:heroku_commands">Раздел&nbsp;1.4.4</a>
 .&nbsp;<a class="arrow" href="#fnref:1.25">&uarr;</a></li>
 <li id="fn:1.26">Произносится &ldquo;Engine X&rdquo;.&nbsp;<a class="arrow" href="#fnref:1.26">&uarr;</a></li>
 <li id="fn:1.27">Heroku работает с любой Ruby веб-платформой, использующей <a href="http://rack.rubyforge.org/">Rack middleware</a>, которое обеспечивает стандартный интерфейс между веб-платформами и веб-серверами. Rack интерфейс чрезвычайно прочно укоренился в сообществе Ruby, включая столь различные платформы  как, например, <a href="http://www.sinatrarb.com/">Sinatra</a>, <a href="http://ramaze.net/">Ramaze</a>, <a href="http://camping.rubyforge.org/files/README.html">Camping</a>, и Rails, что означает, что Heroku в основном поддерживает любое веб-приложение Ruby.&nbsp;<a class="arrow" href="#fnref:1.27">&uarr;</a></li>
-<li id="fn:1.28">Из-за особенностей их установок, ссылка “About your application’s environment” не работает на Heroku; вместо этой надписи вы получите сообщение об ошибке. Не волнуйтесь, это нормально. Ошибка уйдет, когда мы удалим страницу Rails по умолчанию в <a class="ref" href="filling-in-the-layout#sec:rails_routes">Разделе&nbsp;5.2.2</a>.&nbsp;<a class="arrow" href="#fnref:1.28">&uarr;</a></li>
+<li id="fn:1.28">Из-за особенностей их установок, ссылка “About your application’s environment” не работает на Heroku; вместо этой надписи вы получите сообщение об ошибке. Не волнуйтесь, это нормально. Ошибка уйдет, когда мы удалим страницу Rails по умолчанию в <a class="ref" href="filling-in-the-layout?version=3.0#sec:rails_routes">Разделе&nbsp;5.2.2</a>.&nbsp;<a class="arrow" href="#fnref:1.28">&uarr;</a></li>
 </ol>
 </div>
 

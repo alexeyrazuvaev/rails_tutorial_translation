@@ -1,12 +1,12 @@
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:8" href="sign-up#top" class="heading"><span class="number">Глава 8</span> Регистрация</a></h1>
+<h1 class="chapter"><a id="sec:8" href="sign-up?version=3.0#top" class="heading"><span class="number">Глава 8</span> Регистрация</a></h1>
 
 
-<p>Теперь у нас есть рабочая модель User, пришло время добавить возможность без которой некоторые сайты просто жить не могут: позволить пользователям регистрироваться на сайте; таким образом выполнив обещание подразумевавшееся в <a class="ref" href="filling-in-the-layout#sec:user_signup">Разделе&nbsp;5.3</a>, &ldquo;Регистрация пользователей: Первый шаг&rdquo;. Мы будем использовать HTML <em>форму</em> для предоставления пользователями регистрационной информации нашему приложению в <a class="ref" href="sign-up#sec:signup_form">Разделе&nbsp;8.1</a>, которая затем будет использована для создания нового пользователя и сохранения его атрибутов в базе данных в <a class="ref" href="sign-up#sec:signup_success">Разделе&nbsp;8.3</a>. Как обычно, мы будем писать тесты по мере разработки и в <a class="ref" href="sign-up#sec:rspec_integration_tests">Разделе&nbsp;8.4</a> мы будем использовать поддержку RSpec синтаксиса веб навигации для написания кратких и выразительных интеграционных тестов.</p>
+<p>Теперь у нас есть рабочая модель User, пришло время добавить возможность без которой некоторые сайты просто жить не могут: позволить пользователям регистрироваться на сайте; таким образом выполнив обещание подразумевавшееся в <a class="ref" href="filling-in-the-layout?version=3.0#sec:user_signup">Разделе&nbsp;5.3</a>, &ldquo;Регистрация пользователей: Первый шаг&rdquo;. Мы будем использовать HTML <em>форму</em> для предоставления пользователями регистрационной информации нашему приложению в <a class="ref" href="sign-up?version=3.0#sec:signup_form">Разделе&nbsp;8.1</a>, которая затем будет использована для создания нового пользователя и сохранения его атрибутов в базе данных в <a class="ref" href="sign-up?version=3.0#sec:signup_success">Разделе&nbsp;8.3</a>. Как обычно, мы будем писать тесты по мере разработки и в <a class="ref" href="sign-up?version=3.0#sec:rspec_integration_tests">Разделе&nbsp;8.4</a> мы будем использовать поддержку RSpec синтаксиса веб навигации для написания кратких и выразительных интеграционных тестов.</p>
 
-<p>Так как мы будем создавать новых пользователей в этой главе, вы можете сбросить базу данных, чтобы удалить всех пользователей, созданных в консоли (например, в <a class="ref" href="modeling-and-viewing-users-two#sec:a_name_and_a_gravatar">Разделе&nbsp;7.3.2</a>), чтобы ваши результаты соответствовали тому, что показано в учебнике. вы можете сделать это следующим образом:</p>
+<p>Так как мы будем создавать новых пользователей в этой главе, вы можете сбросить базу данных, чтобы удалить всех пользователей, созданных в консоли (например, в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:a_name_and_a_gravatar">Разделе&nbsp;7.3.2</a>), чтобы ваши результаты соответствовали тому, что показано в учебнике. вы можете сделать это следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:reset
 </pre></div>
@@ -24,16 +24,16 @@
 <div class="label" id="sec:signup_form"></div>
 
 
-<h2><a id="sec:8.1" href="sign-up#sec:signup_form" class="heading"><span class="number">8.1</span> Регистрационная форма</a></h2>
+<h2><a id="sec:8.1" href="sign-up?version=3.0#sec:signup_form" class="heading"><span class="number">8.1</span> Регистрационная форма</a></h2>
 
 
-<p>Напомним из <a class="ref" href="filling-in-the-layout#sec:users_controller">Раздела&nbsp;5.3.1</a> что у нас уже есть тесты для new users (signup) страницы, первоначально рассматривавшиеся в <a class="ref" href="filling-in-the-layout#code:signup_title_test">Листинге&nbsp;5.26</a> и воспроизведенные в <a class="ref" href="sign-up#code:new_users_tests">Листинге&nbsp;8.1</a>.  (Как и было обещано в <a class="ref" href="modeling-and-viewing-users-two#sec:tests_with_factories">Разделе&nbsp;7.3.1</a>, мы переключились с <code>get &rsquo;new&rsquo;</code> на <code>get :new</code> потому что это то, что мои пальцы хотят печатать.) Кроме того, мы видели в <a class="ref" href="filling-in-the-layout#fig:blank_signup_page">Рис.&nbsp;5.10</a> (еще раз показано в <a class="ref" href="sign-up#fig:blank_signup_page_recap">Рис.&nbsp;8.1</a>) что эта страница регистрации в настоящее время чиста: совершенно бесполезна для регистрации новых пользователей. Цель этого раздела - положить начало исправлению этого печального положения дел, сделав форму регистрации, макет которой показан в <a class="ref" href="sign-up#fig:signup_mockup">Рис.&nbsp;8.2</a>.</p>
+<p>Напомним из <a class="ref" href="filling-in-the-layout?version=3.0#sec:users_controller">Раздела&nbsp;5.3.1</a> что у нас уже есть тесты для new users (signup) страницы, первоначально рассматривавшиеся в <a class="ref" href="filling-in-the-layout?version=3.0#code:signup_title_test">Листинге&nbsp;5.26</a> и воспроизведенные в <a class="ref" href="sign-up?version=3.0#code:new_users_tests">Листинге&nbsp;8.1</a>.  (Как и было обещано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:tests_with_factories">Разделе&nbsp;7.3.1</a>, мы переключились с <code>get &rsquo;new&rsquo;</code> на <code>get :new</code> потому что это то, что мои пальцы хотят печатать.) Кроме того, мы видели в <a class="ref" href="filling-in-the-layout?version=3.0#fig:blank_signup_page">Рис.&nbsp;5.10</a> (еще раз показано в <a class="ref" href="sign-up?version=3.0#fig:blank_signup_page_recap">Рис.&nbsp;8.1</a>) что эта страница регистрации в настоящее время чиста: совершенно бесполезна для регистрации новых пользователей. Цель этого раздела - положить начало исправлению этого печального положения дел, сделав форму регистрации, макет которой показан в <a class="ref" href="sign-up?version=3.0#fig:signup_mockup">Рис.&nbsp;8.2</a>.</p>
 
 <div class="label" id="code:new_users_tests"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 8.1.</span> <span class="description">Тесты для страницы new users (впервые показанные в <a class="ref" href="filling-in-the-layout#code:signup_title_test">Листинг&nbsp;5.26</a>). <br /> <code>spec/controllers/users_controller_spec.rb</code></span>
+<div class="listing"><span class="header">Листинг 8.1.</span> <span class="description">Тесты для страницы new users (впервые показанные в <a class="ref" href="filling-in-the-layout?version=3.0#code:signup_title_test">Листинг&nbsp;5.26</a>). <br /> <code>spec/controllers/users_controller_spec.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
@@ -83,10 +83,10 @@
 <div class="label" id="sec:using_form_for"></div>
 
 
-<h3><a id="sec:8.1.1" href="sign-up#sec:using_form_for" class="heading"><span class="number">8.1.1</span> Использование <code>form_for</code></a></h3>
+<h3><a id="sec:8.1.1" href="sign-up?version=3.0#sec:using_form_for" class="heading"><span class="number">8.1.1</span> Использование <code>form_for</code></a></h3>
 
 
-<p>Элемент HTML, необходимый для предоставления информации на удаленный сайт, это <em>форма</em>, что предполагает хороший первый шаг к регистрации пользователей - создание формы для приема регистрационной информации. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code>; результат представлен в <a class="ref" href="sign-up#code:new_user_form">Листинге&nbsp;8.2</a>. (Читатели, знакомые с Rails&nbsp;2.x должны отметить, что <code>form_for</code> теперь использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; то есть, где Rails&nbsp;2.x использовал <tt class="verb">&lt;% form_for ... %&gt;</tt>, Rails&nbsp;3 использует <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
+<p>Элемент HTML, необходимый для предоставления информации на удаленный сайт, это <em>форма</em>, что предполагает хороший первый шаг к регистрации пользователей - создание формы для приема регистрационной информации. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code>; результат представлен в <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинге&nbsp;8.2</a>. (Читатели, знакомые с Rails&nbsp;2.x должны отметить, что <code>form_for</code> теперь использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; то есть, где Rails&nbsp;2.x использовал <tt class="verb">&lt;% form_for ... %&gt;</tt>, Rails&nbsp;3 использует <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
 
 <div class="label" id="code:new_user_form"></div>
 
@@ -121,7 +121,7 @@
 </div></div>
 
 
-<p>Давайте рассмотрим по частям. Наличие ключевого слова <code>do</code> указывает, что <code>form_for</code> принимает блок (<a class="ref" href="rails-flavored-ruby#sec:blocks">Раздел&nbsp;4.3.2</a>), который имеет одну переменную, которую мы назвали <code>f</code> от &ldquo;form&rdquo;. Внутри <code>form_for</code> хелпера, <code>f</code> это объект, который представляет форму; как это обычно бывает с Rails хелперами, нам не нужно знать деталей реализации, но нам <em>нужно</em> знать что делает объект <code>f</code>: при вызове с методом, соответствующим <a href="http://www.w3schools.com/html/html_forms.asp">HTML элементу form</a>&nbsp;&mdash;&nbsp;таким как  текстовое поле, радио кнопки, или поле пароля, он возвращает код для этого элемента, специально разработанный для установки атрибута объекта <code>@user</code>. Другими словами,</p>
+<p>Давайте рассмотрим по частям. Наличие ключевого слова <code>do</code> указывает, что <code>form_for</code> принимает блок (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:blocks">Раздел&nbsp;4.3.2</a>), который имеет одну переменную, которую мы назвали <code>f</code> от &ldquo;form&rdquo;. Внутри <code>form_for</code> хелпера, <code>f</code> это объект, который представляет форму; как это обычно бывает с Rails хелперами, нам не нужно знать деталей реализации, но нам <em>нужно</em> знать что делает объект <code>f</code>: при вызове с методом, соответствующим <a href="http://www.w3schools.com/html/html_forms.asp">HTML элементу form</a>&nbsp;&mdash;&nbsp;таким как  текстовое поле, радио кнопки, или поле пароля, он возвращает код для этого элемента, специально разработанный для установки атрибута объекта <code>@user</code>. Другими словами,</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:name</span> <span class="cp">%&gt;</span><span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
@@ -133,7 +133,7 @@
 
 <p>создает HTML, необходимый, чтобы сделать маркированный элемент текстового поля, подходящий для установки <code>name</code> атрибута модели User.</p>
 
-<p>Чтобы увидеть это в действии, нам нужно добыть и посмотреть на реальный HTML производимый с помощью этой формы, но здесь у нас есть проблема: сейчас страница неисправна, потому что мы не установили переменную <code>@user</code>, как и все неопределенные переменные экземпляра (<a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Раздел&nbsp;4.2.3</a>), <code>@user</code> в настоящее время равна <code>nil</code>. Соответственно, если вы сейчас запустите свой набор тестов, вы увидите, что тесты страницы регистрации не проходят. Чтобы заставить их пройти и получить визуализацию нашей формы, мы должны определить переменную <code>@user</code> в действии контроллера, соответствующего <code>new.html.erb</code>, т.е., в <code>new</code> действии контроллера Users. Хелпер <code>form_for</code> ожидает, что <code>@user</code> будет объектом User, а так как мы создаем <em>нового</em> пользователя, мы просто используем <code>User.new</code>, как видно в <a class="ref" href="sign-up#code:new_action_with_user">Листинге&nbsp;8.3</a>.</p>
+<p>Чтобы увидеть это в действии, нам нужно добыть и посмотреть на реальный HTML производимый с помощью этой формы, но здесь у нас есть проблема: сейчас страница неисправна, потому что мы не установили переменную <code>@user</code>, как и все неопределенные переменные экземпляра (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Раздел&nbsp;4.2.3</a>), <code>@user</code> в настоящее время равна <code>nil</code>. Соответственно, если вы сейчас запустите свой набор тестов, вы увидите, что тесты страницы регистрации не проходят. Чтобы заставить их пройти и получить визуализацию нашей формы, мы должны определить переменную <code>@user</code> в действии контроллера, соответствующего <code>new.html.erb</code>, т.е., в <code>new</code> действии контроллера Users. Хелпер <code>form_for</code> ожидает, что <code>@user</code> будет объектом User, а так как мы создаем <em>нового</em> пользователя, мы просто используем <code>User.new</code>, как видно в <a class="ref" href="sign-up?version=3.0#code:new_action_with_user">Листинге&nbsp;8.3</a>.</p>
 
 <div class="label" id="code:new_action_with_user"></div>
 
@@ -154,7 +154,7 @@
 </div></div>
 
 
-<p>С определенной <code>@user</code> переменной, тесты вновь должны проходить,<sup class="footnote" id="fnref:8.1"><a href="#fn:8.1">1</a></sup> и теперь форма (чуть-чуть отстиленная <a class="ref" href="sign-up#code:form_css">Листингом&nbsp;8.4</a>) представлена на <a class="ref" href="sign-up#fig:signup_form">Рис.&nbsp;8.3</a>.</p>
+<p>С определенной <code>@user</code> переменной, тесты вновь должны проходить,<sup class="footnote" id="fnref:8.1"><a href="#fn:8.1">1</a></sup> и теперь форма (чуть-чуть отстиленная <a class="ref" href="sign-up?version=3.0#code:form_css">Листингом&nbsp;8.4</a>) представлена на <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a>.</p>
 
 <div class="label" id="code:form_css"></div>
 
@@ -185,16 +185,16 @@
 <div class="label" id="sec:the_form_html"></div>
 
 
-<h3><a id="sec:8.1.2" href="sign-up#sec:the_form_html" class="heading"><span class="number">8.1.2</span> HTML формы</a></h3>
+<h3><a id="sec:8.1.2" href="sign-up?version=3.0#sec:the_form_html" class="heading"><span class="number">8.1.2</span> HTML формы</a></h3>
 
 
-<p>Как видно на <a class="ref" href="sign-up#fig:signup_form">Рис.&nbsp;8.3</a>, страница регистрации теперь правильно отображается, указывая на то, что <code>form_for</code> код в <a class="ref" href="sign-up#code:new_user_form">Листинге&nbsp;8.2</a> производит валидный HTML. Если вы посмотрите на HTML генерируемый формой (используя <a href="http://getfirebug.com/">Firebug</a> или опцию &ldquo;Исходный код страницы&rdquo;  вашего браузера), вы должны увидеть разметку как в <a class="ref" href="sign-up#code:signup_form_html">Листинге&nbsp;8.5</a>. Хотя многие детали не имеют значения для наших целей, давайте уделим минуту, чтобы осветить наиболее важные части ее структуры.</p>
+<p>Как видно на <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a>, страница регистрации теперь правильно отображается, указывая на то, что <code>form_for</code> код в <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинге&nbsp;8.2</a> производит валидный HTML. Если вы посмотрите на HTML генерируемый формой (используя <a href="http://getfirebug.com/">Firebug</a> или опцию &ldquo;Исходный код страницы&rdquo;  вашего браузера), вы должны увидеть разметку как в <a class="ref" href="sign-up?version=3.0#code:signup_form_html">Листинге&nbsp;8.5</a>. Хотя многие детали не имеют значения для наших целей, давайте уделим минуту, чтобы осветить наиболее важные части ее структуры.</p>
 
 <div class="label" id="code:signup_form_html"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 8.5.</span> <span class="description">HTML формы из <a class="ref" href="sign-up#fig:signup_form">Рис.&nbsp;8.3</a>.</span>
+<div class="listing"><span class="header">Листинг 8.5.</span> <span class="description">HTML формы из <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a>.</span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span> <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">style=</span><span class="s">&quot;margin:0;padding:0;display:inline&quot;</span><span class="nt">&gt;</span>
@@ -229,7 +229,7 @@
 </div></div>
 
 
-<p>Мы начнем с внутренней структуры. Сравнивая <a class="ref" href="sign-up#code:new_user_form">Листинг&nbsp;8.2</a> с <a class="ref" href="sign-up#code:signup_form_html">Листингом&nbsp;8.5</a>, мы видим, что Embedded Ruby</p>
+<p>Мы начнем с внутренней структуры. Сравнивая <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинг&nbsp;8.2</a> с <a class="ref" href="sign-up?version=3.0#code:signup_form_html">Листингом&nbsp;8.5</a>, мы видим, что Embedded Ruby</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:name</span> <span class="cp">%&gt;</span><span class="nt">&lt;br</span> <span class="nt">/&gt;</span>
@@ -269,7 +269,7 @@
 </div>
 
 
-<p>Как видно в <a class="ref" href="sign-up#fig:filled_in_form">Рис.&nbsp;8.4</a>, текстовые поля (<code>type="text"</code>) просто отображает их содержимое, в то время как поле пароля (<code>type="password"</code>) скрывает ввод в целях безопасности, как показано на <a class="ref" href="sign-up#fig:filled_in_form">Рис.&nbsp;8.4</a>.</p>
+<p>Как видно в <a class="ref" href="sign-up?version=3.0#fig:filled_in_form">Рис.&nbsp;8.4</a>, текстовые поля (<code>type="text"</code>) просто отображает их содержимое, в то время как поле пароля (<code>type="password"</code>) скрывает ввод в целях безопасности, как показано на <a class="ref" href="sign-up?version=3.0#fig:filled_in_form">Рис.&nbsp;8.4</a>.</p>
 
 <div class="label" id="fig:filled_in_form"></div>
 
@@ -277,7 +277,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/filled_in_form.png" alt="filled_in_form" /></span></div><div class="caption"><span class="header">Рисунок  8.4: </span><span class="description">Заполненная форма, показывающая разницу между <code>text</code> и <code>password</code> полями.&nbsp;<a href="http://railstutorial.org/images/figures/filled_in_form-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Как мы увидим в <a class="ref" href="sign-up#sec:signup_success">Разделе&nbsp;8.3</a>, ключ к созданию пользователя это специальный атрибут <code>name</code> в каждом <code>input</code>:</p>
+<p>Как мы увидим в <a class="ref" href="sign-up?version=3.0#sec:signup_success">Разделе&nbsp;8.3</a>, ключ к созданию пользователя это специальный атрибут <code>name</code> в каждом <code>input</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">-</span> <span class="na">-</span> <span class="na">-</span> <span class="nt">/&gt;</span>
 .
@@ -288,9 +288,9 @@
 </div>
 
 
-<p>Эти значения <code>name</code> позволяют Rails построить хэш инициализации (через переменную <code>params</code> впервые показанную в <a class="ref" href="modeling-and-viewing-users-one#sec:users_show">Разделе&nbsp;6.3.2</a>) для создания пользователей, используя значения, введенные пользователями, как мы увидим в <a class="ref" href="sign-up#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
+<p>Эти значения <code>name</code> позволяют Rails построить хэш инициализации (через переменную <code>params</code> впервые показанную в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:users_show">Разделе&nbsp;6.3.2</a>) для создания пользователей, используя значения, введенные пользователями, как мы увидим в <a class="ref" href="sign-up?version=3.0#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
 
-<p>Вторым важным элементом является сам тег <code>form</code>. Rails создает <code>form</code> тег используя объект <code>@user</code>: потому что каждый объект Ruby знает свой собственный класс (<a class="ref" href="rails-flavored-ruby#sec:constructors">Раздел&nbsp;4.4.1</a>), Rails выводит, что <code>@user</code> принадлежит классу <code>User</code>; причем, так как <code>@user</code> это <em>новый</em> пользователь, Rails знает, что нужно построить форму с <code>post</code> методом, который является надлежащим глаголом для создания нового объекта (<a class="ref" href="static-pages#sidebar:get_etc">Box&nbsp;3.1</a>):</p>
+<p>Вторым важным элементом является сам тег <code>form</code>. Rails создает <code>form</code> тег используя объект <code>@user</code>: потому что каждый объект Ruby знает свой собственный класс (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:constructors">Раздел&nbsp;4.4.1</a>), Rails выводит, что <code>@user</code> принадлежит классу <code>User</code>; причем, так как <code>@user</code> это <em>новый</em> пользователь, Rails знает, что нужно построить форму с <code>post</code> методом, который является надлежащим глаголом для создания нового объекта (<a class="ref" href="static-pages?version=3.0#sidebar:get_etc">Box&nbsp;3.1</a>):</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span> <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
 </pre></div>
@@ -314,10 +314,10 @@
 <div class="label" id="sec:signup_failure"></div>
 
 
-<h2><a id="sec:8.2" href="sign-up#sec:signup_failure" class="heading"><span class="number">8.2</span> Сбой регистрации</a></h2>
+<h2><a id="sec:8.2" href="sign-up?version=3.0#sec:signup_failure" class="heading"><span class="number">8.2</span> Сбой регистрации</a></h2>
 
 
-<p>Хотя мы кратко рассмотрели HTML формы, показанной в <a class="ref" href="sign-up#fig:signup_form">Рис.&nbsp;8.3</a> (<a class="ref" href="sign-up#code:signup_form_html">Листинг&nbsp;8.5</a>), он (HTML) лучше всего понимается в контексте <em>сбоя регистрации</em>. Просто получить регистрационную форму, которая принимает недействительные данные и вновь показывает страницу регистрации (как на макете в <a class="ref" href="sign-up#fig:signup_failure_mockup">Рис.&nbsp;8.5</a>) является значительным достижением, и это будет целью данного раздела.</p>
+<p>Хотя мы кратко рассмотрели HTML формы, показанной в <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a> (<a class="ref" href="sign-up?version=3.0#code:signup_form_html">Листинг&nbsp;8.5</a>), он (HTML) лучше всего понимается в контексте <em>сбоя регистрации</em>. Просто получить регистрационную форму, которая принимает недействительные данные и вновь показывает страницу регистрации (как на макете в <a class="ref" href="sign-up?version=3.0#fig:signup_failure_mockup">Рис.&nbsp;8.5</a>) является значительным достижением, и это будет целью данного раздела.</p>
 
 <div class="label" id="fig:signup_failure_mockup"></div>
 
@@ -330,10 +330,10 @@
 <div class="label" id="sec:testing_failure"></div>
 
 
-<h3><a id="sec:8.2.1" href="sign-up#sec:testing_failure" class="heading"><span class="number">8.2.1</span> Тестирование сбоя</a></h3>
+<h3><a id="sec:8.2.1" href="sign-up?version=3.0#sec:testing_failure" class="heading"><span class="number">8.2.1</span> Тестирование сбоя</a></h3>
 
 
-<p>Напомним, из <a class="ref" href="modeling-and-viewing-users-one#sec:a_users_resource">Раздела&nbsp;6.3.3</a> что добавление <code>resources :users</code> в файл <code>routes.rb</code> (<a class="ref" href="modeling-and-viewing-users-one#code:users_resource">Листинг&nbsp;6.26</a>) автоматически гарантирует, что наше Rails приложение отвечает на RESTful URL из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a>. В частности, это гарантирует, что <tt>POST</tt> запрос в <tt>/users</tt> обрабатывается <code>create</code> действием. Нашей стратегией для <code>create</code> действия будет использование формы регистрации, для создания нового объекта пользователь, используя <code>User.new</code>, попробовать (безуспешно) сохранить этого пользователя, а затем сделать страницу регистрации для возможной повторной попытки. Наша задача заключается в написании тестов для этого действия, а затем добавлении <code>create</code> в контроллер Users, чтобы заставить тесты пройти.</p>
+<p>Напомним, из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:a_users_resource">Раздела&nbsp;6.3.3</a> что добавление <code>resources :users</code> в файл <code>routes.rb</code> (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:users_resource">Листинг&nbsp;6.26</a>) автоматически гарантирует, что наше Rails приложение отвечает на RESTful URL из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>. В частности, это гарантирует, что <tt>POST</tt> запрос в <tt>/users</tt> обрабатывается <code>create</code> действием. Нашей стратегией для <code>create</code> действия будет использование формы регистрации, для создания нового объекта пользователь, используя <code>User.new</code>, попробовать (безуспешно) сохранить этого пользователя, а затем сделать страницу регистрации для возможной повторной попытки. Наша задача заключается в написании тестов для этого действия, а затем добавлении <code>create</code> в контроллер Users, чтобы заставить тесты пройти.</p>
 
 <p>Давайте начнем с обзора кода для формы регистрации:</p>
 
@@ -344,7 +344,7 @@
 </div>
 
 
-<p>Как отмечено в <a class="ref" href="sign-up#sec:the_form_html">Разделе&nbsp;8.1.2</a>, этот HTML выдает <tt>POST</tt> запрос к <tt>/users</tt> URL. По аналогии с методом <code>get</code>, который выдает <tt>GET</tt> запрос внутри теста, мы используем метод <code>post</code> чтобы выдать запрос <tt>POST</tt> к <code>create</code> действию. Как мы вскоре увидим, <code>create</code> принимает хэш соответствующий типу создаваемого объекта; так как это тест для <em>сбоя</em> регистрации, мы просто передадим хэш <code>@attr</code> с пустыми записями, как показано в <a class="ref" href="sign-up#code:failing_create_specs">Листинге&nbsp;8.6</a>. Это по сути эквивалентно посещению страницы регистрации и нажатии на кнопку с любым незаполненным полем.</p>
+<p>Как отмечено в <a class="ref" href="sign-up?version=3.0#sec:the_form_html">Разделе&nbsp;8.1.2</a>, этот HTML выдает <tt>POST</tt> запрос к <tt>/users</tt> URL. По аналогии с методом <code>get</code>, который выдает <tt>GET</tt> запрос внутри теста, мы используем метод <code>post</code> чтобы выдать запрос <tt>POST</tt> к <code>create</code> действию. Как мы вскоре увидим, <code>create</code> принимает хэш соответствующий типу создаваемого объекта; так как это тест для <em>сбоя</em> регистрации, мы просто передадим хэш <code>@attr</code> с пустыми записями, как показано в <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинге&nbsp;8.6</a>. Это по сути эквивалентно посещению страницы регистрации и нажатии на кнопку с любым незаполненным полем.</p>
 
 <div class="label" id="code:failing_create_specs"></div>
 
@@ -434,10 +434,10 @@
 <div class="label" id="sec:a_working_form"></div>
 
 
-<h3><a id="sec:8.2.2" href="sign-up#sec:a_working_form" class="heading"><span class="number">8.2.2</span> Работающая форма</a></h3>
+<h3><a id="sec:8.2.2" href="sign-up?version=3.0#sec:a_working_form" class="heading"><span class="number">8.2.2</span> Работающая форма</a></h3>
 
 
-<p>Мы можем получить прохождение тестов из <a class="ref" href="sign-up#sec:testing_failure">Раздела&nbsp;8.2.1</a> с кодом из <a class="ref" href="sign-up#code:first_create_action">Листинга&nbsp;8.7</a>. Этот листинг включает в себя второй вариант использования <code>render</code> метода, который мы впервые увидели в контексте партиалов (частичных шаблонов) (<a class="ref" href="filling-in-the-layout#sec:partials">Раздел&nbsp;5.1.3</a>); как вы можете видеть, <code>render</code> также работает в контроллере действий. Обратите внимание, что мы воспользовались этой возможностью, чтобы представить <code>if</code>-<code>else</code> ветвящиеся структуры, которые позволяют нам обрабатывать случаи сбоя и успеха раздельно, в зависимости от значения <code>@user.save</code>.</p>
+<p>Мы можем получить прохождение тестов из <a class="ref" href="sign-up?version=3.0#sec:testing_failure">Раздела&nbsp;8.2.1</a> с кодом из <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинга&nbsp;8.7</a>. Этот листинг включает в себя второй вариант использования <code>render</code> метода, который мы впервые увидели в контексте партиалов (частичных шаблонов) (<a class="ref" href="filling-in-the-layout?version=3.0#sec:partials">Раздел&nbsp;5.1.3</a>); как вы можете видеть, <code>render</code> также работает в контроллере действий. Обратите внимание, что мы воспользовались этой возможностью, чтобы представить <code>if</code>-<code>else</code> ветвящиеся структуры, которые позволяют нам обрабатывать случаи сбоя и успеха раздельно, в зависимости от значения <code>@user.save</code>.</p>
 
 <div class="label" id="code:first_create_action"></div>
 
@@ -463,7 +463,7 @@
 </div></div>
 
 
-<p>Лучший способ понять, как работает код в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> это <em>отправить</em> форму с некоторыми недействительной регистрационными данными; результаты представлены в <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>.</p>
+<p>Лучший способ понять, как работает код в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинге&nbsp;8.7</a> это <em>отправить</em> форму с некоторыми недействительной регистрационными данными; результаты представлены в <a class="ref" href="sign-up?version=3.0#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>.</p>
 
 <div class="label" id="fig:signup_failure_rails_3"></div>
 
@@ -471,7 +471,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_3.png" alt="signup_failure_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  8.6: </span><span class="description">Сбой регистрации с хэшем <code>params</code>&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы получить более четкую картину того, как Rails обрабатывает предоставление регистрационных данных, давайте ближе познакомимся с хэшем <code>params</code> в отладочной информации, отображаемой в нижней части страницы <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>:</p>
+<p>Чтобы получить более четкую картину того, как Rails обрабатывает предоставление регистрационных данных, давайте ближе познакомимся с хэшем <code>params</code> в отладочной информации, отображаемой в нижней части страницы <a class="ref" href="sign-up?version=3.0#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nn">---</span> <span class="kt">!map</span><span class="l-Scalar-Plain">:ActiveSupport::HashWithIndifferentAccess</span>
 <span class="l-Scalar-Plain">commit</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Sign up</span>
@@ -487,7 +487,7 @@
 </div>
 
 
-<p>Мы видели, начиная с <a class="ref" href="modeling-and-viewing-users-one#sec:users_show">Раздела&nbsp;6.3.2</a> что хэш <code>params</code> содержит информацию о каждом запросе; в случае URL типа <tt>/users/1</tt>, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тега <code>input</code> который мы видели в <a class="ref" href="sign-up#code:new_user_form">Листинге&nbsp;8.2</a>; например, значение</p>
+<p>Мы видели, начиная с <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:users_show">Раздела&nbsp;6.3.2</a> что хэш <code>params</code> содержит информацию о каждом запросе; в случае URL типа <tt>/users/1</tt>, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тега <code>input</code> который мы видели в <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинге&nbsp;8.2</a>; например, значение</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
@@ -496,7 +496,7 @@
 
 <p>с именем <code>"user[email]"</code> это именно <code>email</code> атрибут хэша <code>user</code>.</p>
 
-<p>Хотя хэш-ключи отображаются как строки в отладочном выводе, внутренне Rails использует символы, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователей, именно атрибутов, необходимых в качестве аргумента <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up#code:first_create_action">Листинг&nbsp;8.7</a>. Это означает, что строка</p>
+<p>Хотя хэш-ключи отображаются как строки в отладочном выводе, внутренне Rails использует символы, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователей, именно атрибутов, необходимых в качестве аргумента <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинг&nbsp;8.7</a>. Это означает, что строка</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
@@ -513,7 +513,7 @@
 
 <p>А это именно тот формат который необходим для инициализации объекта модели User с заданными атрибутами.</p>
 
-<p>Конечно, такой экземпляр переменной имеет значение для успешной регистрации, как мы увидим в <a class="ref" href="sign-up#sec:signup_success">Разделе&nbsp;8.3</a>, как только <code>@user</code> правильно определена, вызов <code>@user.save</code> это все, что необходимо для завершения регистрации&mdash;но это имеет свои последствия даже в случае сбоя регистрации, рассматриваемого здесь. Обратите внимание на <a class="ref" href="sign-up#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a> что поля уже <em>заполнены</em> данными из провальной отправки. Это происходит потому что <code>form_for</code> автоматически заполняет поля атрибутами объекта <code>@user</code>, так что, например, если <code>@user.name</code> это <code>"Foo"</code> то</p>
+<p>Конечно, такой экземпляр переменной имеет значение для успешной регистрации, как мы увидим в <a class="ref" href="sign-up?version=3.0#sec:signup_success">Разделе&nbsp;8.3</a>, как только <code>@user</code> правильно определена, вызов <code>@user.save</code> это все, что необходимо для завершения регистрации&mdash;но это имеет свои последствия даже в случае сбоя регистрации, рассматриваемого здесь. Обратите внимание на <a class="ref" href="sign-up?version=3.0#fig:signup_failure_rails_3">Рис.&nbsp;8.6</a> что поля уже <em>заполнены</em> данными из провальной отправки. Это происходит потому что <code>form_for</code> автоматически заполняет поля атрибутами объекта <code>@user</code>, так что, например, если <code>@user.name</code> это <code>"Foo"</code> то</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;field&quot;</span><span class="nt">&gt;</span>
@@ -547,7 +547,7 @@
 <div class="label" id="sec:signup_error_messages"></div>
 
 
-<h3><a id="sec:8.2.3" href="sign-up#sec:signup_error_messages" class="heading"><span class="number">8.2.3</span> Сообщения об ошибках при регистрации</a></h3>
+<h3><a id="sec:8.2.3" href="sign-up?version=3.0#sec:signup_error_messages" class="heading"><span class="number">8.2.3</span> Сообщения об ошибках при регистрации</a></h3>
 
 <p>Хотя это и не является строго обязательным, все же полезно выводить сообщения об ошибках при сбое регистрации, чтобы указать на проблемы, которые помешали успешной регистрации пользователя. Rails предоставляет именно такие сообщения, основанные на валидациях модели User. Рассмотрим, например, попытку сохранения пользователя с неправильным адресом электронной почты и коротким паролем:</p>
 
@@ -562,9 +562,9 @@
 </div>
 
 
-<p>Здесь объект <code>errors.full_messages</code> (который мы видели кратко в <a class="ref" href="modeling-and-viewing-users-one#sec:presence_validation">Разделе&nbsp;6.2.1</a>) содержит массив сообщений об ошибках.</p>
+<p>Здесь объект <code>errors.full_messages</code> (который мы видели кратко в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:presence_validation">Разделе&nbsp;6.2.1</a>) содержит массив сообщений об ошибках.</p>
 
-<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузер, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="#fn:8.3">3</a></sup></p>
+<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузер, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up?version=3.0#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="#fn:8.3">3</a></sup></p>
 
 <div class="label" id="code:f_error_messages"></div>
 
@@ -584,7 +584,7 @@
 </div></div>
 
 
-<p>Заметим здесь, что мы <code>render</code> партиал <code>&rsquo;shared/error_messages&rsquo;</code>; что отражает общую конвенцию Rails, которая помещает частичные шаблоны, которые мы планируем использовать во многих контроллерах, в специально отведенный каталог <code>shared/</code>. (Мы увидим что эти планы реализованы в <a class="ref" href="updating-showing-and-deleting-users#sec:edit_form">Разделе&nbsp;10.1.1</a>.) Это означает, что мы должны создать этот новый каталог вместе с файлом партиала <code>_error_messages.html.erb</code>. Сам партиал представлен в <a class="ref" href="sign-up#code:errors_partial">Листинге&nbsp;8.9</a>.</p>
+<p>Заметим здесь, что мы <code>render</code> партиал <code>&rsquo;shared/error_messages&rsquo;</code>; что отражает общую конвенцию Rails, которая помещает частичные шаблоны, которые мы планируем использовать во многих контроллерах, в специально отведенный каталог <code>shared/</code>. (Мы увидим что эти планы реализованы в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:edit_form">Разделе&nbsp;10.1.1</a>.) Это означает, что мы должны создать этот новый каталог вместе с файлом партиала <code>_error_messages.html.erb</code>. Сам партиал представлен в <a class="ref" href="sign-up?version=3.0#code:errors_partial">Листинге&nbsp;8.9</a>.</p>
 
 <div class="label" id="code:errors_partial"></div>
 
@@ -633,7 +633,7 @@
 </div>
 
 
-<p>Мы видим здесь, что <code>empty?</code> метод, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает с массивами, возвращая <code>true</code> для пустого массива и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, он возвращает <code>true</code> если в массиве есть какие-нибудь элементы и <code>false</code> в противном случае.</p>
+<p>Мы видим здесь, что <code>empty?</code> метод, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает с массивами, возвращая <code>true</code> для пустого массива и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, он возвращает <code>true</code> если в массиве есть какие-нибудь элементы и <code>false</code> в противном случае.</p>
 
 <p>Другая новая идея это <code>pluralize</code> текст хелпер. Он не доступен в консоли, но мы можем включить его явно через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref:8.4"><a href="#fn:8.4">4</a></sup></p>
 
@@ -666,7 +666,7 @@
 
 <p>возвращает <code>"1 error"</code> или <code>"2 errors"</code> (и т.д.) в зависимости от количества ошибок.</p>
 
-<p>Обратите внимание, что <a class="ref" href="sign-up#code:errors_partial">Листинг&nbsp;8.9</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в отстиливании сообщения об ошибках. (Напомним, из <a class="ref" href="filling-in-the-layout#sec:custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилизации id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с CSS показанным в <a class="ref" href="sign-up#code:error_messages_css">Листинге&nbsp;8.10</a>. Результат сбоя регистрации с сообщениями об ошибке представлен в <a class="ref" href="sign-up#fig:signup_error_messages">Рис.&nbsp;8.7</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты, или минимальной длине паролей.</p>
+<p>Обратите внимание, что <a class="ref" href="sign-up?version=3.0#code:errors_partial">Листинг&nbsp;8.9</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в отстиливании сообщения об ошибках. (Напомним, из <a class="ref" href="filling-in-the-layout?version=3.0#sec:custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилизации id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с CSS показанным в <a class="ref" href="sign-up?version=3.0#code:error_messages_css">Листинге&nbsp;8.10</a>. Результат сбоя регистрации с сообщениями об ошибке представлен в <a class="ref" href="sign-up?version=3.0#fig:signup_error_messages">Рис.&nbsp;8.7</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты, или минимальной длине паролей.</p>
 
 <div class="label" id="code:error_messages_css"></div>
 
@@ -734,9 +734,9 @@
 <div class="label" id="sec:filtering_parameter_logging"></div>
 
 
-<h3><a id="sec:8.2.4" href="sign-up#sec:filtering_parameter_logging" class="heading"><span class="number">8.2.4</span> Фильтрация логгируемых параметров</a></h3>
+<h3><a id="sec:8.2.4" href="sign-up?version=3.0#sec:filtering_parameter_logging" class="heading"><span class="number">8.2.4</span> Фильтрация логгируемых параметров</a></h3>
 
-<p>Прежде чем перейти к успешной регистрации, нужно довести до конца одно дело. Вы могли заметить, что, хотя приложили большие усилия, чтобы зашифровать пароль в <a class="ref" href="modeling-and-viewing-users-two#top">Главе&nbsp;7</a>, как пароль так и его подтверждение появляются в виде <a href="http://www.computerhope.com/jargon/c/cleartex.htm">чистого текста</a> в отладочной информации. Само по себе это не проблема, вспомните из <a class="ref" href="modeling-and-viewing-users-one#code:rails_debug">Листинга&nbsp;6.23</a> что эта информация отображается только для приложений, работающих в режиме <code>development</code>, поэтому реальные пользователи никогда не увидят этого, но это намек на потенциальную проблему: пароли могут также появиться в незашифрованном виде в <em>log файле</em> который Rails использует для записи информации о выполнении приложения. Действительно, в предыдущих версиях Rails, development log файл в этом случае мог содержать строки, подобные показанным в <a class="ref" href="sign-up#code:development_log_file_with_passwords">Листинге&nbsp;8.11</a>.</p>
+<p>Прежде чем перейти к успешной регистрации, нужно довести до конца одно дело. Вы могли заметить, что, хотя приложили большие усилия, чтобы зашифровать пароль в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#top">Главе&nbsp;7</a>, как пароль так и его подтверждение появляются в виде <a href="http://www.computerhope.com/jargon/c/cleartex.htm">чистого текста</a> в отладочной информации. Само по себе это не проблема, вспомните из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:rails_debug">Листинга&nbsp;6.23</a> что эта информация отображается только для приложений, работающих в режиме <code>development</code>, поэтому реальные пользователи никогда не увидят этого, но это намек на потенциальную проблему: пароли могут также появиться в незашифрованном виде в <em>log файле</em> который Rails использует для записи информации о выполнении приложения. Действительно, в предыдущих версиях Rails, development log файл в этом случае мог содержать строки, подобные показанным в <a class="ref" href="sign-up?version=3.0#code:development_log_file_with_passwords">Листинге&nbsp;8.11</a>.</p>
 
 <div class="label" id="code:development_log_file_with_passwords"></div>
 
@@ -753,7 +753,7 @@
 </div></div>
 
 
-<p>Хранение незашифрованных паролей в лог-файлах было бы страшным нарушением безопасности, если  бы кто-нибудь овладел файлом, он потенциально мог получить пароли каждого пользователя в системе. (Конечно, здесь показана провальная регистрация, но для успешной регистрации проблема аналогична.) Эта проблема была настолько распространена в Rails приложениях, что Rails 3 реализовал новое значение по умолчанию: теперь все <code>password</code> атрибуты фильтруются автоматически, как показано в <a class="ref" href="sign-up#code:development_log_file_with_filtered_passwords">Листинге&nbsp;8.12</a>. Мы видим, что строка <code>"[FILTERED]"</code> появляется на месте пароля и его подтверждения. (В production, лог-файлом будет <code>log/production.log</code>, и фильтрация будет работать аналогичным образом.)</p>
+<p>Хранение незашифрованных паролей в лог-файлах было бы страшным нарушением безопасности, если  бы кто-нибудь овладел файлом, он потенциально мог получить пароли каждого пользователя в системе. (Конечно, здесь показана провальная регистрация, но для успешной регистрации проблема аналогична.) Эта проблема была настолько распространена в Rails приложениях, что Rails 3 реализовал новое значение по умолчанию: теперь все <code>password</code> атрибуты фильтруются автоматически, как показано в <a class="ref" href="sign-up?version=3.0#code:development_log_file_with_filtered_passwords">Листинге&nbsp;8.12</a>. Мы видим, что строка <code>"[FILTERED]"</code> появляется на месте пароля и его подтверждения. (В production, лог-файлом будет <code>log/production.log</code>, и фильтрация будет работать аналогичным образом.)</p>
 
 <div class="label" id="code:development_log_file_with_filtered_passwords"></div>
 
@@ -770,7 +770,7 @@
 </div></div>
 
 
-<p>Сама фильтрация паролей осуществляется через настройки в конфигурационном файле <code>application.rb</code> (<a class="ref" href="sign-up#code:password_filtering">Листинг&nbsp;8.13</a>).</p>
+<p>Сама фильтрация паролей осуществляется через настройки в конфигурационном файле <code>application.rb</code> (<a class="ref" href="sign-up?version=3.0#code:password_filtering">Листинг&nbsp;8.13</a>).</p>
 
 <div class="label" id="code:password_filtering"></div>
 
@@ -821,9 +821,9 @@
 <div class="label" id="sec:signup_success"></div>
 
 
-<h2><a id="sec:8.3" href="sign-up#sec:signup_success" class="heading"><span class="number">8.3</span> Успешная регистрация</a></h2>
+<h2><a id="sec:8.3" href="sign-up?version=3.0#sec:signup_success" class="heading"><span class="number">8.3</span> Успешная регистрация</a></h2>
 
-<p>Получив обработку недействительной предоставляемой формы, теперь пришло время для завершения регистрационной формы, на самом деле сохранив нового пользователя (если валидный) в базу данных. Во-первых, мы попробуем сохранить пользователя; если сохранение пройдет успешно, информация пользователя будет записана в базу данных автоматически, а затем  <em>перенаправлена</em> браузеру для отображения профиля пользователя (вместе с дружеским приветствием), как показано в макете на <a class="ref" href="sign-up#fig:signup_success_mockup">Рис.&nbsp;8.8</a>. Если это не удастся, мы просто отступим к сценарию, разработанному в <a class="ref" href="sign-up#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
+<p>Получив обработку недействительной предоставляемой формы, теперь пришло время для завершения регистрационной формы, на самом деле сохранив нового пользователя (если валидный) в базу данных. Во-первых, мы попробуем сохранить пользователя; если сохранение пройдет успешно, информация пользователя будет записана в базу данных автоматически, а затем  <em>перенаправлена</em> браузеру для отображения профиля пользователя (вместе с дружеским приветствием), как показано в макете на <a class="ref" href="sign-up?version=3.0#fig:signup_success_mockup">Рис.&nbsp;8.8</a>. Если это не удастся, мы просто отступим к сценарию, разработанному в <a class="ref" href="sign-up?version=3.0#sec:signup_failure">Разделе&nbsp;8.2</a>.</p>
 
 <div class="label" id="fig:signup_success_mockup"></div>
 
@@ -836,9 +836,9 @@
 <div class="label" id="sec:testing_success"></div>
 
 
-<h3><a id="sec:8.3.1" href="sign-up#sec:testing_success" class="heading"><span class="number">8.3.1</span> Тестирование успешной регистрации</a></h3>
+<h3><a id="sec:8.3.1" href="sign-up?version=3.0#sec:testing_success" class="heading"><span class="number">8.3.1</span> Тестирование успешной регистрации</a></h3>
 
-<p>Тесты для успешной регистрации следуют примеру тестов для сбоя регистрации из <a class="ref" href="sign-up#code:failing_create_specs">Листинга&nbsp;8.6</a>. Давайте посмотрим на результат, показанный в <a class="ref" href="sign-up#code:signup_success_tests">Листинге&nbsp;8.14</a>.</p>
+<p>Тесты для успешной регистрации следуют примеру тестов для сбоя регистрации из <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинга&nbsp;8.6</a>. Давайте посмотрим на результат, показанный в <a class="ref" href="sign-up?version=3.0#code:signup_success_tests">Листинге&nbsp;8.14</a>.</p>
 
 <div class="label" id="code:signup_success_tests"></div>
 
@@ -881,7 +881,7 @@
 </div></div>
 
 
-<p>Как и тестами сбоя регистрации (<a class="ref" href="sign-up#code:failing_create_specs">Листинг&nbsp;8.6</a>), здесь мы используем <code>post :create</code> для обращения к <code>create</code> действию с HTTP запросом <tt>POST</tt>. Как и в тестах для провального создания <a class="ref" href="sign-up#code:failing_create_specs">Листинг&nbsp;8.6</a>, первый тест сворачивает создание пользователя в <code>lambda</code> и использует <code>count</code> метод для проверки того, что база данных изменилась соответствующим образом:</p>
+<p>Как и тестами сбоя регистрации (<a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинг&nbsp;8.6</a>), здесь мы используем <code>post :create</code> для обращения к <code>create</code> действию с HTTP запросом <tt>POST</tt>. Как и в тестах для провального создания <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинг&nbsp;8.6</a>, первый тест сворачивает создание пользователя в <code>lambda</code> и использует <code>count</code> метод для проверки того, что база данных изменилась соответствующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="s2">&quot;should create a user&quot;</span> <span class="k">do</span>
   <span class="nb">lambda</span> <span class="k">do</span>
@@ -894,7 +894,7 @@
 
 <p>Здесь, вместо <code>should_not change(User, :count)</code>  как в случае провального создания пользователя, мы имеем <code>should change(User, :count).by(1)</code>, которое утверждает, что <code>lambda</code> блок должен изменить количество <code>User</code> на&nbsp;1.</p>
 
-<p>Второй тест использует <code>assigns</code> метод, впервые показанный в <a class="ref" href="modeling-and-viewing-users-two#code:get_show_test">Листинге&nbsp;7.17</a> чтобы проверить, что действие <code>create</code> перенаправляется на вновь созданную страницу user&rsquo;s <code>show</code>:</p>
+<p>Второй тест использует <code>assigns</code> метод, впервые показанный в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a> чтобы проверить, что действие <code>create</code> перенаправляется на вновь созданную страницу user&rsquo;s <code>show</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="s2">&quot;should redirect to the user show page&quot;</span> <span class="k">do</span>
   <span class="n">post</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="vi">@attr</span>
@@ -904,14 +904,14 @@
 </div>
 
 
-<p>Этот вид переадресации происходит при, практически, каждой успешной отправке формы в вебе, и, благодаря удобному синтаксису RSpec, вы не должны ничего знать о лежащем в его основе коде ответа HTTP.<sup class="footnote" id="fnref:8.5"><a href="#fn:8.5">5</a></sup> Сам URL генерируется с использованием именованного маршрута <code>user_path</code>, показанного в <a class="ref" href="modeling-and-viewing-users-two#table:named_routes">Таблице&nbsp;7.1</a>.</p>
+<p>Этот вид переадресации происходит при, практически, каждой успешной отправке формы в вебе, и, благодаря удобному синтаксису RSpec, вы не должны ничего знать о лежащем в его основе коде ответа HTTP.<sup class="footnote" id="fnref:8.5"><a href="#fn:8.5">5</a></sup> Сам URL генерируется с использованием именованного маршрута <code>user_path</code>, показанного в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#table:named_routes">Таблице&nbsp;7.1</a>.</p>
 
 <div class="label" id="sec:the_finished_signup_form"></div>
 
 
-<h3><a id="sec:8.3.2" href="sign-up#sec:the_finished_signup_form" class="heading"><span class="number">8.3.2</span> Завершение формы регистрации</a></h3>
+<h3><a id="sec:8.3.2" href="sign-up?version=3.0#sec:the_finished_signup_form" class="heading"><span class="number">8.3.2</span> Завершение формы регистрации</a></h3>
 
-<p>Чтобы получить прохождение этих тестов, и, тем самым, завершить рабочую регистрационную форму, заполните закомментированный раздел в <a class="ref" href="sign-up#code:first_create_action">Листинге&nbsp;8.7</a> переадресацией, как показано в <a class="ref" href="sign-up#code:user_create_action">Листинге&nbsp;8.15</a>.</p>
+<p>Чтобы получить прохождение этих тестов, и, тем самым, завершить рабочую регистрационную форму, заполните закомментированный раздел в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинге&nbsp;8.7</a> переадресацией, как показано в <a class="ref" href="sign-up?version=3.0#code:user_create_action">Листинге&nbsp;8.15</a>.</p>
 
 <div class="label" id="code:user_create_action"></div>
 
@@ -937,14 +937,14 @@
 </div></div>
 
 
-<p>Обратите внимание, что мы можем опустить <code>user_path</code> в переадресации, написав просто <code>redirect_to @user</code> для перенаправления на страницу показывающую пользователя, в соответствии с конвенцией, которую мы видели ранее в контексте <code>link_to</code> в <a class="ref" href="modeling-and-viewing-users-two#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>. Этот синтаксис приятно краток, но, к сожалению RSpec не понимает его, поэтому в тестах мы должны использовать более подробный <code>user_path(@user)</code>.</p>
+<p>Обратите внимание, что мы можем опустить <code>user_path</code> в переадресации, написав просто <code>redirect_to @user</code> для перенаправления на страницу показывающую пользователя, в соответствии с конвенцией, которую мы видели ранее в контексте <code>link_to</code> в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>. Этот синтаксис приятно краток, но, к сожалению RSpec не понимает его, поэтому в тестах мы должны использовать более подробный <code>user_path(@user)</code>.</p>
 
 <div class="label" id="sec:the_flash"></div>
 
 
-<h3><a id="sec:8.3.3" href="sign-up#sec:the_flash" class="heading"><span class="number">8.3.3</span> Флэш</a></h3>
+<h3><a id="sec:8.3.3" href="sign-up?version=3.0#sec:the_flash" class="heading"><span class="number">8.3.3</span> Флэш</a></h3>
 
-<p>Перед отправкой валидной регистрации в браузер, мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно  появляется, а затем исчезает при перезагрузке страницы. (Если сейчас что-то непонятно, будьте терпеливы; Конкретный пример появится в ближайшее время) Rails способ сделать это состоит в использовании специальной переменной <em>flash</em>, которая работает как <a   href="http://ru.wikipedia.org/wiki/Флэш-память">флэш-память</a> в том, что она хранит свои данные временно. Переменная <code>flash</code> это на самом деле хэш; и вы можете даже вспомнить консольный например, в <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели, как для перебора хэша использовался стратегически именованный хэш <code>flash</code>. Чтобы вспомнить, попробуйте эту консольную сессию:</p>
+<p>Перед отправкой валидной регистрации в браузер, мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно  появляется, а затем исчезает при перезагрузке страницы. (Если сейчас что-то непонятно, будьте терпеливы; Конкретный пример появится в ближайшее время) Rails способ сделать это состоит в использовании специальной переменной <em>flash</em>, которая работает как <a   href="http://ru.wikipedia.org/wiki/Флэш-память">флэш-память</a> в том, что она хранит свои данные временно. Переменная <code>flash</code> это на самом деле хэш; и вы можете даже вспомнить консольный например, в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели, как для перебора хэша использовался стратегически именованный хэш <code>flash</code>. Чтобы вспомнить, попробуйте эту консольную сессию:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">flash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:success</span> <span class="o">=&gt;</span> <span class="s2">&quot;It worked!&quot;</span><span class="p">,</span> <span class="ss">:error</span> <span class="o">=&gt;</span> <span class="s2">&quot;It failed. :-(&quot;</span> <span class="p">}</span>
@@ -961,7 +961,7 @@
 </div>
 
 
-<p>Мы можем организовать отображение содержимого Флэш на веб-узле, включив его в макет нашего приложения, как в <a class="ref" href="sign-up#code:layout_flash">Листинге&nbsp;8.16</a>.</p>
+<p>Мы можем организовать отображение содержимого Флэш на веб-узле, включив его в макет нашего приложения, как в <a class="ref" href="sign-up?version=3.0#code:layout_flash">Листинге&nbsp;8.16</a>.</p>
 
 <div class="label" id="code:layout_flash"></div>
 
@@ -1005,9 +1005,9 @@
 </div>
 
 
-<p>Причина, по которой мы перебираем все возможные пары ключ/значение заключается в том, что благодаря этому мы сможем включать другие виды флэш сообщений; например, в <a class="ref" href="sign-in-sign-out#code:signin_failure">Листинге&nbsp;9.8</a> мы увидим <code>flash[:error]</code> используемое для индикации неудавшегося входа на сайт.<sup class="footnote" id="fnref:8.7"><a href="#fn:8.7">7</a></sup></p>
+<p>Причина, по которой мы перебираем все возможные пары ключ/значение заключается в том, что благодаря этому мы сможем включать другие виды флэш сообщений; например, в <a class="ref" href="sign-in-sign-out?version=3.0#code:signin_failure">Листинге&nbsp;9.8</a> мы увидим <code>flash[:error]</code> используемое для индикации неудавшегося входа на сайт.<sup class="footnote" id="fnref:8.7"><a href="#fn:8.7">7</a></sup></p>
 
-<p>Давайте протестируем флэш сообщение, чтобы убедиться в его правильности и в том, что оно появляется под ключом <code>:success</code> (<a class="ref" href="sign-up#code:signup_flash_test">Листинг&nbsp;8.17</a>).</p>
+<p>Давайте протестируем флэш сообщение, чтобы убедиться в его правильности и в том, что оно появляется под ключом <code>:success</code> (<a class="ref" href="sign-up?version=3.0#code:signup_flash_test">Листинг&nbsp;8.17</a>).</p>
 
 <div class="label" id="code:signup_flash_test"></div>
 
@@ -1041,7 +1041,7 @@
 </div></div>
 
 
-<p>Это вводит &ldquo;равно-тильда&rdquo; <tt class="verb">=~</tt> оператор для сравнения строк с регулярными выражениями. (Мы впервые увидели регулярные выражения в <code>email_regex</code> <a class="ref" href="modeling-and-viewing-users-one#code:validates_format_of_email">Листинга&nbsp;6.17</a>). Вместо того, чтобы тестировать полное флэш сообщение, мы просто тестируем на существование &ldquo;welcome to the sample app&rdquo;. (Обратите внимание, что у нас еще нет теста для внешнего вида реального HTML флэш сообщений; мы исправим это тестированием  фактического тега <a class="ref" href="sign-up#sec:successful_signup">Раздел&nbsp;8.4.3</a>.)</p>
+<p>Это вводит &ldquo;равно-тильда&rdquo; <tt class="verb">=~</tt> оператор для сравнения строк с регулярными выражениями. (Мы впервые увидели регулярные выражения в <code>email_regex</code> <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:validates_format_of_email">Листинга&nbsp;6.17</a>). Вместо того, чтобы тестировать полное флэш сообщение, мы просто тестируем на существование &ldquo;welcome to the sample app&rdquo;. (Обратите внимание, что у нас еще нет теста для внешнего вида реального HTML флэш сообщений; мы исправим это тестированием  фактического тега <a class="ref" href="sign-up?version=3.0#sec:successful_signup">Раздел&nbsp;8.4.3</a>.)</p>
 
 <p>Если вы много программировали ранее, скорее всего, вы уже знакомы с регулярными выражениями, но вот быстрая <code>console</code> сессия в случае если вам необходимо введение:</p>
 
@@ -1053,7 +1053,7 @@
 </div>
 
 
-<p>Значения, возвращаемые здесь консолью, могут выглядеть странно: для несовпадения, regex сравнение возвращает <code>nil</code>; для совпадения оно возвращает <em>index</em> (позицию, место) в строке где началось совпадение.<sup class="footnote" id="fnref:8.8"><a href="#fn:8.8">8</a></sup> Обычно точный индекс не имеет значения, так как сравнение, как правило, используется в булевом контексте: вспомните из <a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Раздела&nbsp;4.2.3</a> что <code>nil</code> это <code>false</code> в булевом контексте и что все остальное (даже&nbsp;<code>0</code>) является истиной. Таким образом, мы можем написать код, подобный этому:</p>
+<p>Значения, возвращаемые здесь консолью, могут выглядеть странно: для несовпадения, regex сравнение возвращает <code>nil</code>; для совпадения оно возвращает <em>index</em> (позицию, место) в строке где началось совпадение.<sup class="footnote" id="fnref:8.8"><a href="#fn:8.8">8</a></sup> Обычно точный индекс не имеет значения, так как сравнение, как правило, используется в булевом контексте: вспомните из <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Раздела&nbsp;4.2.3</a> что <code>nil</code> это <code>false</code> в булевом контексте и что все остальное (даже&nbsp;<code>0</code>) является истиной. Таким образом, мы можем написать код, подобный этому:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">success</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the Sample App!&quot;</span>
 <span class="go">=&gt; &quot;Welcome to the Sample App!&quot;</span>
@@ -1071,7 +1071,7 @@
 </div>
 
 
-<p>Теперь, когда мы понимаем, как работает сравнение регулярных выражений в тестах флэш, мы можем получить прохождение тестов, назначив <code>flash[:success]</code> в действии <code>create</code> как в <a class="ref" href="sign-up#code:signup_flash">Листинге&nbsp;8.18</a>. Сообщения используют различный регистр, но тесты пройдут в любом случае так как в конце регулярного выражения стоит&nbsp;<code>i</code>. Таким образом, мы не испортим тест, если напишем, например, <code>sample app</code> вместо <code>Sample App</code>.</p>
+<p>Теперь, когда мы понимаем, как работает сравнение регулярных выражений в тестах флэш, мы можем получить прохождение тестов, назначив <code>flash[:success]</code> в действии <code>create</code> как в <a class="ref" href="sign-up?version=3.0#code:signup_flash">Листинге&nbsp;8.18</a>. Сообщения используют различный регистр, но тесты пройдут в любом случае так как в конце регулярного выражения стоит&nbsp;<code>i</code>. Таким образом, мы не испортим тест, если напишем, например, <code>sample app</code> вместо <code>Sample App</code>.</p>
 
 <div class="label" id="code:signup_flash"></div>
 
@@ -1103,9 +1103,9 @@
 <div class="label" id="sec:the_first_signup"></div>
 
 
-<h3><a id="sec:8.3.4" href="sign-up#sec:the_first_signup" class="heading"><span class="number">8.3.4</span> Первая регистрация</a></h3>
+<h3><a id="sec:8.3.4" href="sign-up?version=3.0#sec:the_first_signup" class="heading"><span class="number">8.3.4</span> Первая регистрация</a></h3>
 
-<p>Вы можете увидеть результат всей этой работы, зарегистрировав нашего первого пользователя (под именем &ldquo;Rails Tutorial&rdquo; и адресом электронной почты &ldquo;<tt>example@railstutorial.org</tt>&rdquo;), которые показывают дружеское послание после успешной регистрации, как показано на <a class="ref" href="sign-up#fig:signup_flash">Рис.&nbsp;8.9</a>. (приятный зеленый дизайн для <code>success</code> класса был включен с помощью Blueprint CSS фреймворка из <a class="ref" href="rails-flavored-ruby#sec:cascading_style_sheets">Раздела&nbsp;4.1.2</a>.) Затем, после перезагрузки страницы показывающей пользователя, флэш сообщение исчезает, как и было обещано (<a class="ref" href="sign-up#fig:signup_flash_reloaded">Рис.&nbsp;8.10</a>).</p>
+<p>Вы можете увидеть результат всей этой работы, зарегистрировав нашего первого пользователя (под именем &ldquo;Rails Tutorial&rdquo; и адресом электронной почты &ldquo;<tt>example@railstutorial.org</tt>&rdquo;), которые показывают дружеское послание после успешной регистрации, как показано на <a class="ref" href="sign-up?version=3.0#fig:signup_flash">Рис.&nbsp;8.9</a>. (приятный зеленый дизайн для <code>success</code> класса был включен с помощью Blueprint CSS фреймворка из <a class="ref" href="rails-flavored-ruby?version=3.0#sec:cascading_style_sheets">Раздела&nbsp;4.1.2</a>.) Затем, после перезагрузки страницы показывающей пользователя, флэш сообщение исчезает, как и было обещано (<a class="ref" href="sign-up?version=3.0#fig:signup_flash_reloaded">Рис.&nbsp;8.10</a>).</p>
 
 <div class="label" id="fig:signup_flash"></div>
 
@@ -1138,13 +1138,13 @@
 <div class="label" id="sec:rspec_integration_tests"></div>
 
 
-<h2><a id="sec:8.4" href="sign-up#sec:rspec_integration_tests" class="heading"><span class="number">8.4</span> RSpec интеграционные тесты</a></h2>
+<h2><a id="sec:8.4" href="sign-up?version=3.0#sec:rspec_integration_tests" class="heading"><span class="number">8.4</span> RSpec интеграционные тесты</a></h2>
 
 <p>В принципе, мы закончили с регистрацией пользователей, но вы могли заметить, что мы не протестировали структуру формы регистрации, также мы не проверили, что предоставление информации действительно работает. Конечно, мы <em>должны</em> проверить это, просмотрев страницы в нашем браузере, но весь смысл автоматизированного тестирования в том, чтобы убедиться, что раз уж вещи работают, то они и останутся таковыми. Создание таких тестов - цель этого раздела и результаты довольно приятны.</p>
 
-<p>Один метод тестирования мог бы проверять структуру HTML формы (с использованием <code>render_views</code> и <code>have_selector</code> метода), и это действительно хороший способ для тест-драйва представлений. (<a class="ref" href="sign-up#sec:signup_exercises">Раздел&nbsp;8.6</a> имеет упражнения на этот счет.) Но я предпочитаю не тестировать детальную структуру HTML представлений&mdash;я не вижу никаких причин, почему мы должны знать, что Rails реализует предоставление пользовательского email используя <code>name="user[email]"</code>, к тому же, любые тесты этой структуры будут сломаны, если будущие версии Rails изменят эту конвенцию. Кроме того, было бы неплохо иметь тесты для всего процесса регистрации: посещение страницы регистрации, заполнение формы, нажатие на кнопку, и проверка (если предоставленные данные валидны) того, что новый пользователь создается в (тестовой) базе данных.</p>
+<p>Один метод тестирования мог бы проверять структуру HTML формы (с использованием <code>render_views</code> и <code>have_selector</code> метода), и это действительно хороший способ для тест-драйва представлений. (<a class="ref" href="sign-up?version=3.0#sec:signup_exercises">Раздел&nbsp;8.6</a> имеет упражнения на этот счет.) Но я предпочитаю не тестировать детальную структуру HTML представлений&mdash;я не вижу никаких причин, почему мы должны знать, что Rails реализует предоставление пользовательского email используя <code>name="user[email]"</code>, к тому же, любые тесты этой структуры будут сломаны, если будущие версии Rails изменят эту конвенцию. Кроме того, было бы неплохо иметь тесты для всего процесса регистрации: посещение страницы регистрации, заполнение формы, нажатие на кнопку, и проверка (если предоставленные данные валидны) того, что новый пользователь создается в (тестовой) базе данных.</p>
 
-<p>Хотя это не единственный способ (см. <a class="ref" href="sign-up#sidebar:integration_alternatives">Блок&nbsp;8.1</a>), я предпочитаю решать эту проблему используя RSpec интеграционные тесты, которые мы впервые использовали в <a class="ref" href="filling-in-the-layout#sec:integration_tests">Разделе&nbsp;5.2.1</a> для тестирования пользовательских маршрутов (например <tt>/about</tt> для About страницы). В том разделе мы видели только небольшую часть мощности интеграционных тестов; начиная с этого раздела, мы увидим, насколько удивительными они могут быть.</p>
+<p>Хотя это не единственный способ (см. <a class="ref" href="sign-up?version=3.0#sidebar:integration_alternatives">Блок&nbsp;8.1</a>), я предпочитаю решать эту проблему используя RSpec интеграционные тесты, которые мы впервые использовали в <a class="ref" href="filling-in-the-layout?version=3.0#sec:integration_tests">Разделе&nbsp;5.2.1</a> для тестирования пользовательских маршрутов (например <tt>/about</tt> для About страницы). В том разделе мы видели только небольшую часть мощности интеграционных тестов; начиная с этого раздела, мы увидим, насколько удивительными они могут быть.</p>
 
 <div class="label" id="sidebar:integration_alternatives"></div>
 
@@ -1161,10 +1161,10 @@
 <div class="label" id="sec:integration_tests_with_style"></div>
 
 
-<h3><a id="sec:8.4.1" href="sign-up#sec:integration_tests_with_style" class="heading"><span class="number">8.4.1</span> Интеграционные тесты со стилем</a></h3></a></h3>
+<h3><a id="sec:8.4.1" href="sign-up?version=3.0#sec:integration_tests_with_style" class="heading"><span class="number">8.4.1</span> Интеграционные тесты со стилем</a></h3></a></h3>
 
 
-<p>Мы видели в <a class="ref" href="filling-in-the-layout#code:layout_links_spec">Листинге&nbsp;5.13</a> что RSpec интеграционные тесты поддерживают контроллер-тест&ndash;стиль конструкции, такие как</p>
+<p>Мы видели в <a class="ref" href="filling-in-the-layout?version=3.0#code:layout_links_spec">Листинге&nbsp;5.13</a> что RSpec интеграционные тесты поддерживают контроллер-тест&ndash;стиль конструкции, такие как</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;/&#39;</span>
 <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">:content</span> <span class="o">=&gt;</span> <span class="s2">&quot;Home&quot;</span><span class="p">)</span>
@@ -1186,9 +1186,9 @@
 <div class="label" id="sec:failed_signup"></div>
 
 
-<h3><a id="sec:8.4.2" href="sign-up#sec:failed_signup" class="heading"><span class="number">8.4.2</span> Сбой регистрации пользователя не должен создавать нового пользователя</a></h3>
+<h3><a id="sec:8.4.2" href="sign-up?version=3.0#sec:failed_signup" class="heading"><span class="number">8.4.2</span> Сбой регистрации пользователя не должен создавать нового пользователя</a></h3>
 
-<p>Теперь мы готовы сделать интеграционный тест для регистрации пользователей. Как мы видели в <a class="ref" href="filling-in-the-layout#sec:integration_tests">Разделе&nbsp;5.2.1</a>, RSpec поставляется с генератором для изготовления подобных интеграционных specs; в данном случае, наши интеграционные тесты будут содержать различные действия, предпринимаемые пользователями, поэтому мы назовем тесты <code>users</code>:</p>
+<p>Теперь мы готовы сделать интеграционный тест для регистрации пользователей. Как мы видели в <a class="ref" href="filling-in-the-layout?version=3.0#sec:integration_tests">Разделе&nbsp;5.2.1</a>, RSpec поставляется с генератором для изготовления подобных интеграционных specs; в данном случае, наши интеграционные тесты будут содержать различные действия, предпринимаемые пользователями, поэтому мы назовем тесты <code>users</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate integration_test users
 <span class="go">      invoke  rspec</span>
@@ -1197,9 +1197,9 @@
 </div>
 
 
-<p>Как и в <a class="ref" href="filling-in-the-layout#sec:integration_tests">Разделе&nbsp;5.2.1</a>, генератор автоматически добавляет spec идентификатор, что приводит название файла теста к виду <code>users_spec.rb</code>.<sup class="footnote" id="fnref:8.10"><a href="#fn:8.10">10</a></sup></p>
+<p>Как и в <a class="ref" href="filling-in-the-layout?version=3.0#sec:integration_tests">Разделе&nbsp;5.2.1</a>, генератор автоматически добавляет spec идентификатор, что приводит название файла теста к виду <code>users_spec.rb</code>.<sup class="footnote" id="fnref:8.10"><a href="#fn:8.10">10</a></sup></p>
 
-<p>Мы начнем со сбоя регистрации. Простой способ организовать провальную регистрацию, это посетить signup URL и просто нажать на кнопку, в результате должна появиться страница как в <a class="ref" href="sign-up#fig:blank_signup">Рис.&nbsp;8.11</a>. После сбоя предоставления, ответ должен сформировать <code>users/new</code> шаблон.  Если вы проверите результирующий HTML, вы должны увидеть что-то вроде разметки в <a class="ref" href="sign-up#code:error_explanation">Листинге&nbsp;8.19</a>. Это означает, что мы можем проверить на наличие сообщений об ошибках, поиском тега <code>div</code> с CSS id <code>"error_explanation"</code>. Тест для этого шага представлен в <a class="ref" href="sign-up#code:signup_failure_test">Листинге&nbsp;8.20</a>.</p>
+<p>Мы начнем со сбоя регистрации. Простой способ организовать провальную регистрацию, это посетить signup URL и просто нажать на кнопку, в результате должна появиться страница как в <a class="ref" href="sign-up?version=3.0#fig:blank_signup">Рис.&nbsp;8.11</a>. После сбоя предоставления, ответ должен сформировать <code>users/new</code> шаблон.  Если вы проверите результирующий HTML, вы должны увидеть что-то вроде разметки в <a class="ref" href="sign-up?version=3.0#code:error_explanation">Листинге&nbsp;8.19</a>. Это означает, что мы можем проверить на наличие сообщений об ошибках, поиском тега <code>div</code> с CSS id <code>"error_explanation"</code>. Тест для этого шага представлен в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test">Листинге&nbsp;8.20</a>.</p>
 
 <div class="label" id="fig:blank_signup"></div>
 
@@ -1213,7 +1213,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 8.19.</span> <span class="description"><code>div</code> error_explanation из страницы на <a class="ref" href="sign-up#fig:blank_signup">Рис.&nbsp;8.11</a>.</span>
+<div class="listing"><span class="header">Листинг 8.19.</span> <span class="description"><code>div</code> error_explanation из страницы на <a class="ref" href="sign-up?version=3.0#fig:blank_signup">Рис.&nbsp;8.11</a>.</span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;error_explanation&quot;</span> <span class="na">id=</span><span class="s">&quot;error_explanation&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;h2&gt;</span>5 errors prohibited this user from being saved<span class="nt">&lt;/h2&gt;</span>
@@ -1270,7 +1270,7 @@
 </div>
 
 
-<p>Обратите внимание, какой естественный язык в <a class="ref" href="sign-up#code:signup_failure_test">Листинге&nbsp;8.20</a>. Единственная проблема заключается в том, что это (# написано по-английски?)   <em>немного</em> не тот тест который мы хотели: мы на самом деле не протестировали что сбой предоставления формы приводит к сбою создания нового пользователя. Чтобы так сделать, нам нужно свернуть шаги теста в один пакет, а затем проверить что количество <code>User</code> не изменилось. Как мы видели в  <a class="ref" href="sign-up#code:failing_create_specs">Листинге&nbsp;8.6</a> и  <a class="ref" href="sign-up#code:signup_success_tests">Листинге&nbsp;8.14</a>, это может быть достигнуто с <code>lambda</code>. В тех случаях блок <code>lambda</code> содержал только одну строку, но мы видим в <a class="ref" href="sign-up#code:signup_failure_test_lambda">Листинг&nbsp;8.21</a> Листинге&nbsp;8.21</a> что она может обвернуть несколько строк так же легко.</p>
+<p>Обратите внимание, какой естественный язык в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test">Листинге&nbsp;8.20</a>. Единственная проблема заключается в том, что это (# написано по-английски?)   <em>немного</em> не тот тест который мы хотели: мы на самом деле не протестировали что сбой предоставления формы приводит к сбою создания нового пользователя. Чтобы так сделать, нам нужно свернуть шаги теста в один пакет, а затем проверить что количество <code>User</code> не изменилось. Как мы видели в  <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинге&nbsp;8.6</a> и  <a class="ref" href="sign-up?version=3.0#code:signup_success_tests">Листинге&nbsp;8.14</a>, это может быть достигнуто с <code>lambda</code>. В тех случаях блок <code>lambda</code> содержал только одну строку, но мы видим в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test_lambda">Листинг&nbsp;8.21</a> Листинге&nbsp;8.21</a> что она может обвернуть несколько строк так же легко.</p>
 
 <div class="label" id="code:signup_failure_test_lambda"></div>
 
@@ -1305,7 +1305,7 @@
 </div></div>
 
 
-<p>Как и в <a class="ref" href="sign-up#code:failing_create_specs">Листинг&nbsp;8.6</a>, это использует</p>
+<p>Как и в <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинг&nbsp;8.6</a>, это использует</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">should_not</span> <span class="n">change</span><span class="p">(</span><span class="no">User</span><span class="p">,</span> <span class="ss">:count</span><span class="p">)</span>
 </pre></div>
@@ -1314,14 +1314,14 @@
 
 <p>чтобы проверить, что код внутри <code>lambda</code> блока не меняет значение <code>User.count</code>.</p>
 
-<p>Интеграционный тест в <a class="ref" href="sign-up#code:signup_failure_test_lambda">Листинге&nbsp;8.21</a> связывает воедино все части Rails, включая модели, представления, контроллеры, маршрутизацию и хелперы. Он обеспечивает непрерывную цепь проверяющую, что наш регистрационный механизм исправно работает, по крайней мере для случая сбоя регистрации.</p>
+<p>Интеграционный тест в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test_lambda">Листинге&nbsp;8.21</a> связывает воедино все части Rails, включая модели, представления, контроллеры, маршрутизацию и хелперы. Он обеспечивает непрерывную цепь проверяющую, что наш регистрационный механизм исправно работает, по крайней мере для случая сбоя регистрации.</p>
 
 <div class="label" id="sec:successful_signup"></div>
 
 
-<h3><a id="sec:8.4.3" href="sign-up#sec:successful_signup" class="heading"><span class="number">8.4.3</span> Успешная регистрация пользователя должна создавать нового пользователя</a></h3>
+<h3><a id="sec:8.4.3" href="sign-up?version=3.0#sec:successful_signup" class="heading"><span class="number">8.4.3</span> Успешная регистрация пользователя должна создавать нового пользователя</a></h3>
 
-<p>Теперь мы переходим к интеграцоннму тесту для успешной регистрации. В этом случае нам необходимо заполнить поля регистрации валидными данными пользователя. Когда мы закончим, результом должна быть страница показывающая пользователя с &ldquo;flash success&rdquo; <code>div</code> тегом, и это должно изменить количество User на&nbsp;1. <a class="ref" href="sign-up#code:signup_success_test">Листинг&nbsp;8.22</a> показывает, как это сделать</p>
+<p>Теперь мы переходим к интеграцоннму тесту для успешной регистрации. В этом случае нам необходимо заполнить поля регистрации валидными данными пользователя. Когда мы закончим, результом должна быть страница показывающая пользователя с &ldquo;flash success&rdquo; <code>div</code> тегом, и это должно изменить количество User на&nbsp;1. <a class="ref" href="sign-up?version=3.0#code:signup_success_test">Листинг&nbsp;8.22</a> показывает, как это сделать</p>
 
 <div class="label" id="code:signup_success_test"></div>
 
@@ -1386,7 +1386,7 @@
 </div>
 
 
-<p>Как и в <a class="ref" href="sign-up#code:signup_failure_test_lambda">Листинге&nbsp;8.21</a>, мы завернули код для успешной регистрации в <code>lambda</code> блок. В этом случае, вместо того, чтобы убедиться, что количество пользователей <em>не</em> меняется, мы убедимся, что оно увеличивается на&nbsp;1 за счет записи пользователя, создаваемой в тестовой базе данных. Результат выглядит следующим образом:</p>
+<p>Как и в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test_lambda">Листинге&nbsp;8.21</a>, мы завернули код для успешной регистрации в <code>lambda</code> блок. В этом случае, вместо того, чтобы убедиться, что количество пользователей <em>не</em> меняется, мы убедимся, что оно увеличивается на&nbsp;1 за счет записи пользователя, создаваемой в тестовой базе данных. Результат выглядит следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/users_spec.rb
 <span class="go">..</span>
@@ -1400,9 +1400,9 @@
 
 <p>С этим, наши интеграционные тесты для регистрации завершены, и мы можем быть уверены, что, если пользователи не присоединяется к нашему сайту, то это не потому, что регистрационная форма не работает.</p>
 
-<h2><a id="sec:8.5" href="sign-up#sec:8.5" class="heading"><span class="number">8.5</span> Заключение</a></h2>
+<h2><a id="sec:8.5" href="sign-up?version=3.0#sec:8.5" class="heading"><span class="number">8.5</span> Заключение</a></h2>
 
-<p>Возможность регистрировать пользователей это важная веха для нашего приложения. Хотя пример приложения до сих пор не делает ничего полезного, мы заложили необходимый фундамент для  будущего развития. В следующих двух главах, мы завершим еще две основные вехи: во-первых, в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a> мы завершим нашу аутентификационную машинерию, позволив пользователям входить и выходить из приложения, во-вторых, в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;10</a> мы позволим всем пользователям обновлять информацию в их учетных записях и позволим администраторам сайта удалять пользователей, а также добавим защиту страниц для обеспечения безопасности сайта, завершив тем самым полный набор REST действий для ресурса Users из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a>.</p>
+<p>Возможность регистрировать пользователей это важная веха для нашего приложения. Хотя пример приложения до сих пор не делает ничего полезного, мы заложили необходимый фундамент для  будущего развития. В следующих двух главах, мы завершим еще две основные вехи: во-первых, в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a> мы завершим нашу аутентификационную машинерию, позволив пользователям входить и выходить из приложения, во-вторых, в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#top">Главе&nbsp;10</a> мы позволим всем пользователям обновлять информацию в их учетных записях и позволим администраторам сайта удалять пользователей, а также добавим защиту страниц для обеспечения безопасности сайта, завершив тем самым полный набор REST действий для ресурса Users из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>.</p>
 
 <p>Как обычно, если вы используете Git, вы должны объединить ваши изменения c главной веткой:</p>
 
@@ -1417,18 +1417,18 @@
 <div class="label" id="sec:signup_exercises"></div>
 
 
-<h2><a id="sec:8.6" href="sign-up#sec:signup_exercises" class="heading"><span class="number">8.6</span> Упражнения</a></h2>
+<h2><a id="sec:8.6" href="sign-up?version=3.0#sec:signup_exercises" class="heading"><span class="number">8.6</span> Упражнения</a></h2>
 
 
 
 
 <ol>
 
-<li>Используя модель из <a class="ref" href="sign-up#code:field_tests">Листинга&nbsp;8.23</a>, напишите тесты для проверки на наличие каждого поля в регистрационной форме. (Не забудьте строку <code>render_views</code>,  необходимую для работы этих тестов.)</li>
+<li>Используя модель из <a class="ref" href="sign-up?version=3.0#code:field_tests">Листинга&nbsp;8.23</a>, напишите тесты для проверки на наличие каждого поля в регистрационной форме. (Не забудьте строку <code>render_views</code>,  необходимую для работы этих тестов.)</li>
 
-<li>Зачастую регистрационные формы очищают поле пароля при сбое регистрации, как показано на  <a class="ref" href="sign-up#fig:cleared_password">Рис.&nbsp;8.12</a>. Модифицируйте действие <code>create</code> контроллера Users, чтобы изменить соответствующим образом поведение нашего приложения. <em>Подсказка:</em> Сброс <code>@user.password</code>.</li>
+<li>Зачастую регистрационные формы очищают поле пароля при сбое регистрации, как показано на  <a class="ref" href="sign-up?version=3.0#fig:cleared_password">Рис.&nbsp;8.12</a>. Модифицируйте действие <code>create</code> контроллера Users, чтобы изменить соответствующим образом поведение нашего приложения. <em>Подсказка:</em> Сброс <code>@user.password</code>.</li>
 
-<li>HTML флэша в <a class="ref" href="sign-up#code:layout_flash">Листинге&nbsp;8.16</a> это, практически, уродская комбинация HTML и ERb. Проверьте, запустив набор тестов, что более чистый код в <a class="ref" href="sign-up#code:layout_flash_content_tag">Листинге&nbsp;8.24</a>, использующий Rails хелпер <code>content_tag</code>, тоже работает.</li>
+<li>HTML флэша в <a class="ref" href="sign-up?version=3.0#code:layout_flash">Листинге&nbsp;8.16</a> это, практически, уродская комбинация HTML и ERb. Проверьте, запустив набор тестов, что более чистый код в <a class="ref" href="sign-up?version=3.0#code:layout_flash_content_tag">Листинге&nbsp;8.24</a>, использующий Rails хелпер <code>content_tag</code>, тоже работает.</li>
 
 </ol>
 
@@ -1507,10 +1507,10 @@
 </div></div>
 
 
-<div class="navigation">  <a class="prev_page" href="modeling-and-viewing-users-two#top">
+<div class="navigation">  <a class="prev_page" href="modeling-and-viewing-users-two?version=3.0#top">
     &laquo;&nbsp;<span class="number">Глава 7</span> Моделирование и просмотр пользователей, часть II
   </a>
-  <a class="next_page" href="sign-in-sign-out#top">
+  <a class="next_page" href="sign-in-sign-out?version=3.0#top">
     <span class="number">Глава 9</span> Войти, выйти&nbsp;&raquo;
   </a>
 </div><div class="footnotes">
@@ -1519,10 +1519,10 @@
 <li id="fn:8.2">Название происходит от <a  href="http://ru.wikipedia.org/wiki/Ламбда-исчисление">лямбда-исчисления</a>, математической системы для представления функций и их операций.&nbsp;<a class="arrow" href="#fnref:8.2">&uarr;</a></li>
 <li id="fn:8.3">До Rails&nbsp;3, отображение сообщений об ошибках было реализовано через магический вызов специального метода <code>error_messages</code> на объект формы&nbsp;<code>f</code>, следующим образом: <tt class="verb">&lt;%= f.error_messages %&gt;</tt>. Хотя зачастую это было удобно, этот волшебный метод было тяжело настроить, так что команда Rails Core решила рекомендовать использование Embedded Ruby для отображения ошибок вручную.&nbsp;<a class="arrow" href="#fnref:8.3">&uarr;</a></li>
 <li id="fn:8.4">Я выяснил это путем поиска <code>pluralize</code> в Rails API.&nbsp;<a class="arrow" href="#fnref:8.4">&uarr;</a></li>
-<li id="fn:8.5">В случае, если вам интересно, код ответа <tt>302</tt>, в отличие от &ldquo;постоянной переадресации&rdquo; <tt>301</tt> кратко обсуждаемой в <a class="ref" href="static-pages#sidebar:response_codes">Блоке&nbsp;3.2</a>.&nbsp;<a class="arrow" href="#fnref:8.5">&uarr;</a></li>
+<li id="fn:8.5">В случае, если вам интересно, код ответа <tt>302</tt>, в отличие от &ldquo;постоянной переадресации&rdquo; <tt>301</tt> кратко обсуждаемой в <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блоке&nbsp;3.2</a>.&nbsp;<a class="arrow" href="#fnref:8.5">&uarr;</a></li>
 <li id="fn:8.6">Обратите внимание, что ключ <code>:success</code> является символом, но Embedded Ruby автоматически преобразует его в строку <code>"success"</code> перед вставкой в шаблон.&nbsp;<a class="arrow" href="#fnref:8.6">&uarr;</a></li>
 <li id="fn:8.7">На самом деле, мы будем использовать тесно связаный <code>flash.now</code>, но мы не будем акцентироваться на этом ньюансе, до тех пор, пока он нам не понадобится.&nbsp;<a class="arrow" href="#fnref:8.7">&uarr;</a></li>
-<li id="fn:8.8">Индексы имеют нулевое смещние, как и массивы (<a class="ref" href="rails-flavored-ruby#sec:arrays_and_ranges">Раздел&nbsp;4.3.1</a>), поэтому возвращаемое значение, <code>0</code> означает что строка совпадает с регулярным выражением, начиная с первого символа.&nbsp;<a class="arrow" href="#fnref:8.8">&uarr;</a></li>
+<li id="fn:8.8">Индексы имеют нулевое смещние, как и массивы (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Раздел&nbsp;4.3.1</a>), поэтому возвращаемое значение, <code>0</code> означает что строка совпадает с регулярным выражением, начиная с первого символа.&nbsp;<a class="arrow" href="#fnref:8.8">&uarr;</a></li>
 <li id="fn:8.9">Что касается этой записи, этот синтаксис доступен благодаря <a href="http://github.com/brynary/webrat">Webrat</a>, (# WebКрыса), которая предоставляется как гем зависимость для <tt>rspec-rails</tt>, но Webrat была написана до широкого внедрения <a  href="http://rack.rubyforge.org/">Rack</a> и в конечном итоге будет вытеснена проектом  <a  href="http://github.com/jnicklas/capybara">Capybara</a>. К счастью, <a  href="http://ru.wikipedia.org/wiki/%CA%E0%EF%E8%E1%E0%F0%E0">Capybara</a> разработан как прямая замена для Webrat, поэтому синтаксис должен остаться тем же.&nbsp;<a class="arrow" href="#fnref:8.9">&uarr;</a></li>
 <li id="fn:8.10">Обратите внимание на множественное число; это <em>не</em> User spec <code>user_spec.rb</code>, который является тестом модели, а не интеграционным тестом.&nbsp;<a class="arrow" href="#fnref:8.10">&uarr;</a></li>
 <li id="fn:8.11">Вы можете использовать Firebug или &rsquo;s &ldquo;Исходный код страницы&rdquo; вашего браузера, если вам необходимо выяснить id. Или вы можете заметить, что Rails использует имя ресурса и имя атрибута разделенные знаком подчеркивания, что приводит к <code>user_name</code>, <code>user_email</code>, и т.д..&nbsp;<a class="arrow" href="#fnref:8.11">&uarr;</a></li>

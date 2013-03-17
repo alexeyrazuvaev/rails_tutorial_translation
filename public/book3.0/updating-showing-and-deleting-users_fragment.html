@@ -1,10 +1,10 @@
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:10" href="updating-showing-and-deleting-users#top" class="heading"><span class="number">Глава 10</span> Обновление, демонстрация, и удаление пользователей</a></h1>
+<h1 class="chapter"><a id="sec:10" href="updating-showing-and-deleting-users?version=3.0#top" class="heading"><span class="number">Глава 10</span> Обновление, демонстрация, и удаление пользователей</a></h1>
 
 
-<p>В этой главе мы завершим REST действия для ресурса Users (<a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблица&nbsp;6.2</a>) добавив <code>edit</code>, <code>update</code>, <code>index</code>, и <code>destroy</code> действия. Мы начнем с того, что дадим пользователям возможность обновлять свои профили, что также обеспечит естественную возможность для обеспечения модели безопасности (стало возможным, благодаря аутентификационному коду из <a class="ref" href="sign-in-sign-out#top">Главы&nbsp;9</a>). Затем мы сделаем список всех пользователей (также требует аутентификации), что будет поводом для внедрения выборки данных и постраничного вывода (пагинации). Наконец, мы также добавим возможность удалять пользователей, стиранием их в базе данных. Так как мы не можем позволить любому пользователю обладать такими опасными возможностями, мы позаботимся о создании привилегированного класса административных пользователей (администраторов).</p>
+<p>В этой главе мы завершим REST действия для ресурса Users (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблица&nbsp;6.2</a>) добавив <code>edit</code>, <code>update</code>, <code>index</code>, и <code>destroy</code> действия. Мы начнем с того, что дадим пользователям возможность обновлять свои профили, что также обеспечит естественную возможность для обеспечения модели безопасности (стало возможным, благодаря аутентификационному коду из <a class="ref" href="sign-in-sign-out?version=3.0#top">Главы&nbsp;9</a>). Затем мы сделаем список всех пользователей (также требует аутентификации), что будет поводом для внедрения выборки данных и постраничного вывода (пагинации). Наконец, мы также добавим возможность удалять пользователей, стиранием их в базе данных. Так как мы не можем позволить любому пользователю обладать такими опасными возможностями, мы позаботимся о создании привилегированного класса административных пользователей (администраторов).</p>
 
 <p>Начнем с создания новой <code>updating-users</code> темы ветки:</p>
 
@@ -16,18 +16,18 @@
 <div class="label" id="sec:updating_users"></div>
 
 
-<h2><a id="sec:10.1" href="updating-showing-and-deleting-users#sec:updating_users" class="heading"><span class="number">10.1</span> Обновление пользователей</a></h2>
+<h2><a id="sec:10.1" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users" class="heading"><span class="number">10.1</span> Обновление пользователей</a></h2>
 
 
-<p>Основная идея редактирования информации о пользователе тесно параллельна созданию новых пользователей (<a class="ref" href="sign-up#top">Глава&nbsp;8</a>). Вместо <code>new</code> действия визуализирующего представление для нового пользователя, мы имеем <code>edit</code> действие, отображающее представление для редактирования пользователей; вместо <code>create</code> отвечающего на запрос <tt>POST</tt>, мы имеем <code>update</code> действие, отвечающее на запрос <tt>PUT</tt> (<a class="ref" href="static-pages#sidebar:get_etc">Блок&nbsp;3.1</a>). Основное отличие заключается в том, что зарегистрироваться может любой человек, но только текущий пользователь должен иметь возможность обновлять свою информацию. Это означает, что нам необходимо обеспечить контроль доступа таким образом, чтобы только авторизированные пользователи могли редактировать и обновлять информацию; аутентификационный механизм из <a class="ref" href="sign-in-sign-out#top">Главы&nbsp;9</a> позволит нам использовать <em>before filter</em> для обеспечения этого вида контроля.</p>
+<p>Основная идея редактирования информации о пользователе тесно параллельна созданию новых пользователей (<a class="ref" href="sign-up?version=3.0#top">Глава&nbsp;8</a>). Вместо <code>new</code> действия визуализирующего представление для нового пользователя, мы имеем <code>edit</code> действие, отображающее представление для редактирования пользователей; вместо <code>create</code> отвечающего на запрос <tt>POST</tt>, мы имеем <code>update</code> действие, отвечающее на запрос <tt>PUT</tt> (<a class="ref" href="static-pages?version=3.0#sidebar:get_etc">Блок&nbsp;3.1</a>). Основное отличие заключается в том, что зарегистрироваться может любой человек, но только текущий пользователь должен иметь возможность обновлять свою информацию. Это означает, что нам необходимо обеспечить контроль доступа таким образом, чтобы только авторизированные пользователи могли редактировать и обновлять информацию; аутентификационный механизм из <a class="ref" href="sign-in-sign-out?version=3.0#top">Главы&nbsp;9</a> позволит нам использовать <em>before filter</em> для обеспечения этого вида контроля.</p>
 
 <div class="label" id="sec:edit_form"></div>
 
 
-<h3><a id="sec:10.1.1" href="updating-showing-and-deleting-users#sec:edit_form" class="heading"><span class="number">10.1.1</span> Форма для редактирования</a></h3>
+<h3><a id="sec:10.1.1" href="updating-showing-and-deleting-users?version=3.0#sec:edit_form" class="heading"><span class="number">10.1.1</span> Форма для редактирования</a></h3>
 
 
-<p>Начнем с тестов для  формы редактирования, макет которой показан на <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_mockup">Рис.&nbsp;10.1</a>.<sup class="footnote" id="fnref:10.1"><a href="#fn:10.1">1</a></sup> Два аналогичных теста для <code>new</code> user страницы, проверяющие на правильный ответ и заголовок, мы видели в (<a class="ref" href="sign-up#code:new_users_tests">Листинге&nbsp;8.1</a>; третий тест проверяет существование ссылки для редактирования изображения Gravatarа пользователя (<a class="ref" href="modeling-and-viewing-users-two#sec:a_name_and_a_gravatar">Раздел&nbsp;7.3.2</a>). Если вы покопаетесь в сайте Gravatar, вы увидите, что страница для добавления или изменения изображений (что несколько странно), расположена на <a href="http://gravatar.com/emails"><tt>http://gravatar.com/emails</tt></a>, поэтому мы тестируем <code>edit</code> страницу на наличие ссылки на этот URL.<sup class="footnote" id="fnref:10.2"><a href="#fn:10.2">2</a></sup> Результат показан в <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_specs">Листинге&nbsp;10.1</a>.</p>
+<p>Начнем с тестов для  формы редактирования, макет которой показан на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_mockup">Рис.&nbsp;10.1</a>.<sup class="footnote" id="fnref:10.1"><a href="#fn:10.1">1</a></sup> Два аналогичных теста для <code>new</code> user страницы, проверяющие на правильный ответ и заголовок, мы видели в (<a class="ref" href="sign-up?version=3.0#code:new_users_tests">Листинге&nbsp;8.1</a>; третий тест проверяет существование ссылки для редактирования изображения Gravatarа пользователя (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:a_name_and_a_gravatar">Раздел&nbsp;7.3.2</a>). Если вы покопаетесь в сайте Gravatar, вы увидите, что страница для добавления или изменения изображений (что несколько странно), расположена на <a href="http://gravatar.com/emails"><tt>http://gravatar.com/emails</tt></a>, поэтому мы тестируем <code>edit</code> страницу на наличие ссылки на этот URL.<sup class="footnote" id="fnref:10.2"><a href="#fn:10.2">2</a></sup> Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_specs">Листинге&nbsp;10.1</a>.</p>
 
 <div class="label" id="fig:edit_user_mockup"></div>
 
@@ -79,9 +79,9 @@
 </div></div>
 
 
-<p>Здесь мы использовали <code>test_sign_in(@user)</code> для входа в качестве пользователя, в ожидании защиты страницы редактирования от несанкционированного доступа (<a class="ref" href="updating-showing-and-deleting-users#sec:protecting_pages">Раздел&nbsp;10.2</a>). В противном случае, эти тесты прервались бы сразу после реализации нашего аутентификационного кода.</p>
+<p>Здесь мы использовали <code>test_sign_in(@user)</code> для входа в качестве пользователя, в ожидании защиты страницы редактирования от несанкционированного доступа (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:protecting_pages">Раздел&nbsp;10.2</a>). В противном случае, эти тесты прервались бы сразу после реализации нашего аутентификационного кода.</p>
 
-<p>Напомним из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a> что надлежащим URL для страницы редактирования пользователя является <tt>/users/1/edit</tt> (при условии, что id пользователя&nbsp;<tt>1</tt>). Напомним, что идентификатор пользователя доступен в переменной <code>params[:id]</code> , это означает, что мы можем найти пользователя с помощью кода из  <a class="ref" href="updating-showing-and-deleting-users#code:initial_edit_action">Листинга&nbsp;10.2</a>. При этом используется <code>find</code> для поиска соответствующего пользователя в базе данных, а затем устанавливается нужное значение переменной <code>@title</code>.</p>
+<p>Напомним из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a> что надлежащим URL для страницы редактирования пользователя является <tt>/users/1/edit</tt> (при условии, что id пользователя&nbsp;<tt>1</tt>). Напомним, что идентификатор пользователя доступен в переменной <code>params[:id]</code> , это означает, что мы можем найти пользователя с помощью кода из  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:initial_edit_action">Листинга&nbsp;10.2</a>. При этом используется <code>find</code> для поиска соответствующего пользователя в базе данных, а затем устанавливается нужное значение переменной <code>@title</code>.</p>
 
 <div class="label" id="code:initial_edit_action"></div>
 
@@ -102,7 +102,7 @@
 </div></div>
 
 
-<p>Для прохождения этих тестов требуется создание соответствующего (edit) представления, показанного в <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинге&nbsp;10.3</a>. Обратите внимание, насколько оно похоже на new user представление из  <a class="ref" href="sign-up#code:new_user_form">Листинга&nbsp;8.2</a>; большое перекрытие предполагает факторинг повторяющгося кода в партиал, который мы оставим в качестве упражнения (<a class="ref" href="updating-showing-and-deleting-users#sec:updating_deleting_exercises">Раздел&nbsp;10.6</a>).</p>
+<p>Для прохождения этих тестов требуется создание соответствующего (edit) представления, показанного в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинге&nbsp;10.3</a>. Обратите внимание, насколько оно похоже на new user представление из  <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинга&nbsp;8.2</a>; большое перекрытие предполагает факторинг повторяющгося кода в партиал, который мы оставим в качестве упражнения (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_deleting_exercises">Раздел&nbsp;10.6</a>).</p>
 
 <div class="label" id="code:user_edit_view"></div>
 
@@ -143,22 +143,22 @@
 </div></div>
 
 
-<p>Здесь мы повторно использовали общедоступный партиал <code>error_messages</code>, введеный в <a class="ref" href="sign-up#sec:signup_error_messages">Разделе&nbsp;8.2.3</a>.</p>
+<p>Здесь мы повторно использовали общедоступный партиал <code>error_messages</code>, введеный в <a class="ref" href="sign-up?version=3.0#sec:signup_error_messages">Разделе&nbsp;8.2.3</a>.</p>
 
-<p>Вы можете вспомнить из <a class="ref" href="sign-up#code:f_error_messages">Листинга&nbsp;8.8</a> что error-messages партиал явно связан с переменной <code>@user</code>. В данном случае, у нас <em>есть</em> переменная <code>@user</code>, но для того, чтобы сделать этот партиал действительно общедоступным, мы не должны зависеть от этого факта. Решение заключается в передаче соответствующего объекта переменной формы&nbsp;<code>f</code> в качестве параметра партиала:</p>
+<p>Вы можете вспомнить из <a class="ref" href="sign-up?version=3.0#code:f_error_messages">Листинга&nbsp;8.8</a> что error-messages партиал явно связан с переменной <code>@user</code>. В данном случае, у нас <em>есть</em> переменная <code>@user</code>, но для того, чтобы сделать этот партиал действительно общедоступным, мы не должны зависеть от этого факта. Решение заключается в передаче соответствующего объекта переменной формы&nbsp;<code>f</code> в качестве параметра партиала:</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">&#39;shared/error_messages&#39;</span><span class="p">,</span> <span class="ss">:object</span> <span class="o">=&gt;</span> <span class="n">f</span><span class="o">.</span><span class="n">object</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Это создает переменную <code>object</code> в партиале, которую мы можем использовать для генерации сообщений об ошибках, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:updated_error_messages_partial">Листинге&nbsp;10.4</a>. (Отмечу причудливую цепочку методов для получения точной версии имени объекта; см Rails API введение в, скажем, <code>humanize</code>, чтобы получить представление о диапазоне Rails утилит.)</p>
+<p>Это создает переменную <code>object</code> в партиале, которую мы можем использовать для генерации сообщений об ошибках, как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:updated_error_messages_partial">Листинге&nbsp;10.4</a>. (Отмечу причудливую цепочку методов для получения точной версии имени объекта; см Rails API введение в, скажем, <code>humanize</code>, чтобы получить представление о диапазоне Rails утилит.)</p>
 
 <div class="label" id="code:updated_error_messages_partial"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 10.4.</span> <span class="description">Обновление error-messages партиала из <a class="ref" href="sign-up#code:errors_partial">Листинга&nbsp;8.9</a>, позволяющее ему работать с другими объектами. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 10.4.</span> <span class="description">Обновление error-messages партиала из <a class="ref" href="sign-up?version=3.0#code:errors_partial">Листинга&nbsp;8.9</a>, позволяющее ему работать с другими объектами. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">object</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">any?</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error_explanation&quot;</span><span class="nt">&gt;</span>
@@ -177,7 +177,7 @@
 </div></div>
 
 
-<p>Пока мы здесь, мы также обновим форму регистрации с более общим кодом (<a class="ref" href="updating-showing-and-deleting-users#code:signup_errors_updated">Листинг&nbsp;10.5</a>).</p>
+<p>Пока мы здесь, мы также обновим форму регистрации с более общим кодом (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:signup_errors_updated">Листинг&nbsp;10.5</a>).</p>
 
 <div class="label" id="code:signup_errors_updated"></div>
 
@@ -197,7 +197,7 @@
 </div></div>
 
 
-<p>Мы также добавим ссылку на страницу редактирования пользователя в навигацию сайта (мы назовем ее  &ldquo;Settings&rdquo; (#"настройки"), как показано на макете в <a class="ref" href="updating-showing-and-deleting-users#fig:profile_settings_link_mockup">Рис.&nbsp;10.2</a><sup class="footnote" id="fnref:10.3"><a href="#fn:10.3">3</a></sup> и <a class="ref" href="updating-showing-and-deleting-users#code:settings_link">Листинге&nbsp;10.6</a>.</p>
+<p>Мы также добавим ссылку на страницу редактирования пользователя в навигацию сайта (мы назовем ее  &ldquo;Settings&rdquo; (#"настройки"), как показано на макете в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:profile_settings_link_mockup">Рис.&nbsp;10.2</a><sup class="footnote" id="fnref:10.3"><a href="#fn:10.3">3</a></sup> и <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:settings_link">Листинге&nbsp;10.6</a>.</p>
 
 <div class="label" id="fig:profile_settings_link_mockup"></div>
 
@@ -232,9 +232,9 @@
 </div></div>
 
 
-<p>Здесь мы используем именованный маршрут <code>edit_user_path</code> из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a>, вместе с удобным вспомогательным методом <code>current_user</code> определенным в <a class="ref" href="sign-in-sign-out#code:current_user_working">Листинге&nbsp;9.16</a>.</p>
+<p>Здесь мы используем именованный маршрут <code>edit_user_path</code> из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>, вместе с удобным вспомогательным методом <code>current_user</code> определенным в <a class="ref" href="sign-in-sign-out?version=3.0#code:current_user_working">Листинге&nbsp;9.16</a>.</p>
 
-<p>С переменной экземпляра <code>@user</code> из <a class="ref" href="updating-showing-and-deleting-users#code:initial_edit_action">Листинга&nbsp;10.2</a>, тесты из <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_specs">Листинга&nbsp;10.1</a> проходят. Как видно на <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_settings">Рис.&nbsp;10.3</a>, страница <code>edit</code> отображается, хотя она еще не работает.</p>
+<p>С переменной экземпляра <code>@user</code> из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:initial_edit_action">Листинга&nbsp;10.2</a>, тесты из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_specs">Листинга&nbsp;10.1</a> проходят. Как видно на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_settings">Рис.&nbsp;10.3</a>, страница <code>edit</code> отображается, хотя она еще не работает.</p>
 
 <div class="label" id="fig:edit_user_settings"></div>
 
@@ -242,13 +242,13 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/edit_user_settings.png" alt="edit_user_settings" /></span></div><div class="caption"><span class="header">Рисунок  10.3: </span><span class="description">Редактирование настроек пользователя (<a href="http://localhost:3000/users/1/edit"><tt>/users/1/edit</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/edit_user_settings-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Глядя на исходный HTML <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_settings">Рис.&nbsp;10.3</a>, мы видим form тег, как и ожидалось (<a class="ref" href="updating-showing-and-deleting-users#code:edit_form_html">Листинг&nbsp;10.7</a>).</p>
+<p>Глядя на исходный HTML <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_settings">Рис.&nbsp;10.3</a>, мы видим form тег, как и ожидалось (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:edit_form_html">Листинг&nbsp;10.7</a>).</p>
 
 <div class="label" id="code:edit_form_html"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 10.7.</span> <span class="description">HTML формы редактирования, определенной в  <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинге&nbsp;10.3</a> и показанной на <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_settings">Рис.&nbsp;10.3</a>.</span>
+<div class="listing"><span class="header">Листинг 10.7.</span> <span class="description">HTML формы редактирования, определенной в  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинге&nbsp;10.3</a> и показанной на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_settings">Рис.&nbsp;10.3</a>.</span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users/1&quot;</span> <span class="na">class=</span><span class="s">&quot;edit_user&quot;</span> <span class="na">id=</span><span class="s">&quot;edit_user_1&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;input</span> <span class="na">name=</span><span class="s">&quot;_method&quot;</span> <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">value=</span><span class="s">&quot;put&quot;</span> <span class="nt">/&gt;</span>
@@ -267,9 +267,9 @@
 </div>
 
 
-<p>Так как веб-браузеры не могут напрямую отправлять <tt>PUT</tt> запросы (в соответствии с требованиями REST конвенции из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a>), Rails подделывает их с помощью <tt>POST</tt> запроса и скрытого <code>input</code> поля.<sup class="footnote" id="fnref:10.4"><a href="#fn:10.4">4</a></sup></p>
+<p>Так как веб-браузеры не могут напрямую отправлять <tt>PUT</tt> запросы (в соответствии с требованиями REST конвенции из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>), Rails подделывает их с помощью <tt>POST</tt> запроса и скрытого <code>input</code> поля.<sup class="footnote" id="fnref:10.4"><a href="#fn:10.4">4</a></sup></p>
 
-<p>Здесь стоит обратить внимание на еще одну тонкость: код <code>form_for(@user)</code> в <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинге&nbsp;8.2</a>&mdash;откуда Rails знает, что нужно использовать <tt>POST</tt> запрос для  новых пользователей и <tt>PUT</tt> для редактирования пользователей? Ответ кроется в возможности определения того, что мы имеем дело с новым или уже существующим в базе данных пользователем, посредством булевого метода <code>new_record?</code> (который мы видели в <a class="ref" href="modeling-and-viewing-users-two#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>):</p>
+<p>Здесь стоит обратить внимание на еще одну тонкость: код <code>form_for(@user)</code> в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинге&nbsp;8.2</a>&mdash;откуда Rails знает, что нужно использовать <tt>POST</tt> запрос для  новых пользователей и <tt>PUT</tt> для редактирования пользователей? Ответ кроется в возможности определения того, что мы имеем дело с новым или уже существующим в базе данных пользователем, посредством булевого метода <code>new_record?</code> (который мы видели в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>):</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">new_record?</span>
@@ -285,9 +285,9 @@
 <div class="label" id="sec:enabling_edits"></div>
 
 
-<h3><a id="sec:10.1.2" href="updating-showing-and-deleting-users#sec:enabling_edits" class="heading"><span class="number">10.1.2</span> Включение редактирования</a></h3>
+<h3><a id="sec:10.1.2" href="updating-showing-and-deleting-users?version=3.0#sec:enabling_edits" class="heading"><span class="number">10.1.2</span> Включение редактирования</a></h3>
 
-<p>Несмотря на то что форма редактирования пока не работает, мы возложили загрузку изображений на Gravatar, поэтому он работает сразу, при нажатии на ссылку &ldquo;change&rdquo; показанную на  <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_settings">Рис.&nbsp;10.3</a>, как видно на <a class="ref" href="updating-showing-and-deleting-users#fig:gravatar_cropper">Рис.&nbsp;10.4</a>. Давайте получим остальную функциональность редактирования пользователя, работающую с тем же успехом.</p>
+<p>Несмотря на то что форма редактирования пока не работает, мы возложили загрузку изображений на Gravatar, поэтому он работает сразу, при нажатии на ссылку &ldquo;change&rdquo; показанную на  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_settings">Рис.&nbsp;10.3</a>, как видно на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:gravatar_cropper">Рис.&nbsp;10.4</a>. Давайте получим остальную функциональность редактирования пользователя, работающую с тем же успехом.</p>
 
 <div class="label" id="fig:gravatar_cropper"></div>
 
@@ -295,7 +295,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/gravatar_cropper.png" alt="gravatar_cropper" /></span></div><div class="caption"><span class="header">Рисунок  10.4: </span><span class="description">Интерфейс обрезки изображений  <a href="http://gravatar.com/">Gravatar</a> с изображением <a href="http://michaelhartl.com/">какого-то чувака</a>.&nbsp;<a href="http://railstutorial.org/images/figures/gravatar_cropper-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Тесты для <code>update</code> действия похожи на аналогичные для <code>create</code> действия. В частности, мы тестируем и успех и провал обновления (<a class="ref" href="updating-showing-and-deleting-users#code:user_update_specs">Листинг&nbsp;10.8</a>). (Это большой кусок кода; посмотрим, сможете ли вы проработать его, опираясь на тесты из <a class="ref" href="sign-up#top">Главы&nbsp;8</a>.)</p>
+<p>Тесты для <code>update</code> действия похожи на аналогичные для <code>create</code> действия. В частности, мы тестируем и успех и провал обновления (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_update_specs">Листинг&nbsp;10.8</a>). (Это большой кусок кода; посмотрим, сможете ли вы проработать его, опираясь на тесты из <a class="ref" href="sign-up?version=3.0#top">Главы&nbsp;8</a>.)</p>
 
 <div class="label" id="code:user_update_specs"></div>
 
@@ -376,7 +376,7 @@
 
 <p>Этот код перезагружает <code>@user</code> переменную из (тестовой) базы данных используя <code>@user.reload</code>, а затем проверяет, что новые имя пользователя и email совпадают с атрибутами в хэше <code>@attr</code>.</p>
 
-<p>Действие <code>update</code>, необходимое для прохождения тестов в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_specs">Листинге&nbsp;10.8</a> аналогично финальной форме <code>create</code> действия (<a class="ref" href="sign-in-sign-out#code:signin_upon_signup">Листинг&nbsp;9.24</a>), как видно в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_action">Листинге&nbsp;10.9</a>.</p>
+<p>Действие <code>update</code>, необходимое для прохождения тестов в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_update_specs">Листинге&nbsp;10.8</a> аналогично финальной форме <code>create</code> действия (<a class="ref" href="sign-in-sign-out?version=3.0#code:signin_upon_signup">Листинг&nbsp;9.24</a>), как видно в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_update_action">Листинге&nbsp;10.9</a>.</p>
 
 <div class="label" id="code:user_update_action"></div>
 
@@ -403,16 +403,16 @@
 </div></div>
 
 
-<p>С этим кодом страница редактирования пользователя должна работать. Каждое редактирование требует от пользователя повторного подтверждения пароля (как следует из пустого текстового поля подтверждения на <a class="ref" href="updating-showing-and-deleting-users#fig:edit_user_settings">Рис.&nbsp;10.3</a>), что делает обновление более безопасным, но вызывающим незначительное раздражение.</p>
+<p>С этим кодом страница редактирования пользователя должна работать. Каждое редактирование требует от пользователя повторного подтверждения пароля (как следует из пустого текстового поля подтверждения на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_settings">Рис.&nbsp;10.3</a>), что делает обновление более безопасным, но вызывающим незначительное раздражение.</p>
 
 <div class="label" id="sec:protecting_pages"></div>
 
 
-<h2><a id="sec:10.2" href="updating-showing-and-deleting-users#sec:protecting_pages" class="heading"><span class="number">10.2</span> Защита страниц</a></h2>
+<h2><a id="sec:10.2" href="updating-showing-and-deleting-users?version=3.0#sec:protecting_pages" class="heading"><span class="number">10.2</span> Защита страниц</a></h2>
 
 
 
-<p>Хотя edit и update действия из  <a class="ref" href="updating-showing-and-deleting-users#sec:updating_users">Раздела&nbsp;10.1</a> функционально завершены, они страдают от нелепой бреши в безопасности: они позволяют любым (даже незарегистрированным пользователям) иметь доступ к любому действию, и любой зарегистрированный пользователь может изменять информацию любого другого пользователя. В этом разделе мы реализуем модель безопасности, которая будет требовать от пользователей входа в систему и будет предотвращать обновление любой информации, кроме их собственной. Незарегистрированные пользователи, пытающиеся получить доступ к защищенным страницам будут перенаправлены на страницу входа с полезным сообщением, как показано на <a class="ref" href="updating-showing-and-deleting-users#fig:signin_page_protected_mockup">Рис.&nbsp;10.5</a>.</p>
+<p>Хотя edit и update действия из  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users">Раздела&nbsp;10.1</a> функционально завершены, они страдают от нелепой бреши в безопасности: они позволяют любым (даже незарегистрированным пользователям) иметь доступ к любому действию, и любой зарегистрированный пользователь может изменять информацию любого другого пользователя. В этом разделе мы реализуем модель безопасности, которая будет требовать от пользователей входа в систему и будет предотвращать обновление любой информации, кроме их собственной. Незарегистрированные пользователи, пытающиеся получить доступ к защищенным страницам будут перенаправлены на страницу входа с полезным сообщением, как показано на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:signin_page_protected_mockup">Рис.&nbsp;10.5</a>.</p>
 
 <div class="label" id="fig:signin_page_protected_mockup"></div>
 
@@ -425,9 +425,9 @@
 <div class="label" id="sec:requiring_signed_in_users"></div>
 
 
-<h3><a id="sec:10.2.1" href="updating-showing-and-deleting-users#sec:requiring_signed_in_users" class="heading"><span class="number">10.2.1</span> Требование входа пользователей</a></h3>
+<h3><a id="sec:10.2.1" href="updating-showing-and-deleting-users?version=3.0#sec:requiring_signed_in_users" class="heading"><span class="number">10.2.1</span> Требование входа пользователей</a></h3>
 
-<p>Поскольку ограничения безопасности для <code>edit</code> и <code>update</code> действий идентичны, мы будем обрабатывать их в одном  RSpec <code>describe</code> блоке. Начав с требования входа, наши первоначальные тесты затем проверяют, что невошедшие пользователи, пытающиеся получить доступ к какому либо из действий, просто перенаправляеются на страницу входа, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:authentication_specs">Листинге&nbsp;10.10</a>.</p>
+<p>Поскольку ограничения безопасности для <code>edit</code> и <code>update</code> действий идентичны, мы будем обрабатывать их в одном  RSpec <code>describe</code> блоке. Начав с требования входа, наши первоначальные тесты затем проверяют, что невошедшие пользователи, пытающиеся получить доступ к какому либо из действий, просто перенаправляеются на страницу входа, как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authentication_specs">Листинге&nbsp;10.10</a>.</p>
 
 <div class="label" id="code:authentication_specs"></div>
 
@@ -464,7 +464,7 @@
 </div></div>
 
 
-<p>Код приложения получит прохождение этих тестов используя <em>before filter</em>, который организует особый метод, который будет вызываться перед данным действием. В этом случае мы определим <code>authenticate</code> метод и вызовем его используя <code>before_filter :authenticate</code>, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:authenticate_before_filter">Листинге&nbsp;10.11</a>.</p>
+<p>Код приложения получит прохождение этих тестов используя <em>before filter</em>, который организует особый метод, который будет вызываться перед данным действием. В этом случае мы определим <code>authenticate</code> метод и вызовем его используя <code>before_filter :authenticate</code>, как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authenticate_before_filter">Листинге&nbsp;10.11</a>.</p>
 
 <div class="label" id="code:authenticate_before_filter"></div>
 
@@ -489,7 +489,7 @@
 
 <p>По умолчанию предфильтр применяется к <em>каждому</em> действию в контроллере, поэтому здесь мы ограничим действие фильтра только <code>:edit</code> и <code>:update</code> действиями передачей хэша опций <code>:only</code>.</p>
 
-<p>Этот код пока не будет работать, так как <code>deny_access</code> не был определен. Поскольку отказ в доступе является частью аутентификации, мы поместим его в хелпер Sessions из <a class="ref" href="sign-in-sign-out#top">Главы&nbsp;9</a>. Все что <code>deny_access</code> делает, это выводит сообщение <code>flash[:notice]</code>, а затем перенаправляет на страницу входа (<a class="ref" href="updating-showing-and-deleting-users#code:deny_access">Листинг&nbsp;10.12</a>).</p>
+<p>Этот код пока не будет работать, так как <code>deny_access</code> не был определен. Поскольку отказ в доступе является частью аутентификации, мы поместим его в хелпер Sessions из <a class="ref" href="sign-in-sign-out?version=3.0#top">Главы&nbsp;9</a>. Все что <code>deny_access</code> делает, это выводит сообщение <code>flash[:notice]</code>, а затем перенаправляет на страницу входа (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:deny_access">Листинг&nbsp;10.12</a>).</p>
 
 <div class="label" id="code:deny_access"></div>
 
@@ -512,7 +512,7 @@
 </div></div>
 
 
-<p>Отметим здесь, что <a class="ref" href="updating-showing-and-deleting-users#code:deny_access">Листинг&nbsp;10.12</a> использует сокращение для установки <code>flash[:notice]</code> передавая хэш опций функции <em>redirect_to</em>. Код в <a class="ref" href="updating-showing-and-deleting-users#code:deny_access">Листинге&nbsp;10.12</a> эквивалентен более подробному</p>
+<p>Отметим здесь, что <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:deny_access">Листинг&nbsp;10.12</a> использует сокращение для установки <code>flash[:notice]</code> передавая хэш опций функции <em>redirect_to</em>. Код в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:deny_access">Листинге&nbsp;10.12</a> эквивалентен более подробному</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">flash</span><span class="o">[</span><span class="ss">:notice</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Please sign in to access this page.&quot;</span>
 <span class="n">redirect_to</span> <span class="n">signin_path</span>
@@ -522,7 +522,7 @@
 
 <p>(Аналогичная конструкция работает для ключа <code>:error</code>, но не для <code>:success</code>.)</p>
 
-<p>Вместе с <code>:success</code> и <code>:error</code>, <code>:notice</code> ключ завершает наш триумвират <code>flash</code> стилей, каждый из которых имеет встроенную поддержку Blueprint CSS. Выйдя из системы и попытавшись получить доступ к странице редактирования пользователя <a href="http://localhost:3000/users/1/edit"><tt>/users/1/edit</tt></a>, мы  в результате увидим желтый <code>"notice"</code> блок, как показано на  <a class="ref" href="updating-showing-and-deleting-users#fig:protected_sign_in">Рис.&nbsp;10.6</a>.</p>
+<p>Вместе с <code>:success</code> и <code>:error</code>, <code>:notice</code> ключ завершает наш триумвират <code>flash</code> стилей, каждый из которых имеет встроенную поддержку Blueprint CSS. Выйдя из системы и попытавшись получить доступ к странице редактирования пользователя <a href="http://localhost:3000/users/1/edit"><tt>/users/1/edit</tt></a>, мы  в результате увидим желтый <code>"notice"</code> блок, как показано на  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:protected_sign_in">Рис.&nbsp;10.6</a>.</p>
 
 <div class="label" id="fig:protected_sign_in"></div>
 
@@ -535,9 +535,9 @@
 <div class="label" id="sec:requiring_the_right_user"></div>
 
 
-<h3><a id="sec:10.2.2" href="updating-showing-and-deleting-users#sec:requiring_the_right_user" class="heading"><span class="number">10.2.2</span> Требование правильного пользователя</a></h3>
+<h3><a id="sec:10.2.2" href="updating-showing-and-deleting-users?version=3.0#sec:requiring_the_right_user" class="heading"><span class="number">10.2.2</span> Требование правильного пользователя</a></h3>
 
-<p>Конечно, требования входа пользователей недостаточно; пользователи должны иметь доступ к редактированию <em>только</em> своей информации. Мы можем протестировать это, вначале войдя как неправильный пользователь, а затем обратившись к <code>edit</code> и <code>update</code> действиям (<a class="ref" href="updating-showing-and-deleting-users#code:authentication_for_signed_in">Листинг&nbsp;10.13</a>). Обратите внимание, что, так как пользователи никогда не должны даже <em>пытаться</em> изменить профиль другого пользователя, мы сделаем переадресацию не на страницу входа, а на корневой URL.</p>
+<p>Конечно, требования входа пользователей недостаточно; пользователи должны иметь доступ к редактированию <em>только</em> своей информации. Мы можем протестировать это, вначале войдя как неправильный пользователь, а затем обратившись к <code>edit</code> и <code>update</code> действиям (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authentication_for_signed_in">Листинг&nbsp;10.13</a>). Обратите внимание, что, так как пользователи никогда не должны даже <em>пытаться</em> изменить профиль другого пользователя, мы сделаем переадресацию не на страницу входа, а на корневой URL.</p>
 
 <div class="label" id="code:authentication_for_signed_in"></div>
 
@@ -577,7 +577,7 @@
 </div></div>
 
 
-<p>Код приложения прост: мы добавим второй предфильтр к вызову <code>correct_user</code> метода (который мы должны написать), как показано в <a class="ref" href="updating-showing-and-deleting-users#code:correct_user_before_filter">Листинге&nbsp;10.14</a>.</p>
+<p>Код приложения прост: мы добавим второй предфильтр к вызову <code>correct_user</code> метода (который мы должны написать), как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:correct_user_before_filter">Листинге&nbsp;10.14</a>.</p>
 
 <div class="label" id="code:correct_user_before_filter"></div>
 
@@ -612,7 +612,7 @@
 </div></div>
 
 
-<p>Этот код использует <code>current_user?</code> метод, который (как и <code>deny_access</code>) мы определяем в хелпере Sessions (<a class="ref" href="updating-showing-and-deleting-users#code:current_user_p">Листинг&nbsp;10.15</a>).</p>
+<p>Этот код использует <code>current_user?</code> метод, который (как и <code>deny_access</code>) мы определяем в хелпере Sessions (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:current_user_p">Листинг&nbsp;10.15</a>).</p>
 
 <div class="label" id="code:current_user_p"></div>
 
@@ -641,7 +641,7 @@
 </div></div>
 
 
-<p><a class="ref" href="updating-showing-and-deleting-users#code:correct_user_before_filter">Листинг&nbsp;10.14</a> также показывает обновленное <code>edit</code> действие. Ранее, в <a class="ref" href="updating-showing-and-deleting-users#code:initial_edit_action">Листинге&nbsp;10.2</a>, мы имели</p>
+<p><a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:correct_user_before_filter">Листинг&nbsp;10.14</a> также показывает обновленное <code>edit</code> действие. Ранее, в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:initial_edit_action">Листинге&nbsp;10.2</a>, мы имели</p>
 
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">edit</span>
   <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
@@ -656,7 +656,7 @@
 <div class="label" id="sec:friendly_forwarding"></div>
 
 
-<h3><a id="sec:10.2.3" href="updating-showing-and-deleting-users#sec:friendly_forwarding" class="heading"><span class="number">10.2.3</span> Дружелюбная переадресация</a></h3>
+<h3><a id="sec:10.2.3" href="updating-showing-and-deleting-users?version=3.0#sec:friendly_forwarding" class="heading"><span class="number">10.2.3</span> Дружелюбная переадресация</a></h3>
 
 <p>Защита наших страниц закончена, как и было написано, но есть один небольшой недостаток: когда пользователи пытаются получить доступ к защищенной странице, они перенаправляются к странице профиля, независимо от того, куда они пытались попасть. Другими словами, если не залогинившийся пользователь пытается посетить страницу редактирования, после входа пользователь будет перенаправлен на <tt>/users/1</tt> вместо <tt>/users/1/edit</tt>. Было бы намного более доброжелательно, по отношению к пользователям, все же перенаправлять их на запрашиваемую страницу вместо этого .</p>
 
@@ -667,7 +667,7 @@
 </div>
 
 
-<p>Последующий код выглядит как в <a class="ref" href="updating-showing-and-deleting-users#code:friendly_forwarding_test">Листинге&nbsp;10.16</a>.</p>
+<p>Последующий код выглядит как в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_forwarding_test">Листинге&nbsp;10.16</a>.</p>
 
 <div class="label" id="code:friendly_forwarding_test"></div>
 
@@ -696,7 +696,7 @@
 
 <p>(Как отмечено в комментарии, интеграционный тест <em>follows</em> redirects (# переходит на страницу к которой ведет переадресация), поэтому тестирование того, что ответ <code>should redirect_to</code> (# должен перенаправлять_к) некоторому URL - не будет работать. Это знание мне дорогого стоило.)</p>
 
-<p>Теперь реализация.<sup class="footnote" id="fnref:10.5"><a href="#fn:10.5">5</a></sup> Для того чтобы перенаправить пользователей к запрашиваемой ими странице, нам нужно где-то сохранить запрашиваемую страницу, а затем переадресовать к ней. Хранение будет осуществляться посредством <code>session</code> - объекта, предоставляемого Rails, о котором вы можете думать как об экземпляре переменной <code>cookies</code> из <a class="ref" href="sign-in-sign-out#sec:remember_me">Раздела&nbsp;9.3.2</a>, которая автоматически истекает при закрытии браузера.<sup class="footnote" id="fnref:10.6"><a href="#fn:10.6">6</a></sup> Мы также используем <code>request</code> объект для получения <code>request_uri</code>, т.е., URL запрашиваемой страницы. Результирующий код приложения показан в <a class="ref" href="updating-showing-and-deleting-users#code:friendly_forwarding_code">Листинге&nbsp;10.17</a>.</p>
+<p>Теперь реализация.<sup class="footnote" id="fnref:10.5"><a href="#fn:10.5">5</a></sup> Для того чтобы перенаправить пользователей к запрашиваемой ими странице, нам нужно где-то сохранить запрашиваемую страницу, а затем переадресовать к ней. Хранение будет осуществляться посредством <code>session</code> - объекта, предоставляемого Rails, о котором вы можете думать как об экземпляре переменной <code>cookies</code> из <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Раздела&nbsp;9.3.2</a>, которая автоматически истекает при закрытии браузера.<sup class="footnote" id="fnref:10.6"><a href="#fn:10.6">6</a></sup> Мы также используем <code>request</code> объект для получения <code>request_uri</code>, т.е., URL запрашиваемой страницы. Результирующий код приложения показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_forwarding_code">Листинге&nbsp;10.17</a>.</p>
 
 <div class="label" id="code:friendly_forwarding_code"></div>
 
@@ -736,7 +736,7 @@
 
 <p>Здесь мы добавили строку к методу <code>deny_access</code>, сохраняющую полный путь запроса с помощью <code>store_location</code> перед дальнейшим выполнением кода. Метод <code>store_location</code> помещает запрашиваемый URL в переменную <code>session</code> под ключом <code>:return_to</code>. (Мы сделали методы <code>store_location</code> и <code>clear_return_to</code> приватными так как они никогда не понадобятся за пределами хелпера Sessions.)</p>
 
-<p>Мы также определили метод <code>redirect_back_or</code> для запрашиваемого URL если он существует, или какого либо дефолтного URL в противном случае. Этот метод необходим в <code>create</code> действии контроллера Sessions для переадресации после успешного входа (<a class="ref" href="updating-showing-and-deleting-users#code:friendly_session_create">Листинг&nbsp;10.18</a>).</p>
+<p>Мы также определили метод <code>redirect_back_or</code> для запрашиваемого URL если он существует, или какого либо дефолтного URL в противном случае. Этот метод необходим в <code>create</code> действии контроллера Sessions для переадресации после успешного входа (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_session_create">Листинг&nbsp;10.18</a>).</p>
 
 <div class="label" id="code:friendly_session_create"></div>
 
@@ -768,14 +768,14 @@
 </div></div>
 
 
-<p>С этим тест доброжелательной переадресации из <a class="ref" href="updating-showing-and-deleting-users#code:friendly_forwarding_test">Листинга&nbsp;10.16</a> должен пройти, и базовую аутентификацию пользователей можно считать законченной.</p>
+<p>С этим тест доброжелательной переадресации из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_forwarding_test">Листинга&nbsp;10.16</a> должен пройти, и базовую аутентификацию пользователей можно считать законченной.</p>
 
 <div class="label" id="sec:showing_users"></div>
 
 
-<h2><a id="sec:10.3" href="updating-showing-and-deleting-users#sec:showing_users" class="heading"><span class="number">10.3</span> Просмотр всех пользователей сайта</a></h2>
+<h2><a id="sec:10.3" href="updating-showing-and-deleting-users?version=3.0#sec:showing_users" class="heading"><span class="number">10.3</span> Просмотр всех пользователей сайта</a></h2>
 
-<p>В этом разделе мы добавим предпоследнее user действие <code>index</code>, которое предназначено для отображения <em>всех</em> пользователей, а не одного из них. По пути, мы узнаем о наполнении базы данных образцами пользователей и <em>пагинации (разбиения на страницы)</em> вывода пользователей, таким образом index страница может быть масштабирована для отображения потенциально большого количества пользователей. Макет результата&nbsp;&mdash;&nbsp;пользователи, постраничные ссылки, и &ldquo;Users&rdquo; навигационная ссылка&nbsp;&mdash;&nbsp;представлены на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_mockup">Рис.&nbsp;10.7</a>.<sup class="footnote" id="fnref:10.7"><a href="#fn:10.7">7</a></sup> В <a class="ref" href="updating-showing-and-deleting-users#sec:destroying_users">Разделе&nbsp;10.4</a>, мы также добавим административный интерфейс к user index таким образом (предположительно проблемные) пользователи смогут быть удалены.</p>
+<p>В этом разделе мы добавим предпоследнее user действие <code>index</code>, которое предназначено для отображения <em>всех</em> пользователей, а не одного из них. По пути, мы узнаем о наполнении базы данных образцами пользователей и <em>пагинации (разбиения на страницы)</em> вывода пользователей, таким образом index страница может быть масштабирована для отображения потенциально большого количества пользователей. Макет результата&nbsp;&mdash;&nbsp;пользователи, постраничные ссылки, и &ldquo;Users&rdquo; навигационная ссылка&nbsp;&mdash;&nbsp;представлены на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_mockup">Рис.&nbsp;10.7</a>.<sup class="footnote" id="fnref:10.7"><a href="#fn:10.7">7</a></sup> В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:destroying_users">Разделе&nbsp;10.4</a>, мы также добавим административный интерфейс к user index таким образом (предположительно проблемные) пользователи смогут быть удалены.</p>
 
 <div class="label" id="fig:user_index_mockup"></div>
 
@@ -788,9 +788,9 @@
 <div class="label" id="sec:user_index"></div>
 
 
-<h3><a id="sec:10.3.1" href="updating-showing-and-deleting-users#sec:user_index" class="heading"><span class="number">10.3.1</span> Список пользователей</a></h3>
+<h3><a id="sec:10.3.1" href="updating-showing-and-deleting-users?version=3.0#sec:user_index" class="heading"><span class="number">10.3.1</span> Список пользователей</a></h3>
 
-<p>Хотя мы сохраним страницы <code>show</code> отдельных пользователей видимыми для всех посетителей сайта, для страницы user <code>index</code> будет реализовано ограничение, отображающее ее только для зарегистрированных пользователей, также будет реализовано ограничение того, сколько зарегистрированных пользователей будет отображаться на каждой странице списка. Наши <code>index</code> тесты проконтролируют это, а также проверят, что все зарегистрированные пользователи попали в список  (<a class="ref" href="updating-showing-and-deleting-users#code:user_index_tests">Листинг&nbsp;10.19</a>).</p>
+<p>Хотя мы сохраним страницы <code>show</code> отдельных пользователей видимыми для всех посетителей сайта, для страницы user <code>index</code> будет реализовано ограничение, отображающее ее только для зарегистрированных пользователей, также будет реализовано ограничение того, сколько зарегистрированных пользователей будет отображаться на каждой странице списка. Наши <code>index</code> тесты проконтролируют это, а также проверят, что все зарегистрированные пользователи попали в список  (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index_tests">Листинг&nbsp;10.19</a>).</p>
 
 <div class="label" id="code:user_index_tests"></div>
 
@@ -851,7 +851,7 @@
 
 <p>Как вы можете видеть, метод проверки index страницы делает три "фабричных" пользователя (вошедших, как и первый из них), а затем проверяет что страница  index содержит тег элемента списка (<code>li</code>) для имени каждого из них. Обратите внимание, что мы позаботились о том, чтобы дать пользователям различные имена, чтобы каждый элемент в списке пользователей имел уникальную запись.</p>
 
-<p>Как и ожидалось, код приложения использует <code>User.all</code> для создания переменной экземпляра <code>@users</code> в  <code>index</code> действии контроллера Users (<a class="ref" href="updating-showing-and-deleting-users#code:user_index">Листинг&nbsp;10.20</a>).</p>
+<p>Как и ожидалось, код приложения использует <code>User.all</code> для создания переменной экземпляра <code>@users</code> в  <code>index</code> действии контроллера Users (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index">Листинг&nbsp;10.20</a>).</p>
 
 <div class="label" id="code:user_index"></div>
 
@@ -881,9 +881,9 @@
 </div></div>
 
 
-<p>Обратите внимание, что мы добавили <code>:index</code> к списку действий контроллера, защищаемых <code>authenticate</code> предфильтром, тем самым получив прохождение первого теста из <a class="ref" href="updating-showing-and-deleting-users#code:user_index_tests">Листинга&nbsp;10.19</a>.</p>
+<p>Обратите внимание, что мы добавили <code>:index</code> к списку действий контроллера, защищаемых <code>authenticate</code> предфильтром, тем самым получив прохождение первого теста из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index_tests">Листинга&nbsp;10.19</a>.</p>
 
-<p>Для того, чтобы на самом деле создать страницу, нам необходимо создать представление, которое перебирает всех пользователей и обертывает каждого из них в тег&nbsp;<code>li</code>. Мы сделаем это с помощью метода <code>each</code>, отображающего Gravatar и имя каждого пользователя, в то время как сам он будет завернут в тег ненумерованного списка (<code>ul</code>) (<a class="ref" href="updating-showing-and-deleting-users#code:user_index_view">Листинг&nbsp;10.21</a>).</p>
+<p>Для того, чтобы на самом деле создать страницу, нам необходимо создать представление, которое перебирает всех пользователей и обертывает каждого из них в тег&nbsp;<code>li</code>. Мы сделаем это с помощью метода <code>each</code>, отображающего Gravatar и имя каждого пользователя, в то время как сам он будет завернут в тег ненумерованного списка (<code>ul</code>) (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index_view">Листинг&nbsp;10.21</a>).</p>
 
 <div class="label" id="code:user_index_view"></div>
 
@@ -905,7 +905,7 @@
 </div></div>
 
 
-<p>Затем мы добавим немного CSS (<a class="ref" href="updating-showing-and-deleting-users#code:user_index_css">Листинг&nbsp;10.22</a>).</p>
+<p>Затем мы добавим немного CSS (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index_css">Листинг&nbsp;10.22</a>).</p>
 
 <div class="label" id="code:user_index_css"></div>
 
@@ -927,7 +927,7 @@
 </div></div>
 
 
-<p>Наконец мы добавим &ldquo;Users&rdquo; ссылку в навигационное меню шапки сайта (<a class="ref" href="updating-showing-and-deleting-users#code:users_link">Листинг&nbsp;10.23</a>). Этот код использует именованый маршрут <code>users_path</code> из <a class="ref" href="modeling-and-viewing-users-one#table:RESTful_users">Таблицы&nbsp;6.2</a>.</p>
+<p>Наконец мы добавим &ldquo;Users&rdquo; ссылку в навигационное меню шапки сайта (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:users_link">Листинг&nbsp;10.23</a>). Этот код использует именованый маршрут <code>users_path</code> из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>.</p>
 
 <div class="label" id="code:users_link"></div>
 
@@ -955,7 +955,7 @@
 </div></div>
 
 
-<p>С этим кодом мы получили полнофункциональную страницу user index (со всеми проходящими тестами), но она выглядит несколько&hellip; безлюдно (<a class="ref" href="updating-showing-and-deleting-users#fig:user_index_only_one">Рис.&nbsp;10.8</a>).</p>
+<p>С этим кодом мы получили полнофункциональную страницу user index (со всеми проходящими тестами), но она выглядит несколько&hellip; безлюдно (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_only_one">Рис.&nbsp;10.8</a>).</p>
 
 <div class="label" id="fig:user_index_only_one"></div>
 
@@ -968,11 +968,11 @@
 <div class="label" id="sec:sample_users"></div>
 
 
-<h3><a id="sec:10.3.2" href="updating-showing-and-deleting-users#sec:sample_users" class="heading"><span class="number">10.3.2</span> Образцы пользователей</a></h3>
+<h3><a id="sec:10.3.2" href="updating-showing-and-deleting-users?version=3.0#sec:sample_users" class="heading"><span class="number">10.3.2</span> Образцы пользователей</a></h3>
 
 <p>В этом разделе мы дадим нашему одинокому образцу пользователя небольшую компанию. Конечно, чтобы создать достаточное количество пользователей, мы <em>могли бы</em>, использовать наш веб-браузер, для посещения страницы регистрации и создания новых пользователей по одному, но куда более продвинутым решением является использование Ruby (и Rake), чтобы сделать пользователей для нас.</p>
 
-<p>Во-первых, мы добавим <a  href="http://lingvo.yandex.ru/faker/">Faker</a> гем в <code>Gemfile</code>, который позволит нам делать образцы пользователей с полу-реалистичными именами и адресами электронной почты (<a class="ref" href="updating-showing-and-deleting-users#code:faker_gemfile">Листинг&nbsp;10.24</a>).</p>
+<p>Во-первых, мы добавим <a  href="http://lingvo.yandex.ru/faker/">Faker</a> гем в <code>Gemfile</code>, который позволит нам делать образцы пользователей с полу-реалистичными именами и адресами электронной почты (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:faker_gemfile">Листинг&nbsp;10.24</a>).</p>
 
 <div class="label" id="code:faker_gemfile"></div>
 
@@ -1003,7 +1003,7 @@
 </div>
 
 
-<p>Далее мы добавим Rake-задачу для создания образцов пользователей. Rake задачи живут в <code>lib/tasks</code>, и определяются с помощью  <em>пространства имен</em> (в даном случае, <code>:db</code>), как видно в  <a class="ref" href="updating-showing-and-deleting-users#code:db_populate">Листинге&nbsp;10.25</a>.</p>
+<p>Далее мы добавим Rake-задачу для создания образцов пользователей. Rake задачи живут в <code>lib/tasks</code>, и определяются с помощью  <em>пространства имен</em> (в даном случае, <code>:db</code>), как видно в  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:db_populate">Листинге&nbsp;10.25</a>.</p>
 
 <div class="label" id="code:db_populate"></div>
 
@@ -1044,13 +1044,13 @@
 
 <p>обеспечивает Rake задаче доступ к локальному Rails окружению, включая модель User (и, следовательно, к <code>User.create!</code>).</p>
 
-<p>С пространством имен <code>:db</code> как в <a class="ref" href="updating-showing-and-deleting-users#code:db_populate">Листинге&nbsp;10.25</a>, мы можем вызвать Rake задачу следующим образом:</p>
+<p>С пространством имен <code>:db</code> как в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:db_populate">Листинге&nbsp;10.25</a>, мы можем вызвать Rake задачу следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:populate
 </pre></div>
 </div>
 
-<p>После запуска Rake задачи, наше приложениее имеет 100 примеров пользователей, как видно в  <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_all">Рис.&nbsp;10.9</a>. (Я взял на себя смелость связать первые несколько образцов адресов  с фотографиями так что не все изображения являются дефолтными картинками Gravatar.)</p>
+<p>После запуска Rake задачи, наше приложениее имеет 100 примеров пользователей, как видно в  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_all">Рис.&nbsp;10.9</a>. (Я взял на себя смелость связать первые несколько образцов адресов  с фотографиями так что не все изображения являются дефолтными картинками Gravatar.)</p>
 <div class="label" id="fig:user_index_all"></div>
 
 
@@ -1062,11 +1062,11 @@
 <div class="label" id="sec:pagination"></div>
 
 
-<h3><a id="sec:10.3.3" href="updating-showing-and-deleting-users#sec:pagination" class="heading"><span class="number">10.3.3</span> Пагинация</a></h3>
+<h3><a id="sec:10.3.3" href="updating-showing-and-deleting-users?version=3.0#sec:pagination" class="heading"><span class="number">10.3.3</span> Пагинация</a></h3>
 
 <p>Решив проблему слишком малого количества образцов пользователей, мы столкнулись с противоположной проблемой: наличие слишком большого числа пользователей на странице. Сейчас их сто, что уже достаточно большое число, а на реальном сайте это могут быть и тысячи. Решение заключается в <em>пагинации (разбиении на страницы, постраничном выводе)</em> пользователей, так, чтобы (например) показывать только 30 на каждой странице одновременно.</p>
 
-<p>В Rails есть несколько способов разбиения на страницы, мы будем использовать один из самых простых и надежных, он называется <a href="http://wiki.github.com/mislav/will_paginate/"><tt>will_paginate</tt></a>. Для его использования, нам, как обычно, необходимо обновить <code>Gemfile</code> (<a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_gem">Листинг&nbsp;10.26</a>).</p>
+<p>В Rails есть несколько способов разбиения на страницы, мы будем использовать один из самых простых и надежных, он называется <a href="http://wiki.github.com/mislav/will_paginate/"><tt>will_paginate</tt></a>. Для его использования, нам, как обычно, необходимо обновить <code>Gemfile</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_gem">Листинг&nbsp;10.26</a>).</p>
 
 <div class="label" id="code:will_paginate_gem"></div>
 
@@ -1094,7 +1094,7 @@
 </div>
 
 
-<p>С установленным <tt>will_paginate</tt> мы готовы разбивать на страницы результаты поиска пользователей. Мы начнем с добавления специального метода <code>will_paginate</code> в представление (<a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинг&nbsp;10.27</a>); через мгновение мы увидим, почему код появился выше и ниже списка пользователей.</p>
+<p>С установленным <tt>will_paginate</tt> мы готовы разбивать на страницы результаты поиска пользователей. Мы начнем с добавления специального метода <code>will_paginate</code> в представление (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_index_view">Листинг&nbsp;10.27</a>); через мгновение мы увидим, почему код появился выше и ниже списка пользователей.</p>
 
 <div class="label" id="code:will_paginate_index_view"></div>
 
@@ -1120,7 +1120,7 @@
 </div></div>
 
 
-<p>Метод <code>will_paginate</code> немного волшебный; внутри представления <code>users</code>, он автоматически ищет объект <code>@users</code>, а затем отображает пагинационные ссылки для доступа к остальным страницам. Представление в <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинге&nbsp;10.27</a> пока не работает, из-за того что на данный момент <code>@users</code> содержит результаты <code>User.all</code> (<a class="ref" href="updating-showing-and-deleting-users#code:user_index">Листинг&nbsp;10.20</a>), которые принадлежат классу Массив, в то время как <code>will_paginate</code> ожидает объект класса <code>WillPaginate::Collection</code>. К счастью, это всего лишь вид объекта, возвращаемого методом <code>paginate</code> поставляемого гемом <tt>will_paginate</tt>:</p>
+<p>Метод <code>will_paginate</code> немного волшебный; внутри представления <code>users</code>, он автоматически ищет объект <code>@users</code>, а затем отображает пагинационные ссылки для доступа к остальным страницам. Представление в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_index_view">Листинге&nbsp;10.27</a> пока не работает, из-за того что на данный момент <code>@users</code> содержит результаты <code>User.all</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index">Листинг&nbsp;10.20</a>), которые принадлежат классу Массив, в то время как <code>will_paginate</code> ожидает объект класса <code>WillPaginate::Collection</code>. К счастью, это всего лишь вид объекта, возвращаемого методом <code>paginate</code> поставляемого гемом <tt>will_paginate</tt>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">class</span>
@@ -1133,7 +1133,7 @@
 
 <p>Обратите внимание, что <code>paginate</code> принимает в качестве аргумента хэш с ключом <code>:page</code> и значением, равным запрашиваемой странице. <code>User.paginate</code> вытягивает пользователей из базы данных по одному куску за раз (30 по умолчанию), основываясь на параметре <code>:page</code>. Так, например, стр.&nbsp;1 содержит пользователей с 1 по 30, стр.&nbsp;2 это пользователи 31&ndash;60, и т.д..</p>
 
-<p>Мы можем разбить список пользователей на страницы в примере приложения, используя <code>paginate</code> вместо <code>all</code> в <code>index</code> действии (<a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_action">Листинг&nbsp;10.28</a>). Здесь <code>:page</code> параметр приходит из <code>params[:page]</code>, который <code>will_paginate</code> сгенерировал автоматически.</p>
+<p>Мы можем разбить список пользователей на страницы в примере приложения, используя <code>paginate</code> вместо <code>all</code> в <code>index</code> действии (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_index_action">Листинг&nbsp;10.28</a>). Здесь <code>:page</code> параметр приходит из <code>params[:page]</code>, который <code>will_paginate</code> сгенерировал автоматически.</p>
 
 <div class="label" id="code:will_paginate_index_action"></div>
 
@@ -1158,7 +1158,7 @@
 </div></div>
 
 
-<p>Страница user index теперь должна работать как представлено на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_pagination_rails_3">Рис.&nbsp;10.10</a>; так как мы включили <code>will_paginate</code> сверху и снизу списка пользователей, ссылки на страницы появились в обоих местах.</p>
+<p>Страница user index теперь должна работать как представлено на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_pagination_rails_3">Рис.&nbsp;10.10</a>; так как мы включили <code>will_paginate</code> сверху и снизу списка пользователей, ссылки на страницы появились в обоих местах.</p>
 
 <div class="label" id="fig:user_index_pagination_rails_3"></div>
 
@@ -1166,7 +1166,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_index_pagination_rails_3.png" alt="user_index_pagination_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  10.10: </span><span class="description">Страница user index   <a href="http://localhost:3000/users"><tt>/users</tt></a> с пагинацией.&nbsp;<a href="http://railstutorial.org/images/figures/user_index_pagination_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Если теперь кликнуть по любой&nbsp;<a href="http://localhost:3000/users?page=2">2</a> или <a href="http://localhost:3000/users?page=2">Next</a> ссылке, вы получите вторую страницу с результатами, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_page_two_rails_3">Рис.&nbsp;10.11</a>.</p>
+<p>Если теперь кликнуть по любой&nbsp;<a href="http://localhost:3000/users?page=2">2</a> или <a href="http://localhost:3000/users?page=2">Next</a> ссылке, вы получите вторую страницу с результатами, как это показано на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_page_two_rails_3">Рис.&nbsp;10.11</a>.</p>
 
 <div class="label" id="fig:user_index_page_two_rails_3"></div>
 
@@ -1179,12 +1179,12 @@
 <div class="label" id="sec:testing_pagination"></div>
 
 
-<h4><a id="sec:10.3.3.1" href="updating-showing-and-deleting-users#sec:testing_pagination" class="heading">Тестирование пагинации</a></h4>
+<h4><a id="sec:10.3.3.1" href="updating-showing-and-deleting-users?version=3.0#sec:testing_pagination" class="heading">Тестирование пагинации</a></h4>
 
 
 <p>Тестирование пагинации требует детального знания принципов работы <tt>will_paginate</tt>, поэтому мы вначале сделали реализацию, но ее тестирование все еще хорошая идея. Для того, чтобы сделать это, нам необходимо вызвать пагинацию в тесте, что подразумевает создание более чем 30 (сфабрикованных) пользователей.</p>
 
-<p>Как и прежде, мы будем использовать Factory Girl для имитации пользователей, но мы тут же натыкаемся на проблему: адреса электронной почты пользователей должны быть уникальными, что, как представляется, требует создания более чем 30 пользователей вручную&nbsp;&mdash;&nbsp;ужасно муторная работа. К счастью, Factory Girl предвидела этот вопрос, и обеспечила <em>последовательность (цикл)</em> для ее решения, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:factory_sequence">Листинге&nbsp;10.29</a>.</p>
+<p>Как и прежде, мы будем использовать Factory Girl для имитации пользователей, но мы тут же натыкаемся на проблему: адреса электронной почты пользователей должны быть уникальными, что, как представляется, требует создания более чем 30 пользователей вручную&nbsp;&mdash;&nbsp;ужасно муторная работа. К счастью, Factory Girl предвидела этот вопрос, и обеспечила <em>последовательность (цикл)</em> для ее решения, как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:factory_sequence">Листинге&nbsp;10.29</a>.</p>
 
 <div class="label" id="code:factory_sequence"></div>
 
@@ -1213,7 +1213,7 @@
 </div>
 
 
-<p>Применяя идею фабричных последовательностей (циклов), мы можем сделать 31 пользователя (исходный <code>@user</code> плюс еще 30) внутри теста, а затем проверить, что ответ имеет HTML, ожидаемый от  <tt>will_paginate</tt> (который вы должны суметь определить с помощью Firebug или просмотра исходного кода страницы). Результат показан в <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_test">Листинге&nbsp;10.30</a>.</p>
+<p>Применяя идею фабричных последовательностей (циклов), мы можем сделать 31 пользователя (исходный <code>@user</code> плюс еще 30) внутри теста, а затем проверить, что ответ имеет HTML, ожидаемый от  <tt>will_paginate</tt> (который вы должны суметь определить с помощью Firebug или просмотра исходного кода страницы). Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_test">Листинге&nbsp;10.30</a>.</p>
 
 <div class="label" id="code:will_paginate_test"></div>
 
@@ -1283,7 +1283,7 @@
 </div>
 
 
-<p>Как видно из последнего примера, вхождения&nbsp;<code>&lt;&lt;</code> могут быть объединены. В самом тесте обратите внимание на компактную запись <code>have_selector("div.pagination")</code>, которая заимствует конвенцию классов из CSS (впервые виденную в <a class="ref" href="filling-in-the-layout#code:header_content">Листинге&nbsp;5.3</a>) для проверки <code>div</code> тега с классом <code>pagination</code>. Также отметим, что, поскольку на данный момент существует 33 пользователя, мы обновили элемент user теста для использования только первых трех элементов (<code>[0..2]</code>) массива <code>@users</code>, которые мы имели в своем распоряжении в <a class="ref" href="updating-showing-and-deleting-users#code:user_index_tests">Листинге&nbsp;10.19</a>:</p>
+<p>Как видно из последнего примера, вхождения&nbsp;<code>&lt;&lt;</code> могут быть объединены. В самом тесте обратите внимание на компактную запись <code>have_selector("div.pagination")</code>, которая заимствует конвенцию классов из CSS (впервые виденную в <a class="ref" href="filling-in-the-layout?version=3.0#code:header_content">Листинге&nbsp;5.3</a>) для проверки <code>div</code> тега с классом <code>pagination</code>. Также отметим, что, поскольку на данный момент существует 33 пользователя, мы обновили элемент user теста для использования только первых трех элементов (<code>[0..2]</code>) массива <code>@users</code>, которые мы имели в своем распоряжении в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_index_tests">Листинге&nbsp;10.19</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@users</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">].</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
   <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s2">&quot;li&quot;</span><span class="p">,</span> <span class="ss">:content</span> <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
@@ -1297,11 +1297,11 @@
 <div class="label" id="sec:partial_refactoring"></div>
 
 
-<h3><a id="sec:10.3.4" href="updating-showing-and-deleting-users#sec:partial_refactoring" class="heading"><span class="number">10.3.4</span> Частичный рефакторинг</a></h3>
+<h3><a id="sec:10.3.4" href="updating-showing-and-deleting-users?version=3.0#sec:partial_refactoring" class="heading"><span class="number">10.3.4</span> Частичный рефакторинг</a></h3>
 
 <p>Разбитый на страницы список пользователей теперь закончен, но есть одно улучшение, от которого я не могу удержаться: Rails имеет несколько невероятно ловких инструментов для создания компактных представлений, и в этом разделе мы займемся рефакторингом страницы со списком пользователей, используя эти инструменты. Так как наш код хорошо протестирован, мы можем с уверенностью приступить к рефакторингу, будучи уверенными в том, что мы врядли нарушим функциональность сайта. </p>
 
-<p>Первым шагом нашего рефакторинга будет замена пользовательского&nbsp;<code>li</code> из <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинга&nbsp;10.27</a> вызовом <code>render</code>  (<a class="ref" href="updating-showing-and-deleting-users#code:index_view_first_refactoring">Листинг&nbsp;10.31</a>).</p>
+<p>Первым шагом нашего рефакторинга будет замена пользовательского&nbsp;<code>li</code> из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_index_view">Листинга&nbsp;10.27</a> вызовом <code>render</code>  (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:index_view_first_refactoring">Листинг&nbsp;10.31</a>).</p>
 
 <div class="label" id="code:index_view_first_refactoring"></div>
 
@@ -1324,7 +1324,7 @@
 </div></div>
 
 
-<p>Здесь мы вызываем  <code>render</code> не на строку с именем партиала, а на перемнную <code>user</code> класса <code>User</code>;<sup class="footnote" id="fnref:10.9"><a href="#fn:10.9">9</a></sup> в этом контексте, Rails автоматически ищет партиал с названием <code>_user.html.erb</code>, который мы должны создать (<a class="ref" href="updating-showing-and-deleting-users#code:user_partial">Листинг&nbsp;10.32</a>).</p>
+<p>Здесь мы вызываем  <code>render</code> не на строку с именем партиала, а на перемнную <code>user</code> класса <code>User</code>;<sup class="footnote" id="fnref:10.9"><a href="#fn:10.9">9</a></sup> в этом контексте, Rails автоматически ищет партиал с названием <code>_user.html.erb</code>, который мы должны создать (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_partial">Листинг&nbsp;10.32</a>).</p>
 
 <div class="label" id="code:user_partial"></div>
 
@@ -1340,7 +1340,7 @@
 </div></div>
 
 
-<p>Это явное улучшение, но мы можем сделать еще лучше: мы можем вызвать <code>render</code> <em>непосредственно</em> на переменную  <code>@users</code> (<a class="ref" href="updating-showing-and-deleting-users#code:index_final_refactoring">Листинг&nbsp;10.33</a>).</p>
+<p>Это явное улучшение, но мы можем сделать еще лучше: мы можем вызвать <code>render</code> <em>непосредственно</em> на переменную  <code>@users</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:index_final_refactoring">Листинг&nbsp;10.33</a>).</p>
 
 <div class="label" id="code:index_final_refactoring"></div>
 
@@ -1361,14 +1361,14 @@
 </div></div>
 
 
-<p>Здесь Rails делает вывод, что <code>@users</code> это список объектов <code>User</code>; кроме того, при вызове с коллекцией пользователей, Rails автоматически перебирает их и отображает каждого из них с помощью партиала <code>_user.html.erb</code>. Результатом служит впечатляюще компактный код <a class="ref" href="updating-showing-and-deleting-users#code:index_final_refactoring">Листинга&nbsp;10.33</a>.</p>
+<p>Здесь Rails делает вывод, что <code>@users</code> это список объектов <code>User</code>; кроме того, при вызове с коллекцией пользователей, Rails автоматически перебирает их и отображает каждого из них с помощью партиала <code>_user.html.erb</code>. Результатом служит впечатляюще компактный код <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:index_final_refactoring">Листинга&nbsp;10.33</a>.</p>
 
 <div class="label" id="sec:destroying_users"></div>
 
 
-<h2><a id="sec:10.4" href="updating-showing-and-deleting-users#sec:destroying_users" class="heading"><span class="number">10.4</span> Уничтожение пользователей</a></h2>
+<h2><a id="sec:10.4" href="updating-showing-and-deleting-users?version=3.0#sec:destroying_users" class="heading"><span class="number">10.4</span> Уничтожение пользователей</a></h2>
 
-<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как показано в макете на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_delete_links_mockup">Рис.&nbsp;10.12</a>, и определм <code>destroy</code> действие необходимое для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
+<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как показано в макете на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_delete_links_mockup">Рис.&nbsp;10.12</a>, и определм <code>destroy</code> действие необходимое для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
 
 
 <div class="label" id="fig:user_index_delete_links_mockup"></div>
@@ -1382,10 +1382,10 @@
 <div class="label" id="sec:administrative_users"></div>
 
 
-<h3><a id="sec:10.4.1" href="updating-showing-and-deleting-users#sec:administrative_users" class="heading"><span class="number">10.4.1</span> Административные пользователи</a></h3>
+<h3><a id="sec:10.4.1" href="updating-showing-and-deleting-users?version=3.0#sec:administrative_users" class="heading"><span class="number">10.4.1</span> Административные пользователи</a></h3>
 
 
-<p>Мы будем идентифицировать привилегированных пользователей с правами администратора посредством булевого атрибута <code>admin</code> в модели User, что, как мы увидим, автоматически приведет нас к методу <code>admin?</code> для проверки административного статуса. Мы можем написать тесты для этого атрибута, как в <a class="ref" href="updating-showing-and-deleting-users#code:admin_specs">Листинге&nbsp;10.34</a>.</p>
+<p>Мы будем идентифицировать привилегированных пользователей с правами администратора посредством булевого атрибута <code>admin</code> в модели User, что, как мы увидим, автоматически приведет нас к методу <code>admin?</code> для проверки административного статуса. Мы можем написать тесты для этого атрибута, как в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_specs">Листинге&nbsp;10.34</a>.</p>
 
 <div class="label" id="code:admin_specs"></div>
 
@@ -1436,7 +1436,7 @@
 </div>
 
 
-<p>Миграция просто добавляет столбец <code>admin</code> к таблице <code>users</code> (<a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинг&nbsp;10.35</a>), приводя к модели данных показанной на <a class="ref" href="updating-showing-and-deleting-users#fig:user_model_admin">Рис.&nbsp;10.13</a>.</p>
+<p>Миграция просто добавляет столбец <code>admin</code> к таблице <code>users</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_migration">Листинг&nbsp;10.35</a>), приводя к модели данных показанной на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_model_admin">Рис.&nbsp;10.13</a>.</p>
 
 <div class="label" id="code:admin_migration"></div>
 
@@ -1457,7 +1457,7 @@
 </div></div>
 
 
-<p>Обратите внимание на то, что мы добавили аргумент <code>:default =&gt; false</code> к <code>add_column</code> в <a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинге&nbsp;10.35</a>, что означает, что пользователи <em>не являются</em> администраторами по умолчанию. (Без <code>:default =&gt; false</code> аргумента, <code>admin</code> был бы по умолчанию <code>nil</code>, который по-прежнему <code>false</code>, так что этот шаг не является строго обязательным. Это более явно и четко сообщает о наших  намерениях, и Rails, и читателям нашего кода.)</p>
+<p>Обратите внимание на то, что мы добавили аргумент <code>:default =&gt; false</code> к <code>add_column</code> в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_migration">Листинге&nbsp;10.35</a>, что означает, что пользователи <em>не являются</em> администраторами по умолчанию. (Без <code>:default =&gt; false</code> аргумента, <code>admin</code> был бы по умолчанию <code>nil</code>, который по-прежнему <code>false</code>, так что этот шаг не является строго обязательным. Это более явно и четко сообщает о наших  намерениях, и Rails, и читателям нашего кода.)</p>
 
 <div class="label" id="fig:user_model_admin"></div>
 
@@ -1488,7 +1488,7 @@
 </div>
 
 
-<p>В качестве последнего шага, давайте обновим наш заполнитель образцов данных для того, чтобы сделать первого пользователя администратором (<a class="ref" href="updating-showing-and-deleting-users#code:populator_with_admin">Листинг&nbsp;10.36</a>).</p>
+<p>В качестве последнего шага, давайте обновим наш заполнитель образцов данных для того, чтобы сделать первого пользователя администратором (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:populator_with_admin">Листинг&nbsp;10.36</a>).</p>
 
 <div class="label" id="code:populator_with_admin"></div>
 
@@ -1525,11 +1525,11 @@
 <div class="label" id="sec:revisiting_attr_accessible"></div>
 
 
-<h4><a id="sec:10.4.1.1" href="updating-showing-and-deleting-users#sec:revisiting_attr_accessible" class="heading">Возвращение к  <code>attr_accessible</code></a></h4>
+<h4><a id="sec:10.4.1.1" href="updating-showing-and-deleting-users?version=3.0#sec:revisiting_attr_accessible" class="heading">Возвращение к  <code>attr_accessible</code></a></h4>
 
 
 
-<p>Вы могли заметить, что <a class="ref" href="updating-showing-and-deleting-users#code:populator_with_admin">Листинг&nbsp;10.36</a> делает пользователя администратором с помощью <code>toggle!(:admin)</code>, но почему бы просто не добавить <code>:admin =&gt; true</code> к хэшу инициализации? Ответ прост&nbsp;&mdash;&nbsp;это не будет работать, и это является его особенностью: только <code>attr_accessible</code> атрибуты могут быть назначены через массовое назначение, а атрибут <code>admin</code> не является доступным. <a class="ref" href="updating-showing-and-deleting-users#code:attr_accessible_review">Листинг&nbsp;10.37</a> воспроизводит последний список <code>attr_accessible</code> атрибутов&nbsp;&mdash;&nbsp;обратите внимание на то, что <code>:admin</code> <em>не присутствует</em> в списке.</p>
+<p>Вы могли заметить, что <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:populator_with_admin">Листинг&nbsp;10.36</a> делает пользователя администратором с помощью <code>toggle!(:admin)</code>, но почему бы просто не добавить <code>:admin =&gt; true</code> к хэшу инициализации? Ответ прост&nbsp;&mdash;&nbsp;это не будет работать, и это является его особенностью: только <code>attr_accessible</code> атрибуты могут быть назначены через массовое назначение, а атрибут <code>admin</code> не является доступным. <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:attr_accessible_review">Листинг&nbsp;10.37</a> воспроизводит последний список <code>attr_accessible</code> атрибутов&nbsp;&mdash;&nbsp;обратите внимание на то, что <code>:admin</code> <em>не присутствует</em> в списке.</p>
 
 <div class="label" id="code:attr_accessible_review"></div>
 
@@ -1560,9 +1560,9 @@
 <div class="label" id="sec:the_destroy_action"></div>
 
 
-<h3><a id="sec:10.4.2" href="updating-showing-and-deleting-users#sec:the_destroy_action" class="heading"><span class="number">10.4.2</span> <code>Destroy</code> действие</a></h3>
+<h3><a id="sec:10.4.2" href="updating-showing-and-deleting-users?version=3.0#sec:the_destroy_action" class="heading"><span class="number">10.4.2</span> <code>Destroy</code> действие</a></h3>
 
-<p>Последний шаг, необходимый для завершения ресурса Users, заключается в добавлении удаляющих ссылок и <code>destroy</code> действия. Мы начнем с добавления удаляющей ссылки для каждого пользователя на страницу со списком пользователей  (<a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинг&nbsp;10.38</a>).</p>
+<p>Последний шаг, необходимый для завершения ресурса Users, заключается в добавлении удаляющих ссылок и <code>destroy</code> действия. Мы начнем с добавления удаляющей ссылки для каждого пользователя на страницу со списком пользователей  (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:delete_links">Листинг&nbsp;10.38</a>).</p>
 
 <div class="label" id="code:delete_links"></div>
 
@@ -1582,7 +1582,7 @@
 </div></div>
 
 
-<p>Обратите внимание на аргумент <code>:method =&gt; :delete</code>, который организует выдачу ссылками необходимого запроса <tt>DELETE</tt>. Мы также обернули каждую ссылку в&nbsp;<code>if</code> выражение, таким образом они видны только администраторам. Результат, видимый нашим административным пользователям, представлен в <a class="ref" href="updating-showing-and-deleting-users#fig:index_delete_links_rails_3">Рис.&nbsp;10.14</a>.</p>
+<p>Обратите внимание на аргумент <code>:method =&gt; :delete</code>, который организует выдачу ссылками необходимого запроса <tt>DELETE</tt>. Мы также обернули каждую ссылку в&nbsp;<code>if</code> выражение, таким образом они видны только администраторам. Результат, видимый нашим административным пользователям, представлен в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:index_delete_links_rails_3">Рис.&nbsp;10.14</a>.</p>
 
 <p>Изначально, веб браузеры не могут отправлять <tt>DELETE</tt> запросы, и  Rails подделывает их с помощью JavaScript.<sup class="footnote" id="fnref:10.12"><a href="#fn:10.12">12</a></sup> Поэтому, для того, чтобы получить рабочие удаляющие ссылки, мы должны включить дефолтные Rails JavaScript библиотеки, что мы сделаем, добавив строку</p>
 
@@ -1591,7 +1591,7 @@
 </div>
 
 
-<p>в шаблон сайта. Результат показан в <a class="ref" href="updating-showing-and-deleting-users#code:adding_default_javascript">Листинг&nbsp;10.39</a>.</p>
+<p>в шаблон сайта. Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:adding_default_javascript">Листинг&nbsp;10.39</a>.</p>
 
 <div class="label" id="code:adding_default_javascript"></div>
 
@@ -1625,7 +1625,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/index_delete_links_rails_3.png" alt="index_delete_links_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  10.14: </span><span class="description">Список пользователей <a href="http://localhost:3000/users"><tt>/users</tt></a> с удаляющими ссылками.&nbsp;<a href="http://railstutorial.org/images/figures/index_delete_links_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Даже несмотря на то, что только администраторы могут видеть ссылки на удаление, есть еще одна страшная дыра в безопасности: любой достаточно опытный злоумышленник может просто выдать запрос <tt>DELETE</tt> из командной строки и удалить любого пользователя на сайте. Для того, чтобы обеспечить безопасность сайта, мы также нуждаемся в контроле доступа, и наши тесты должны проверить не только то, что администраторы  <em>могут</em> удалять пользователей, но также и то, что другие пользователи <em>не могут</em> этого делать. Результаты представлены в <a class="ref" href="updating-showing-and-deleting-users#code:destroy_tests">Листинге&nbsp;10.40</a>. Отметим, что, по аналогии с <code>get</code>, <code>post</code>, и <code>put</code> методами, мы используем <code>delete</code> для того, чтобы выдать запрос <tt>DELETE</tt> внутри теста.</p>
+<p>Даже несмотря на то, что только администраторы могут видеть ссылки на удаление, есть еще одна страшная дыра в безопасности: любой достаточно опытный злоумышленник может просто выдать запрос <tt>DELETE</tt> из командной строки и удалить любого пользователя на сайте. Для того, чтобы обеспечить безопасность сайта, мы также нуждаемся в контроле доступа, и наши тесты должны проверить не только то, что администраторы  <em>могут</em> удалять пользователей, но также и то, что другие пользователи <em>не могут</em> этого делать. Результаты представлены в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:destroy_tests">Листинге&nbsp;10.40</a>. Отметим, что, по аналогии с <code>get</code>, <code>post</code>, и <code>put</code> методами, мы используем <code>delete</code> для того, чтобы выдать запрос <tt>DELETE</tt> внутри теста.</p>
 
 <div class="label" id="code:destroy_tests"></div>
 
@@ -1683,7 +1683,7 @@
 </div></div>
 
 
-<p>(Вы могли заметить, что мы создали пользователя с правами администратора, используя <code>:admin =&gt; true</code>; фабрика пользователей не связана правилами <code>attr_accessible</code> параметров.) Отметим здесь, что метод <code>change</code> может принимать отрицательные значения, это означает, что, как мы убеждаемся в создании пользователя, тестируя изменение на +1  (<a class="ref" href="sign-up#code:signup_success_tests">Листинг&nbsp;8.14</a>), мы можем проверить удаление пользователя, тестируя изменение на -1:</p>
+<p>(Вы могли заметить, что мы создали пользователя с правами администратора, используя <code>:admin =&gt; true</code>; фабрика пользователей не связана правилами <code>attr_accessible</code> параметров.) Отметим здесь, что метод <code>change</code> может принимать отрицательные значения, это означает, что, как мы убеждаемся в создании пользователя, тестируя изменение на +1  (<a class="ref" href="sign-up?version=3.0#code:signup_success_tests">Листинг&nbsp;8.14</a>), мы можем проверить удаление пользователя, тестируя изменение на -1:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nb">lambda</span> <span class="k">do</span>
   <span class="n">delete</span> <span class="ss">:destroy</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="vi">@user</span>
@@ -1692,7 +1692,7 @@
 </div>
 
 
-<p>Как вы можете догадаться, реализация использует предфильтр, в этот раз для ограничения доступа к <code>destroy</code> действию. <code>Destroy</code> действие самостоятельно находит пользователя, уничтожает его, а затем переадресует к списку пользователей (<a class="ref" href="updating-showing-and-deleting-users#code:admin_destroy_before_filter">Листинг&nbsp;10.41</a>).</p>
+<p>Как вы можете догадаться, реализация использует предфильтр, в этот раз для ограничения доступа к <code>destroy</code> действию. <code>Destroy</code> действие самостоятельно находит пользователя, уничтожает его, а затем переадресует к списку пользователей (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_destroy_before_filter">Листинг&nbsp;10.41</a>).</p>
 
 <div class="label" id="code:admin_destroy_before_filter"></div>
 
@@ -1725,7 +1725,7 @@
 </div></div>
 
 
-<p>Обратите внимание, что <code>destroy</code> действие использует <em>цепочку методов</em> (кратко рассматривается в <a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a>) в строке</p>
+<p>Обратите внимание, что <code>destroy</code> действие использует <em>цепочку методов</em> (кратко рассматривается в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a>) в строке</p>
 
 <div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">destroy</span>
 </pre></div>
@@ -1736,12 +1736,12 @@
 
 <p>В этой точке все тесты должны проходить, и ресурс Users&nbsp;&mdash;&nbsp;со своим контроллером, моделью и представлением&nbsp;&mdash;&nbsp;функционально завершен.</p>
 
-<h2><a id="sec:10.5" href="updating-showing-and-deleting-users#sec:10.5" class="heading"><span class="number">10.5</span> Заключение</a></h2>
+<h2><a id="sec:10.5" href="updating-showing-and-deleting-users?version=3.0#sec:10.5" class="heading"><span class="number">10.5</span> Заключение</a></h2>
 
 
-<p>Мы прошли долгий путь с момента введения контроллера Users в <a class="ref" href="filling-in-the-layout#sec:user_signup">Разделе&nbsp;5.3</a>. Разделе&nbsp;5.3</a>. Те пользователи, даже не могли зарегистрироваться; теперь же пользователи могут зарегистрироваться, войти в систему, выйти, просматривать свои профили, редактировать их параметры, и видеть список всех пользователей, а некоторые из них могут даже удалять других пользователей.</p>
+<p>Мы прошли долгий путь с момента введения контроллера Users в <a class="ref" href="filling-in-the-layout?version=3.0#sec:user_signup">Разделе&nbsp;5.3</a>. Разделе&nbsp;5.3</a>. Те пользователи, даже не могли зарегистрироваться; теперь же пользователи могут зарегистрироваться, войти в систему, выйти, просматривать свои профили, редактировать их параметры, и видеть список всех пользователей, а некоторые из них могут даже удалять других пользователей.</p>
 
-<p>Остальная часть этой книги будет опираться на ресурс Users (и связанную с ним аутентификационную систему) чтобы сделать сайт с  Twitter-подобными микросообщениями (<a class="ref" href="user-microposts#top">Глава&nbsp;11</a>) и следованием за пользователями (<a class="ref" href="following-users#top">Глава&nbsp;12</a>). Эти главы представят некоторые из наиболее мощных возможностей Rails, включая моделирование данных с <code>has_many</code> и <code>has_many :through</code>.</p>
+<p>Остальная часть этой книги будет опираться на ресурс Users (и связанную с ним аутентификационную систему) чтобы сделать сайт с  Twitter-подобными микросообщениями (<a class="ref" href="user-microposts?version=3.0#top">Глава&nbsp;11</a>) и следованием за пользователями (<a class="ref" href="following-users?version=3.0#top">Глава&nbsp;12</a>). Эти главы представят некоторые из наиболее мощных возможностей Rails, включая моделирование данных с <code>has_many</code> и <code>has_many :through</code>.</p>
 
 <p>Прежде чем двигаться дальше, убедитесь, что объединили все изменения в мастер ветку:</p>
 
@@ -1753,7 +1753,7 @@
 </div>
 
 
-<p>Стоит также отметить, что в этой главе мы в последний раз имели необходимость в установке гема. Для справки, окончательный вариант <code>Gemfile</code> показан в <a class="ref" href="updating-showing-and-deleting-users#code:final_gemfile">Листинге&nbsp;10.42</a>.</p>
+<p>Стоит также отметить, что в этой главе мы в последний раз имели необходимость в установке гема. Для справки, окончательный вариант <code>Gemfile</code> показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:final_gemfile">Листинге&nbsp;10.42</a>.</p>
 
 <div class="label" id="code:final_gemfile"></div>
 
@@ -1789,20 +1789,20 @@
 <div class="label" id="sec:updating_deleting_exercises"></div>
 
 
-<h2><a id="sec:10.6" href="updating-showing-and-deleting-users#sec:updating_deleting_exercises" class="heading"><span class="number">10.6</span> Упражнения</a></h2>
+<h2><a id="sec:10.6" href="updating-showing-and-deleting-users?version=3.0#sec:updating_deleting_exercises" class="heading"><span class="number">10.6</span> Упражнения</a></h2>
 
 
 
 
 <ol>
 
-<li>Организуйте открытие Gravatar ссылки &ldquo;change&rdquo; из <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинга&nbsp;10.3</a> в новом окне (или вкладке). <em>Подсказка:</em> Ищите в сети; вы должны найти один простой и надежный метод с участием так называмого <code>_blank</code>. </li>
+<li>Организуйте открытие Gravatar ссылки &ldquo;change&rdquo; из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинга&nbsp;10.3</a> в новом окне (или вкладке). <em>Подсказка:</em> Ищите в сети; вы должны найти один простой и надежный метод с участием так называмого <code>_blank</code>. </li>
 
-<li>Удалите дублирующийся код формы рефакторингом <code>new.html.erb</code> и <code>edit.html.erb</code> представлений, используя партиал из <a class="ref" href="updating-showing-and-deleting-users#code:new_edit_partial">Листинга&nbsp;10.43</a>. Обратите внимание, на то, что вам придется передать пременную формы&nbsp;<code>f</code> в виде явной локальной переменной, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:new_user_with_partial">Листинге&nbsp;10.44</a>.</li>
+<li>Удалите дублирующийся код формы рефакторингом <code>new.html.erb</code> и <code>edit.html.erb</code> представлений, используя партиал из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:new_edit_partial">Листинга&nbsp;10.43</a>. Обратите внимание, на то, что вам придется передать пременную формы&nbsp;<code>f</code> в виде явной локальной переменной, как показано в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:new_user_with_partial">Листинге&nbsp;10.44</a>.</li>
 
 <li>Зарегистрированным пользователям совершенно незачем иметь доступ к <code>new</code> и <code>create</code> действиям контроллера Users. Организуйте  для таких пользователей переадресацию  в корневой URL, при попытке обратиться к этим страницам.</li>
 
-<li>Добавьте тесты, проверяющие что удаляющие ссылки в <a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинге&nbsp;10.38</a> появляются для администраторов, но не для обычных пользователей.</li>
+<li>Добавьте тесты, проверяющие что удаляющие ссылки в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:delete_links">Листинге&nbsp;10.38</a> появляются для администраторов, но не для обычных пользователей.</li>
 
 <li>Модифицируйте действие <code>destroy</code> так, чтобы предотвратить уничтожение административными пользователями самих себя. (Начните с написания теста.)</li>
 
@@ -1860,10 +1860,10 @@
 
 
 
-<div class="navigation">  <a class="prev_page" href="sign-in-sign-out#top">
+<div class="navigation">  <a class="prev_page" href="sign-in-sign-out?version=3.0#top">
     &laquo;&nbsp;<span class="number">Глава 9</span> Войти, выйти
   </a>
-  <a class="next_page" href="user-microposts#top">
+  <a class="next_page" href="user-microposts?version=3.0#top">
     <span class="number">Глава 11</span> Микросообщения пользователей&nbsp;&raquo;
   </a>
 </div><div class="footnotes">
@@ -1873,12 +1873,12 @@
 <li id="fn:10.3">Изображение взято на <a href="http://www.flickr.com/photos/sashawolff/4598355045/">http://www.flickr.com/photos/sashawolff/4598355045/</a>.&nbsp;<a class="arrow" href="#fnref:10.3">&uarr;</a></li>
 <li id="fn:10.4">Не беспокойтесь о том, как это работает, детали, представляют интерес для разработчиков самого фреймворка Rails, но по замыслу не имеют значения для разработчиков Rails приложений.&nbsp;<a class="arrow" href="#fnref:10.4">&uarr;</a></li>
 <li id="fn:10.5">Код в этом разделе это адаптация (переделка) гема <a href="http://github.com/thoughtbot/clearance">Clearance</a> команды разработчиков <a href="http://thoughtbot.com/">thoughtbot</a>.&nbsp;<a class="arrow" href="#fnref:10.5">&uarr;</a></li>
-<li id="fn:10.6">Действительно, как отмечалось в <a class="ref" href="sign-in-sign-out#sec:sign_in_out_exercises">Разделе&nbsp;9.6</a>, <code>session</code> реализуется именно этим способом.&nbsp;<a class="arrow" href="#fnref:10.6">&uarr;</a></li>
+<li id="fn:10.6">Действительно, как отмечалось в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sign_in_out_exercises">Разделе&nbsp;9.6</a>, <code>session</code> реализуется именно этим способом.&nbsp;<a class="arrow" href="#fnref:10.6">&uarr;</a></li>
 <li id="fn:10.7">Фотография ребенка из <a href="http://www.flickr.com/photos/glasgows/338937124/">http://www.flickr.com/photos/glasgows/338937124/</a>.&nbsp;<a class="arrow" href="#fnref:10.7">&uarr;</a></li>
 <li id="fn:10.8">Технически, нам требуется создать только 28 дополнительных "сфабрикованных" пользователей, так как три пользователя у нас уже есть, но я считаю создание 30 более однозначным.&nbsp;<a class="arrow" href="#fnref:10.8">&uarr;</a></li>
 <li id="fn:10.9">Имя <code>user</code> непринципиально&nbsp;&mdash;&nbsp;мы могли бы написать <code>@users.each do |foobar|</code>, а затем использовать <code>render foobar</code>. Ключом является <em>класс</em> объекта&nbsp;&mdash;&nbsp;в данном случае, <code>User</code>.&nbsp;<a class="arrow" href="#fnref:10.9">&uarr;</a></li>
 <li id="fn:10.10">Метод <code>toggle!</code> вызывает колбэки Active Record но не валидации, так что мы должны установить атрибут <code>password</code> (но не подтверждение) с тем чтобы иметь не чистый пароль в обратном вызове <code>encrypt_password</code>.&nbsp;<a class="arrow" href="#fnref:10.10">&uarr;</a></li>
-<li id="fn:10.11">Инструменты командной строки, такие как <tt>curl</tt> (см. <a class="ref" href="static-pages#sidebar:response_codes">Блок&nbsp;3.2</a>) могут выдавать <tt>PUT</tt> запросы этой формы.&nbsp;<a class="arrow" href="#fnref:10.11">&uarr;</a></li>
+<li id="fn:10.11">Инструменты командной строки, такие как <tt>curl</tt> (см. <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блок&nbsp;3.2</a>) могут выдавать <tt>PUT</tt> запросы этой формы.&nbsp;<a class="arrow" href="#fnref:10.11">&uarr;</a></li>
 <li id="fn:10.12">Это означает, что ссылки на удаление не будут работать если у пользователя нет (или отключен) JavaScript. Если вы обязаны поддерживать браузеры без включенного JavaScript, вы можете подделать запрос <tt>DELETE</tt> используя форму и запрос <tt>POST</tt>, что будет работать даже в отсутствие JavaScript; см. об этом более подробно Railscast на &ldquo;<a href="http://railscasts.com/episodes/77-destroy-without-javascript">Destroy Without JavaScript</a>&rdquo;.&nbsp;<a class="arrow" href="#fnref:10.12">&uarr;</a></li>
 </ol>
 </div>

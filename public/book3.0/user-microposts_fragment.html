@@ -1,9 +1,9 @@
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:11" href="user-microposts#top" class="heading"><span class="number">Глава 11</span> Микросообщения пользователей</a></h1>
+<h1 class="chapter"><a id="sec:11" href="user-microposts?version=3.0#top" class="heading"><span class="number">Глава 11</span> Микросообщения пользователей</a></h1>
 
-<p>В <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;10</a> были закончены REST действия для ресурса Users, так что пришло время наконец-то добавить второй ресурс: пользовательские <em>микросообщения</em>.<sup class="footnote" id="fnref:11.1"><a href="#fn:11.1">1</a></sup> Эти короткие сообщения, связанные с конкретным пользователем, впервые были показаны (в зачаточной форме) в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>. В этой главе мы сделаем полноценную версию наброска из <a class="ref" href="a-demo-app#sec:microposts_resource">Раздела&nbsp;2.3</a>, сконструировав модель данных Micropost, связав ее с моделью User при помощи <code>has_many</code> и <code>belongs_to</code> методов, а затем сделав формы и партиалы, необходимые для манипулирования результатами и их отображения. В <a class="ref" href="following-users#top">Главе&nbsp;12</a> мы завершим наш крохотный клон Twitter, добавив понятие  <em>слежения</em> за пользователями, чтобы получить <em>поток (feed)</em> их микросообщений.</p>
+<p>В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#top">Главе&nbsp;10</a> были закончены REST действия для ресурса Users, так что пришло время наконец-то добавить второй ресурс: пользовательские <em>микросообщения</em>.<sup class="footnote" id="fnref:11.1"><a href="#fn:11.1">1</a></sup> Эти короткие сообщения, связанные с конкретным пользователем, впервые были показаны (в зачаточной форме) в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>. В этой главе мы сделаем полноценную версию наброска из <a class="ref" href="a-demo-app?version=3.0#sec:microposts_resource">Раздела&nbsp;2.3</a>, сконструировав модель данных Micropost, связав ее с моделью User при помощи <code>has_many</code> и <code>belongs_to</code> методов, а затем сделав формы и партиалы, необходимые для манипулирования результатами и их отображения. В <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы завершим наш крохотный клон Twitter, добавив понятие  <em>слежения</em> за пользователями, чтобы получить <em>поток (feed)</em> их микросообщений.</p>
 
 <p>Если вы используете Git для управления версиями, я предлагаю сделать новую тему ветки, как обычно:</p>
 
@@ -17,24 +17,24 @@
 <div class="label" id="sec:a_micropost_model"></div>
 
 
-<h2><a id="sec:11.1" href="user-microposts#sec:a_micropost_model" class="heading"><span class="number">11.1</span> Модель Micropost</a></h2>
+<h2><a id="sec:11.1" href="user-microposts?version=3.0#sec:a_micropost_model" class="heading"><span class="number">11.1</span> Модель Micropost</a></h2>
 
-<p>Мы начнем Microposts ресурс с создания модели Micropost, которая фиксирует основные характеристики микросообщений. Что мы сделаем основываясь на работе, проделанной в <a class="ref" href="a-demo-app#sec:microposts_resource">Разделе&nbsp;2.3</a>; как и модель из того раздела, наша новая модель  Micropost будет включать валидации и ассоциации с моделью User. В отличие от той модели, данная Micropost модель  будет полностью протестирована, а также будет иметь дефолтное <em>упорядочивание</em> и автоматическую <em>деструкцию</em> в случае уничтожения родительского пользователя.</p>
+<p>Мы начнем Microposts ресурс с создания модели Micropost, которая фиксирует основные характеристики микросообщений. Что мы сделаем основываясь на работе, проделанной в <a class="ref" href="a-demo-app?version=3.0#sec:microposts_resource">Разделе&nbsp;2.3</a>; как и модель из того раздела, наша новая модель  Micropost будет включать валидации и ассоциации с моделью User. В отличие от той модели, данная Micropost модель  будет полностью протестирована, а также будет иметь дефолтное <em>упорядочивание</em> и автоматическую <em>деструкцию</em> в случае уничтожения родительского пользователя.</p>
 
 <div class="label" id="sec:the_basic_model"></div>
 
 
-<h3><a id="sec:11.1.1" href="user-microposts#sec:the_basic_model" class="heading"><span class="number">11.1.1</span> Базовая модель</a></h3>
+<h3><a id="sec:11.1.1" href="user-microposts?version=3.0#sec:the_basic_model" class="heading"><span class="number">11.1.1</span> Базовая модель</a></h3>
 
 
-<p>Модели Micropost необходимы лишь два атрибута: <code>content</code> атрибут, содержащий текст микросообщений,<sup class="footnote" id="fnref:11.2"><a href="#fn:11.2">2</a></sup> и <code>user_id</code>, связывающий микросообщения с конкретным пользователем. Как и в случае с моделью User (<a class="ref" href="modeling-and-viewing-users-one#code:generate_user_model">Листинг&nbsp;6.1</a>), мы генерируем ее используя <code>generate model</code>:</p>
+<p>Модели Micropost необходимы лишь два атрибута: <code>content</code> атрибут, содержащий текст микросообщений,<sup class="footnote" id="fnref:11.2"><a href="#fn:11.2">2</a></sup> и <code>user_id</code>, связывающий микросообщения с конкретным пользователем. Как и в случае с моделью User (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:generate_user_model">Листинг&nbsp;6.1</a>), мы генерируем ее используя <code>generate model</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate model Micropost content:string user_id:integer
 </pre></div>
 </div>
 
 
-<p>Это производит миграцию для создания таблицы <code>microposts</code> в базе данных (<a class="ref" href="user-microposts#code:micropost_migration">Листинг&nbsp;11.1</a>); сравните ее с аналогичной миграцией для таблицы <code>users</code> из <a class="ref" href="modeling-and-viewing-users-one#code:users_migration">Листинга&nbsp;6.2</a>.</p>
+<p>Это производит миграцию для создания таблицы <code>microposts</code> в базе данных (<a class="ref" href="user-microposts?version=3.0#code:micropost_migration">Листинг&nbsp;11.1</a>); сравните ее с аналогичной миграцией для таблицы <code>users</code> из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:users_migration">Листинга&nbsp;6.2</a>.</p>
 
 <div class="label" id="code:micropost_migration"></div>
 
@@ -62,7 +62,7 @@
 </div></div>
 
 
-<p>Отметим, что, поскольку мы ожидаем извлечение всех микросообщений, связанных с данным&nbsp;id пользователя в порядке обратном их созданию, <a class="ref" href="user-microposts#code:micropost_migration">Листинг&nbsp;11.1</a> добавляет индексы (<a class="ref" href="modeling-and-viewing-users-one#sidebar:database_indices">Блок&nbsp;6.2</a>) на столбцы <code>user_id</code> и <code>created_at</code>:</p>
+<p>Отметим, что, поскольку мы ожидаем извлечение всех микросообщений, связанных с данным&nbsp;id пользователя в порядке обратном их созданию, <a class="ref" href="user-microposts?version=3.0#code:micropost_migration">Листинг&nbsp;11.1</a> добавляет индексы (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блок&nbsp;6.2</a>) на столбцы <code>user_id</code> и <code>created_at</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:user_id</span>
 <span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:created_at</span>
@@ -70,7 +70,7 @@
 </div>
 
 
-<p>Отметим также строку <code>t.timestamps</code>, которая (как указано в <a class="ref" href="modeling-and-viewing-users-one#sec:database_migrations">Разделе&nbsp;6.1.1</a>) добавляет волшебные столбцы <code>created_at</code> и <code>updated_at</code>. Мы будем работать со столбцом <code>created_at</code> в <a class="ref" href="user-microposts#sec:ordering_and_dependency">Разделе&nbsp;11.1.3</a> и <a class="ref" href="user-microposts#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>.</p>
+<p>Отметим также строку <code>t.timestamps</code>, которая (как указано в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:database_migrations">Разделе&nbsp;6.1.1</a>) добавляет волшебные столбцы <code>created_at</code> и <code>updated_at</code>. Мы будем работать со столбцом <code>created_at</code> в <a class="ref" href="user-microposts?version=3.0#sec:ordering_and_dependency">Разделе&nbsp;11.1.3</a> и <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>.</p>
 
 <p>Мы можем запустить миграцию микросообщений как обычно (с учетом необходимости подготовки тестовой базы данных, поскольку модель данных изменилась):</p>
 
@@ -80,7 +80,7 @@
 </div>
 
 
-<p>В результате получилась модель Micropost со структурой, показанной в <a class="ref" href="user-microposts#fig:micropost_model">Рис.&nbsp;11.1</a>.</p>
+<p>В результате получилась модель Micropost со структурой, показанной в <a class="ref" href="user-microposts?version=3.0#fig:micropost_model">Рис.&nbsp;11.1</a>.</p>
 
 <div class="label" id="fig:micropost_model"></div>
 
@@ -93,12 +93,12 @@
 <div class="label" id="sec:accessible_attribute"></div>
 
 
-<h4><a id="sec:11.1.1.1" href="user-microposts#sec:accessible_attribute" class="heading">Доступные атрибуты</a></h4>
+<h4><a id="sec:11.1.1.1" href="user-microposts?version=3.0#sec:accessible_attribute" class="heading">Доступные атрибуты</a></h4>
 
 
-<p>Прежде чем конкретизировать модель Micropost, важно в первую очередь применить <code>attr_accessible</code> для указания атрибутов, редактируемых посредством веб. Как обсуждалось в <a class="ref" href="modeling-and-viewing-users-one#sec:accessible_attributes">Разделе&nbsp;6.1.2.2</a> и <a class="ref" href="updating-showing-and-deleting-users#sec:revisiting_attr_accessible">Разделе&nbsp;10.4.1.1</a>, неопределение доступных атрибутов  означает что кто-нибудь может легко изменить любой аспект объекта микросоообщений используя клиент командной строки для выдачи вредоносного запроса. Например, злоумышленник может изменить <code>user_id</code> атрибуты на микросообщениях, тем самым связав микросообщения с неправильным пользователем.</p>
+<p>Прежде чем конкретизировать модель Micropost, важно в первую очередь применить <code>attr_accessible</code> для указания атрибутов, редактируемых посредством веб. Как обсуждалось в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:accessible_attributes">Разделе&nbsp;6.1.2.2</a> и <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:revisiting_attr_accessible">Разделе&nbsp;10.4.1.1</a>, неопределение доступных атрибутов  означает что кто-нибудь может легко изменить любой аспект объекта микросоообщений используя клиент командной строки для выдачи вредоносного запроса. Например, злоумышленник может изменить <code>user_id</code> атрибуты на микросообщениях, тем самым связав микросообщения с неправильным пользователем.</p>
 
-<p>В случае модели Micropost, есть только <em>один</em> атрибут, который необходимо редактировать через веб, а именно, атрибут <code>content</code> (<a class="ref" href="user-microposts#code:micropost_accessible_attribute">Листинг&nbsp;11.2</a>).</p>
+<p>В случае модели Micropost, есть только <em>один</em> атрибут, который необходимо редактировать через веб, а именно, атрибут <code>content</code> (<a class="ref" href="user-microposts?version=3.0#code:micropost_accessible_attribute">Листинг&nbsp;11.2</a>).</p>
 
 <div class="label" id="code:micropost_accessible_attribute"></div>
 
@@ -122,7 +122,7 @@
 
 <p>будет просто игнорироваться.</p>
 
-<p>Декларация <code>attr_accessible</code> в <a class="ref" href="user-microposts#code:micropost_accessible_attribute">Листинге&nbsp;11.2</a> необходима для безопасности сайта, но она представляет проблему для дефолтного Micropost model spec (<a class="ref" href="user-microposts#code:initial_micropost_spec">Листинг&nbsp;11.3</a>).</p>
+<p>Декларация <code>attr_accessible</code> в <a class="ref" href="user-microposts?version=3.0#code:micropost_accessible_attribute">Листинге&nbsp;11.2</a> необходима для безопасности сайта, но она представляет проблему для дефолтного Micropost model spec (<a class="ref" href="user-microposts?version=3.0#code:initial_micropost_spec">Листинг&nbsp;11.3</a>).</p>
 
 <div class="label" id="code:initial_micropost_spec"></div>
 
@@ -151,15 +151,15 @@
 
 <p>Этот тест в настоящее время проходит, но есть в нем что-то неладное. (Попробуйте понять, что именно, прежде чем продолжать)</p>
 
-<p>Проблема в том, что <code>before(:each)</code> блок в  <a class="ref" href="user-microposts#code:initial_micropost_spec">Листинге&nbsp;11.3</a> назначает id пользователя через массовое назначение, собственно, что <code>attr_accessible</code> и предотвращает; в частности, как отмечалось выше, <code>:user_id =&gt; 1</code> часть хэша инициализации просто игнорируется. Решением заключается в избегании использования непосредственно <code>Micropost.new</code>; вместо этого, мы будем создавать микросообщения через их <em>ассоциацию</em> с моделью User, которая устанавливает id пользователя автоматически. Достижение этого является задачей следующего раздела.</p>
+<p>Проблема в том, что <code>before(:each)</code> блок в  <a class="ref" href="user-microposts?version=3.0#code:initial_micropost_spec">Листинге&nbsp;11.3</a> назначает id пользователя через массовое назначение, собственно, что <code>attr_accessible</code> и предотвращает; в частности, как отмечалось выше, <code>:user_id =&gt; 1</code> часть хэша инициализации просто игнорируется. Решением заключается в избегании использования непосредственно <code>Micropost.new</code>; вместо этого, мы будем создавать микросообщения через их <em>ассоциацию</em> с моделью User, которая устанавливает id пользователя автоматически. Достижение этого является задачей следующего раздела.</p>
 
 <div class="label" id="sec:user_micropost_associations"></div>
 
 
-<h3><a id="sec:11.1.2" href="user-microposts#sec:user_micropost_associations" class="heading"><span class="number">11.1.2</span> Ассоциации Пользователь/Микросообщения</a></h3>
+<h3><a id="sec:11.1.2" href="user-microposts?version=3.0#sec:user_micropost_associations" class="heading"><span class="number">11.1.2</span> Ассоциации Пользователь/Микросообщения</a></h3>
 
 
-<p>Цель этого раздела заключается в установлении <em>ассоциации (связи)</em> между моделями Micropost и User&nbsp;&mdash;&nbsp;отношений, кратко рассмотренных в <a class="ref" href="a-demo-app#sec:demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a> и показанных схематически в <a class="ref" href="user-microposts#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> и <a class="ref" href="user-microposts#fig:user_has_many_microposts">Рис.&nbsp;11.3</a>. По пути, мы будем писать тесты для модели Micropost которые, в отличие от тестов в <a class="ref" href="user-microposts#code:initial_micropost_spec">Листинге&nbsp;11.3</a>, будут совместимы с <code>attr_accessible</code> из <a class="ref" href="user-microposts#code:micropost_accessible_attribute">Листинга&nbsp;11.2</a>.</p>
+<p>Цель этого раздела заключается в установлении <em>ассоциации (связи)</em> между моделями Micropost и User&nbsp;&mdash;&nbsp;отношений, кратко рассмотренных в <a class="ref" href="a-demo-app?version=3.0#sec:demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a> и показанных схематически в <a class="ref" href="user-microposts?version=3.0#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> и <a class="ref" href="user-microposts?version=3.0#fig:user_has_many_microposts">Рис.&nbsp;11.3</a>. По пути, мы будем писать тесты для модели Micropost которые, в отличие от тестов в <a class="ref" href="user-microposts?version=3.0#code:initial_micropost_spec">Листинге&nbsp;11.3</a>, будут совместимы с <code>attr_accessible</code> из <a class="ref" href="user-microposts?version=3.0#code:micropost_accessible_attribute">Листинга&nbsp;11.2</a>.</p>
 
 <div class="label" id="fig:micropost_belongs_to_user"></div>
 
@@ -175,7 +175,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_has_many_microposts.png" alt="user_has_many_microposts" /></span></div><div class="caption"><span class="header">Рисунок  11.3: </span><span class="description"><code>has_many</code> отношение между  пользователем и его микросообщениями.&nbsp;<a href="http://railstutorial.org/images/figures/user_has_many_microposts-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Мы начнем с ассоциации модели Micropost. Во-первых, мы хотим повторить <code>Micropost.create!</code> тест показанный в <a class="ref" href="user-microposts#code:initial_micropost_spec">Листинге&nbsp;11.3</a> без несостоятельного массового назначения. Во-вторых, мы видим из <a class="ref" href="user-microposts#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> что объект <code>micropost</code> должен иметь метод <code>user</code>. Наконец, <code>micropost.user</code> должен быть пользователем, соответствующим <code>user_id</code> микросообщений. Мы можем выразить эти требования в RSpec кодом  <a class="ref" href="user-microposts#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a>.</p>
+<p>Мы начнем с ассоциации модели Micropost. Во-первых, мы хотим повторить <code>Micropost.create!</code> тест показанный в <a class="ref" href="user-microposts?version=3.0#code:initial_micropost_spec">Листинге&nbsp;11.3</a> без несостоятельного массового назначения. Во-вторых, мы видим из <a class="ref" href="user-microposts?version=3.0#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> что объект <code>micropost</code> должен иметь метод <code>user</code>. Наконец, <code>micropost.user</code> должен быть пользователем, соответствующим <code>user_id</code> микросообщений. Мы можем выразить эти требования в RSpec кодом  <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a>.</p>
 
 <div class="label" id="code:micropost_belongs_to_user_spec"></div>
 
@@ -216,7 +216,7 @@
 </div></div>
 
 
-<p>Заметим, что вместо использования <code>Micropost.create</code> или <code>Micropost.create!</code> для создания микросообщения, <a class="ref" href="user-microposts#code:micropost_belongs_to_user_spec">Листинг&nbsp;11.4</a> использует</p>
+<p>Заметим, что вместо использования <code>Micropost.create</code> или <code>Micropost.create!</code> для создания микросообщения, <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user_spec">Листинг&nbsp;11.4</a> использует</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="vi">@attr</span><span class="p">)</span>
 </pre></div>
@@ -230,7 +230,7 @@
 </div>
 
 
-<p>Эта схема является <a href="http://www.answers.com/canonical">каноническим</a> способом создания микросообщения через его ассоциацию с пользователем. (Мы используем "фабричного" пользователя так как это тесты для модели Micropost, а не для модели User.) При создании этим способом, объект микросообщение <em>автоматически</em> имеет <code>user_id</code> с правильно установленным значением, что устраняет проблему, отмеченную в <a class="ref" href="user-microposts#sec:accessible_attribute">Разделе&nbsp;11.1.1.1</a>. В частности, код</p>
+<p>Эта схема является <a href="http://www.answers.com/canonical">каноническим</a> способом создания микросообщения через его ассоциацию с пользователем. (Мы используем "фабричного" пользователя так как это тесты для модели Micropost, а не для модели User.) При создании этим способом, объект микросообщение <em>автоматически</em> имеет <code>user_id</code> с правильно установленным значением, что устраняет проблему, отмеченную в <a class="ref" href="user-microposts?version=3.0#sec:accessible_attribute">Разделе&nbsp;11.1.1.1</a>. В частности, код</p>
 
 <div class="code"><div class="highlight"><pre>  <span class="n">before</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">do</span>
     <span class="vi">@attr</span> <span class="o">=</span> <span class="p">{</span>
@@ -246,7 +246,7 @@
 </div>
 
 
-<p>из <a class="ref" href="user-microposts#code:initial_micropost_spec">Листинга&nbsp;11.3</a> является дефектным, так как <code>:user_id =&gt; 1</code> ничего не делает, когда <code>user_id</code> не является одним из доступных атрибутов модели Micropost. Пройдя через ассоциацию пользователя, с другой стороны, код</p>
+<p>из <a class="ref" href="user-microposts?version=3.0#code:initial_micropost_spec">Листинга&nbsp;11.3</a> является дефектным, так как <code>:user_id =&gt; 1</code> ничего не делает, когда <code>user_id</code> не является одним из доступных атрибутов модели Micropost. Пройдя через ассоциацию пользователя, с другой стороны, код</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="s2">&quot;should create a new instance given valid attributes&quot;</span> <span class="k">do</span>
   <span class="vi">@user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="vi">@attr</span><span class="p">)</span>
@@ -255,9 +255,9 @@
 </div>
 
 
-<p>из <a class="ref" href="user-microposts#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a> имеет правильный <code>user_id</code> по своей конструкции.</p>
+<p>из <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a> имеет правильный <code>user_id</code> по своей конструкции.</p>
 
-<p>Эти специальные <code>create</code> методы пока не будут работать; они требуют надлежащей <code>has_many</code> ассоциации в модели User. Мы отложим более детализированные тесты для этой ассоциации до <a class="ref" href="user-microposts#sec:ordering_and_dependency">Раздела&nbsp;11.1.3</a>; на данный момент мы просто протестируем на наличие атрибута <code>microposts</code> (<a class="ref" href="user-microposts#code:user_has_many_microposts_spec">Листинг&nbsp;11.5</a>).</p>
+<p>Эти специальные <code>create</code> методы пока не будут работать; они требуют надлежащей <code>has_many</code> ассоциации в модели User. Мы отложим более детализированные тесты для этой ассоциации до <a class="ref" href="user-microposts?version=3.0#sec:ordering_and_dependency">Раздела&nbsp;11.1.3</a>; на данный момент мы просто протестируем на наличие атрибута <code>microposts</code> (<a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts_spec">Листинг&nbsp;11.5</a>).</p>
 
 <div class="label" id="code:user_has_many_microposts_spec"></div>
 
@@ -286,7 +286,7 @@
 </div></div>
 
 
-<p>Мы можем получить прохождение тестов из <a class="ref" href="user-microposts#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a> и <a class="ref" href="user-microposts#code:user_has_many_microposts_spec">Листинга&nbsp;11.5</a> используя <code>belongs_to</code>/<code>has_many</code> ассоциацию, проиллюстрированную в <a class="ref" href="user-microposts#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> и <a class="ref" href="user-microposts#fig:user_has_many_microposts">Рис.&nbsp;11.3</a>, как показано в <a class="ref" href="user-microposts#code:micropost_belongs_to_user">Листинге&nbsp;11.6</a> и <a class="ref" href="user-microposts#code:user_has_many_microposts">Листинге&nbsp;11.7</a>.</p>
+<p>Мы можем получить прохождение тестов из <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user_spec">Листинга&nbsp;11.4</a> и <a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts_spec">Листинга&nbsp;11.5</a> используя <code>belongs_to</code>/<code>has_many</code> ассоциацию, проиллюстрированную в <a class="ref" href="user-microposts?version=3.0#fig:micropost_belongs_to_user">Рис.&nbsp;11.2</a> и <a class="ref" href="user-microposts?version=3.0#fig:user_has_many_microposts">Рис.&nbsp;11.3</a>, как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user">Листинге&nbsp;11.6</a> и <a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts">Листинге&nbsp;11.7</a>.</p>
 
 <div class="label" id="code:micropost_belongs_to_user"></div>
 
@@ -324,7 +324,7 @@
 </div></div>
 
 
-<p>С помощью этой <code>belongs_to</code>/<code>has_many</code> ассоциации, Rails строит методы, показанные в <a class="ref" href="user-microposts#table:association_methods">Таблице&nbsp;11.1</a>. Вы можете сравнить записи в <a class="ref" href="user-microposts#table:association_methods">Таблице&nbsp;11.1</a> с кодом в <a class="ref" href="user-microposts#code:micropost_belongs_to_user_spec">Листинге&nbsp;11.4</a> и <a class="ref" href="user-microposts#code:user_has_many_microposts_spec">Листинге&nbsp;11.5</a> чтобы убедиться, что вы понимаете основные свойства ассоциаций. (В <a class="ref" href="user-microposts#table:association_methods">Таблице&nbsp;11.1</a> есть один метод, который мы прежде не использовали&nbsp;&mdash;&nbsp;метод <code>build</code>; ему найдется хорошее применение в <a class="ref" href="user-microposts#sec:micropost_validations">Разделе&nbsp;11.1.4</a> и особенно в <a class="ref" href="user-microposts#sec:creating_microposts">Разделе&nbsp;11.3.2</a>.)</p>
+<p>С помощью этой <code>belongs_to</code>/<code>has_many</code> ассоциации, Rails строит методы, показанные в <a class="ref" href="user-microposts?version=3.0#table:association_methods">Таблице&nbsp;11.1</a>. Вы можете сравнить записи в <a class="ref" href="user-microposts?version=3.0#table:association_methods">Таблице&nbsp;11.1</a> с кодом в <a class="ref" href="user-microposts?version=3.0#code:micropost_belongs_to_user_spec">Листинге&nbsp;11.4</a> и <a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts_spec">Листинге&nbsp;11.5</a> чтобы убедиться, что вы понимаете основные свойства ассоциаций. (В <a class="ref" href="user-microposts?version=3.0#table:association_methods">Таблице&nbsp;11.1</a> есть один метод, который мы прежде не использовали&nbsp;&mdash;&nbsp;метод <code>build</code>; ему найдется хорошее применение в <a class="ref" href="user-microposts?version=3.0#sec:micropost_validations">Разделе&nbsp;11.1.4</a> и особенно в <a class="ref" href="user-microposts?version=3.0#sec:creating_microposts">Разделе&nbsp;11.3.2</a>.)</p>
 
 <div class="label" id="table:association_methods"></div>
 
@@ -337,12 +337,12 @@
 <div class="label" id="sec:ordering_and_dependency"></div>
 
 
-<h3><a id="sec:11.1.3" href="user-microposts#sec:ordering_and_dependency" class="heading"><span class="number">11.1.3</span> Улучшение микросообщений</a></h3>
+<h3><a id="sec:11.1.3" href="user-microposts?version=3.0#sec:ordering_and_dependency" class="heading"><span class="number">11.1.3</span> Улучшение микросообщений</a></h3>
 
 
-<p>Тесты <code>has_many</code> ассоциации в <a class="ref" href="user-microposts#code:user_has_many_microposts_spec">Листинге&nbsp;11.5</a> мало чего тестируют&nbsp;&mdash;&nbsp;они просто проверяют <em>существование</em> атрибута <code>microposts</code>. В этом разделе мы добавим <em>упорядочивание</em> и <em>зависимость</em> к микросообщениям, а также протестируем что <code>user.microposts</code> метод действительно возвращает массив микросообщений.</p>
+<p>Тесты <code>has_many</code> ассоциации в <a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts_spec">Листинге&nbsp;11.5</a> мало чего тестируют&nbsp;&mdash;&nbsp;они просто проверяют <em>существование</em> атрибута <code>microposts</code>. В этом разделе мы добавим <em>упорядочивание</em> и <em>зависимость</em> к микросообщениям, а также протестируем что <code>user.microposts</code> метод действительно возвращает массив микросообщений.</p>
 
-<p>Нам нужно будет построить несколько микросообщений в User model spec, что означает, что мы должны сделать фабрику микросообщений в этой точке. Для этого нам нужен способ для создания ассоциации в Factory Girl. К счастью, это легко&nbsp;&mdash;&nbsp;мы просто используем Factory Girl метод  <code>micropost.association</code>, как показано в <a class="ref" href="user-microposts#code:micropost_factory">Листинге&nbsp;11.8</a>.<sup class="footnote" id="fnref:11.3"><a href="#fn:11.3">3</a></sup></p>
+<p>Нам нужно будет построить несколько микросообщений в User model spec, что означает, что мы должны сделать фабрику микросообщений в этой точке. Для этого нам нужен способ для создания ассоциации в Factory Girl. К счастью, это легко&nbsp;&mdash;&nbsp;мы просто используем Factory Girl метод  <code>micropost.association</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_factory">Листинге&nbsp;11.8</a>.<sup class="footnote" id="fnref:11.3"><a href="#fn:11.3">3</a></sup></p>
 
 <div class="label" id="code:micropost_factory"></div>
 
@@ -375,7 +375,7 @@
 <div class="label" id="sec:default_scope"></div>
 
 
-<h4><a id="sec:11.1.3.1" href="user-microposts#sec:default_scope" class="heading">Дефолтное упорядочивание</a></h4>
+<h4><a id="sec:11.1.3.1" href="user-microposts?version=3.0#sec:default_scope" class="heading">Дефолтное упорядочивание</a></h4>
 
 
 <p>Мы можем поместить фабрику в тест упорядочивания микросообщений. По умолчанию, использование <code>user.microposts</code> для вытягивания пользовательских микросообщений из базы данных не дает никаких гарантий сохранения порядка микросообщений, но мы хотим (следуя конвенции блогов и Twitter), чтобы микросообщения выдавались в обратном хронологическом порядке, т.е. последнее созданное сообщение должно быть первым в списке. Для проверки этого порядка мы сначала создаем пару микросообщений следующим образом:</p>
@@ -388,7 +388,7 @@
 
 <p>Здесь мы указываем, что второй пост был создан совсем недавно, <code>1.hour.ago</code> (один.час.назад), а второй пост был создан <code>1.day.ago</code> (один.день.назад). Обратите внимание, насколько удобна Factory Girl в использовании: мы можем не только назначать пользователя используя массовое назначение (так как фабрики пренебрегают <code>attr_accessible</code>), мы также можем установить <code>created_at</code> вручную, чего не позволяет делать Active Record.<sup class="footnote" id="fnref:11.4"><a href="#fn:11.4">4</a></sup></p>
 
-<p>Большинство адаптеров баз данных (в том числе адаптер SQLite) возвращает микросообщения в порядке их id, поэтому мы можем организовать начальные тесты, которые почти наверняка провалятся, используя код в <a class="ref" href="user-microposts#code:micropost_ordering_test">Листинге&nbsp;11.9</a>.</p>
+<p>Большинство адаптеров баз данных (в том числе адаптер SQLite) возвращает микросообщения в порядке их id, поэтому мы можем организовать начальные тесты, которые почти наверняка провалятся, используя код в <a class="ref" href="user-microposts?version=3.0#code:micropost_ordering_test">Листинге&nbsp;11.9</a>.</p>
 
 <div class="label" id="code:micropost_ordering_test"></div>
 
@@ -430,9 +430,9 @@
 </div>
 
 
-<p>указывающая, что сообщения должны быть упорядочены таким образом, чтобы новейшее сообщение было первым. Этот тест должен быть провальным, так как по умолчанию сообщения будут упорядочены по&nbsp;id, т.е., <code>[@mp1, @mp2]</code>. Эти тесты также тестируют базовую корректность самой <code>has_many</code> ассоциации, проверяя (как указано в <a class="ref" href="user-microposts#table:association_methods">Таблице&nbsp;11.1</a>), что <code>user.microposts</code> является массивом микросообщений.</p>
+<p>указывающая, что сообщения должны быть упорядочены таким образом, чтобы новейшее сообщение было первым. Этот тест должен быть провальным, так как по умолчанию сообщения будут упорядочены по&nbsp;id, т.е., <code>[@mp1, @mp2]</code>. Эти тесты также тестируют базовую корректность самой <code>has_many</code> ассоциации, проверяя (как указано в <a class="ref" href="user-microposts?version=3.0#table:association_methods">Таблице&nbsp;11.1</a>), что <code>user.microposts</code> является массивом микросообщений.</p>
 
-<p>Для того чтобы получить прохождение тестов упорядоченности, мы используем  Rails средство <code>default_scope</code> с параметром <code>:order</code>, как показано в <a class="ref" href="user-microposts#code:micropost_ordering">Листинге&nbsp;11.10</a>. (Это наш первый пример понятия <em>пространства</em>. Мы узнаем о пространстве в более общем контексте в <a class="ref" href="following-users#top">Главе&nbsp;12</a>.)</p>
+<p>Для того чтобы получить прохождение тестов упорядоченности, мы используем  Rails средство <code>default_scope</code> с параметром <code>:order</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_ordering">Листинге&nbsp;11.10</a>. (Это наш первый пример понятия <em>пространства</em>. Мы узнаем о пространстве в более общем контексте в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>.)</p>
 
 <div class="label" id="code:micropost_ordering"></div>
 
@@ -455,10 +455,10 @@
 <div class="label" id="sec:dependent_destroy"></div>
 
 
-<h4><a id="sec:11.1.3.2" href="user-microposts#sec:dependent_destroy" class="heading">Dependent: destroy</a></h4>
+<h4><a id="sec:11.1.3.2" href="user-microposts?version=3.0#sec:dependent_destroy" class="heading">Dependent: destroy</a></h4>
 
 
-<p>Помимо правильного упорядочивания, есть второе уточнение, которое мы хотели бы добавить в микросообщения. Напомним из <a class="ref" href="updating-showing-and-deleting-users#sec:destroying_users">Раздела&nbsp;10.4</a> что администраторы сайта имеют право <em>уничтожать</em> пользователей. Само собой разумеется, что если пользователь уничтожен, то должны быть уничтожены и его микросообщения. Мы можем протестировать это вначале уничтожив пользователя, а затем проверив, что связанных с ним микросообщений больше нет в базе данных  (<a class="ref" href="user-microposts#code:micropost_dependency_test">Листинг&nbsp;11.11</a>).</p>
+<p>Помимо правильного упорядочивания, есть второе уточнение, которое мы хотели бы добавить в микросообщения. Напомним из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:destroying_users">Раздела&nbsp;10.4</a> что администраторы сайта имеют право <em>уничтожать</em> пользователей. Само собой разумеется, что если пользователь уничтожен, то должны быть уничтожены и его микросообщения. Мы можем протестировать это вначале уничтожив пользователя, а затем проверив, что связанных с ним микросообщений больше нет в базе данных  (<a class="ref" href="user-microposts?version=3.0#code:micropost_dependency_test">Листинг&nbsp;11.11</a>).</p>
 
 <div class="label" id="code:micropost_dependency_test"></div>
 
@@ -506,7 +506,7 @@
 
 <p>проделывает этот трюк.)</p>
 
-<p>Код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts#code:micropost_dependency_test">Листинга&nbsp;11.11</a> короче чем одна строка; в самом деле, это всего лишь опция метода ассоциации <code>has_many</code>, как  показано в <a class="ref" href="user-microposts#code:micropost_dependency">Листинге&nbsp;11.12</a>.</p>
+<p>Код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts?version=3.0#code:micropost_dependency_test">Листинга&nbsp;11.11</a> короче чем одна строка; в самом деле, это всего лишь опция метода ассоциации <code>has_many</code>, как  показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_dependency">Листинге&nbsp;11.12</a>.</p>
 
 <div class="label" id="code:micropost_dependency"></div>
 
@@ -532,9 +532,9 @@
 <div class="label" id="sec:micropost_validations"></div>
 
 
-<h3><a id="sec:11.1.4" href="user-microposts#sec:micropost_validations" class="heading"><span class="number">11.1.4</span> Валидации микросообщений</a></h3>
+<h3><a id="sec:11.1.4" href="user-microposts?version=3.0#sec:micropost_validations" class="heading"><span class="number">11.1.4</span> Валидации микросообщений</a></h3>
 
-<p>Прежде чем покинуть модель Micropost, мы наведем в ней окончательный лоск, добавив валидации (следуя примеру из <a class="ref" href="a-demo-app#sec:putting_the_micro_in_microposts">Раздела&nbsp;2.3.2</a>). И <code>user_id</code> и <code>content</code> атрибуты должны существовать, а <code>content</code> в дальнейшем вынужден быть не длиннее чем 140 знаков, что мы можем протестировать, используя код в <a class="ref" href="user-microposts#code:micropost_validations_tests">Листинге&nbsp;11.13</a>.</p>
+<p>Прежде чем покинуть модель Micropost, мы наведем в ней окончательный лоск, добавив валидации (следуя примеру из <a class="ref" href="a-demo-app?version=3.0#sec:putting_the_micro_in_microposts">Раздела&nbsp;2.3.2</a>). И <code>user_id</code> и <code>content</code> атрибуты должны существовать, а <code>content</code> в дальнейшем вынужден быть не длиннее чем 140 знаков, что мы можем протестировать, используя код в <a class="ref" href="user-microposts?version=3.0#code:micropost_validations_tests">Листинге&nbsp;11.13</a>.</p>
 
 <div class="label" id="code:micropost_validations_tests"></div>
 
@@ -572,9 +572,9 @@
 </div></div>
 
 
-<p>Этот код в основном следует примерам из теста валидаций модели User из <a class="ref" href="modeling-and-viewing-users-one#sec:user_validations">Раздела&nbsp;6.2</a>. (аналогичные тесты были разбиты на несколько строк в том разделе, но вы уже должны достаточно комфортно переваривать показанную выше более компактную формулировку  кода  RSpec.)</p>
+<p>Этот код в основном следует примерам из теста валидаций модели User из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:user_validations">Раздела&nbsp;6.2</a>. (аналогичные тесты были разбиты на несколько строк в том разделе, но вы уже должны достаточно комфортно переваривать показанную выше более компактную формулировку  кода  RSpec.)</p>
 
-<p>Как и в <a class="ref" href="modeling-and-viewing-users-one#sec:user_validations">Разделе&nbsp;6.2</a>, код в <a class="ref" href="user-microposts#code:micropost_validations_tests">Листинге&nbsp;11.13</a> использует мультипликацию строки для тестирования валидации длины микросообщения:</p>
+<p>Как и в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:user_validations">Разделе&nbsp;6.2</a>, код в <a class="ref" href="user-microposts?version=3.0#code:micropost_validations_tests">Листинге&nbsp;11.13</a> использует мультипликацию строки для тестирования валидации длины микросообщения:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails console
 <span class="gp">&gt;</span>&gt; <span class="s2">&quot;a&quot;</span> * 10
@@ -593,16 +593,16 @@
 </div>
 
 
-<p>код в <a class="ref" href="user-microposts#code:micropost_validations_tests">Листинге&nbsp;11.13</a> использует метод <code>build</code>:</p>
+<p>код в <a class="ref" href="user-microposts?version=3.0#code:micropost_validations_tests">Листинге&nbsp;11.13</a> использует метод <code>build</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">build</span>
 </pre></div>
 </div>
 
 
-<p>Вспомните из <a class="ref" href="user-microposts#table:association_methods">Таблицы&nbsp;11.1</a>, что это по существу эквивалентно <code>Micropost.new</code>, кроме того, что он автоматически устанавливает <code>user_id</code> к <code>@user.id</code>.</p>
+<p>Вспомните из <a class="ref" href="user-microposts?version=3.0#table:association_methods">Таблицы&nbsp;11.1</a>, что это по существу эквивалентно <code>Micropost.new</code>, кроме того, что он автоматически устанавливает <code>user_id</code> к <code>@user.id</code>.</p>
 
-<p>Сами валидации являются прямыми аналогами валидаций модели User, как видно из <a class="ref" href="user-microposts#code:micropost_validations">Листинга&nbsp;11.14</a>.</p>
+<p>Сами валидации являются прямыми аналогами валидаций модели User, как видно из <a class="ref" href="user-microposts?version=3.0#code:micropost_validations">Листинга&nbsp;11.14</a>.</p>
 
 <div class="label" id="code:micropost_validations"></div>
 
@@ -629,10 +629,10 @@
 <div class="label" id="sec:showing_microposts"></div>
 
 
-<h2><a id="sec:11.2" href="user-microposts#sec:showing_microposts" class="heading"><span class="number">11.2</span> Просмотр микросообщений</a></h2>
+<h2><a id="sec:11.2" href="user-microposts?version=3.0#sec:showing_microposts" class="heading"><span class="number">11.2</span> Просмотр микросообщений</a></h2>
 
 
-<p>Хотя у нас еще нет способа создания микросообщений через веб&nbsp;&mdash;&nbsp;он появится лишь в <a class="ref" href="user-microposts#sec:creating_microposts">Разделе&nbsp;11.3.2</a>&nbsp;&mdash;&nbsp;это не остановит нас от их отображения (и тестирования этого отображения). Следуя по стопам Twitter, мы запланируем отображение микросообщений пользователя не на отдельной странице microposts <code>index</code>, а непосредственно на самой странице user <code>show</code>, как это показано на макете в <a class="ref" href="user-microposts#fig:user_microposts_mockup">Рис.&nbsp;11.4</a>. Мы начнем с довольно простых ERb шаблонов для добавления отображения микросообщений в профиле пользователя, а затем мы добавим микросообщения в заполнитель образцов данных из <a class="ref" href="updating-showing-and-deleting-users#sec:sample_users">Раздела&nbsp;10.3.2</a> чтобы у нас было что отображать.</p>
+<p>Хотя у нас еще нет способа создания микросообщений через веб&nbsp;&mdash;&nbsp;он появится лишь в <a class="ref" href="user-microposts?version=3.0#sec:creating_microposts">Разделе&nbsp;11.3.2</a>&nbsp;&mdash;&nbsp;это не остановит нас от их отображения (и тестирования этого отображения). Следуя по стопам Twitter, мы запланируем отображение микросообщений пользователя не на отдельной странице microposts <code>index</code>, а непосредственно на самой странице user <code>show</code>, как это показано на макете в <a class="ref" href="user-microposts?version=3.0#fig:user_microposts_mockup">Рис.&nbsp;11.4</a>. Мы начнем с довольно простых ERb шаблонов для добавления отображения микросообщений в профиле пользователя, а затем мы добавим микросообщения в заполнитель образцов данных из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:sample_users">Раздела&nbsp;10.3.2</a> чтобы у нас было что отображать.</p>
 
 <div class="label" id="fig:user_microposts_mockup"></div>
 
@@ -640,15 +640,15 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_microposts_mockup.png" alt="user_microposts_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.4: </span><span class="description">Макет страницы профиля с микросообщениями.&nbsp;&nbsp;<a href="http://railstutorial.org/images/figures/user_microposts_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Как и в случае обсуждения машинерии входа в <a class="ref" href="sign-in-sign-out#sec:remember_me">Разделе&nbsp;9.3.2</a>, <a class="ref" href="user-microposts#sec:augmenting_the_user_show_page">Раздел&nbsp;11.2.1</a> будет часто отправлять несколько элементов в  <a href="http://ru.wikipedia.org/wiki/Стэк">стек</a> на время, а затем выталкивать их оттуда один за другим. Если вы начнете увязать, будте терпеливы; у <a class="ref" href="user-microposts#sec:sample_microposts">Раздела&nbsp;11.2.2</a> хорошая развязка.</p>
+<p>Как и в случае обсуждения машинерии входа в <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>, <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Раздел&nbsp;11.2.1</a> будет часто отправлять несколько элементов в  <a href="http://ru.wikipedia.org/wiki/Стэк">стек</a> на время, а затем выталкивать их оттуда один за другим. Если вы начнете увязать, будте терпеливы; у <a class="ref" href="user-microposts?version=3.0#sec:sample_microposts">Раздела&nbsp;11.2.2</a> хорошая развязка.</p>
 
 <div class="label" id="sec:augmenting_the_user_show_page"></div>
 
 
-<h3><a id="sec:11.2.1" href="user-microposts#sec:augmenting_the_user_show_page" class="heading"><span class="number">11.2.1</span> Дополнение страницы показывающей пользователя</a></h3>
+<h3><a id="sec:11.2.1" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page" class="heading"><span class="number">11.2.1</span> Дополнение страницы показывающей пользователя</a></h3>
 
 
-<p>Начнем с теста для отображения микросообщений пользователя. Мы работаем в Users controller spec, так как контроллер Users содержит действие user <code>show</code>. Наша стратегия заключается в создании пары "фабричных" микросообщений, связанных с пользователем, а затем проверке, что   страница show имеет тег <code>span</code> с CSS классом <code>"content"</code> содержащим текст каждого микросообщения. Результирующий  RSpec пример  представлен в <a class="ref" href="user-microposts#code:user_show_microposts_test">Листинге&nbsp;11.15</a>.</p>
+<p>Начнем с теста для отображения микросообщений пользователя. Мы работаем в Users controller spec, так как контроллер Users содержит действие user <code>show</code>. Наша стратегия заключается в создании пары "фабричных" микросообщений, связанных с пользователем, а затем проверке, что   страница show имеет тег <code>span</code> с CSS классом <code>"content"</code> содержащим текст каждого микросообщения. Результирующий  RSpec пример  представлен в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts_test">Листинге&nbsp;11.15</a>.</p>
 
 <div class="label" id="code:user_show_microposts_test"></div>
 
@@ -687,7 +687,7 @@
 </div></div>
 
 
-<p>Хотя эти тесты не пройдут до <a class="ref" href="user-microposts#code:micropost_partial">Листинга&nbsp;11.17</a>, мы начнем работу с кодом приложения, добавив таблицу микросообщений в страницу профиля пользователя, как показано в <a class="ref" href="user-microposts#code:user_show_microposts">Листинге&nbsp;11.16</a>.<sup class="footnote" id="fnref:11.5"><a href="#fn:11.5">5</a></sup></p>
+<p>Хотя эти тесты не пройдут до <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>, мы начнем работу с кодом приложения, добавив таблицу микросообщений в страницу профиля пользователя, как показано в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts">Листинге&nbsp;11.16</a>.<sup class="footnote" id="fnref:11.5"><a href="#fn:11.5">5</a></sup></p>
 
 <div class="label" id="code:user_show_microposts"></div>
 
@@ -726,7 +726,7 @@
 </div>
 
 
-<p>Такое применение метода <code>empty?</code>, мы видели прежде в контексте строк (например, <a class="ref" href="rails-flavored-ruby#sec:objects_and_message_passing">Раздел&nbsp;4.2.3</a>), к массиву:</p>
+<p>Такое применение метода <code>empty?</code>, мы видели прежде в контексте строк (например, <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Раздел&nbsp;4.2.3</a>), к массиву:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">].</span><span class="n">empty?</span>
@@ -746,21 +746,21 @@
 
 <p>мы можем быть уверены, что пустая таблица не будет отображаться, когда у пользователя нет микросообщений.</p>
 
-<p>Вы также могли отметить в <a class="ref" href="user-microposts#code:user_show_microposts">Листинге&nbsp;11.16</a> что мы превентивно добавили пагинацию для микросообщений.</p>
+<p>Вы также могли отметить в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts">Листинге&nbsp;11.16</a> что мы превентивно добавили пагинацию для микросообщений.</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">will_paginate</span> <span class="vi">@microposts</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Если вы сравните это с аналогичной строкой на странице списка пользователей в <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинге&nbsp;10.27</a>, вы увидите, что прежде мы имели просто</p>
+<p>Если вы сравните это с аналогичной строкой на странице списка пользователей в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_index_view">Листинге&nbsp;10.27</a>, вы увидите, что прежде мы имели просто</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">will_paginate</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Это работало, потому что, в контексте контроллера Users, <code>will_paginate</code> <em>предполагает</em> существование переменной экземпляра  <code>@users</code> (которая, как мы видели в <a class="ref" href="updating-showing-and-deleting-users#sec:pagination">Разделе&nbsp;10.3.3</a>, должна принадлежать классу <code>WillPaginate::Collection</code>). В данном случае, поскольку мы все еще в контроллере Users, но хотим пагинировать  <em>микросообщения</em>, а не пользователей, мы явно передаем <code>@microposts</code> переменную в <code>will_paginate</code>. Конечно, это означает, что мы должны будем определить такую переменную в user <code>show</code> действии  (<a class="ref" href="user-microposts#code:user_show_microposts_instance">Листинг&nbsp;11.18</a> below).</p>
+<p>Это работало, потому что, в контексте контроллера Users, <code>will_paginate</code> <em>предполагает</em> существование переменной экземпляра  <code>@users</code> (которая, как мы видели в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:pagination">Разделе&nbsp;10.3.3</a>, должна принадлежать классу <code>WillPaginate::Collection</code>). В данном случае, поскольку мы все еще в контроллере Users, но хотим пагинировать  <em>микросообщения</em>, а не пользователей, мы явно передаем <code>@microposts</code> переменную в <code>will_paginate</code>. Конечно, это означает, что мы должны будем определить такую переменную в user <code>show</code> действии  (<a class="ref" href="user-microposts?version=3.0#code:user_show_microposts_instance">Листинг&nbsp;11.18</a> below).</p>
 
 <p>Наконец, отметим, что мы воспользовались этой возможностью, чтобы добавить графу текущего количества микросообщений к сайдбару профиля:</p>
 
@@ -784,7 +784,7 @@
 </div>
 
 
-<p>Этот код отвечает за генерацию таблицы микросообщений, но вы можете видеть, что он просто перекладывает тяжелую работу на партиал  micropost. Мы видели в <a class="ref" href="updating-showing-and-deleting-users#sec:partial_refactoring">Разделе&nbsp;10.3.4</a> что код</p>
+<p>Этот код отвечает за генерацию таблицы микросообщений, но вы можете видеть, что он просто перекладывает тяжелую работу на партиал  micropost. Мы видели в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:partial_refactoring">Разделе&nbsp;10.3.4</a> что код</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="vi">@users</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -798,7 +798,7 @@
 </div>
 
 
-<p>делает то же самое для микросообщений. Это означает, что мы должны определить партиал <code>_micropost.html.erb</code> (наряду с директорией представлений <code>micropost</code>), как показано в <a class="ref" href="user-microposts#code:micropost_partial">Листинге&nbsp;11.17</a>.</p>
+<p>делает то же самое для микросообщений. Это означает, что мы должны определить партиал <code>_micropost.html.erb</code> (наряду с директорией представлений <code>micropost</code>), как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинге&nbsp;11.17</a>.</p>
 
 <div class="label" id="code:micropost_partial"></div>
 
@@ -818,9 +818,9 @@
 </div></div>
 
 
-<p>При этом используется удивительный вспомогательный метод <code>time_ago_in_words</code>, чей эффект мы увидим в <a class="ref" href="user-microposts#sec:sample_microposts">Разделе&nbsp;11.2.2</a>.</p>
+<p>При этом используется удивительный вспомогательный метод <code>time_ago_in_words</code>, чей эффект мы увидим в <a class="ref" href="user-microposts?version=3.0#sec:sample_microposts">Разделе&nbsp;11.2.2</a>.</p>
 
-<p>До сих пор, несмотря на определение всех соответствующих ERb шаблонов, тесты в <a class="ref" href="user-microposts#code:user_show_microposts_test">Листинге&nbsp;11.15</a> были провальными за неимением переменной <code>@microposts</code>. Мы можем заставить их пройти с кодом из <a class="ref" href="user-microposts#code:user_show_microposts_instance">Листинга&nbsp;11.18</a>.</p>
+<p>До сих пор, несмотря на определение всех соответствующих ERb шаблонов, тесты в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts_test">Листинге&nbsp;11.15</a> были провальными за неимением переменной <code>@microposts</code>. Мы можем заставить их пройти с кодом из <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts_instance">Листинга&nbsp;11.18</a>.</p>
 
 <div class="label" id="code:user_show_microposts_instance"></div>
 
@@ -844,7 +844,7 @@
 
 <p>Обратим здесь внимание, насколько умен <code>paginate</code>&nbsp;&mdash;&nbsp;он работает даже с ассоциацией микросообщений, конвертируя массив в объект  <code>WillPaginate::Collection</code> на лету.</p>
 
-<p>После добавления CSS из <a class="ref" href="user-microposts#code:micropost_css">Листинга&nbsp;11.19</a> к нашему <code>custom.css</code> файлу,<sup class="footnote" id="fnref:11.7"><a href="#fn:11.7">7</a></sup> мы можем взглянуть на нашу новую страницу профиля пользователя в  <a class="ref" href="user-microposts#fig:user_profile_no_microposts">Рис.&nbsp;11.5</a>. Это довольно&hellip; печально. Конечно, это связано с тем, что в настоящее время у нас нет микросообщений. Пришло время изменить это.</p>
+<p>После добавления CSS из <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинга&nbsp;11.19</a> к нашему <code>custom.css</code> файлу,<sup class="footnote" id="fnref:11.7"><a href="#fn:11.7">7</a></sup> мы можем взглянуть на нашу новую страницу профиля пользователя в  <a class="ref" href="user-microposts?version=3.0#fig:user_profile_no_microposts">Рис.&nbsp;11.5</a>. Это довольно&hellip; печально. Конечно, это связано с тем, что в настоящее время у нас нет микросообщений. Пришло время изменить это.</p>
 
 <div class="label" id="code:micropost_css"></div>
 
@@ -926,17 +926,17 @@
 <div class="label" id="sec:sample_microposts"></div>
 
 
-<h3><a id="sec:11.2.2" href="user-microposts#sec:sample_microposts" class="heading"><span class="number">11.2.2</span> Образцы микросообщений</a></h3>
+<h3><a id="sec:11.2.2" href="user-microposts?version=3.0#sec:sample_microposts" class="heading"><span class="number">11.2.2</span> Образцы микросообщений</a></h3>
 
 
-<p>При всей проделанной работе по созданию шаблонов для микросообщений пользователя в <a class="ref" href="user-microposts#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>, конец был довольно разочаровывающим. Мы можем исправить эту печальную ситуацию, добавив микросообщения во вноситель образцов данных из <a class="ref" href="updating-showing-and-deleting-users#sec:sample_users">Раздела&nbsp;10.3.2</a>. Добавление образцов микросообщений для <em>всех</em> пользователей займет довольно много времени, поэтому сначала мы выберем только первые шесть пользователей<sup class="footnote" id="fnref:11.8"><a href="#fn:11.8">8</a></sup> используя <code>:limit</code> опцию метода <code>User.all</code>:<sup class="footnote" id="fnref:11.9"><a href="#fn:11.9">9</a></sup></p>
+<p>При всей проделанной работе по созданию шаблонов для микросообщений пользователя в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>, конец был довольно разочаровывающим. Мы можем исправить эту печальную ситуацию, добавив микросообщения во вноситель образцов данных из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:sample_users">Раздела&nbsp;10.3.2</a>. Добавление образцов микросообщений для <em>всех</em> пользователей займет довольно много времени, поэтому сначала мы выберем только первые шесть пользователей<sup class="footnote" id="fnref:11.8"><a href="#fn:11.8">8</a></sup> используя <code>:limit</code> опцию метода <code>User.all</code>:<sup class="footnote" id="fnref:11.9"><a href="#fn:11.9">9</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="ss">:limit</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>Затем мы сделаем 50 микросообщений для каждого пользователя (достаточно, для переполнения лимита пагинации, равного&nbsp;30), сгенерируем образец содержимого для каждого микросообщения, используя удобный метод <a href="http://faker.rubyforge.org/rdoc/classes/Faker/Lorem.html"><tt>Lorem.sentence</tt> гема Faker. (<code>Faker::Lorem.sentence</code> возвращает текст <em>lorem ipsum</em>; как отмечалось в <a class="ref" href="modeling-and-viewing-users-one#top">Главе&nbsp;6</a>, <em>lorem ipsum</em> имеет <a href="http://www.straightdope.com/columns/read/2290/what-does-the-filler-text-lorem-ipsum-mean">увлекательную предысторию</a>.) Получившийся в результате новый заполнитель образцов данных показан в <a class="ref" href="user-microposts#code:sample_microposts">Листинге&nbsp;11.20</a>.</p>
+<p>Затем мы сделаем 50 микросообщений для каждого пользователя (достаточно, для переполнения лимита пагинации, равного&nbsp;30), сгенерируем образец содержимого для каждого микросообщения, используя удобный метод <a href="http://faker.rubyforge.org/rdoc/classes/Faker/Lorem.html"><tt>Lorem.sentence</tt> гема Faker. (<code>Faker::Lorem.sentence</code> возвращает текст <em>lorem ipsum</em>; как отмечалось в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>, <em>lorem ipsum</em> имеет <a href="http://www.straightdope.com/columns/read/2290/what-does-the-filler-text-lorem-ipsum-mean">увлекательную предысторию</a>.) Получившийся в результате новый заполнитель образцов данных показан в <a class="ref" href="user-microposts?version=3.0#code:sample_microposts">Листинге&nbsp;11.20</a>.</p>
 
 <div class="label" id="code:sample_microposts"></div>
 
@@ -970,7 +970,7 @@
 </div>
 
 
-<p>Теперь мы в состоянии воспользоваться плодами наших трудов в <a class="ref" href="user-microposts#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a> отображая информацию для каждого микросообщеня.<sup class="footnote" id="fnref:11.10"><a href="#fn:11.10">10</a></sup> <a class="ref" href="user-microposts#fig:user_profile_with_microposts">Рис.&nbsp;11.6</a> показывает страницу профиля первого (вошедшего) пользователя, а  <a class="ref" href="user-microposts#fig:other_profile_with_microposts">Рис.&nbsp;11.7</a> показывает профиль второго пользователя. Наконец, <a class="ref" href="user-microposts#fig:user_profile_microposts_page_2_rails_3">Рис.&nbsp;11.8</a> показывает <em>вторую</em> страницу микросообщений первого пользователя, наряду с пагинационными ссылками в нижней части отображения. Заметим, что, во всех трех случаях, в каждом отображении микросообщения указывается время когда оно было создано (например, &ldquo;Posted 1 minute ago.&rdquo;); Это работа метода <code>time_ago_in_words</code> из <a class="ref" href="user-microposts#code:micropost_partial">Листинга&nbsp;11.17</a>. Если вы подождете пару минут и перезагрузите страницу, вы увидите, как текст автоматически обновится в соответствии с новым временем.</p>
+<p>Теперь мы в состоянии воспользоваться плодами наших трудов в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a> отображая информацию для каждого микросообщеня.<sup class="footnote" id="fnref:11.10"><a href="#fn:11.10">10</a></sup> <a class="ref" href="user-microposts?version=3.0#fig:user_profile_with_microposts">Рис.&nbsp;11.6</a> показывает страницу профиля первого (вошедшего) пользователя, а  <a class="ref" href="user-microposts?version=3.0#fig:other_profile_with_microposts">Рис.&nbsp;11.7</a> показывает профиль второго пользователя. Наконец, <a class="ref" href="user-microposts?version=3.0#fig:user_profile_microposts_page_2_rails_3">Рис.&nbsp;11.8</a> показывает <em>вторую</em> страницу микросообщений первого пользователя, наряду с пагинационными ссылками в нижней части отображения. Заметим, что, во всех трех случаях, в каждом отображении микросообщения указывается время когда оно было создано (например, &ldquo;Posted 1 minute ago.&rdquo;); Это работа метода <code>time_ago_in_words</code> из <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>. Если вы подождете пару минут и перезагрузите страницу, вы увидите, как текст автоматически обновится в соответствии с новым временем.</p>
 
 <div class="label" id="fig:user_profile_with_microposts"></div>
 
@@ -999,11 +999,11 @@
 <div class="label" id="sec:manipulating_microposts"></div>
 
 
-<h2><a id="sec:11.3" href="user-microposts#sec:manipulating_microposts" class="heading"><span class="number">11.3</span> Манипулирование микросообщениями</a></h2>
+<h2><a id="sec:11.3" href="user-microposts?version=3.0#sec:manipulating_microposts" class="heading"><span class="number">11.3</span> Манипулирование микросообщениями</a></h2>
 
-<p>Закончив моделирование данных и  шаблоны для отображения микросообщений,  сейчас мы обратим наше внимание на интерфейс для их создания  через веб. Результатом будет наш третий пример использования формы HTML, для создания ресурса&nbsp;&mdash;&nbsp;в данном случае, ресурса Microposts.<sup class="footnote" id="fnref:11.11"><a href="#fn:11.11">11</a></sup> В этом разделе мы также увидим первый намек на <em>status feed</em>&nbsp;&mdash;&nbsp;понятие, полной реализацией которого мы займемся в <a class="ref" href="following-users#top">Главе&nbsp;12</a>. Наконец, как и с пользователями, мы сделаем возможным уничтожение микросообщений через веб.</p>
+<p>Закончив моделирование данных и  шаблоны для отображения микросообщений,  сейчас мы обратим наше внимание на интерфейс для их создания  через веб. Результатом будет наш третий пример использования формы HTML, для создания ресурса&nbsp;&mdash;&nbsp;в данном случае, ресурса Microposts.<sup class="footnote" id="fnref:11.11"><a href="#fn:11.11">11</a></sup> В этом разделе мы также увидим первый намек на <em>status feed</em>&nbsp;&mdash;&nbsp;понятие, полной реализацией которого мы займемся в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>. Наконец, как и с пользователями, мы сделаем возможным уничтожение микросообщений через веб.</p>
 
-<p>Существует один разрыв с предыдущими соглашениями, который стоит отметить: интерфейс ресурса Microposts будет работать главным образом за счет контроллеров Users и Pages, а не полагаться на собственный контроллер. Это означает, что маршруты для ресурса Microposts необычайно просты, как показано в <a class="ref" href="user-microposts#code:microposts_resource">Листинге&nbsp;11.21</a>. Код в <a class="ref" href="user-microposts#code:microposts_resource">Листинге&nbsp;11.21</a> в свою очередь приводит к RESTful маршрутам показанным в <a class="ref" href="user-microposts#table:RESTful_microposts">Таблице&nbsp;11.2</a>, которые являются сокращенным вариантом полного набора маршрутов виденного нами в <a class="ref" href="a-demo-app#table:demo_RESTful_microposts">Таблице&nbsp;2.3</a>. Конечно, эта простота является признаком того, что они <em>более</em> продвинутые&nbsp;&mdash;&nbsp;мы прошли долгий путь со времени нашей зависимости от  scaffolding в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, и нам более не нужна бОльшая часть их сложности.</p>
+<p>Существует один разрыв с предыдущими соглашениями, который стоит отметить: интерфейс ресурса Microposts будет работать главным образом за счет контроллеров Users и Pages, а не полагаться на собственный контроллер. Это означает, что маршруты для ресурса Microposts необычайно просты, как показано в <a class="ref" href="user-microposts?version=3.0#code:microposts_resource">Листинге&nbsp;11.21</a>. Код в <a class="ref" href="user-microposts?version=3.0#code:microposts_resource">Листинге&nbsp;11.21</a> в свою очередь приводит к RESTful маршрутам показанным в <a class="ref" href="user-microposts?version=3.0#table:RESTful_microposts">Таблице&nbsp;11.2</a>, которые являются сокращенным вариантом полного набора маршрутов виденного нами в <a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_microposts">Таблице&nbsp;2.3</a>. Конечно, эта простота является признаком того, что они <em>более</em> продвинутые&nbsp;&mdash;&nbsp;мы прошли долгий путь со времени нашей зависимости от  scaffolding в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>, и нам более не нужна бОльшая часть их сложности.</p>
 
 <div class="label" id="code:microposts_resource"></div>
 
@@ -1028,7 +1028,7 @@
 <div class="label" id="table:RESTful_microposts"></div>
 
 
-<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Цель</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>POST</tt></td><td class="align_left"><tt>/microposts</tt></td><td class="align_left"><code>create</code></td><td class="align_left">создание нового микросообщения</td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left"><tt>/microposts/1</tt></td><td class="align_left"><code>destroy</code></td><td class="align_left">удаление микросообщения с id <code>1</code></td></tr></table></div><div class="caption"><span class="header">Таблица 11.2: </span><span class="description">RESTful маршруты обеспеченные ресурсом Microposts в <a class="ref" href="user-microposts#code:microposts_resource">Листинге&nbsp;11.21</a>.</span></div></div>
+<div class="table"><div class="center"><table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Цель</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>POST</tt></td><td class="align_left"><tt>/microposts</tt></td><td class="align_left"><code>create</code></td><td class="align_left">создание нового микросообщения</td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left"><tt>/microposts/1</tt></td><td class="align_left"><code>destroy</code></td><td class="align_left">удаление микросообщения с id <code>1</code></td></tr></table></div><div class="caption"><span class="header">Таблица 11.2: </span><span class="description">RESTful маршруты обеспеченные ресурсом Microposts в <a class="ref" href="user-microposts?version=3.0#code:microposts_resource">Листинге&nbsp;11.21</a>.</span></div></div>
 
 
 
@@ -1036,9 +1036,9 @@
 <div class="label" id="sec:access_control"></div>
 
 
-<h3><a id="sec:11.3.1" href="user-microposts#sec:access_control" class="heading"><span class="number">11.3.1</span> Контроль доступа</a></h3>
+<h3><a id="sec:11.3.1" href="user-microposts?version=3.0#sec:access_control" class="heading"><span class="number">11.3.1</span> Контроль доступа</a></h3>
 
-<p>Мы начнем нашу разработку ресурса Microposts с контроля доступа на уровне контроллера Microposts. Идея проста: как <code>create</code> так и  <code>destroy</code> действия должны требовать чтобы пользователи вошли в систему. Код RSpec для тестирования этого представлен в <a class="ref" href="user-microposts#code:micropost_access_control">Листинге&nbsp;11.22</a>, что потребует создания файла Microposts controller spec. (Мы протестируем и добавим третью защиту&nbsp;&mdash;&nbsp;обеспечение того, что только пользователь, создавший микросообщение может удалить его&nbsp;&mdash;&nbsp;в <a class="ref" href="user-microposts#sec:destroying_microposts">Разделе&nbsp;11.3.4</a>.)</p>
+<p>Мы начнем нашу разработку ресурса Microposts с контроля доступа на уровне контроллера Microposts. Идея проста: как <code>create</code> так и  <code>destroy</code> действия должны требовать чтобы пользователи вошли в систему. Код RSpec для тестирования этого представлен в <a class="ref" href="user-microposts?version=3.0#code:micropost_access_control">Листинге&nbsp;11.22</a>, что потребует создания файла Microposts controller spec. (Мы протестируем и добавим третью защиту&nbsp;&mdash;&nbsp;обеспечение того, что только пользователь, создавший микросообщение может удалить его&nbsp;&mdash;&nbsp;в <a class="ref" href="user-microposts?version=3.0#sec:destroying_microposts">Разделе&nbsp;11.3.4</a>.)</p>
 
 <div class="label" id="code:micropost_access_control"></div>
 
@@ -1068,7 +1068,7 @@
 </div></div>
 
 
-<p>Прежде чем начать писать код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts#code:micropost_access_control">Листинга&nbsp;11.22</a> требуется произвести небольшой рефакторинг. Вспомним из <a class="ref" href="updating-showing-and-deleting-users#sec:requiring_signed_in_users">Раздела&nbsp;10.2.1</a> что мы внедрили требование входа используя предфильтр который назывался <code>authenticate</code> метод (<a class="ref" href="updating-showing-and-deleting-users#code:authenticate_before_filter">Листинг&nbsp;10.11</a>). В то время <code>authenticate</code> был необходим только в Users контроллере, но теперь мы обнаружили, что он также необходим нам и в контроллере Microposts, так что мы переместим <code>authenticate</code> в Sessions хелпер, как показано в <a class="ref" href="user-microposts#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>.<sup class="footnote" id="fnref:11.12"><a href="#fn:11.12">12</a></sup></p>
+<p>Прежде чем начать писать код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts?version=3.0#code:micropost_access_control">Листинга&nbsp;11.22</a> требуется произвести небольшой рефакторинг. Вспомним из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:requiring_signed_in_users">Раздела&nbsp;10.2.1</a> что мы внедрили требование входа используя предфильтр который назывался <code>authenticate</code> метод (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authenticate_before_filter">Листинг&nbsp;10.11</a>). В то время <code>authenticate</code> был необходим только в Users контроллере, но теперь мы обнаружили, что он также необходим нам и в контроллере Microposts, так что мы переместим <code>authenticate</code> в Sessions хелпер, как показано в <a class="ref" href="user-microposts?version=3.0#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>.<sup class="footnote" id="fnref:11.12"><a href="#fn:11.12">12</a></sup></p>
 
 <div class="label" id="code:sessions_helper_authenticate"></div>
 
@@ -1098,7 +1098,7 @@
 
 <p>(Чтобы избежать повторения кода, вы сейчас должны также удалить <code>authenticate</code> из контроллера Users.)</p>
 
-<p>С кодом в <a class="ref" href="user-microposts#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>,  <code>authenticate</code> метод теперь доступен в контроллере Microposts, что означает, что мы можем ограничить доступ к <code>create</code> и <code>destroy</code> действиям с предфильтром показанным в <a class="ref" href="user-microposts#code:microposts_controller_access_control">Листинге&nbsp;11.24</a>. (Так как мы не генерировали его через командную строку, вам следует создать контроллер Microposts вручную.)</p>
+<p>С кодом в <a class="ref" href="user-microposts?version=3.0#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>,  <code>authenticate</code> метод теперь доступен в контроллере Microposts, что означает, что мы можем ограничить доступ к <code>create</code> и <code>destroy</code> действиям с предфильтром показанным в <a class="ref" href="user-microposts?version=3.0#code:microposts_controller_access_control">Листинге&nbsp;11.24</a>. (Так как мы не генерировали его через командную строку, вам следует создать контроллер Microposts вручную.)</p>
 
 <div class="label" id="code:microposts_controller_access_control"></div>
 
@@ -1139,9 +1139,9 @@
 <div class="label" id="sec:creating_microposts"></div>
 
 
-<h3><a id="sec:11.3.2" href="user-microposts#sec:creating_microposts" class="heading"><span class="number">11.3.2</span> Создание микросообщений</a></h3>
+<h3><a id="sec:11.3.2" href="user-microposts?version=3.0#sec:creating_microposts" class="heading"><span class="number">11.3.2</span> Создание микросообщений</a></h3>
 
-<p>В <a class="ref" href="sign-up#top">Главе&nbsp;8</a> мы реализовали регистрацию пользователей, сделав HTML форму которая выдавала HTTP запрос <tt>POST</tt> в <code>create</code> действие контроллера Users. Реализация создания микросообщения аналогична; основное отличие заключается в том, что вместо использования отдельной страницы с адресом <tt>/microposts/new</tt>, мы (следуя Twitter конвенции) поместим форму на самой Home странице (т.е.,  root path&nbsp;<tt>/</tt>), как показано на макете в <a class="ref" href="user-microposts#fig:home_page_with_micropost_form_mockup">Рис.&nbsp;11.9</a>.</p>
+<p>В <a class="ref" href="sign-up?version=3.0#top">Главе&nbsp;8</a> мы реализовали регистрацию пользователей, сделав HTML форму которая выдавала HTTP запрос <tt>POST</tt> в <code>create</code> действие контроллера Users. Реализация создания микросообщения аналогична; основное отличие заключается в том, что вместо использования отдельной страницы с адресом <tt>/microposts/new</tt>, мы (следуя Twitter конвенции) поместим форму на самой Home странице (т.е.,  root path&nbsp;<tt>/</tt>), как показано на макете в <a class="ref" href="user-microposts?version=3.0#fig:home_page_with_micropost_form_mockup">Рис.&nbsp;11.9</a>.</p>
 
 <div class="label" id="fig:home_page_with_micropost_form_mockup"></div>
 
@@ -1149,9 +1149,9 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_page_with_micropost_form_mockup.png" alt="home_page_with_micropost_form_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.9: </span><span class="description">Макет Home страницы с формой для создания микросообщений.&nbsp;<a href="http://railstutorial.org/images/figures/home_page_with_micropost_form_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Когда мы последний раз видели Home страницу, она выглядела как на <a class="ref" href="filling-in-the-layout#fig:layout_rounded_corners">Рис.&nbsp;5.7</a>&nbsp;&mdash;&nbsp;то есть, у нее была большая жирная &ldquo;Sign up now!&rdquo; кнопка посередине. Так как форма для создания микросообщения имеет смысл только в контексте конкретного, вошедшего в систему пользователя, одной из целей данного раздела будет предоставление различных версий Home страницы в зависимости от статуса посетителя. Мы осуществим это в <a class="ref" href="user-microposts#code:microposts_home_page">Листинге&nbsp;11.27</a> ниже, а пока только подразумевается что тесты для <code>create</code> действия контроллера Microposts должны обеспечить вход ("фабричного") пользователя в систему прежде чем пытаться создать сообщение.</p>
+<p>Когда мы последний раз видели Home страницу, она выглядела как на <a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_rounded_corners">Рис.&nbsp;5.7</a>&nbsp;&mdash;&nbsp;то есть, у нее была большая жирная &ldquo;Sign up now!&rdquo; кнопка посередине. Так как форма для создания микросообщения имеет смысл только в контексте конкретного, вошедшего в систему пользователя, одной из целей данного раздела будет предоставление различных версий Home страницы в зависимости от статуса посетителя. Мы осуществим это в <a class="ref" href="user-microposts?version=3.0#code:microposts_home_page">Листинге&nbsp;11.27</a> ниже, а пока только подразумевается что тесты для <code>create</code> действия контроллера Microposts должны обеспечить вход ("фабричного") пользователя в систему прежде чем пытаться создать сообщение.</p>
 
-<p>Держа в уме эту оговорку, тесты для создания микросообщений параллельны аналогичным тестам для создания пользователя из <a class="ref" href="sign-up#code:failing_create_specs">Листинга&nbsp;8.6</a> и <a class="ref" href="sign-up#code:signup_success_tests">Листинга&nbsp;8.14</a>; результаты представлены в <a class="ref" href="user-microposts#code:microposts_create_tests">Листинге&nbsp;11.25</a>.</p>
+<p>Держа в уме эту оговорку, тесты для создания микросообщений параллельны аналогичным тестам для создания пользователя из <a class="ref" href="sign-up?version=3.0#code:failing_create_specs">Листинга&nbsp;8.6</a> и <a class="ref" href="sign-up?version=3.0#code:signup_success_tests">Листинга&nbsp;8.14</a>; результаты представлены в <a class="ref" href="user-microposts?version=3.0#code:microposts_create_tests">Листинге&nbsp;11.25</a>.</p>
 
 <div class="label" id="code:microposts_create_tests"></div>
 
@@ -1217,7 +1217,7 @@
 </div></div>
 
 
-<p>Действие <code>create</code> микросообщений похоже на его user аналог (<a class="ref" href="sign-up#code:user_create_action">Листинг&nbsp;8.15</a>); принципиальное отличие заключается в использовании пользователь/микросообщение ассоциации для <code>build</code> нового микрособщения, как видно в <a class="ref" href="user-microposts#code:microposts_create_action">Листинге&nbsp;11.26</a>.</p>
+<p>Действие <code>create</code> микросообщений похоже на его user аналог (<a class="ref" href="sign-up?version=3.0#code:user_create_action">Листинг&nbsp;8.15</a>); принципиальное отличие заключается в использовании пользователь/микросообщение ассоциации для <code>build</code> нового микрособщения, как видно в <a class="ref" href="user-microposts?version=3.0#code:microposts_create_action">Листинге&nbsp;11.26</a>.</p>
 
 <div class="label" id="code:microposts_create_action"></div>
 
@@ -1246,7 +1246,7 @@
 </div></div>
 
 
-<p>В этой точке все тесты из <a class="ref" href="user-microposts#code:microposts_create_tests">Листинга&nbsp;11.25</a> должны проходить, но, конечно, у нас все еще нет формы для создания микросообщений. Мы можем исправить это с кодом из <a class="ref" href="user-microposts#code:microposts_home_page">Листинга&nbsp;11.27</a>, который предоставляет различный HTML в зависимости от того, вошел ли посетитель в систему.</p>
+<p>В этой точке все тесты из <a class="ref" href="user-microposts?version=3.0#code:microposts_create_tests">Листинга&nbsp;11.25</a> должны проходить, но, конечно, у нас все еще нет формы для создания микросообщений. Мы можем исправить это с кодом из <a class="ref" href="user-microposts?version=3.0#code:microposts_home_page">Листинга&nbsp;11.27</a>, который предоставляет различный HTML в зависимости от того, вошел ли посетитель в систему.</p>
 
 <div class="label" id="code:microposts_home_page"></div>
 
@@ -1281,7 +1281,7 @@
 </div></div>
 
 
-<p>Наличие большого количества кода в каждой ветке условного оператора <code>if</code>-<code>else</code> это немного грязно, и его очистка с помощью партиалов остается в качестве упражнения (<a class="ref" href="user-microposts#sec:micropost_exercises">Раздел&nbsp;11.5</a>). Однако заполнение необходимых партиалов из <a class="ref" href="user-microposts#code:microposts_home_page">Листинг&nbsp;11.27</a> не является упражнением; мы заполним партиал формы микросообщений в <a class="ref" href="user-microposts#code:micropost_form">Листинге&nbsp;11.28</a> и сайдбар новой Home страницы в <a class="ref" href="user-microposts#code:user_info">Листинге&nbsp;11.29</a>.</p>
+<p>Наличие большого количества кода в каждой ветке условного оператора <code>if</code>-<code>else</code> это немного грязно, и его очистка с помощью партиалов остается в качестве упражнения (<a class="ref" href="user-microposts?version=3.0#sec:micropost_exercises">Раздел&nbsp;11.5</a>). Однако заполнение необходимых партиалов из <a class="ref" href="user-microposts?version=3.0#code:microposts_home_page">Листинг&nbsp;11.27</a> не является упражнением; мы заполним партиал формы микросообщений в <a class="ref" href="user-microposts?version=3.0#code:micropost_form">Листинге&nbsp;11.28</a> и сайдбар новой Home страницы в <a class="ref" href="user-microposts?version=3.0#code:user_info">Листинге&nbsp;11.29</a>.</p>
 
 <div class="label" id="code:micropost_form"></div>
 
@@ -1325,9 +1325,9 @@
 </div></div>
 
 
-<p>Отметим, что, как и в сайдбаре профиля (<a class="ref" href="user-microposts#code:user_show_microposts">Листинг&nbsp;11.16</a>), информация о пользователе в <a class="ref" href="user-microposts#code:user_info">Листинге&nbsp;11.29</a> отображает общее число микросообщений  пользователя. Хотя есть небольшое отличие; в сайдбаре профиля, <strong>Microposts</strong> это <a href="http://lingvo.yandex.ru/label/с английского/LingvoUniversal/">метка</a>, и отображаемое  <strong>Microposts</strong>&nbsp;1 имет смысл. Однако в данном случае  выражение &ldquo;1 microposts&rdquo; является безграмотным, поэтому мы организуем отображение  &ldquo;1 micropost&rdquo; (но &ldquo;2 microposts&rdquo;) используя удобный вспомогателный метод <code>pluralize</code>.</p>
+<p>Отметим, что, как и в сайдбаре профиля (<a class="ref" href="user-microposts?version=3.0#code:user_show_microposts">Листинг&nbsp;11.16</a>), информация о пользователе в <a class="ref" href="user-microposts?version=3.0#code:user_info">Листинге&nbsp;11.29</a> отображает общее число микросообщений  пользователя. Хотя есть небольшое отличие; в сайдбаре профиля, <strong>Microposts</strong> это <a href="http://lingvo.yandex.ru/label/с английского/LingvoUniversal/">метка</a>, и отображаемое  <strong>Microposts</strong>&nbsp;1 имет смысл. Однако в данном случае  выражение &ldquo;1 microposts&rdquo; является безграмотным, поэтому мы организуем отображение  &ldquo;1 micropost&rdquo; (но &ldquo;2 microposts&rdquo;) используя удобный вспомогателный метод <code>pluralize</code>.</p>
 
-<p>Форма, определенная в <a class="ref" href="user-microposts#code:micropost_form">Листинге&nbsp;11.28</a> является точным аналогом регистрационной формы из <a class="ref" href="sign-up#code:new_user_form">Листинга&nbsp;8.2</a>, что означает, что ей необходима переменная экземпляра <code>@micropost</code>. Она поставляется в <a class="ref" href="user-microposts#code:micropost_instance_variable">Листинге&nbsp;11.30</a>&nbsp;&mdash;&nbsp;но только когда пользователь вошел в систему.</p>
+<p>Форма, определенная в <a class="ref" href="user-microposts?version=3.0#code:micropost_form">Листинге&nbsp;11.28</a> является точным аналогом регистрационной формы из <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинга&nbsp;8.2</a>, что означает, что ей необходима переменная экземпляра <code>@micropost</code>. Она поставляется в <a class="ref" href="user-microposts?version=3.0#code:micropost_instance_variable">Листинге&nbsp;11.30</a>&nbsp;&mdash;&nbsp;но только когда пользователь вошел в систему.</p>
 
 <div class="label" id="code:micropost_instance_variable"></div>
 
@@ -1349,7 +1349,7 @@
 </div></div>
 
 
-<p>Теперь HTML должен рендериться правильно, показывая форму как на <a class="ref" href="user-microposts#fig:home_with_form">Рис.&nbsp;11.10</a>, и форму с ошибкой отправки как на <a class="ref" href="user-microposts#fig:home_form_errors">Рис.&nbsp;11.11</a>. Приглашаю вас создать свое микросообщение и убедиться, что все работает&nbsp;&mdash;&nbsp;но вам, вероятно, все же следует повременить с этим делом до <a class="ref" href="user-microposts#sec:a_proto_feed">Раздела&nbsp;11.3.3</a>.</p>
+<p>Теперь HTML должен рендериться правильно, показывая форму как на <a class="ref" href="user-microposts?version=3.0#fig:home_with_form">Рис.&nbsp;11.10</a>, и форму с ошибкой отправки как на <a class="ref" href="user-microposts?version=3.0#fig:home_form_errors">Рис.&nbsp;11.11</a>. Приглашаю вас создать свое микросообщение и убедиться, что все работает&nbsp;&mdash;&nbsp;но вам, вероятно, все же следует повременить с этим делом до <a class="ref" href="user-microposts?version=3.0#sec:a_proto_feed">Раздела&nbsp;11.3.3</a>.</p>
 
 <div class="label" id="fig:home_with_form"></div>
 
@@ -1370,10 +1370,10 @@
 <div class="label" id="sec:a_proto_feed"></div>
 
 
-<h3><a id="sec:11.3.3" href="user-microposts#sec:a_proto_feed" class="heading"><span class="number">11.3.3</span> Предварительная реализация потока сообщений</a></h3>
+<h3><a id="sec:11.3.3" href="user-microposts?version=3.0#sec:a_proto_feed" class="heading"><span class="number">11.3.3</span> Предварительная реализация потока сообщений</a></h3>
 
 
-<p>Комментарий в конце <a class="ref" href="user-microposts#sec:creating_microposts">Раздела&nbsp;11.3.2</a> намекает на проблему: текущая  Home страница не отображает микросообщений. Если вы хотите, вы можете убедиться что форма, показанная на <a class="ref" href="user-microposts#fig:home_with_form">Рис.&nbsp;11.10</a> работает, введя допустимое микросообщение и затем перейдя на <a href="http://localhost:3000/users/1">страницу профиля</a> чтобы увидеть сообщение, но это довольно громоздко. Было бы гораздо лучше иметь <em>feed (поток, канал)</em> микросообщений, который включал бы в себя микросообщения пользователя, как показано на макете в <a class="ref" href="user-microposts#fig:proto_feed_mockup">Рис.&nbsp;11.12</a>. (В <a class="ref" href="following-users#top">Главе&nbsp;12</a> мы обобщим этот канал (поток) включив микросообщения пользователей за которыми <em>следит</em> текущий пользователь.)</p>
+<p>Комментарий в конце <a class="ref" href="user-microposts?version=3.0#sec:creating_microposts">Раздела&nbsp;11.3.2</a> намекает на проблему: текущая  Home страница не отображает микросообщений. Если вы хотите, вы можете убедиться что форма, показанная на <a class="ref" href="user-microposts?version=3.0#fig:home_with_form">Рис.&nbsp;11.10</a> работает, введя допустимое микросообщение и затем перейдя на <a href="http://localhost:3000/users/1">страницу профиля</a> чтобы увидеть сообщение, но это довольно громоздко. Было бы гораздо лучше иметь <em>feed (поток, канал)</em> микросообщений, который включал бы в себя микросообщения пользователя, как показано на макете в <a class="ref" href="user-microposts?version=3.0#fig:proto_feed_mockup">Рис.&nbsp;11.12</a>. (В <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы обобщим этот канал (поток) включив микросообщения пользователей за которыми <em>следит</em> текущий пользователь.)</p>
 
 <div class="label" id="fig:proto_feed_mockup"></div>
 
@@ -1381,7 +1381,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/proto_feed_mockup.png" alt="proto_feed_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.12: </span><span class="description">Макет Home страницы с предварительной реализацией потока сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/proto_feed_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Так как каждый пользователь должен иметь поток сообщений, мы естественным образом пришли к <code>feed</code> методу в модели  User. В конце концов, мы протестируем, что поток сообщений возвращает микросообщения пользователей, за которыми следит текущий пользователь, но пока мы просто протестируем, что  <code>feed</code> метод <em>включает в себя</em> микросообщения текущего пользователя, но <em>исключает</em> сообщения других пользователей. Мы можем выразить эти требования в коде из <a class="ref" href="user-microposts#code:feed_specs">Листинга&nbsp;11.31</a>.</p>
+<p>Так как каждый пользователь должен иметь поток сообщений, мы естественным образом пришли к <code>feed</code> методу в модели  User. В конце концов, мы протестируем, что поток сообщений возвращает микросообщения пользователей, за которыми следит текущий пользователь, но пока мы просто протестируем, что  <code>feed</code> метод <em>включает в себя</em> микросообщения текущего пользователя, но <em>исключает</em> сообщения других пользователей. Мы можем выразить эти требования в коде из <a class="ref" href="user-microposts?version=3.0#code:feed_specs">Листинга&nbsp;11.31</a>.</p>
 
 <div class="label" id="code:feed_specs"></div>
 
@@ -1442,7 +1442,7 @@
 </div>
 
 
-<p>Мы можем организовать  <code>feed</code> соответствующих микросообщений, выбрав все микросообщения с  <code>user_id</code> равным id текущего пользователя, чего мы можем достигнуть используя <code>where</code> метод на модели <code>Micropost</code>, как показано в <a class="ref" href="user-microposts#code:proto_status_feed">Листинге&nbsp;11.32</a>.<sup class="footnote" id="fnref:11.14"><a href="#fn:11.14">14</a></sup></p>
+<p>Мы можем организовать  <code>feed</code> соответствующих микросообщений, выбрав все микросообщения с  <code>user_id</code> равным id текущего пользователя, чего мы можем достигнуть используя <code>where</code> метод на модели <code>Micropost</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:proto_status_feed">Листинге&nbsp;11.32</a>.<sup class="footnote" id="fnref:11.14"><a href="#fn:11.14">14</a></sup></p>
 
 <div class="label" id="code:proto_status_feed"></div>
 
@@ -1475,7 +1475,7 @@
 
 <p>гарантирует, что <code>id</code>&nbsp;корректно <em>маскирован</em> прежде чем быть включенным в лежащий в его основе  SQL запрос, что позволит избежать серьезной дыры в безопасности называемой <a href="http://ru.wikipedia.org/wiki/SQL-инъекция"><em>SQL инъекция</em></a>. (<code>id</code> атрибут в данном случае просто целое число, так что в этом случае опасности нет, но <em>постоянное</em> маскирование переменных, вводимых в SQL выражение является хорошей привычкой.)</p>
 
-<p>Внимательные  читатели могли отметить в этой точке, что код в <a class="ref" href="user-microposts#code:proto_status_feed">Листинге&nbsp;11.32</a> по сути эквивалентен записи</p>
+<p>Внимательные  читатели могли отметить в этой точке, что код в <a class="ref" href="user-microposts?version=3.0#code:proto_status_feed">Листинге&nbsp;11.32</a> по сути эквивалентен записи</p>
 
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">feed</span>
   <span class="n">microposts</span>
@@ -1484,9 +1484,9 @@
 </div>
 
 
-<p>Мы использовали код <a class="ref" href="user-microposts#code:proto_status_feed">Листинга&nbsp;11.32</a> вместо нее так как он генерализует гораздо более естественным образом полную ленту микросообщений необходимую в <a class="ref" href="following-users#top">Главе&nbsp;12</a>.</p>
+<p>Мы использовали код <a class="ref" href="user-microposts?version=3.0#code:proto_status_feed">Листинга&nbsp;11.32</a> вместо нее так как он генерализует гораздо более естественным образом полную ленту микросообщений необходимую в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>.</p>
 
-<p>Чтобы использовать этот поток сообщений в примере приложения, мы добавим переменную экземпляра <code>@feed_items</code> для (пагинированного) потока сообщений  текущего пользователя как в <a class="ref" href="user-microposts#code:feed_instance_variable">Листинге&nbsp;11.33</a>, а затем добавим партиал feed (<a class="ref" href="user-microposts#code:feed_partial">Листинг&nbsp;11.34</a>) к Home странице (<a class="ref" href="user-microposts#code:home_with_feed">Листинг&nbsp;11.36</a>).</p>
+<p>Чтобы использовать этот поток сообщений в примере приложения, мы добавим переменную экземпляра <code>@feed_items</code> для (пагинированного) потока сообщений  текущего пользователя как в <a class="ref" href="user-microposts?version=3.0#code:feed_instance_variable">Листинге&nbsp;11.33</a>, а затем добавим партиал feed (<a class="ref" href="user-microposts?version=3.0#code:feed_partial">Листинг&nbsp;11.34</a>) к Home странице (<a class="ref" href="user-microposts?version=3.0#code:home_with_feed">Листинг&nbsp;11.36</a>).</p>
 
 <div class="label" id="code:feed_instance_variable"></div>
 
@@ -1536,7 +1536,7 @@
 </div>
 
 
-<p>Здесь мы передаем параметр <code>:collection</code> с элементами потока сообщений, что заставляет  <code>render</code> использовать данный партиал (<code>&rsquo;feed_item&rsquo;</code> в данном случае) для рендеринга каждого элемента в коллекции. (Мы опустили параметр <code>:partial</code> в предыдущих рендерингах, используя запись, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам партиал элемента потока сообщений представлен в <a class="ref" href="user-microposts#code:feed_item_partial">Листинге&nbsp;11.35</a>; обратите внимание на добавление удаляющей ссылки в партиал feed item, следуя примеру из <a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинга&nbsp;10.38</a>.</p>
+<p>Здесь мы передаем параметр <code>:collection</code> с элементами потока сообщений, что заставляет  <code>render</code> использовать данный партиал (<code>&rsquo;feed_item&rsquo;</code> в данном случае) для рендеринга каждого элемента в коллекции. (Мы опустили параметр <code>:partial</code> в предыдущих рендерингах, используя запись, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам партиал элемента потока сообщений представлен в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a>; обратите внимание на добавление удаляющей ссылки в партиал feed item, следуя примеру из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:delete_links">Листинга&nbsp;10.38</a>.</p>
 
 <div class="label" id="code:feed_item_partial"></div>
 
@@ -1569,7 +1569,7 @@
 </div></div>
 
 
-<p>Затем мы можем добавить поток сообщений на Home страницу посредством рендеринга партиала потока сообщений как обычно (<a class="ref" href="user-microposts#code:home_with_feed">Листинг&nbsp;11.36</a>). В результате поток сообщений отображается на Home странице, как и требовалось (<a class="ref" href="user-microposts#fig:home_with_proto_feed">Рис.&nbsp;11.13</a>).</p>
+<p>Затем мы можем добавить поток сообщений на Home страницу посредством рендеринга партиала потока сообщений как обычно (<a class="ref" href="user-microposts?version=3.0#code:home_with_feed">Листинг&nbsp;11.36</a>). В результате поток сообщений отображается на Home странице, как и требовалось (<a class="ref" href="user-microposts?version=3.0#fig:home_with_proto_feed">Рис.&nbsp;11.13</a>).</p>
 
 <div class="label" id="code:home_with_feed"></div>
 
@@ -1608,7 +1608,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_with_proto_feed.png" alt="home_with_proto_feed" /></span></div><div class="caption"><span class="header">Рисунок  11.13: </span><span class="description"> Home страница (<a href="http://localhost:3000/"><tt>/</tt></a>) с предварительной реализацией потока сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/home_with_proto_feed-full.png">(полный размер)</a></span></div></div>
 
 
-<p>На данный момент, создание новых микросообщений работает как надо, что показано на <a class="ref" href="user-microposts#fig:micropost_created">Рис.&nbsp;11.14</a>. (Мы напишем интеграционный тест для этого эффекта в <a class="ref" href="user-microposts#sec:testing_the_new_home_page">Разделе&nbsp;11.3.5</a>.) Однако есть одна тонкость: при <em>неудачной</em> отправке микросообщения, Home страница ожидает переменную экземпляра <code>@feed_items</code>, таким образом провальная отправка в настоящее время не работает (что вы можете проверить запустив ваш набор тестов). Самым простым решением будет полное подавление потока сообщений присвоением ему пустого массива, как показано в <a class="ref" href="user-microposts#code:microposts_create_action_with_feed">Листинге&nbsp;11.37</a>.<sup class="footnote" id="fnref:11.15"><a href="#fn:11.15">15</a></sup></p>
+<p>На данный момент, создание новых микросообщений работает как надо, что показано на <a class="ref" href="user-microposts?version=3.0#fig:micropost_created">Рис.&nbsp;11.14</a>. (Мы напишем интеграционный тест для этого эффекта в <a class="ref" href="user-microposts?version=3.0#sec:testing_the_new_home_page">Разделе&nbsp;11.3.5</a>.) Однако есть одна тонкость: при <em>неудачной</em> отправке микросообщения, Home страница ожидает переменную экземпляра <code>@feed_items</code>, таким образом провальная отправка в настоящее время не работает (что вы можете проверить запустив ваш набор тестов). Самым простым решением будет полное подавление потока сообщений присвоением ему пустого массива, как показано в <a class="ref" href="user-microposts?version=3.0#code:microposts_create_action_with_feed">Листинге&nbsp;11.37</a>.<sup class="footnote" id="fnref:11.15"><a href="#fn:11.15">15</a></sup></p>
 
 <div class="label" id="fig:micropost_created"></div>
 
@@ -1651,10 +1651,10 @@
 <div class="label" id="sec:destroying_microposts"></div>
 
 
-<h3><a id="sec:11.3.4" href="user-microposts#sec:destroying_microposts" class="heading"><span class="number">11.3.4</span> Уничтожение микросообщений</a></h3>
+<h3><a id="sec:11.3.4" href="user-microposts?version=3.0#sec:destroying_microposts" class="heading"><span class="number">11.3.4</span> Уничтожение микросообщений</a></h3>
 
 
-<p>Последний кусок функционала, добавляемый к ресурсу Microposts это воможность уничтожения микросообщений. Как и с удалением пользователя  (<a class="ref" href="updating-showing-and-deleting-users#sec:the_destroy_action">Раздел&nbsp;10.4.2</a>), мы будем делать это с помощью &ldquo;delete&rdquo; ссылок, как показано на макете в <a class="ref" href="user-microposts#fig:micropost_delete_links_mockup">Рис.&nbsp;11.15</a>. В отличие от уничтожения пользователя, где право на удаление имели только администраторы, удаляющие ссылки будут работать только для пользователя, создавшего микросообщения.</p>
+<p>Последний кусок функционала, добавляемый к ресурсу Microposts это воможность уничтожения микросообщений. Как и с удалением пользователя  (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:the_destroy_action">Раздел&nbsp;10.4.2</a>), мы будем делать это с помощью &ldquo;delete&rdquo; ссылок, как показано на макете в <a class="ref" href="user-microposts?version=3.0#fig:micropost_delete_links_mockup">Рис.&nbsp;11.15</a>. В отличие от уничтожения пользователя, где право на удаление имели только администраторы, удаляющие ссылки будут работать только для пользователя, создавшего микросообщения.</p>
 
 <div class="label" id="fig:micropost_delete_links_mockup"></div>
 
@@ -1662,7 +1662,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/micropost_delete_links_mockup.png" alt="micropost_delete_links_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.15: </span><span class="description">Макет предварительной реализации потока сообщений со ссылками на удаление микросообщений.&nbsp;<a href="http://railstutorial.org/images/figures/micropost_delete_links_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Нашим первым шагом является добавление удаляющей ссылки в партиал микросообщения как в <a class="ref" href="user-microposts#code:feed_item_partial">Листинге&nbsp;11.35</a>. Результат представлен в <a class="ref" href="user-microposts#code:micropost_partial_with_delete">Листинге&nbsp;11.38</a>.</p>
+<p>Нашим первым шагом является добавление удаляющей ссылки в партиал микросообщения как в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a>. Результат представлен в <a class="ref" href="user-microposts?version=3.0#code:micropost_partial_with_delete">Листинге&nbsp;11.38</a>.</p>
 
 <div class="label" id="code:micropost_partial_with_delete"></div>
 
@@ -1706,7 +1706,7 @@
 
 <p>Когда обращение к <code>micropost.user</code> вызывает исключение, этот код ищет пользователя опираясь на <code>user_id</code> микросообщений.</p>
 
-<p>Тест для <code>destroy</code> действия это просто обобщение аналогичных тестов для уничтожения пользователей (<a class="ref" href="updating-showing-and-deleting-users#code:destroy_tests">Листинг&nbsp;10.40</a>), как видно в <a class="ref" href="user-microposts#code:micropost_destroy_specs">Листинге&nbsp;11.39</a>.</p>
+<p>Тест для <code>destroy</code> действия это просто обобщение аналогичных тестов для уничтожения пользователей (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:destroy_tests">Листинг&nbsp;10.40</a>), как видно в <a class="ref" href="user-microposts?version=3.0#code:micropost_destroy_specs">Листинге&nbsp;11.39</a>.</p>
 
 <div class="label" id="code:micropost_destroy_specs"></div>
 
@@ -1754,7 +1754,7 @@
 </div></div>
 
 
-<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts#code:microposts_destroy_action">Листинг&nbsp;11.40</a>, Листинге&nbsp;11.40</a>, и результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
+<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинг&nbsp;11.40</a>, Листинге&nbsp;11.40</a>, и результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts?version=3.0#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
 
 <div class="label" id="code:microposts_destroy_action"></div>
 
@@ -1783,7 +1783,7 @@
 </pre></div>
 </div></div>
 
-<p>Отметьте, что мы использовали метод <code>where</code> (представлен в <a class="ref" href="user-microposts#sec:a_proto_feed">Разделе&nbsp;11.3.3</a>) для поиска микросообщений <em>через</em> ассоциацию:</p>
+<p>Отметьте, что мы использовали метод <code>where</code> (представлен в <a class="ref" href="user-microposts?version=3.0#sec:a_proto_feed">Разделе&nbsp;11.3.3</a>) для поиска микросообщений <em>через</em> ассоциацию:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">current_user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">find_by_id</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
@@ -1809,7 +1809,7 @@
 </div>
 
 
-<p>Это было бы эквивалентно коду в <a class="ref" href="user-microposts#code:microposts_destroy_action">Листинге&nbsp;11.40</a>. Но, как объясняет <a href="http://www.rubyfocus.biz/">Wolfram Arnold</a> в своем блоге <a href="http://www.rubyfocus.biz/blog/2011/06/15/access_control_101_in_rails_and_the_citibank-hack.html">Access Control 101 in Rails and the Citibank Hack</a>, в целях безопасности, хорошей практикой является выполнение поиска только через ассоциацию.</p>
+<p>Это было бы эквивалентно коду в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинге&nbsp;11.40</a>. Но, как объясняет <a href="http://www.rubyfocus.biz/">Wolfram Arnold</a> в своем блоге <a href="http://www.rubyfocus.biz/blog/2011/06/15/access_control_101_in_rails_and_the_citibank-hack.html">Access Control 101 in Rails and the Citibank Hack</a>, в целях безопасности, хорошей практикой является выполнение поиска только через ассоциацию.</p>
 
 
 <div class="label" id="fig:home_post_delete"></div>
@@ -1823,16 +1823,16 @@
 <div class="label" id="sec:testing_the_new_home_page"></div>
 
 
-<h3><a id="sec:11.3.5" href="user-microposts#sec:testing_the_new_home_page" class="heading"><span class="number">11.3.5</span> Тестирование новой home страницы</a></h3>
+<h3><a id="sec:11.3.5" href="user-microposts?version=3.0#sec:testing_the_new_home_page" class="heading"><span class="number">11.3.5</span> Тестирование новой home страницы</a></h3>
 
-<p>Прежде чем оставить создание и уничтожение микросообщений, мы напишем интеграционный тест чтобы проверить что наши формы правильно работают. Как и в случае с пользователями  (<a class="ref" href="sign-up#sec:rspec_integration_tests">Раздел&nbsp;8.4</a>), мы начнем с генерации интеграционного теста микросообщений:</p>
+<p>Прежде чем оставить создание и уничтожение микросообщений, мы напишем интеграционный тест чтобы проверить что наши формы правильно работают. Как и в случае с пользователями  (<a class="ref" href="sign-up?version=3.0#sec:rspec_integration_tests">Раздел&nbsp;8.4</a>), мы начнем с генерации интеграционного теста микросообщений:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate integration_test microposts
 </pre></div>
 </div>
 
 
-<p>Тесты для провального и успешного создания микросообщения представлены в <a class="ref" href="user-microposts#code:microposts_integration_spec">Листинге&nbsp;11.41</a>.</p>
+<p>Тесты для провального и успешного создания микросообщения представлены в <a class="ref" href="user-microposts?version=3.0#code:microposts_integration_spec">Листинге&nbsp;11.41</a>.</p>
 
 <div class="label" id="code:microposts_integration_spec"></div>
 
@@ -1887,10 +1887,10 @@
 
 <p>Завершив тестирование функциональности микросообщений мы готовы перейти к завершающей функции нашего примера приложения: следованию за пользователями.</p>
 
-<h2><a id="sec:11.4" href="user-microposts#sec:11.4" class="heading"><span class="number">11.4</span> Заключение</a></h2>
+<h2><a id="sec:11.4" href="user-microposts?version=3.0#sec:11.4" class="heading"><span class="number">11.4</span> Заключение</a></h2>
 
 
-<p>Добавив ресурс Microposts, мы почти закончили наш пример приложения. Все, что осталось, это добавить социальный слой, позволив пользователям следовать друг за другом. Мы узнаем, как моделировать такие отношения пользователей, и увидим реализацию status feed, в <a class="ref" href="following-users#top">Главе&nbsp;12</a>.</p>
+<p>Добавив ресурс Microposts, мы почти закончили наш пример приложения. Все, что осталось, это добавить социальный слой, позволив пользователям следовать друг за другом. Мы узнаем, как моделировать такие отношения пользователей, и увидим реализацию status feed, в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>.</p>
 
 <p>Если вы используете Git для управления версиями, прежде чем продолжить, убедитесь, что вы зафиксировали и объединили ваши изменения:</p>
 
@@ -1913,7 +1913,7 @@
 <div class="label" id="sec:micropost_exercises"></div>
 
 
-<h2><a id="sec:11.5" href="user-microposts#sec:micropost_exercises" class="heading"><span class="number">11.5</span> Упражнения</a></h2>
+<h2><a id="sec:11.5" href="user-microposts?version=3.0#sec:micropost_exercises" class="heading"><span class="number">11.5</span> Упражнения</a></h2>
 
 
 <p>Мы рассмотрели достаточно материала и теперь случился комбинаторный взрыв  возможных расширений к нашему приложению. Вот лишь некоторые из многих возможностей:</p>
@@ -1926,7 +1926,7 @@
 <li>Сделать рефакторинг Home страницы чтобы использовать отдельные партиалы для двух ветвей выражения  <code>if</code>-<code>else</code>.</li>
 <li>Написать тест чтобы убедиться, что ссылки на удаление не появляются у микросообщений созданных не текущим пользователем.</li>
 <li>Добавить <a  rel="nofollow" href="http://www.rusrails.ru/rails-routing">вложенные маршруты</a> так, чтобы по адресу <tt>/users/1/microposts</tt> показывались все микросообщения пользователя&nbsp;1. (Вам также необходимо будет добавить в контроллер Microposts действие <code>index</code> и соответствующее представление.)</li>
-<li>Очень длинные слова в настоящее время крушат наш шаблон, как показано в <a class="ref" href="user-microposts#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему используя <code>wrap</code> хелпер определенный в <a class="ref" href="user-microposts#code:wrap">Листинге&nbsp;11.42</a>. (Обратите внимание на использование <code>raw</code> метода для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
+<li>Очень длинные слова в настоящее время крушат наш шаблон, как показано в <a class="ref" href="user-microposts?version=3.0#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему используя <code>wrap</code> хелпер определенный в <a class="ref" href="user-microposts?version=3.0#code:wrap">Листинге&nbsp;11.42</a>. (Обратите внимание на использование <code>raw</code> метода для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
 </ol>
 
 
@@ -1967,27 +1967,27 @@
 
 
 
-<div class="navigation">  <a class="prev_page" href="updating-showing-and-deleting-users#top">
+<div class="navigation">  <a class="prev_page" href="updating-showing-and-deleting-users?version=3.0#top">
     &laquo;&nbsp;<span class="number">Глава 10</span> Обновление, демонстрация, и удаление пользователей
   </a>
-  <a class="next_page" href="following-users#top">
+  <a class="next_page" href="following-users?version=3.0#top">
     <span class="number">Глава 12</span> Слежение за сообщениями  пользователей&nbsp;&raquo;
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;9</a>, мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="#fnref:11.1">&uarr;</a></li>
-<li id="fn:11.2">Атрибут <code>content</code> будет <code>string</code>, но, как кратко отмечалось в <a class="ref" href="a-demo-app#sec:modeling_microposts">Разделе&nbsp;2.1.2</a>, для более длинных текстовых полей вам следует использовать тип данных  <code>text</code>.&nbsp;<a class="arrow" href="#fnref:11.2">&uarr;</a></li>
+<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>, мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="#fnref:11.1">&uarr;</a></li>
+<li id="fn:11.2">Атрибут <code>content</code> будет <code>string</code>, но, как кратко отмечалось в <a class="ref" href="a-demo-app?version=3.0#sec:modeling_microposts">Разделе&nbsp;2.1.2</a>, для более длинных текстовых полей вам следует использовать тип данных  <code>text</code>.&nbsp;<a class="arrow" href="#fnref:11.2">&uarr;</a></li>
 <li id="fn:11.3">Более подробную информацию о Factory Girl ассоциациях, включая множество доступных опций, см. <a href="http://rdoc.info/projects/thoughtbot/factory_girl">Factory Girl documentation</a>.&nbsp;<a class="arrow" href="#fnref:11.3">&uarr;</a></li>
 <li id="fn:11.4">Вспомните, что <code>created_at</code> и <code>updated_at</code> это &ldquo;волшебные&rdquo; столбцы, так что все явные значения инициализации магическим образом перезаписываются.&nbsp;<a class="arrow" href="#fnref:11.4">&uarr;</a></li>
-<li id="fn:11.5">В смысле <a href="http://en.wikipedia.org/wiki/HTML#Semantic_HTML">семантической разметки</a>, вероятно, было бы лучше использовать  <a href="http://www.w3.org/MarkUp/html3/seqlists.html"><em>нумерованный список</em></a>, но в этом случае вертикальное выравнивания текста и изображений было бы гораздо более трудным, чем с таблицами.  См. упражнение в <a class="ref" href="user-microposts#sec:micropost_exercises">Раздел&nbsp;11.5</a> если вы настаиваете на трудностях с семантической версией.&nbsp;<a class="arrow" href="#fnref:11.5">&uarr;</a></li>
+<li id="fn:11.5">В смысле <a href="http://en.wikipedia.org/wiki/HTML#Semantic_HTML">семантической разметки</a>, вероятно, было бы лучше использовать  <a href="http://www.w3.org/MarkUp/html3/seqlists.html"><em>нумерованный список</em></a>, но в этом случае вертикальное выравнивания текста и изображений было бы гораздо более трудным, чем с таблицами.  См. упражнение в <a class="ref" href="user-microposts?version=3.0#sec:micropost_exercises">Раздел&nbsp;11.5</a> если вы настаиваете на трудностях с семантической версией.&nbsp;<a class="arrow" href="#fnref:11.5">&uarr;</a></li>
 <li id="fn:11.6">В случае, если вам интересно, метод ассоциаций <code>count</code> умен, и выполняет подсчет непосредственно в базе данных. В частности, он  <em>не</em> вытягивает все микросообщения из базы данных и не вызывает затем <code>length</code> на получившемся массиве, так как это стало бы страшно неэффективно при увеличении числа микросообщений. Вместо этого, он просит базу данных подсчитать количество микросообщений с данным <code>user_id</code>. Кстати, в  маловероятном случае при котором count все же будет узким местом в вашем приложении, вы можете сделать его еще быстрее с помощью <a href="http://railscasts.com/episodes/23-counter-cache-column"><em>counter cache</em></a>.&nbsp;<a class="arrow" href="#fnref:11.6">&uarr;</a></li>
-<li id="fn:11.7">Для удобства, <a class="ref" href="user-microposts#code:micropost_css">Листинг&nbsp;11.19</a> на самом деле включает  <em>все</em> CSS необходимые для этой главы.&nbsp;<a class="arrow" href="#fnref:11.7">&uarr;</a></li>
+<li id="fn:11.7">Для удобства, <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинг&nbsp;11.19</a> на самом деле включает  <em>все</em> CSS необходимые для этой главы.&nbsp;<a class="arrow" href="#fnref:11.7">&uarr;</a></li>
 <li id="fn:11.8">(т.е., пять с пользовательскими Gravatar-ами, и один с дефолтным Gravatar)&nbsp;<a class="arrow" href="#fnref:11.8">&uarr;</a></li>
 <li id="fn:11.9">Следите за своим <code>log/development.log</code> файлом, если вам интересно, какой  SQL генерирует этот метод.&nbsp;<a class="arrow" href="#fnref:11.9">&uarr;</a></li>
 <li id="fn:11.10">Текст <em>lorem ipsum</em> гема Faker случаен, так что контент ваших образцов микросообщений будет отличаться.&nbsp;<a class="arrow" href="#fnref:11.10">&uarr;</a></li>
-<li id="fn:11.11">Остальные два ресурса это Users в <a class="ref" href="sign-up#sec:signup_form">Разделе&nbsp;8.1</a> и Sessions в <a class="ref" href="sign-in-sign-out#sec:sessions">Разделе&nbsp;9.1</a>.&nbsp;<a class="arrow" href="#fnref:11.11">&uarr;</a></li>
-<li id="fn:11.12">Мы отмечали в  <a class="ref" href="sign-in-sign-out#sec:remember_me">Разделе&nbsp;9.3.2</a>, что вспомогательные методы по умолчанию доступны только в  <em>представлениях</em>, но мы сделали вспомогательный метод Sessions доступным  также и в контроллерах, добавив  <code>include SessionsHelper</code> в контроллер Application (<a class="ref" href="sign-in-sign-out#code:sessions_helper_include">Листинг&nbsp;9.11</a>).&nbsp;<a class="arrow" href="#fnref:11.12">&uarr;</a></li>
-<li id="fn:11.13">Изучение  методов, таких  как <code>include?</code> является одной из причин, по которым, как отмечалось в <a class="ref" href="beginning#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, я рекомендую читать книги о чистом Ruby после окончания этого учебника&nbsp;<a class="arrow" href="#fnref:11.13">&uarr;</a></li>
+<li id="fn:11.11">Остальные два ресурса это Users в <a class="ref" href="sign-up?version=3.0#sec:signup_form">Разделе&nbsp;8.1</a> и Sessions в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sessions">Разделе&nbsp;9.1</a>.&nbsp;<a class="arrow" href="#fnref:11.11">&uarr;</a></li>
+<li id="fn:11.12">Мы отмечали в  <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>, что вспомогательные методы по умолчанию доступны только в  <em>представлениях</em>, но мы сделали вспомогательный метод Sessions доступным  также и в контроллерах, добавив  <code>include SessionsHelper</code> в контроллер Application (<a class="ref" href="sign-in-sign-out?version=3.0#code:sessions_helper_include">Листинг&nbsp;9.11</a>).&nbsp;<a class="arrow" href="#fnref:11.12">&uarr;</a></li>
+<li id="fn:11.13">Изучение  методов, таких  как <code>include?</code> является одной из причин, по которым, как отмечалось в <a class="ref" href="beginning?version=3.0#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, я рекомендую читать книги о чистом Ruby после окончания этого учебника&nbsp;<a class="arrow" href="#fnref:11.13">&uarr;</a></li>
 <li id="fn:11.14">См. в Rails Guide  <a href="http://www.rusrails.ru/active-record-query-interface">Интерфейс запросов Active Record</a> for more on <code>where</code> and the like (#&nbsp;предположительно: непередаваемый канадский юмор).&nbsp;<a class="arrow" href="#fnref:11.14">&uarr;</a></li>
 <li id="fn:11.15">К сожалению, возвращение пагинированного потока сообщений не работает в данном случае. Реализуйте это и кликните по пагинационной ссылке чтобы увидеть почему. ( <a href="http://railstutorial.org/screencasts">Rails Tutorial screencasts</a> раскрывают этот вопрос более подробно.)&nbsp;<a class="arrow" href="#fnref:11.15">&uarr;</a></li>
 </ol>
