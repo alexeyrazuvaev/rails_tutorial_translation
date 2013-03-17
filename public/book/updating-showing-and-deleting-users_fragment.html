@@ -376,7 +376,7 @@
 
 <p>Этот код перезагружает <code>@user</code> переменную из (тестовой) базы данных используя <code>@user.reload</code>, а затем проверяет, что новые имя пользователя и email совпадают с атрибутами в хэше <code>@attr</code>.</p>
 
-<p>Действие <code>update</code> необходимое для прохождения тестов в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_specs">Листинге&nbsp;10.8</a> аналогично финальной форме <code>create</code> действия (<a class="ref" href="sign-in-sign-out#code:signin_upon_signup">Листинг&nbsp;9.24</a>), как видно в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_action">Листинге&nbsp;10.9</a>.</p>
+<p>Действие <code>update</code>, необходимое для прохождения тестов в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_specs">Листинге&nbsp;10.8</a> аналогично финальной форме <code>create</code> действия (<a class="ref" href="sign-in-sign-out#code:signin_upon_signup">Листинг&nbsp;9.24</a>), как видно в <a class="ref" href="updating-showing-and-deleting-users#code:user_update_action">Листинге&nbsp;10.9</a>.</p>
 
 <div class="label" id="code:user_update_action"></div>
 
@@ -417,7 +417,7 @@
 <div class="label" id="fig:signin_page_protected_mockup"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_page_protected_mockup.png" alt="signin_page_protected_mockup" /></span></div><div class="caption"><span class="header">Рисунок  10.5: </span><span class="description">Макет результата посещения защищенной страницы &nbsp;<a href="http://railstutorial.org/images/figures/signin_page_protected_mockup-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_page_protected_mockup.png" alt="signin_page_protected_mockup" /></span></div><div class="caption"><span class="header">Рисунок  10.5: </span><span class="description">Макет результата посещения защищенной страницы&nbsp;<a href="http://railstutorial.org/images/figures/signin_page_protected_mockup-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -537,7 +537,7 @@
 
 <h3><a id="sec:10.2.2" href="updating-showing-and-deleting-users#sec:requiring_the_right_user" class="heading"><span class="number">10.2.2</span> Требование правильного пользователя</a></h3>
 
-<p>Конечно, требования входа пользователей недостаточно; пользователи должны иметь доступ к редактированию <em>только</em> своей информации. Мы можем протестировать это, вначале войдя как неправильный пользователь, а затем обратившись к <code>edit</code> и <code>update</code> действиям (<a class="ref" href="updating-showing-and-deleting-users#code:authentication_for_signed_in">Листинг&nbsp;10.13</a>). Отметим, что, так как пользователи никогда не должны даже <em>пытаться</em> изменить профиль другого пользователя, мы сделаем переадресацию не на страницу входа, а на корневой URL.</p>
+<p>Конечно, требования входа пользователей недостаточно; пользователи должны иметь доступ к редактированию <em>только</em> своей информации. Мы можем протестировать это, вначале войдя как неправильный пользователь, а затем обратившись к <code>edit</code> и <code>update</code> действиям (<a class="ref" href="updating-showing-and-deleting-users#code:authentication_for_signed_in">Листинг&nbsp;10.13</a>). Обратите внимание, что, так как пользователи никогда не должны даже <em>пытаться</em> изменить профиль другого пользователя, мы сделаем переадресацию не на страницу входа, а на корневой URL.</p>
 
 <div class="label" id="code:authentication_for_signed_in"></div>
 
@@ -658,8 +658,7 @@
 
 <h3><a id="sec:10.2.3" href="updating-showing-and-deleting-users#sec:friendly_forwarding" class="heading"><span class="number">10.2.3</span> Дружелюбная переадресация</a></h3>
 
-<p>Защита наших страниц закончена, как и было написано, но есть один небольшой недостаток: когда пользователи пытаются получить доступ к защищенной странице, они перенаправляются к странице профиля, независимо от того, куда они пытались попасть. Другими словами, если не залогинившийся пользователь пытается посетить страницу редактирования, после входа пользователь будет перенаправлен на <tt>/users/1</tt> вместо <tt>/users/1/edit</tt>. Было бы намного более доброжелательно, по отношению к пользователям, все же перенаправлять
-их на запрашиваемую страницу вместо этого .</p>
+<p>Защита наших страниц закончена, как и было написано, но есть один небольшой недостаток: когда пользователи пытаются получить доступ к защищенной странице, они перенаправляются к странице профиля, независимо от того, куда они пытались попасть. Другими словами, если не залогинившийся пользователь пытается посетить страницу редактирования, после входа пользователь будет перенаправлен на <tt>/users/1</tt> вместо <tt>/users/1/edit</tt>. Было бы намного более доброжелательно, по отношению к пользователям, все же перенаправлять их на запрашиваемую страницу вместо этого .</p>
 
 <p>Очередность посещения страниц, вход, и переадресация на требуемую страницу, это идеальная работа для интеграционного теста, так что давайте сделаем его для дружественной переадресации:</p>
 
@@ -884,7 +883,7 @@
 
 <p>Обратите внимание, что мы добавили <code>:index</code> к списку действий контроллера, защищаемых <code>authenticate</code> предфильтром, тем самым получив прохождение первого теста из <a class="ref" href="updating-showing-and-deleting-users#code:user_index_tests">Листинга&nbsp;10.19</a>.</p>
 
-<p>Чтобы на самом деле создать страницу, нам необходимо создать представление, которое перебирает всех пользователей и обертывает каждого из них в тег&nbsp;<code>li</code>. Мы сделаем это с помощью метода <code>each</code>, отображающего Gravatar и имя каждого пользователя, во время обертывание всего этого добра в теге ненумерованного списка (<code>ul</code>) (<a class="ref" href="updating-showing-and-deleting-users#code:user_index_view">Листинг&nbsp;10.21</a>).</p>
+<p>Для того, чтобы на самом деле создать страницу, нам необходимо создать представление, которое перебирает всех пользователей и обертывает каждого из них в тег&nbsp;<code>li</code>. Мы сделаем это с помощью метода <code>each</code>, отображающего Gravatar и имя каждого пользователя, в то время как сам он будет завернут в тег ненумерованного списка (<code>ul</code>) (<a class="ref" href="updating-showing-and-deleting-users#code:user_index_view">Листинг&nbsp;10.21</a>).</p>
 
 <div class="label" id="code:user_index_view"></div>
 
@@ -971,7 +970,7 @@
 
 <h3><a id="sec:10.3.2" href="updating-showing-and-deleting-users#sec:sample_users" class="heading"><span class="number">10.3.2</span> Образцы пользователей</a></h3>
 
-<p>В этом разделе мы дадим нашему одинокому образцу пользователя некую компанию. Конечно, чтобы создать достаточное количество пользователей, мы <em>могли бы</em>, использовать наш веб-браузер, для посещения страницы регистрации и создания новых пользователей по одному, но куда более продвинутым решением является использование Ruby (и Rake), чтобы сделать пользователей для нас.</p>
+<p>В этом разделе мы дадим нашему одинокому образцу пользователя небольшую компанию. Конечно, чтобы создать достаточное количество пользователей, мы <em>могли бы</em>, использовать наш веб-браузер, для посещения страницы регистрации и создания новых пользователей по одному, но куда более продвинутым решением является использование Ruby (и Rake), чтобы сделать пользователей для нас.</p>
 
 <p>Во-первых, мы добавим <a  href="http://lingvo.yandex.ru/faker/">Faker</a> гем в <code>Gemfile</code>, который позволит нам делать образцы пользователей с полу-реалистичными именами и адресами электронной почты (<a class="ref" href="updating-showing-and-deleting-users#code:faker_gemfile">Листинг&nbsp;10.24</a>).</p>
 
@@ -1036,7 +1035,7 @@
 </div></div>
 
 
-<p>Этот код определяет задачу <code>db:populate</code> которая перезагружает development базу данных используя <code>db:reset</code> (с использованием немного странного синтаксиса, который не должен вас сильно тревожить), затем создает пример пользователя с именем и адресом электронной почты делая реплику нашего предыдущего пользователя, после чего делает еще 99 экземпляров. Строка</p>
+<p>Этот код определяет задачу <code>db:populate</code> которая перезагружает development базу данных используя <code>db:reset</code> (с использованием немного странного синтаксиса, который не должен вас сильно тревожить), затем создает пример пользователя с именем и адресом электронной почты, делая реплику нашего предыдущего пользователя, после чего делает еще 99 экземпляров. Строка</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">task</span> <span class="ss">:populate</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
 </pre></div>
@@ -1121,7 +1120,7 @@
 </div></div>
 
 
-<p>Метод <code>will_paginate</code> немного волшебный; внутри представления <code>users</code>, он автоматически ищет объект <code>@users</code>, а затем отображает пагинационные (# пагинированные, разбитые на страницы) ссылки для доступа к остальным страницам. Представление в <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинге&nbsp;10.27</a> пока не работает, хотя бы потому, что на данный момент <code>@users</code> содержит результаты <code>User.all</code> (<a class="ref" href="updating-showing-and-deleting-users#code:user_index">Листинг&nbsp;10.20</a>), которые принадлежат классу Массив, в то время как <code>will_paginate</code> ожидает объект класса <code>WillPaginate::Collection</code>. К счастью, это всего лишь вид объекта, возвращаемого методом <code>paginate</code> поставляемого гемом <tt>will_paginate</tt>:</p>
+<p>Метод <code>will_paginate</code> немного волшебный; внутри представления <code>users</code>, он автоматически ищет объект <code>@users</code>, а затем отображает пагинационные ссылки для доступа к остальным страницам. Представление в <a class="ref" href="updating-showing-and-deleting-users#code:will_paginate_index_view">Листинге&nbsp;10.27</a> пока не работает, из-за того что на данный момент <code>@users</code> содержит результаты <code>User.all</code> (<a class="ref" href="updating-showing-and-deleting-users#code:user_index">Листинг&nbsp;10.20</a>), которые принадлежат классу Массив, в то время как <code>will_paginate</code> ожидает объект класса <code>WillPaginate::Collection</code>. К счастью, это всего лишь вид объекта, возвращаемого методом <code>paginate</code> поставляемого гемом <tt>will_paginate</tt>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">class</span>
@@ -1167,7 +1166,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_index_pagination_rails_3.png" alt="user_index_pagination_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  10.10: </span><span class="description">Страница user index   <a href="http://localhost:3000/users"><tt>/users</tt></a> с пагинацией.&nbsp;<a href="http://railstutorial.org/images/figures/user_index_pagination_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Если теперь кликнуть по любой&nbsp;<a href="http://localhost:3000/users?page=2">2</a> или <a href="http://localhost:3000/users?page=2">Next</a> ссылке, вы получите вторую страницу с результатами поиска, как показано на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_page_two_rails_3">Рис.&nbsp;10.11</a>.</p>
+<p>Если теперь кликнуть по любой&nbsp;<a href="http://localhost:3000/users?page=2">2</a> или <a href="http://localhost:3000/users?page=2">Next</a> ссылке, вы получите вторую страницу с результатами, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_page_two_rails_3">Рис.&nbsp;10.11</a>.</p>
 
 <div class="label" id="fig:user_index_page_two_rails_3"></div>
 
@@ -1369,7 +1368,7 @@
 
 <h2><a id="sec:10.4" href="updating-showing-and-deleting-users#sec:destroying_users" class="heading"><span class="number">10.4</span> Уничтожение пользователей</a></h2>
 
-<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как показано в макете на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_delete_links_mockup">Рис.&nbsp;10.12</a>, и определение <code>destroy</code> действия необходимо для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
+<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как показано в макете на <a class="ref" href="updating-showing-and-deleting-users#fig:user_index_delete_links_mockup">Рис.&nbsp;10.12</a>, и определм <code>destroy</code> действие необходимое для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
 
 
 <div class="label" id="fig:user_index_delete_links_mockup"></div>
@@ -1386,7 +1385,7 @@
 <h3><a id="sec:10.4.1" href="updating-showing-and-deleting-users#sec:administrative_users" class="heading"><span class="number">10.4.1</span> Административные пользователи</a></h3>
 
 
-<p>Мы будем идентифицировать привилегированных пользователей с правами администратора посредством булевого атрибута <code>admin</code> в модели User, что приведет к методу <code>admin?</code> для проверки административного статуса. Мы можем написать тесты для этого атрибута, как в <a class="ref" href="updating-showing-and-deleting-users#code:admin_specs">Листинге&nbsp;10.34</a>.</p>
+<p>Мы будем идентифицировать привилегированных пользователей с правами администратора посредством булевого атрибута <code>admin</code> в модели User, что, как мы увидим, автоматически приведет нас к методу <code>admin?</code> для проверки административного статуса. Мы можем написать тесты для этого атрибута, как в <a class="ref" href="updating-showing-and-deleting-users#code:admin_specs">Листинге&nbsp;10.34</a>.</p>
 
 <div class="label" id="code:admin_specs"></div>
 
@@ -1437,7 +1436,7 @@
 </div>
 
 
-<p>Миграция просто добавляет столбец <code>admin</code> к таблице <code>users</code> (<a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинг&nbsp;10.35</a>), <a  rel="nofollow" href="http://lingvo.yandex.ru/yielding/с английского/">yielding</a> (??) модель данных в <a class="ref" href="updating-showing-and-deleting-users#fig:user_model_admin">Рис.&nbsp;10.13</a>.</p>
+<p>Миграция просто добавляет столбец <code>admin</code> к таблице <code>users</code> (<a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинг&nbsp;10.35</a>), приводя к модели данных показанной на <a class="ref" href="updating-showing-and-deleting-users#fig:user_model_admin">Рис.&nbsp;10.13</a>.</p>
 
 <div class="label" id="code:admin_migration"></div>
 
@@ -1458,7 +1457,7 @@
 </div></div>
 
 
-<p>Обратите внимание, что мы добавили аргумент <code>:default =&gt; false</code> к <code>add_column</code> в <a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинге&nbsp;10.35</a>, что означает, что пользователи <em>не являются</em> администраторами по умолчанию. (Без <code>:default =&gt; false</code> аргумента, <code>admin</code> был бы по умолчанию <code>nil</code>, который по-прежнему <code>false</code>, так что этот шаг не является строго обязательным. Это более явно и более четко сообщает о наших  намерениях, и Rails, и читателям нашего кода.)</p>
+<p>Обратите внимание на то, что мы добавили аргумент <code>:default =&gt; false</code> к <code>add_column</code> в <a class="ref" href="updating-showing-and-deleting-users#code:admin_migration">Листинге&nbsp;10.35</a>, что означает, что пользователи <em>не являются</em> администраторами по умолчанию. (Без <code>:default =&gt; false</code> аргумента, <code>admin</code> был бы по умолчанию <code>nil</code>, который по-прежнему <code>false</code>, так что этот шаг не является строго обязательным. Это более явно и четко сообщает о наших  намерениях, и Rails, и читателям нашего кода.)</p>
 
 <div class="label" id="fig:user_model_admin"></div>
 
@@ -1536,7 +1535,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 10.37.</span> <span class="description"><code>Attr_accessible</code>  атрибуты модели User <em>без</em> атрибута <code>:admin</code>.  <br /> <code>app/models/user.rb</code></span>
+<div class="listing"><span class="header">Листинг 10.37.</span> <span class="description"><code>attr_accessible</code> атрибуты модели User <em>без</em> атрибута <code>:admin</code>.  <br /> <code>app/models/user.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
   <span class="kp">attr_accessor</span> <span class="ss">:password</span>
@@ -1583,7 +1582,7 @@
 </div></div>
 
 
-<p>Обратите внимание на аргумент <code>:method =&gt; :delete</code>, который организует выдачу ссылками необходимого запроса <tt>DELETE</tt>. Мы также обвернули каждую ссылку в&nbsp;<code>if</code> выражение, таким образом они видны только администраторам. Результаты, видимые нашим административным пользователям, представлены в <a class="ref" href="updating-showing-and-deleting-users#fig:index_delete_links_rails_3">Рис.&nbsp;10.14</a>.</p>
+<p>Обратите внимание на аргумент <code>:method =&gt; :delete</code>, который организует выдачу ссылками необходимого запроса <tt>DELETE</tt>. Мы также обернули каждую ссылку в&nbsp;<code>if</code> выражение, таким образом они видны только администраторам. Результат, видимый нашим административным пользователям, представлен в <a class="ref" href="updating-showing-and-deleting-users#fig:index_delete_links_rails_3">Рис.&nbsp;10.14</a>.</p>
 
 <p>Изначально, веб браузеры не могут отправлять <tt>DELETE</tt> запросы, и  Rails подделывает их с помощью JavaScript.<sup class="footnote" id="fnref:10.12"><a href="#fn:10.12">12</a></sup> Поэтому, для того, чтобы получить рабочие удаляющие ссылки, мы должны включить дефолтные Rails JavaScript библиотеки, что мы сделаем, добавив строку</p>
 
@@ -1740,7 +1739,7 @@
 <h2><a id="sec:10.5" href="updating-showing-and-deleting-users#sec:10.5" class="heading"><span class="number">10.5</span> Заключение</a></h2>
 
 
-<p>Мы прошли долгий путь с момента введения контроллера Users в <a class="ref" href="filling-in-the-layout#sec:user_signup">Раздел&nbsp;5.3</a>. Разделе&nbsp;5.3</a>. Те пользователи, даже не могли зарегистрироваться; теперь пользователи могут зарегистрироваться, войти в систему, выйти, просматривать свои профили, редактировать их параметры, и видеть список всех пользователей, а некоторые из них могут даже удалить других пользователей.</p>
+<p>Мы прошли долгий путь с момента введения контроллера Users в <a class="ref" href="filling-in-the-layout#sec:user_signup">Разделе&nbsp;5.3</a>. Разделе&nbsp;5.3</a>. Те пользователи, даже не могли зарегистрироваться; теперь же пользователи могут зарегистрироваться, войти в систему, выйти, просматривать свои профили, редактировать их параметры, и видеть список всех пользователей, а некоторые из них могут даже удалять других пользователей.</p>
 
 <p>Остальная часть этой книги будет опираться на ресурс Users (и связанную с ним аутентификационную систему) чтобы сделать сайт с  Twitter-подобными микросообщениями (<a class="ref" href="user-microposts#top">Глава&nbsp;11</a>) и следованием за пользователями (<a class="ref" href="following-users#top">Глава&nbsp;12</a>). Эти главы представят некоторые из наиболее мощных возможностей Rails, включая моделирование данных с <code>has_many</code> и <code>has_many :through</code>.</p>
 
@@ -1797,15 +1796,15 @@
 
 <ol>
 
-<li>Организуйте открытие  Gravatar ссылки  &ldquo;change&rdquo; из <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинга&nbsp;10.3</a> в новом окне (или вкладке). <em>Подсказка:</em> Ищите в сети; вы должны найти один простой и надежный метод  с участием так называмого <code>_blank</code>. </li>
+<li>Организуйте открытие Gravatar ссылки &ldquo;change&rdquo; из <a class="ref" href="updating-showing-and-deleting-users#code:user_edit_view">Листинга&nbsp;10.3</a> в новом окне (или вкладке). <em>Подсказка:</em> Ищите в сети; вы должны найти один простой и надежный метод с участием так называмого <code>_blank</code>. </li>
 
-<li>Удалите дублирующийся код формы рефакторингом <code>new.html.erb</code> и <code>edit.html.erb</code> представлений, используя партиал из <a class="ref" href="updating-showing-and-deleting-users#code:new_edit_partial">Листинга&nbsp;10.43</a>. Обратите внимание, что вам придется передать пременную формы&nbsp;<code>f</code> в виде явной локальной переменной, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:new_user_with_partial">Листинге&nbsp;10.44</a>.</li>
+<li>Удалите дублирующийся код формы рефакторингом <code>new.html.erb</code> и <code>edit.html.erb</code> представлений, используя партиал из <a class="ref" href="updating-showing-and-deleting-users#code:new_edit_partial">Листинга&nbsp;10.43</a>. Обратите внимание, на то, что вам придется передать пременную формы&nbsp;<code>f</code> в виде явной локальной переменной, как показано в <a class="ref" href="updating-showing-and-deleting-users#code:new_user_with_partial">Листинге&nbsp;10.44</a>.</li>
 
 <li>Зарегистрированным пользователям совершенно незачем иметь доступ к <code>new</code> и <code>create</code> действиям контроллера Users. Организуйте  для таких пользователей переадресацию  в корневой URL, при попытке обратиться к этим страницам.</li>
 
 <li>Добавьте тесты, проверяющие что удаляющие ссылки в <a class="ref" href="updating-showing-and-deleting-users#code:delete_links">Листинге&nbsp;10.38</a> появляются для администраторов, но не для обычных пользователей.</li>
 
-<li>Модифицируйте действие <code>destroy</code>, чтобы предотвратить уничтожение административными пользователями самих себя. (Начните с написания теста.)</li>
+<li>Модифицируйте действие <code>destroy</code> так, чтобы предотвратить уничтожение административными пользователями самих себя. (Начните с написания теста.)</li>
 
 </ol>
 
@@ -1877,7 +1876,7 @@
 <li id="fn:10.6">Действительно, как отмечалось в <a class="ref" href="sign-in-sign-out#sec:sign_in_out_exercises">Разделе&nbsp;9.6</a>, <code>session</code> реализуется именно этим способом.&nbsp;<a class="arrow" href="#fnref:10.6">&uarr;</a></li>
 <li id="fn:10.7">Фотография ребенка из <a href="http://www.flickr.com/photos/glasgows/338937124/">http://www.flickr.com/photos/glasgows/338937124/</a>.&nbsp;<a class="arrow" href="#fnref:10.7">&uarr;</a></li>
 <li id="fn:10.8">Технически, нам требуется создать только 28 дополнительных "сфабрикованных" пользователей, так как три пользователя у нас уже есть, но я считаю создание 30 более однозначным.&nbsp;<a class="arrow" href="#fnref:10.8">&uarr;</a></li>
-<li id="fn:10.9">Имя <code>user</code> непринципиально&nbsp;&mdash;&nbsp;мы могли бы написать <code>@users.each do |foobar|</code> и затем использовать <code>render foobar</code>. Ключом является <em>класс</em> объекта&nbsp;&mdash;&nbsp;в данном случае, <code>User</code>.&nbsp;<a class="arrow" href="#fnref:10.9">&uarr;</a></li>
+<li id="fn:10.9">Имя <code>user</code> непринципиально&nbsp;&mdash;&nbsp;мы могли бы написать <code>@users.each do |foobar|</code>, а затем использовать <code>render foobar</code>. Ключом является <em>класс</em> объекта&nbsp;&mdash;&nbsp;в данном случае, <code>User</code>.&nbsp;<a class="arrow" href="#fnref:10.9">&uarr;</a></li>
 <li id="fn:10.10">Метод <code>toggle!</code> вызывает колбэки Active Record но не валидации, так что мы должны установить атрибут <code>password</code> (но не подтверждение) с тем чтобы иметь не чистый пароль в обратном вызове <code>encrypt_password</code>.&nbsp;<a class="arrow" href="#fnref:10.10">&uarr;</a></li>
 <li id="fn:10.11">Инструменты командной строки, такие как <tt>curl</tt> (см. <a class="ref" href="static-pages#sidebar:response_codes">Блок&nbsp;3.2</a>) могут выдавать <tt>PUT</tt> запросы этой формы.&nbsp;<a class="arrow" href="#fnref:10.11">&uarr;</a></li>
 <li id="fn:10.12">Это означает, что ссылки на удаление не будут работать если у пользователя нет (или отключен) JavaScript. Если вы обязаны поддерживать браузеры без включенного JavaScript, вы можете подделать запрос <tt>DELETE</tt> используя форму и запрос <tt>POST</tt>, что будет работать даже в отсутствие JavaScript; см. об этом более подробно Railscast на &ldquo;<a href="http://railscasts.com/episodes/77-destroy-without-javascript">Destroy Without JavaScript</a>&rdquo;.&nbsp;<a class="arrow" href="#fnref:10.12">&uarr;</a></li>

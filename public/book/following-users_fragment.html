@@ -4,7 +4,7 @@
 <h1 class="chapter"><a id="sec:12" href="following-users#top" class="heading"><span class="number">Глава 12</span> Слежение за сообщениями  пользователей</a></h1>
 
 
-<p>В этой главе мы завершим ядро примера приложения, добавив социальный слой, что позволит пользователям читать (и не читать) сообщения других пользователей <sup class="footnote" id="fnref:12.27"><a href="#fn:12.27">27</a></sup>, в результате чего на главной странице каждого пользователя будет  отображаться список микросообщений тех пользователей, сообщения которых он читает. Мы также сделаем представления для отображения  читающих и читаемых пользователей. Мы узнаем, как смоделировать слежение за сообщениями пользователей в <a class="ref" href="following-users#sec:the_relationship_model">Разделе&nbsp;12.1</a>, а затем сделаем веб-интерфейс в <a class="ref" href="following-users#sec:a_web_interface_for_following_and_followers">Разделе&nbsp;12.2</a> (включая введение в Ajax). Наконец, мы закончим, разработав полнофункциональную ленту сообщений в <a class="ref" href="following-users#sec:the_status_feed">Разделе&nbsp;12.3</a>.</p>
+<p>В этой главе мы завершим ядро примера приложения, добавив социальный слой, что позволит пользователям читать (и не читать) сообщения других пользователей <sup class="footnote" id="fnref:12.27"><a href="#fn:12.27">27</a></sup>, в результате чего на главной странице каждого пользователя будет  отображаться список микросообщений тех пользователей, сообщения которых он читает. Мы также сделаем представления для отображения  читающих и читаемых пользователей. Мы узнаем, как смоделировать слежение за сообщениями пользователей в <a class="ref" href="following-users#sec:the_relationship_model">Разделе&nbsp;12.1</a>, а затем сделаем веб-интерфейс в <a class="ref" href="following-users#sec:a_web_interface_for_following_and_followers">Разделе&nbsp;12.2</a> (включая введение в Ajax). Наконец, мы закончим, разработав полнофункциональный поток сообщений в <a class="ref" href="following-users#sec:the_status_feed">Разделе&nbsp;12.3</a>.</p>
 
 <p>Эта последняя глава содержит несколько из наиболее сложных материалов учебника, в том числе, сложные модели данных и несколько Ruby / SQL хитростей для создания потока сообщений. С помощью этих примеров вы увидите как Rails может обрабатывать даже весьма сложные модели данных, что должно вам пригодиться, так как вы двигаетесь к разработке собственных приложений с их собственными требованиями. Чтобы помочь с переходом от учебника к самостоятельной разработке, <a class="ref" href="following-users#sec:following_conclusion">Раздел&nbsp;12.4</a> содержит рекомендуемые расширения к ядру примера приложения, а также ссылки на более продвинутые ресурсы.</p>
 
@@ -15,12 +15,12 @@
 </div>
 
 
-<p>Так как материал этой главы особенно сложен, прежде чем писать код, мы улучим момент и сделаем небольшой обзор функции слежения за сообщениями пользователей. Как и в предыдущих главах, на этом раннем этапе мы будем представлять страницы используя макеты.<sup class="footnote" id="fnref:12.1"><a href="#fn:12.1">1</a></sup>  Полная последовательность страниц работает следующим образом пользователь, (John Calvin) начинает на странице своего профиля (<a class="ref" href="following-users#fig:page_flow_profile_mockup">Рис.&nbsp;12.1</a>) и переходит на страницу с пользователями (<a class="ref" href="following-users#fig:page_flow_user_index_mockup">Рис.&nbsp;12.2</a>) чтобы выбрать пользователя, сообщения которого он будет читать. Calvin переходит на страницу профиля выбранного пользователя, Thomas-а Hobbes-а (<a class="ref" href="following-users#fig:page_flow_other_profile_follow_button_mockup">Рис.&nbsp;12.3</a>), кликает по кнопке &ldquo;Follow&rdquo;, чтобы читать сообщения этого пользователя. Это изменяет кнопку &ldquo;Follow&rdquo; на &ldquo;Unfollow&rdquo;, и увеличивает количество &ldquo;followers&rdquo; товарища Hobbes-а на единицу (<a class="ref" href="following-users#fig:page_flow_other_profile_unfollow_button_mockup">Рис.&nbsp;12.4</a>). Вернувшись на свою главную страницу, Calvin теперь видит увеличившееся количество &ldquo;following&rdquo; и обнаруживает микросообщения Hobbes-а в своей ленте сообщений (<a class="ref" href="following-users#fig:page_flow_home_page_feed_mockup">Рис.&nbsp;12.5</a>). Остальная часть этой главы посвящена реализации этой последовательности.</p>
+<p>Так как материал этой главы особенно сложен, прежде чем писать код, мы улучим момент и сделаем небольшой обзор функции слежения за сообщениями пользователей. Как и в предыдущих главах, на этом раннем этапе мы будем представлять страницы используя макеты.<sup class="footnote" id="fnref:12.1"><a href="#fn:12.1">1</a></sup>  Полная последовательность страниц работает следующим образом: пользователь, (John Calvin) начинает на странице своего профиля (<a class="ref" href="following-users#fig:page_flow_profile_mockup">Рис.&nbsp;12.1</a>) и переходит на страницу с пользователями (<a class="ref" href="following-users#fig:page_flow_user_index_mockup">Рис.&nbsp;12.2</a>) для того, чтобы выбрать пользователя, сообщения которого он будет читать. Calvin переходит на страницу профиля выбранного пользователя, Thomas-а Hobbes-а (<a class="ref" href="following-users#fig:page_flow_other_profile_follow_button_mockup">Рис.&nbsp;12.3</a>), кликает по кнопке &ldquo;Follow&rdquo;, чтобы читать сообщения этого пользователя. Это изменяет кнопку &ldquo;Follow&rdquo; на &ldquo;Unfollow&rdquo;, и увеличивает количество &ldquo;followers&rdquo; товарища Hobbes-а на единицу (<a class="ref" href="following-users#fig:page_flow_other_profile_unfollow_button_mockup">Рис.&nbsp;12.4</a>). Вернувшись на свою главную страницу, Calvin теперь видит увеличившееся количество &ldquo;following&rdquo; и обнаруживает микросообщения Hobbes-а в своей ленте сообщений (<a class="ref" href="following-users#fig:page_flow_home_page_feed_mockup">Рис.&nbsp;12.5</a>). Остальная часть этой главы посвящена реализации этой последовательности.</p>
 
 <div class="label" id="fig:page_flow_profile_mockup"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/page_flow_profile_mockup.png" alt="page_flow_profile_mockup" /></span></div><div class="caption"><span class="header">Рисунок  12.1: </span><span class="description">Макет профиля текущего пользователя.&nbsp;<a href="http://railstutorial.org/images/figures/page_flow_profile_mockup-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/page_flow_profile_mockup.png" alt="page_flow_profile_mockup" /></span></div><div class="caption"><span class="header">Рисунок 12.1: </span><span class="description">Макет профиля текущего пользователя.&nbsp;<a href="http://railstutorial.org/images/figures/page_flow_profile_mockup-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -84,11 +84,11 @@
 <p>Проблема модели данных из <a class="ref" href="following-users#fig:naive_user_has_many_following">Рис.&nbsp;12.6</a> в том, что она ужасно избыточна: каждая строка содержит не только id каждого читаемого пользователя, но и всю остальную информацию, <em>уже</em> содержащуюся в таблице <code>users</code>. Еще хуже то, что для моделирования <em>читателей</em> пользователя нам потребуется отдельная <code>followers</code> таблица. Наконец, эта модель данных кошмарно неудобна в эксплуатации, так как каждый раз, при изменении пользователем (скажем) своего имени, нам пришлось бы обновлять запись пользователя не только в <code>users</code> таблице, но также <em>каждую строку, содержащую этого пользователя</em>
 в обоих <code>following</code> и <code>followers</code> таблицах.</p>
 
-<p>Проблема здесь в том, что нам не хватает лежащей в основе абстракции (an underlying abstraction (??)). Один из способов найти правильную абстракцию, это рассмотреть, как мы могли бы реализовать <em>following</em> в веб-приложении. Вспомним из <a class="ref" href="modeling-and-viewing-users-one#sec:a_users_resource">Раздела&nbsp;6.3.3</a>, что REST архитектура включает в себя <em>ресурсы</em> которые создаются и уничтожаются. Это приводит нас к двум вопросам: Что создается, когда пользователь начинает читать сообщения другого пользователя? Что уничтожается, когда пользователь прекращает следить за сообщениями другого пользователя?</p>
+<p>Проблема здесь в том, что нам не хватает лежащей в основе абстракции. Один из способов найти правильную абстракцию, это рассмотреть, как мы могли бы реализовать <em>following</em> в веб-приложении. Вспомним из <a class="ref" href="modeling-and-viewing-users-one#sec:a_users_resource">Раздела&nbsp;6.3.3</a>, что REST архитектура включает в себя <em>ресурсы</em> которые создаются и уничтожаются. Это приводит нас к двум вопросам: Что создается, когда пользователь начинает читать сообщения другого пользователя? Что уничтожается, когда пользователь прекращает следить за сообщениями другого пользователя?</p>
 
-<p>Поразмыслив, мы видим, что в этих случаях приложение должно создать либо разрушить <em>взаимоотношение</em> (или <em>связь</em><sup class="footnote" id="fnref:12.3"><a href="#fn:12.3">3</a></sup>) между двумя пользователями. Затем пользователь <code>has_many :relationships</code> (имеет_много :взаимоотношений), и имеет много <code>following</code> (или <code>followers</code>) <em>через</em> эти взаимоотношения. Действительно, <a class="ref" href="following-users#fig:naive_user_has_many_following">Рис.&nbsp;12.6</a> уже содержит бОльшую часть реализации: поскольку каждый читаемый пользователь уникально идентифицирован посредством <code>followed_id</code>, мы можем преобразовать <code>following</code> в таблицу <code>relationships</code>, опустив информацию о пользователе, и использовать <code>followed_id</code> для получения читаемых пользователей из <code>users</code> таблицы. Кроме того, приняв во внимание  <em>обратные</em> взаимоотношения, мы могли бы использовать <code>follower_id</code> столбец для извлечения массива читателей пользователя.</p>
+<p>Поразмыслив, мы видим, что в этих случаях приложение должно создать либо разрушить <em>взаимоотношение</em> (или <em>связь</em><sup class="footnote" id="fnref:12.3"><a href="#fn:12.3">3</a></sup>) между двумя пользователями. Затем пользователь <code>has_many :relationships</code> (имеет_много :взаимоотношений), и имеет много <code>following</code> (или <code>followers</code>) <em>через</em> эти взаимоотношения. Действительно, <a class="ref" href="following-users#fig:naive_user_has_many_following">Рис.&nbsp;12.6</a> уже содержит бОльшую часть реализации: поскольку каждый читаемый пользователь уникально идентифицирован посредством <code>followed_id</code>, мы можем преобразовать <code>following</code> в таблицу <code>relationships</code>, опустив информацию о пользователе, и использовав <code>followed_id</code> для получения читаемых пользователей из <code>users</code> таблицы. Кроме того, приняв во внимание  <em>обратные</em> взаимоотношения, мы могли бы использовать <code>follower_id</code> столбец для извлечения массива читателей пользователя.</p>
 
-<p>Чтобы создать <code>following</code> массив пользователей, мы могли бы вытянуть массив атрибутов <code>followed_id</code>, а затем найти пользователя для каждого из них. Однако, как и следовало ожидать, в Rails есть более удобный способ для этой процедуры; соответствующая техника известна как <code>has_many :through</code> (имеет_много :через).<sup class="footnote" id="fnref:12.4"><a href="#fn:12.4">4</a></sup> Как мы увидим в <a class="ref" href="following-users#sec:following">Разделе&nbsp;12.1.4</a>, Rails позволяет нам сказать, что пользователь следит за сообщениями многих пользователей <em>через</em> взаимоотношения, используя краткий код</p>
+<p>Для того, чтобы создать <code>following</code> массив пользователей, мы могли бы вытянуть массив атрибутов <code>followed_id</code>, а затем найти пользователя для каждого из них. Однако, как и следовало ожидать, в Rails есть более удобный способ для этой процедуры; соответствующая техника известна как <code>has_many :through</code> (имеет_много :через).<sup class="footnote" id="fnref:12.4"><a href="#fn:12.4">4</a></sup> Как мы увидим в <a class="ref" href="following-users#sec:following">Разделе&nbsp;12.1.4</a>, Rails позволяет нам сказать, что пользователь следит за сообщениями многих пользователей <em>через</em> таблицу взаимоотношений, используя краткий код</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">has_many</span> <span class="ss">:following</span><span class="p">,</span> <span class="ss">:through</span> <span class="o">=&gt;</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">:source</span> <span class="o">=&gt;</span> <span class="s2">&quot;followed_id&quot;</span>
 </pre></div>
@@ -156,7 +156,7 @@
 </div>
 
 
-<p>Результирующая модель данных Relationship показана на  <a class="ref" href="following-users#fig:relationship_model">Рис.&nbsp;12.8</a>.</p>
+<p>Результирующая модель данных Relationship показана на <a class="ref" href="following-users#fig:relationship_model">Рис.&nbsp;12.8</a>.</p>
 
 <div class="label" id="fig:relationship_model"></div>
 
@@ -356,7 +356,7 @@
 </div></div>
 
 
-<p>Ассоциация <code>followed</code> на самом деле не потребуется до  <a class="ref" href="following-users#sec:followers">Раздела&nbsp;12.1.5</a>, но параллельность структуры читатели/читаемые  лучше видна при одновременной реализации.</p>
+<p>Ассоциация <code>followed</code> на самом деле не потребуется до <a class="ref" href="following-users#sec:followers">Раздела&nbsp;12.1.5</a>, но параллельность структуры читатели/читаемые  лучше видна при одновременной реализации.</p>
 
 <div class="label" id="sec:relationship_validations"></div>
 
@@ -459,7 +459,7 @@
 </div>
 
 
-<p>будет составлять массив, используя <code>followed_id</code> в таблице <code>relationships</code>. Но, как отмечалось в <a class="ref" href="following-users#sec:a_problem_with_the_data_model">Разделе&nbsp;12.1.1</a>, <code>user.followeds</code> это довольно <a href="http://translate.google.com/?q=awkward#">неуклюже</a>; гораздо более естественным будет использование &ldquo;following&rdquo; в качестве множественного числа для &ldquo;followed&rdquo;, и написание <code>user.following</code> для массива читаемых пользователей. Естественно, Rails позволяет переопределить умолчание, в данном случае с помощью <code>:source</code> параметра (<a class="ref" href="following-users#code:has_many_following_through_relationships">Листинг&nbsp;12.11</a>), что явно говорит Rails, что источником массива <code>following</code> является множество <code>followed</code>&nbsp;id.</p>
+<p>будет составлять массив, используя <code>followed_id</code> в таблице <code>relationships</code>. Но, как отмечалось в <a class="ref" href="following-users#sec:a_problem_with_the_data_model">Разделе&nbsp;12.1.1</a>, <code>user.followeds</code> это довольно <a href="http://translate.google.com/?q=awkward#">неуклюже</a>; гораздо более естественным будет использование &ldquo;following&rdquo; в качестве множественного числа для &ldquo;followed&rdquo;, и написание <code>user.following</code> для массива читаемых пользователей. Естественно, Rails позволяет переопределить умолчание, в данном случае с помощью <code>:source</code> параметра (<a class="ref" href="following-users#code:has_many_following_through_relationships">Листинг&nbsp;12.11</a>), который явно говорит Rails, что источником массива <code>following</code> является множество <code>followed</code>&nbsp;id.</p>
 
 <div class="label" id="code:has_many_following_through_relationships"></div>
 
@@ -483,7 +483,7 @@
 </div></div>
 
 
-<p>Чтобы создать взаимоотношение с читаемыми (пользователями), мы введем служебный метод <code>follow!</code> и мы сможем написать <code>user.follow!(other_user)</code>.<sup class="footnote" id="fnref:12.7"><a href="#fn:12.7">7</a></sup> Мы также добавим связанный булев метод <code>following?</code> для того чтобы протестировать, читает ли пользователь сообщения других пользователей.<sup class="footnote" id="fnref:12.8"><a href="#fn:12.8">8</a></sup> Тесты в <a class="ref" href="following-users#code:utility_method_tests">Листинге&nbsp;12.12</a> показывают как мы планируем использовать эти методы на практике.</p>
+<p>Для того, чтобы создать взаимоотношение с читаемыми (пользователями), мы введем служебный метод <code>follow!</code> и мы сможем написать <code>user.follow!(other_user)</code>.<sup class="footnote" id="fnref:12.7"><a href="#fn:12.7">7</a></sup> Мы также добавим связанный булев метод <code>following?</code> для того чтобы протестировать, читает ли пользователь сообщения других пользователей.<sup class="footnote" id="fnref:12.8"><a href="#fn:12.8">8</a></sup> Тесты в <a class="ref" href="following-users#code:utility_method_tests">Листинге&nbsp;12.12</a> показывают как мы планируем использовать эти методы на практике.</p>
 
 <div class="label" id="code:utility_method_tests"></div>
 
@@ -571,7 +571,7 @@
 </div></div>
 
 
-<p>Отметим, что в <a class="ref" href="following-users#code:following_p_follow_bang">Листинге&nbsp;12.13</a> мы опустили self пользователя, написав просто</p>
+<p>Отметим, что в <a class="ref" href="following-users#code:following_p_follow_bang">Листинге&nbsp;12.13</a> мы опустили самого пользователя, написав просто</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">relationships</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
 </pre></div>
@@ -698,7 +698,7 @@
 </div></div>
 
 
-<p>Как вы наверное подозреваете, мы не будем создавать полную таблицу в бд для того чтобы просто  повести реверс взаимоотношений. Вместо этого мы воспользуемся основной симметрией между читаемыми и читателями для симуляции таблицы  <code>reverse_relationships</code>, передав <code>followed_id</code> в качестве внешнего ключа. Иными словами, там где ассоциация <code>relationships</code> использует внешний ключ <code>follower_id</code>,</p>
+<p>Как вы наверное подозреваете, мы не будем создавать полную таблицу в базе данных только для того чтобы просто произвести реверс взаимоотношений. Вместо этого мы воспользуемся базовой симметрией между читаемыми и читателями для симуляции таблицы  <code>reverse_relationships</code>, передав <code>followed_id</code> в качестве внешнего ключа. Иными словами, там где ассоциация <code>relationships</code> использует внешний ключ <code>follower_id</code>,</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">has_many</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">:foreign_key</span> <span class="o">=&gt;</span> <span class="s2">&quot;follower_id&quot;</span>
 </pre></div>
@@ -712,7 +712,7 @@
 </div>
 
 
-<p>Ассоциация <code>followers</code> затем строится через реверсированные взаимоотношения, как показано в  <a class="ref" href="following-users#code:user_reverse_relationships">Листинге&nbsp;12.17</a>.</p>
+<p>Ассоциация <code>followers</code> затем строится через реверсированные взаимоотношения, как показано в <a class="ref" href="following-users#code:user_reverse_relationships">Листинге&nbsp;12.17</a>.</p>
 
 <div class="label" id="code:user_reverse_relationships"></div>
 
@@ -763,7 +763,7 @@
 <h2><a id="sec:12.2" href="following-users#sec:a_web_interface_for_following_and_followers" class="heading"><span class="number">12.2</span> Веб-интерфейс для читаемых и читателей</a></h2>
 
 
-<p>Во введении к этой главе, мы сделали предварительный обзор страниц, необходимых для слежения за сообщениями пользователей. В этом разделе мы реализуем базовый интерфейс и читать/не читать функциональность, показанные в тех макетах. Мы также сделаем отдельные страницы для демонстрациии массивов читателей и читающих. В <a class="ref" href="following-users#sec:the_status_feed">Разделе&nbsp;12.3</a>, мы завершим наш пример приложения, добавив ленту сообщений пользователя.</p>
+<p>Во введении к этой главе, мы сделали предварительный обзор страниц, необходимых для слежения за сообщениями пользователей. В этом разделе мы реализуем базовый интерфейс и читать/не читать функциональность, показанные в тех макетах. Мы также сделаем отдельные страницы для демонстрациии массивов читателей и читаемых. В <a class="ref" href="following-users#sec:the_status_feed">Разделе&nbsp;12.3</a>, мы завершим наш пример приложения, добавив ленту сообщений пользователя.</p>
 
 <div class="label" id="sec:sample_following_data"></div>
 
@@ -772,7 +772,7 @@
 
 <p>Как и в предыдущих главах, нам удобно будет использовать Rake задачу для заполнения базы данных образцами взаимоотношений. Это позволит нам заняться в первую очередь внешним видом страниц, временно отложив прикладную часть функциональности.</p>
 
-<p>Когда мы в последний раз видели заполнитель образцов данных в <a class="ref" href="user-microposts#code:sample_microposts">Листинге&nbsp;11.20</a>, он был немного суматошным. Поэтому мы начнем с определения отдельных методов для создания пользователей и микросообщений, а затем добавим образцы данных взаимоотношений используя новый метод <code>make_relationships</code>. Результаты показаны в <a class="ref" href="following-users#code:sample_relationships">Листинге&nbsp;12.18</a>.</p>
+<p>Когда мы последний раз видели заполнитель образцов данных в <a class="ref" href="user-microposts#code:sample_microposts">Листинге&nbsp;11.20</a>, он был немного суматошным. Поэтому мы начнем с определения отдельных методов для создания пользователей и микросообщений, а затем добавим образцы данных взаимоотношений используя новый метод <code>make_relationships</code>. Результаты показаны в <a class="ref" href="following-users#code:sample_relationships">Листинге&nbsp;12.18</a>.</p>
 
 <div class="label" id="code:sample_relationships"></div>
 
@@ -859,7 +859,7 @@
 
 <h3><a id="sec:12.2.2" href="following-users#sec:stats_and_a_follow_form" class="heading"><span class="number">12.2.2</span> Статистика и форма для слежения за сообщениями пользователя</a></h3>
 
-<p>Теперь, когда  у наших образцов пользователей есть массивы читателей и читающих, нам нужно обновить главные страницы и страницы профилей, чтобы отразить это. Мы начнем с создания партиала для отображения статистики читаемых и читателей на странице профиля и на главной странице, как показано на макетах в <a class="ref" href="following-users#fig:page_flow_profile_mockup">Рис.&nbsp;12.1</a> и <a class="ref" href="following-users#fig:page_flow_home_page_feed_mockup">Рис.&nbsp;12.5</a>. Результат будет отображать количиство читаемых и читающих пользователей, вместе со ссылками на специальные страницы для их просмотра. Затем мы добавим читать/не читать форму, и сделаем отдельные страницы для отображения читаемых и читающих пользователей.</p>
+<p>Теперь, когда  у наших образцов пользователей есть массивы читателей и читаемых, нам нужно обновить главные страницы и страницы профилей, чтобы отразить это. Мы начнем с создания партиала для отображения статистики читаемых и читателей на странице профиля и на главной странице, как показано на макетах в <a class="ref" href="following-users#fig:page_flow_profile_mockup">Рис.&nbsp;12.1</a> и <a class="ref" href="following-users#fig:page_flow_home_page_feed_mockup">Рис.&nbsp;12.5</a>. Результат будет отображать количиство читаемых и читающих пользователей, вместе со ссылками на специальные страницы для их просмотра. Затем мы добавим читать/не читать форму, и сделаем отдельные страницы для отображения читаемых и читающих пользователей.</p>
 
 <div class="label" id="fig:stats_partial_mockup"></div>
 
@@ -890,7 +890,7 @@
 </div></div>
 
 
-<p>Вы возможно догадываетесь, что URL для читаемых и читающих пользователей будут выглядеть как <tt>/users/1/following</tt> и <tt>/users/1/followers</tt>, и это именно то, что делает код в  <a class="ref" href="following-users#code:following_followers_actions_routes">Листинге&nbsp;12.19</a>. Поскольку обе страницы будут отображать данные, мы используем  <code>get</code> для того чтобы организовать ответ URL на запросы <tt>GET</tt> (что требуется конвенцией  REST для подобных страниц), и метод <code>member</code> означает, что маршруты отвечают на URL, содержащие id пользователя. (Другой возможный метод, <code>collection</code>, работает без id, так что</p>
+<p>Вы возможно догадываетесь, что URL для читаемых и читающих пользователей будут выглядеть как <tt>/users/1/following</tt> и <tt>/users/1/followers</tt>, и это именно то, что делает код в <a class="ref" href="following-users#code:following_followers_actions_routes">Листинге&nbsp;12.19</a>. Поскольку обе страницы будут отображать данные, мы используем  <code>get</code> для того чтобы организовать ответ URL на запросы <tt>GET</tt> (что требуется конвенцией  REST для подобных страниц), и метод <code>member</code> означает, что маршруты отвечают на URL, содержащие id пользователя. (Другой возможный метод, <code>collection</code>, работает без id, так что</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">resources</span> <span class="ss">:users</span> <span class="k">do</span>
   <span class="n">collection</span> <span class="k">do</span>
@@ -901,7 +901,7 @@
 </div>
 
 
-<p>будет отвечать на URL <tt>/users/tigers</tt>&nbsp;&mdash;&nbsp;предположительно для отображения всех тигров нашего приложения. Узнать больше об этой опции можно из <a rel="nofollow" href="http://www.rusrails.ru/rails-routing">Ruby on Rails по-русски &ldquo;Роутинг в Rails&rdquo;</a>.) Таблица маршрутов, сгенерированных <a class="ref" href="following-users#code:following_followers_actions_routes">Листингом&nbsp;12.19</a> представлена в <a class="ref" href="following-users#table:following_routes">Таблице&nbsp;12.1</a>; обратите внимание на именнованные маршруты для страниц с читателями и читающими, которые мы сейчас будем использовать.</p>
+<p>будет отвечать на URL <tt>/users/tigers</tt>&nbsp;&mdash;&nbsp;предположительно для отображения всех тигров нашего приложения. Узнать больше об этой опции можно из <a rel="nofollow" href="http://www.rusrails.ru/rails-routing">Ruby on Rails по-русски &ldquo;Роутинг в Rails&rdquo;</a>.) Таблица маршрутов, сгенерированных <a class="ref" href="following-users#code:following_followers_actions_routes">Листингом&nbsp;12.19</a> представлена в <a class="ref" href="following-users#table:following_routes">Таблице&nbsp;12.1</a>; обратите внимание на именнованные маршруты для страниц с читателями и читаемыми, которые мы сейчас будем использовать.</p>
 
 <div class="label" id="table:following_routes"></div>
 
@@ -915,7 +915,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 12.20.</span> <span class="description">Тестирование статистики читатели/читающие на Home странице. <br /> <code>spec/controllers/pages_controller_spec.rb</code></span>
+<div class="listing"><span class="header">Листинг 12.20.</span> <span class="description">Тестирование статистики читатели/читаемые на Home странице. <br /> <code>spec/controllers/pages_controller_spec.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="no">PagesController</span> <span class="k">do</span>
   <span class="n">render_views</span>
@@ -976,7 +976,7 @@
 </div>
 
 
-<p>Здесь мы использовали именованные маршруты, показанные в <a class="ref" href="following-users#table:following_routes">Таблице&nbsp;12.1</a> для проверки того, что ссылки имеют правильные  URL.</p>
+<p>Здесь мы использовали именованные маршруты, показанные в <a class="ref" href="following-users#table:following_routes">Таблице&nbsp;12.1</a> для проверки того, что ссылки имеют правильные URL.</p>
 
 <p>Код приложения для партиала статистики это всего лишь таблица внутри div, как показано в <a class="ref" href="following-users#code:stats_partial">Листинге&nbsp;12.21</a>.</p>
 
@@ -1165,7 +1165,7 @@
 </div></div>
 
 
-<p>Обе эти формы используют <code>form_for</code> для манипуляций с объектом модели Relationship; основное отличие между ними заключается в том, что <a class="ref" href="following-users#code:follow_form">Листинг&nbsp;12.25</a> строит <em>новое</em> взаимоотношение, тогда как <a class="ref" href="following-users#code:unfollow_form">Листинг&nbsp;12.26</a> ищет существующее взаимоотношение. Естественно, первый отправляет <tt>POST</tt> запрос к контроллеру Relationships для <code>create</code> взаимоотношения, в то время как последний отправляет <tt>DELETE</tt> запрос для <code>destroy</code> взаимоотношения. (Мы напишем эти действия в <a class="ref" href="following-users#sec:a_working_follow_button_the_standard_way">Разделе&nbsp;12.2.4</a>.) Наконец, отметьте, что форма follow/unfollow не содержит никакого контента кроме кнопки, но нам все еще необходимо отправить <code>followed_id</code>, чего мы можем добиться с помощью <code>hidden_field</code>; который производит HTML формы</p>
+<p>Обе эти формы используют <code>form_for</code> для манипуляций с объектом модели Relationship; основное отличие между ними заключается в том, что <a class="ref" href="following-users#code:follow_form">Листинг&nbsp;12.25</a> строит <em>новое</em> взаимоотношение, тогда как <a class="ref" href="following-users#code:unfollow_form">Листинг&nbsp;12.26</a> ищет существующее взаимоотношение. Естественно, первый отправляет <tt>POST</tt> запрос к контроллеру Relationships для <code>create</code> взаимоотношения, в то время как последний отправляет <tt>DELETE</tt> запрос для <code>destroy</code> взаимоотношения. (Мы напишем эти действия в <a class="ref" href="following-users#sec:a_working_follow_button_the_standard_way">Разделе&nbsp;12.2.4</a>.) Наконец, отметьте, что форма follow/unfollow не содержит никакого контента кроме кнопки, но нам все еще необходимо отправить <code>followed_id</code>, чего мы можем добиться с помощью <code>hidden_field</code>; который производит HTML вида</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;relationship_followed_id&quot;</span> <span class="na">name=</span><span class="s">&quot;relationship[followed_id]&quot;</span>
 <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">value=</span><span class="s">&quot;3&quot;</span> <span class="nt">/&gt;</span>
@@ -1998,7 +1998,7 @@
 </div>
 
 
-<p>вытягивает <em>всех</em> читаемых пользователей в память и создает массив длинной во весь список читаемых пользователей. Поскольку условие в  <a class="ref" href="following-users#code:from_users_followed_by_first_cut">Листинге&nbsp;12.42</a> на самом деле лишь проверяет включение множества, должен быть более эффективный способ для этого, да и  SQL оптимизирован именно для таких множественных операций. Во-вторых, метод в <a class="ref" href="following-users#code:from_users_followed_by_first_cut">Листинге&nbsp;12.42</a> всегда вытягивает <em>все</em> микросообщения и вколачиват их в Ruby массив. Хотя эти микросообщения пагинированы в представлении (<a class="ref" href="user-microposts#code:feed_instance_variable">Листинг&nbsp;11.33</a>), массив по-прежнему полноразмерный.<sup class="footnote" id="fnref:12.19"><a href="#fn:12.19">19</a></sup> Что мы действительно хотим, так это честную пагинацию, которая вытягивает только 30 элементов за раз.</p>
+<p>вытягивает <em>всех</em> читаемых пользователей в память и создает массив длинной во весь список читаемых пользователей. Поскольку условие в  <a class="ref" href="following-users#code:from_users_followed_by_first_cut">Листинге&nbsp;12.42</a> на самом деле лишь проверяет включение во множество, должен быть более эффективный способ для этого, да и SQL оптимизирован именно для таких множественных операций. Во-вторых, метод в <a class="ref" href="following-users#code:from_users_followed_by_first_cut">Листинге&nbsp;12.42</a> всегда вытягивает <em>все</em> микросообщения и вколачиват их в Ruby массив. Хотя эти микросообщения пагинированы в представлении (<a class="ref" href="user-microposts#code:feed_instance_variable">Листинг&nbsp;11.33</a>), массив по-прежнему полноразмерный.<sup class="footnote" id="fnref:12.19"><a href="#fn:12.19">19</a></sup> Что мы действительно хотим, так это честную пагинацию, которая вытягивает только 30 элементов за раз.</p>
 
 <p>Решение обеих задач включает в себя преобразование потока сообщений из метода класса в  <em>пространство</em>, которое является  Rails методом для ограничения выборки из базы данных, основанном на определенных условиях. Например, чтобы организовать выборку методом scope всех административных пользователей в нашем приложении, мы могли бы добавить пространство к User модели следующим образом:</p>
 
@@ -2185,13 +2185,13 @@
 
 <h3><a id="sec:12.3.4" href="following-users#sec:the_new_status_feed" class="heading"><span class="number">12.3.4</span> Новая лента сообщений</a></h3>
 
-<p>С кодом в <a class="ref" href="following-users#code:from_users_followed_by_final">Листинге&nbsp;12.45</a>, наша лента сообщений завершена. Напомним, что код для Home страницы, представлен в <a class="ref" href="following-users#code:real_feed_instance_variable">Листинге&nbsp;12.46</a>; этот код создает пагинированный поток соответствущих микросообщений для использования в представлении, как видно в <a class="ref" href="following-users#fig:home_page_with_feed">Рис.&nbsp;12.20</a>.<sup class="footnote" id="fnref:12.23"><a href="#fn:12.23">23</a></sup> Отметим, что <code>paginate</code> метод фактически достигает цели в методе модели  Micropost в  <a class="ref" href="following-users#code:from_users_followed_by_final">Листинге&nbsp;12.45</a>, организуя вытягивание только&nbsp;30 микросообщений за раз из базы данных.<sup class="footnote" id="fnref:12.24"><a href="#fn:12.24">24</a></sup></p>
+<p>С кодом в <a class="ref" href="following-users#code:from_users_followed_by_final">Листинге&nbsp;12.45</a>, наш поток сообщений завершен. Напомним, что код для Home страницы, представлен в <a class="ref" href="following-users#code:real_feed_instance_variable">Листинге&nbsp;12.46</a>; этот код создает пагинированный поток соответствущих микросообщений для использования в представлении, как видно в <a class="ref" href="following-users#fig:home_page_with_feed">Рис.&nbsp;12.20</a>.<sup class="footnote" id="fnref:12.23"><a href="#fn:12.23">23</a></sup> Отметим, что <code>paginate</code> метод фактически достигает цели в методе модели  Micropost в <a class="ref" href="following-users#code:from_users_followed_by_final">Листинге&nbsp;12.45</a>, организуя вытягивание только&nbsp;30 микросообщений за раз из базы данных.<sup class="footnote" id="fnref:12.24"><a href="#fn:12.24">24</a></sup></p>
 
 <div class="label" id="code:real_feed_instance_variable"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 12.46.</span> <span class="description"><code>Home</code> действие с пагинированным потоком. <br /> <code>app/controllers/pages_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 12.46.</span> <span class="description">Действие <code>home</code> с пагинированным потоком. <br /> <code>app/controllers/pages_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">PagesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
 
@@ -2215,7 +2215,7 @@
 <div class="label" id="fig:home_page_with_feed"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_page_with_feed.png" alt="home_page_with_feed" /></span></div><div class="caption"><span class="header">Рисунок  12.20: </span><span class="description">Home страница с работающей лентой сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/home_page_with_feed-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_page_with_feed.png" alt="home_page_with_feed" /></span></div><div class="caption"><span class="header">Рисунок  12.20: </span><span class="description">Home страница с работающим потоком сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/home_page_with_feed-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -2225,7 +2225,7 @@
 
 <h2><a id="sec:12.4" href="following-users#sec:following_conclusion" class="heading"><span class="number">12.4</span> Заключение</a></h2>
 
-<p>Добавив ленту сообщений, мы закончили ядро примера приложения <em>Учебника Ruby on Rails</em>. Это приложение включает в себя примеры всех основных возможностей Rails, включая модели, представления, контроллеры, шаблоны, партиалы, фильтры, валидации, обратные вызовы, <code>has_many</code>/<code>belongs_to</code> и <code>has_many :through</code> ассоциации, безопасность, тестирование и развертывание. Несмотря на это внушительный список, предстоит еще многое узнать о Rails. В качестве первого шага в этом процессе, этот раздел содержит некоторые рекомендуемые расширения основного приложения, а также рекомендации для дальнейшего обучения.</p>
+<p>Добавив ленту сообщений, мы закончили ключевой пример приложения <em>Учебника Ruby on Rails</em>. Это приложение включает в себя примеры всех основных возможностей Rails, включая модели, представления, контроллеры, шаблоны, партиалы, фильтры, валидации, обратные вызовы, <code>has_many</code>/<code>belongs_to</code> и <code>has_many :through</code> ассоциации, безопасность, тестирование и развертывание. Несмотря на это внушительный список, предстоит еще многое узнать о Rails. В качестве первого шага в этом процессе, этот раздел содержит некоторые рекомендуемые расширения основного приложения, а также рекомендации для дальнейшего обучения.</p>
 
 <p>Прежде чем перейти к решению любого из предложенных расширений приложения, хорошо бы объединить ваши изменения и развернуть приложение:</p>
 
@@ -2260,7 +2260,7 @@
 
 <p>Твиттер позволяет пользователям делать &ldquo;@replies&rdquo;, которые являются микросообщениями, чьи первые символы являются логином пользователя предшествующим знаку&nbsp;<tt>@</tt>. Эти сообщения появляются только в потоке сообщений у пользователя задавшего вопрос или у пользователей читающих данного пользователя. Реализуйте упрощенную версию этого, ограничив появление @replies только в потоках сообщений получателя и отправителя. Это может подразумевать добавление <code>in_reply_to</code> столбца в таблицу <code>microposts</code> и дополнительного <code>including_replies</code> пространства к модели Micropost.</p>
 
-<p>Поскольку нашему приложению не хватает уникальных пользовательских логинов, вам также необходимо решить, каким способом представлять пользователей. Один из вариантов это использование комбинации id и имени, например <code>@1-michael-hartl</code>. Другой способ это <em>добавить</em> уникальное имя пользователя в процесс регистрации и затем использовать его в  @replies.</p>
+<p>Поскольку нашему приложению не хватает уникальных пользовательских логинов, вам также необходимо решить, каким способом представлять пользователей. Один из вариантов это использование комбинации id и имени, например <code>@1-michael-hartl</code>. Другой способ это <em>добавить</em> уникальное имя пользователя в процесс регистрации и затем использовать его в @replies.</p>
 
 <div class="label" id="sec:messaging"></div>
 
@@ -2286,7 +2286,7 @@
 <h4><a id="sec:12.4.1.4" href="following-users#sec:password_reminders" class="heading">Напоминание пароля</a></h4>
 
 
-<p>В настоящее время, если пользователи нашего приложения забудут свои пароли, они не смогут их восстановить. Из-за одностороннего безопасного хэширования паролей в <a class="ref" href="modeling-and-viewing-users-two#top">Главе&nbsp;7</a>, наше приложение не может отправить по email пароли пользователей, но оно может отправить ссылку на форму сброса пароля. Введите  <code>PasswordReminders</code> ресурс для реализации этой функции. Вам следует создавать уникальный token для каждого сброса и отправлять его пользователю. Посещение URL с token должно позволять им сбрасывать старый пароль и назначать новый.</p>
+<p>В настоящее время, если пользователи нашего приложения забудут свои пароли, они не смогут их восстановить. Из-за одностороннего безопасного хэширования паролей в <a class="ref" href="modeling-and-viewing-users-two#top">Главе&nbsp;7</a>, наше приложение не может отправить по email пароли пользователей, но оно может отправить ссылку на форму сброса пароля. Введите <code>PasswordReminders</code> ресурс для реализации этой функции. Вам следует создавать уникальный token для каждого сброса и отправлять его пользователю. Посещение URL с token должно позволять им сбрасывать старый пароль и назначать новый.</p>
 
 <div class="label" id="sec:signup_confirmation"></div>
 
@@ -2294,7 +2294,7 @@
 <h4><a id="sec:12.4.1.5" href="following-users#sec:signup_confirmation" class="heading">Подтверждение регистрации</a></h4>
 
 
-<p>Помимо регулярного выражения для электронной почты, пример приложения в настоящее время не имеет способа проверки валидности пользовательского email адреса. Добавьте шаг проверки email адреса в подтверждение регистрации пользователя. Новая функция должна создавать пользователей в неактивном состоянии, отправлять по email пользователям активационный URL, и затем активировать статус пользователя при посещении соответствующего URL. Дя работы с активный/неактивный переходами вам может помочь прочтение <a href="http://www.google.com/search?q=state+machines+in+rails">state machines in Rails</a>.</p>
+<p>Помимо регулярного выражения для электронной почты, пример приложения в настоящее время не имеет способа проверки валидности пользовательского email адреса. Добавьте шаг проверки email адреса в подтверждение регистрации пользователя. Новая функция должна создавать пользователей в неактивном состоянии, отправлять по email пользователям активационный URL, а затем активировать статус пользователя при посещении соответствующего URL. Для работы с активный/неактивный переходами вам может помочь прочтение <a href="http://www.google.com/search?q=state+machines+in+rails">state machines in Rails</a>.</p>
 
 <div class="label" id="sec:rss_feed"></div>
 
@@ -2310,7 +2310,7 @@
 <h4><a id="sec:12.4.1.7" href="following-users#sec:rest_api" class="heading">REST API</a></h4>
 
 
-<p>Многие веб сайты раскрывают Application Programmer Interface (API) так что сторонние приложения могут  get, post, put и delete ресурсы приложения. Реализуйте такой REST API для примера приложения. Решение подразумевает добавление <code>respond_to</code> блоков  (<a class="ref" href="following-users#sec:a_working_follow_button_with_ajax">Раздел&nbsp;12.2.5</a>) ко многим действиям  Application контроллера;  они должны отвечать на запросы для XML. Позаботьтесь о безопасности; API должен быть доступен только авторизированным пользователям.</p>
+<p>Многие веб сайты раскрывают Application Programmer Interface (API) так что сторонние приложения могут  get, post, put и delete ресурсы приложения. Реализуйте такой REST API для примера приложения. Решение подразумевает добавление <code>respond_to</code> блоков  (<a class="ref" href="following-users#sec:a_working_follow_button_with_ajax">Раздел&nbsp;12.2.5</a>) ко многим действиям  Application контроллера; они должны отвечать на запросы для XML. Позаботьтесь о безопасности; API должен быть доступен только авторизированным пользователям.</p>
 
 <div class="label" id="sec:search"></div>
 
@@ -2329,13 +2329,13 @@
 
 
 <ul>
-<li><a href="http://railstutorial.org/screencasts"><em>Ruby on Rails Tutorial</em> screencasts</a>: я подготовил полноценный скринкаст курс основанный на этой книге. В дополнение к раскрытиювсех материалов этой книги, скринкасты дополнены советами, трюками и демонстрациями типа смотри-как-это-делается, которые сложно зафиксировать в печатном варианте. Они доступны на <a href="http://railstutorial.org/">сайте Ruby on Rails Tutorial</a>, через <a  href="http://my.safaribooksonline.com/">Safari Books Online</a>, и через <a href="http://www.informit.com/index.aspx">InformIT</a>.</li>
+<li><a href="http://railstutorial.org/screencasts"><em>Ruby on Rails Tutorial</em> screencasts</a>: я подготовил полноценный скринкаст курс основанный на этой книге. В дополнение к раскрытию всех материалов этой книги, скринкасты дополнены советами, трюками и демонстрациями типа смотри-как-это-делается, которые сложно зафиксировать в печатном варианте. Они доступны на <a href="http://railstutorial.org/">сайте Ruby on Rails Tutorial</a>, через <a  href="http://my.safaribooksonline.com/">Safari Books Online</a>, и через <a href="http://www.informit.com/index.aspx">InformIT</a>.</li>
 
-<li><a href="http://railscasts.com/">Railscasts</a>: Трудно переоценить важность ресурса Railscasts, я советую начать с посещения <a href="http://railscasts.ru/episodes/archive">архива эпизодов Railscasts</a> и клика по любой зацепившей вас теме.</li>
+<li><a href="http://railscasts.com/">Railscasts</a>: трудно переоценить важность ресурса Railscasts, я советую начать с посещения <a href="http://railscasts.ru/episodes/archive">архива эпизодов Railscasts</a> и клика по любой зацепившей вас теме.</li>
 
-<li><a href="http://railslab.newrelic.com/scaling-rails">Масштабирование Rails</a>: Одна тема в <em>Ruby on Rails Tutorial</em> осталась почти нетронутой: производительность, оптимизация и масштабирование. К счастью, большинство сайтов никогда не столкнется с серьезными проблемами масштабирования, и использование чего-либо кроме простого Rails для оптимизации вероятно будет преждевременным. Если вы столкнулись с проблемами производительности, <a href="http://railslab.newrelic.com/scaling-rails">Scaling Rails</a> серия от Gregg Pollack  <a href="http://envylabs.com/">Envy Labs</a> является прекрасным местом для старта. Я также рекомендую исследовать приложения для мониторинга сайтов <a  href="http://scoutapp.com/">Scout</a> и <a href="http://www.newrelic.com/">New Relic</a>.<sup class="footnote" id="fnref:12.26"><a href="gh12#fn:12.26">26</a></sup> И, как вы к этому времени можете подозревать, есть Railscasts по многим темам масштабирования, включая профилирование, кэширование и фоновые процессы.</li>
+<li><a href="http://railslab.newrelic.com/scaling-rails">Масштабирование Rails</a>: Одна тема в <em>Ruby on Rails Tutorial</em> осталась почти нетронутой: производительность, оптимизация и масштабирование. К счастью, большинство сайтов никогда не столкнется с серьезными проблемами масштабирования, и использование чего-либо кроме простого Rails для оптимизации вероятно будет преждевременным. Если вы столкнулись с проблемами производительности, <a href="http://railslab.newrelic.com/scaling-rails">Scaling Rails</a> серия от Gregg Pollack из <a href="http://envylabs.com/">Envy Labs</a> является прекрасным местом для старта. Я также рекомендую исследовать приложения для мониторинга сайтов <a  href="http://scoutapp.com/">Scout</a> и <a href="http://www.newrelic.com/">New Relic</a>.<sup class="footnote" id="fnref:12.26"><a href="gh12#fn:12.26">26</a></sup> И, как вы к этому времени можете подозревать, есть Railscasts по многим темам масштабирования, включая профилирование, кэширование и фоновые процессы.</li>
 
-<li>Ruby и Rails книги: Как упоминалось в <a class="ref" href="beginning#top">Главе&nbsp;1</a>, я рекомендую <a href="http://www.amazon.com/gp/product/1430223634?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1430223634"><em>Beginning Ruby</em></a> Петера Купера, <a href="http://www.amazon.com/gp/product/1933988657?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1933988657"><em>The Well-Grounded Rubyist</em></a> David&nbsp;A. Black, и <a href="http://www.amazon.com/gp/product/B000P28V8Q?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B000P28V8Q"><em>The Ruby Way</em></a> Хэла Фултона fдля дальнейшего изучения Ruby, и <a href="http://www.amazon.com/gp/product/0321601661?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321601661"><em>The Rails&nbsp;3 Way</em></a> Obie Fernandez для подробной информации о Rails.</li>
+<li>Ruby и Rails книги: Как упоминалось в <a class="ref" href="beginning#top">Главе&nbsp;1</a>, я рекомендую <a href="http://www.amazon.com/gp/product/1430223634?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1430223634"><em>Beginning Ruby</em></a> Петера Купера, <a href="http://www.amazon.com/gp/product/1933988657?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1933988657"><em>The Well-Grounded Rubyist</em></a> David&nbsp;A. Black, и <a href="http://www.amazon.com/gp/product/B000P28V8Q?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=B000P28V8Q"><em>The Ruby Way</em></a> Хэла Фултона для дальнейшего изучения Ruby, и <a href="http://www.amazon.com/gp/product/0321601661?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=390957&amp;creativeASIN=0321601661"><em>The Rails&nbsp;3 Way</em></a> Obie Fernandez для подробной информации о Rails.</li>
 
 <li><a href="http://peepcode.com/">PeepCode</a>: PeepCode</a>: я упоминал несколько коммерческих скринкастеров в <a class="ref" href="beginning#top">Главе&nbsp;1</a>,но только с одним из них у меня есть значительный опыт и это PeepCode. Скринкасты на PeepCode неизменно высокого качества и я горячо рекомендую их.</li>
 
@@ -2354,7 +2354,7 @@
 
 <ol>
 <li>Добавьте тесты для <code>dependent :destroy</code> в модели Relationship (<a class="ref" href="following-users#code:user_relationships_association">Листинг&nbsp;12.5</a> и <a class="ref" href="following-users#code:user_reverse_relationships">Листинг&nbsp;12.17</a>) следуя примеру в <a class="ref" href="user-microposts#code:micropost_dependency_test">Листинге&nbsp;11.11</a>.</li>
-<li>Метод <code>respond_to</code> виденый в <a class="ref" href="following-users#code:relationships_controller_ajax">Листинге&nbsp;12.36</a> на самом деле может быть поднят из действий в сам контроллер Relationships, и <code>respond_to</code> блоки могут быть заменены на  Rails метод <code>respond_with</code>. Подтвердите, что результирующий код, показаный в <a class="ref" href="following-users#code:compact_respond_to">Листинге&nbsp;12.47</a>, является корректным проверив что набор тестов все еще проходит. (Подробнее об этом методе см в Google поиске &ldquo;rails respond_with&rdquo;.)</li>
+<li>Метод <code>respond_to</code> виденый в <a class="ref" href="following-users#code:relationships_controller_ajax">Листинге&nbsp;12.36</a> на самом деле может быть поднят из действий в сам контроллер Relationships, и <code>respond_to</code> блоки могут быть заменены на  Rails метод <code>respond_with</code>. Подтвердите, что результирующий код, показаный в <a class="ref" href="following-users#code:compact_respond_to">Листинге&nbsp;12.47</a>, является корректным, проверив что набор тестов все еще проходит. (Подробнее об этом методе см в Google поиске &ldquo;rails respond_with&rdquo;.)</li>
 <li>Действия <code>following</code> и <code>followers</code> в  <a class="ref" href="following-users#code:following_followers_actions">Листинге&nbsp;12.29</a> до сих пор имеют значительное дублирование. Проверьте что <code>show_follow</code> метод в <a class="ref" href="following-users#code:following_followers_actions_refactored">Листинге&nbsp;12.48</a> устраняет это дублирование. (Посмотрим, сможете ли вы вывести чем занимается метод <code>send</code>, как в, например, <code>@user.send(:following)</code>.)</li>
 <li>Реорганизуйте <a class="ref" href="following-users#code:show_follow_view">Листинг&nbsp;12.30</a> добавив партиалы для кода общего для читаемые/читатели страниц, Home страницы, и страницы показывающей пользователя.</li>
 <li>Следуя модели в <a class="ref" href="following-users#code:stats_view_test">Листинге&nbsp;12.20</a>, напишите тесты для статистики на странице профиля.</li>
@@ -2442,13 +2442,13 @@
 <li id="fn:12.5">Технически, Rails использует метод <code>underscore</code> для преобразования имени класса в  id. Например, <code>"FooBar".underscore</code> это <code>foo_bar</code>, поэтому внешним ключом для объекта <code>FooBar</code> будет <code>foo_bar_id</code>. (Кстати, инверсией <code>underscore</code> является <code>camelize</code>, который конвертирует <code>camel_case</code> в <code>CamelCase</code>.)&nbsp;<a class="arrow" href="#fnref:12.5">&uarr;</a></li>
 <li id="fn:12.6">Если вы заметили что <code>followed_id</code> также идентифицирует пользователя, и обеспокоены ассиметричным обращением с читателями и читаемыми, вы готовы к любым неожиданностям. Мы займемся этим вопросом в <a class="ref" href="following-users#sec:followers">Разделе&nbsp;12.1.5</a>.&nbsp;<a class="arrow" href="#fnref:12.6">&uarr;</a></li>
 <li id="fn:12.7">Этот метод  <code>follow!</code> должен работать всегда, поэтому, (следуя модели <code>create!</code> и <code>save!</code>) мы ставим восклицательный знак и в случае провала будет вызвано исключение.&nbsp;<a class="arrow" href="#fnref:12.7">&uarr;</a></li>
-<li id="fn:12.8">Once you have a lot of experience modeling a particular domain, you can often guess such utility methods in advance, and even when you can&rsquo;t you&rsquo;ll often find yourself writing them to make the tests cleaner. In this case, though, it&rsquo;s OK if you wouldn&rsquo;t have guessed them. Software development is usually an iterative process&mdash;you write code until it starts getting ugly, and then you refactor it&mdash;but for brevity the tutorial presentation is streamlined a bit. (??)&nbsp;<a class="arrow" href="#fnref:12.8">&uarr;</a></li>
+<li id="fn:12.8">Если у вас есть большой опыт моделирования конкретной предметной области, вы зачастую можете предугадать такие вспомогательные методы, и даже если нет, вы часто обнаруживаете себя за их написанием с целью почистить тесты. Однако в данном случае нормально если вы не угадали их. Разработка програмного обеспечения это обычно итеративный процесс &mdash; вы пишете код до тех пор пока он не начинает становиться уродливым, а затем вы рефакторите его &mdash; но, для краткости, изложение в учебнике немного сглажено.&nbsp;<a class="arrow" href="#fnref:12.8">&uarr;</a></li>
 <li id="fn:12.9">Метод <code>authenticate_with_salt</code> включен только в качестве ориентира в файле модели User.&nbsp;<a class="arrow" href="#fnref:12.9">&uarr;</a></li>
-<li id="fn:12.10">Метод <code>unfollow!</code>  <em>не</em> вызывает исключения при неудаче&nbsp;&mdash;&nbsp;фактически я даже не знаю как Rails указывает на провальное уничтожение&nbsp;&mdash;&nbsp;но мы используем восклицательный знак для поддержания <code>follow!</code>/<code>unfollow!</code> симметрии.&nbsp;<a class="arrow" href="#fnref:12.10">&uarr;</a></li>
+<li id="fn:12.10">Метод <code>unfollow!</code> <em>не</em> вызывает исключения при неудаче&nbsp;&mdash;&nbsp;фактически я даже не знаю как Rails указывает на провальное уничтожение&nbsp;&mdash;&nbsp;но мы используем восклицательный знак для поддержания <code>follow!</code>/<code>unfollow!</code> симметрии.&nbsp;<a class="arrow" href="#fnref:12.10">&uarr;</a></li>
 <li id="fn:12.11">Вы могли заметить, что иногда мы получаем доступ к&nbsp;<code>id</code> явно, как в <code>followed.id</code>, а иногда мы просто используем <code>followed</code>. Мне стыдно признаться, но мой обычный алгоритм для выяснения того, что id можно опустить, заключается в проверке работает ли код без&nbsp;<code>.id</code>, а затем в  добавлении&nbsp;<code>.id</code> если не сработало.&nbsp;<a class="arrow" href="#fnref:12.11">&uarr;</a></li>
 <li id="fn:12.12">Все что содержится в <a class="ref" href="following-users#code:following_followers_tests">Листинге&nbsp;12.28</a> было раскрыто в других местах этого руководства, так что это хорошее упражнение в чтении кода.&nbsp;<a class="arrow" href="#fnref:12.12">&uarr;</a></li>
 <li id="fn:12.13">Так как номинально это является акронимом <em>asynchronous JavaScript and XML</em>, Ajax иногда ошибочно пишут как &ldquo;AJAX&rdquo;, хотя на протяжении всей <a href="http://www.adaptivepath.com/ideas/essays/archives/000385.php">оригинальной Ajax статьи</a> используется написание  &ldquo;Ajax&rdquo;.&nbsp;<a class="arrow" href="#fnref:12.13">&uarr;</a></li>
-<li id="fn:12.14">Это работает, только если JavaScript включен в браузере, но изящно деградирует, работая в точности как в  <a class="ref" href="following-users#sec:a_working_follow_button_the_standard_way">Разделе&nbsp;12.2.4</a> если JavaScript отключен.&nbsp;<a class="arrow" href="#fnref:12.14">&uarr;</a></li>
+<li id="fn:12.14">Это работает, только если JavaScript включен в браузере, но изящно деградирует, работая в точности как в <a class="ref" href="following-users#sec:a_working_follow_button_the_standard_way">Разделе&nbsp;12.2.4</a> если JavaScript отключен.&nbsp;<a class="arrow" href="#fnref:12.14">&uarr;</a></li>
 <li id="fn:12.15">В этот момент вы должны включить дефолтную <a href="http://www.prototypejs.org/">Prototype JavaScript Library</a> в вашем Rails приложение как в <a class="ref" href="updating-showing-and-deleting-users#code:adding_default_javascript">Листинге&nbsp;10.39</a> если вы этого еще не сделали.&nbsp;<a class="arrow" href="#fnref:12.15">&uarr;</a></li>
 <li id="fn:12.16">Нет никакой связи между этим <code>respond_to</code> и <code>respond_to</code> используемым в  RSpec примерах.&nbsp;<a class="arrow" href="#fnref:12.16">&uarr;</a></li>
 <li id="fn:12.17">Основное требование заключается в том, что перечисляемые объекты должны реализовывать <code>each</code> метод для перебора коллекции.&nbsp;<a class="arrow" href="#fnref:12.17">&uarr;</a></li>

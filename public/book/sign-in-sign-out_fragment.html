@@ -559,13 +559,13 @@
 
 <h3><a id="sec:9.3.2" href="sign-in-sign-out#sec:remember_me" class="heading"><span class="number">9.3.2</span> Запомнить меня</a></h3>
 
-<p>Мы теперь в состоянии приступить к реализации нашей модели входа, а именно, запоминанию статуса вошедшего пользователя &ldquo;навсегда&rdquo; и очистке сессии только тогда, когда пользователь явно покинет наш сайт. Сами функции входа, в конечном итоге, пересекают традиционное Модель-Представление-Контроллер; в частности, несколько функций входа должны быть доступны и в контроллерах и в представлениях. Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec:back_to_the_title_helper">Раздела&nbsp;4.2.5</a> что Ruby предоставляет <em>модуль</em> для упаковки функций вместе и включения их в нескольких местах, и это план для функций аутентификации. Мы могли бы сделать совершенно новый модуль для аутентификации, но контроллер Sessions уже оснащен модулем, а именно, <code>SessionsHelper</code>. Кроме того, помощники, автоматически включаются в Rails представления, так что все что мы должны сделать, чтобы использовать функции Sessions хелпера  в контроллерах, это включить соответствующий модуль в Application controller (<a class="ref" href="sign-in-sign-out#code:sessions_helper_include">Листинг&nbsp;9.11</a>).</p>
+<p>Мы теперь в состоянии приступить к реализации нашей модели входа, а именно, запоминанию статуса вошедшего пользователя &ldquo;навсегда&rdquo; и очистке сессии только тогда, когда пользователь явно покинет наш сайт. Сами функции входа, в конечном итоге, пересекают традиционное Модель-Представление-Контроллер; в частности, несколько функций входа должны быть доступны и в контроллерах и в представлениях. Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec:back_to_the_title_helper">Раздела&nbsp;4.2.5</a>, что Ruby предоставляет <em>модули</em> для упаковки функций вместе и включения их в нескольких местах, и это план для функций аутентификации. Мы могли бы сделать совершенно новый модуль для аутентификации, но контроллер Sessions уже оснащен модулем, а именно, <code>SessionsHelper</code>. Кроме того, помощники автоматически включаются в Rails представления, так что все что мы должны сделать для того чтобы использовать функции Sessions хелпера  в контроллерах, это включить соответствующий модуль в Application контроллер (<a class="ref" href="sign-in-sign-out#code:sessions_helper_include">Листинг&nbsp;9.11</a>).</p>
 
 <div class="label" id="code:sessions_helper_include"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 9.11.</span> <span class="description">Включение модуля Sessions хелпер в Application controller. <br /> <code>app/controllers/application_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 9.11.</span> <span class="description">Включение модуля SessionsHelper в контроллер Application. <br /> <code>app/controllers/application_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
   <span class="n">protect_from_forgery</span>
@@ -575,7 +575,7 @@
 </div></div>
 
 
-<p>По умолчанию, все помощники доступны в <code>views</code>, но не в контроллерах.  Нам нужны методы Sessions хелпера в обоих местах, поэтому мы должны включить его в явном виде.</p>
+<p>По умолчанию, все помощники доступны во <code>views</code>, но не в контроллерах.  Нам нужны методы Sessions хелпера в обоих местах, поэтому мы должны явно включить его.</p>
 
 <div class="label" id="sidebar:session_cookie"></div>
 
@@ -590,13 +590,13 @@
 
 <pre class="verbatim">  User.find_by_id(session[:remember_token])</pre>
 
-<p>чтобы извлечь пользователя. Из-за способа, которым Rails обрабатывает сессии, этот процесс является безопасным, если злоумышленник попытается подменить идентификатор пользователя, Rails обнаружит несоответствие, основываясь на специальном <em>session id</em>, генерируемом для каждой сессии.</p>
+<p>для получения пользователя. Из-за способа, которым Rails обрабатывает сессии, этот процесс является безопасным, если злоумышленник попытается подменить идентификатор пользователя, Rails обнаружит несоответствие, основываясь на специальном <em>session id</em>, генерируемом для каждой сессии.</p>
 
 <p>Для выбранного нами способа, который подразумевает <em>постоянные</em> сессии&nbsp;&mdash;&nbsp;то есть статус, продолжающийся даже после того, как браузер закрыт&nbsp;&mdash;&nbsp;хранение идентификатора пользователя является серьезной дырой в безопасности. Как только мы разрываем связь между специальным идентификатором сессии и хранящимся идентификатором пользователя, злоумышленник может войти в систему под этим пользователем с <code>remember_token</code>, равным пользовательскому id. Чтобы исправить этот недостаток, мы сгенерируем уникальный, безопасный remember token для каждого пользователя, основанный на пользовательской соли и id. Кроме того, <em>постоянный</em> remember token будет также представлять дыру в безопасности&nbsp;&mdash;&nbsp;путем проверки куки, злоумышленник может найти token а затем использовать его для входа с любого другого компьютера, в любое время. Мы решим эту проблему путем добавления <em>timestamp</em> (временнОй метки) к token, и сбрасыванием token каждый раз, когда пользователь входит в приложение. Это сделает постоянные сессии существенно менее проницаемыми для атак.</p>
 </div>
 
 
-<p>Теперь мы готовы к первому элементу входа, самой <code>sign_in</code> функции. Наш метод аутентификации заключается в помещении <em>remember token</em> как cookie в браузер пользователя (<a class="ref" href="sign-in-sign-out#sidebar:session_cookie">Блок&nbsp;9.2</a>), а затем использовании token для поиска записи пользователя в базе данных при перемещении пользователя от страницы к странице (реализовано в <a class="ref" href="sign-in-sign-out#sec:current_user">Разделе&nbsp;9.3.3</a>). В результате, <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;9.12</a>, отправляет в стек две вещи: хэш <code>cookies</code> и <code>current_user</code>.<sup class="footnote" id="fnref:9.6"><a href="#fn:9.6">6</a></sup> Let&rsquo;s start popping them off.(??)</p>
+<p>Теперь мы готовы к написанию первого элемента входа - самой <code>sign_in</code> функции. Наш метод аутентификации заключается в помещении <em>remember token</em> в качестве куки в браузер пользователя (<a class="ref" href="sign-in-sign-out#sidebar:session_cookie">Блок&nbsp;9.2</a>), а затем использовании token для поиска записи пользователя в базе данных при перемещении пользователя от страницы к странице (реализовано в <a class="ref" href="sign-in-sign-out#sec:current_user">Разделе&nbsp;9.3.3</a>). В результате, <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;9.12</a>, отправляет в стек две вещи: хэш <code>cookies</code> и <code>current_user</code>.<sup class="footnote" id="fnref:9.6"><a href="#fn:9.6">6</a></sup> Давайте с них и начнем.</p>
 
 <div class="label" id="code:sign_in_function"></div>
 
@@ -615,7 +615,7 @@
 </div></div>
 
 
-<p><a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;9.12</a> вводит утилиту <code>cookies</code>, поставляемую Rails. Мы можем использовать <code>cookies</code> как если бы она была хэшем; каждый элемент в cookie это сам хэш из двух элементов, <code>value</code> и дополнительное <code>expires</code> дата (срок)(# дата истечения). Например, мы могли бы осуществить вход пользователя путем размещения cookie со значением, равным пользовательскому id, которое истекает через 20 лет:</p>
+<p><a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;9.12</a> вводит утилиту <code>cookies</code>, поставляемую Rails. Мы можем использовать <code>cookies</code> как если бы она была хэшем; каждый элемент в куки представляет из себя хэш из двух элементов, <code>value</code> и дополнительную <code>expires</code> дату (# дату истечения). Например, мы могли бы осуществить вход пользователя путем размещения куки со значением, равным пользовательскому id, которое истекает через 20 лет:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:value</span>   <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">,</span>
                              <span class="ss">:expires</span> <span class="o">=&gt;</span> <span class="mi">20</span><span class="o">.</span><span class="n">years</span><span class="o">.</span><span class="n">from_now</span><span class="o">.</span><span class="n">utc</span> <span class="p">}</span>
@@ -652,8 +652,8 @@
 <div class="label" id="sidebar:time_helpers"></div>
 
 
-<div class="sidebar"><span class="title"><span class="header">Блок 9.3.</span><span class="description">Cookies истекают через <code>20.years.from_now</code></span></span>
-<p>Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec:a_class_of_our_own">Раздела&nbsp;4.4.2</a> что Ruby позволяет добавлять методы к <em>любому</em>, даже встроенному классу. В том разделе мы добавляли <code>palindrome?</code> метод к <code>String</code> классу (и в результате обнаружили, что <code>"deified"</code> является палиндромом), и мы также видели, как Rails добавляет <code>blank?</code> метод к классу <code>Object</code> (таким образом, <code>"".blank?</code>, <code>"&nbsp;".blank?</code>, и <code>nil.blank?</code> являются <code>true</code>). Код cookie в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;9.12</a> (который внутренне устанавливает срок действия cookie в <code>20.years.from_now</code>) дает еще один пример из этой практики, посредством одного из Rails&rsquo; <em>временных хелперов</em>, которые являются методами добавленными к <code>Fixnum</code> (базовый класс для чисел):</p>
+<div class="sidebar"><span class="title"><span class="header">Блок 9.3.</span><span class="description">Куки истекают через <code>20.years.from_now</code></span></span>
+<p>Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec:a_class_of_our_own">Раздела&nbsp;4.4.2</a>, что Ruby позволяет добавлять методы к <em>любому</em>, даже встроенному классу. В том разделе мы добавляли <code>palindrome?</code> метод к <code>String</code> классу (и в результате обнаружили, что <code>"deified"</code> является палиндромом), и мы также видели, как Rails добавляет <code>blank?</code> метод к классу <code>Object</code> (таким образом, <code>"".blank?</code>, <code>"&nbsp;".blank?</code>, и <code>nil.blank?</code> все являются <code>true</code>). Код куки в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;9.12</a> (который внутренне устанавливает срок действия cookie в <code>20.years.from_now</code>) дает еще один пример из этой практики, посредством одного из Rails&rsquo; <em>временных хелперов</em>, которые являются методами добавленными к <code>Fixnum</code> (базовый класс для чисел):</p>
 
 <pre class="verbatim">  $ rails console
   &gt;&gt; 1.year.from_now
@@ -850,7 +850,7 @@
 
 <p>Если бы мы сделали это, мы бы фактически повторили функциональность <code>attr_accessor</code>, впервые показанного в <a class="ref" href="rails-flavored-ruby#sec:a_user_class">Разделе&nbsp;4.4.5</a> и использовавшегося для создания виртуального атрибута <code>password</code> в <a class="ref" href="modeling-and-viewing-users-two#sec:password_validations">Разделе&nbsp;7.1.1</a>.<sup class="footnote" id="fnref:9.8"><a href="#fn:9.8">8</a></sup> Проблема в том, что он совершенно не в состоянии решить наши проблемы: с кодом в <a class="ref" href="sign-in-sign-out#code:current_user_wrong">Листинге&nbsp;9.15</a>, статус вошедшего пользователя будет забыт: как только пользователь перейдет на другую страницу&nbsp;&mdash;&nbsp;<a class="ref"  rel="nofollow" href="http://lingvo.yandex.ru/poof/%D1%81%20%D0%B0%D0%BD%D0%B3%D0%BB%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B3%D0%BE/">poof!</a>&nbsp;&mdash;&nbsp;сессия закончится и пользователь автоматически выйдет!</p>
 
-<p>Чтобы избежать этой проблемы, мы можем найти сессию пользователя соответствующую cookie созданному кодом в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;9.12</a>, как показано в <a class="ref" href="sign-in-sign-out#code:current_user_working">Листинге&nbsp;9.16</a>.</p>
+<p>Для того, чтобы избежать этой проблемы, мы можем найти сессию пользователя соответствующую куки созданной кодом в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;9.12</a>, как показано в <a class="ref" href="sign-in-sign-out#code:current_user_working">Листинге&nbsp;9.16</a>.</p>
 
 <div class="label" id="code:current_user_working"></div>
 
@@ -895,14 +895,14 @@
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 9.4.</span><span class="description">What the *$@! is <code>||=</code> ? (# мне показалось, или автор все же выругался?)(??)</span></span>
-<p>Конструкция <code>||=</code> очень Рубишная&nbsp;&mdash;&nbsp;то есть, она очень характерна для языка Ruby&nbsp;&mdash;&nbsp;и, следовательно, важно ее знать, если вы планируете много программировать на Ruby. Хотя на первый взгляд она может показаться таинственной, <em>или равно</em> легко понять по аналогии.</p>
+<p>Конструкция <code>||=</code> - очень Рубишная&nbsp;&mdash;&nbsp;то есть, она очень характерна для языка Ruby&nbsp;&mdash;&nbsp;и, следовательно, важно ее знать, если вы планируете много программировать на Ruby. Хотя на первый взгляд она может показаться таинственной, <em>или равно</em> легко понять по аналогии.</p>
 
 <p>Начнем с общепринятой идиомы для изменения определенной в настоящее время переменной. Многие компьютерные программы включают приращение переменной, как в</p>
 
 <pre class="verbatim">  x = x + 1</pre>
 
 
-<p>Большинство языков обеспечивают синтаксическое сокращение для этой операции, в Ruby (и в C, C++, Perl, Python, Java, и т.д.), это выглядит следующим образом:</p>
+<p>Большинство языков обеспечивают синтаксическое сокращение для этой операции; в Ruby (и в C, C++, Perl, Python, Java, и т.д.), это выглядит следующим образом:</p>
 
 <pre class="verbatim">  x += 1</pre>
 
@@ -1301,7 +1301,7 @@
 <h3><a id="sec:9.4.3" href="sign-in-sign-out#sec:changing_the_layout_links" class="heading"><span class="number">9.4.3</span> Изменение ссылок шаблона</a></h3>
 
 
-<p>Мы подходим, наконец, к практическому применению всей нашей войти/выйти работы: мы изменим ссылки в шаблоне, основываясь на статусе пользователя. В частности, как показано на макете в <a class="ref" href="sign-in-sign-out#fig:signin_success_mockup">Рис.&nbsp;9.6</a> мы организуем изменение ссылок, при входе и выходе пользователей из системы, и мы также добавим ссылку на профиль пользователя в страницу, показывающую пользователя для вошедших пользователей.</p>
+<p>Мы подходим, наконец, к практическому применению всей нашей войти/выйти работы: мы сделаем ссылки в шаблоне меняющимися в зависимости от статуса пользователя. В частности, как показано на макете в <a class="ref" href="sign-in-sign-out#fig:signin_success_mockup">Рис.&nbsp;9.6</a>, мы организуем изменение ссылок при входе и выходе пользователей из системы, а также мы добавим ссылку на профиль пользователя в страницу, показывающую пользователя для вошедших пользователей.</p>
 
 <p>Начнем с двух интеграционных тестов: один будет проверять, что ссылка <code>"Sign in"</code> будет появляться для не вошедших пользователей, а другой будет проверять, что ссылка <code>"Sign out"</code> будет появляться для вошедших пользователей; в обоих случаях будет проверяться, что ссылка ведет к надлежащему URL. Мы поместим эти тесты в тест ссылок макета, который мы создали в <a class="ref" href="filling-in-the-layout#sec:integration_tests">Разделе&nbsp;5.2.1</a>; результат представлен в <a class="ref" href="sign-in-sign-out#code:signin_layout_test">Листинге&nbsp;9.25</a>.</p>
 
@@ -1608,7 +1608,7 @@
 <li id="fn:9.6">На некоторых системах, вам, возможно, придется использовать <code>self.current_user = user</code> для прохождения предстоящих тестов.&nbsp;<a class="arrow" href="#fnref:9.6">&uarr;</a></li>
 <li id="fn:9.7">Из-за включения модуля Sessions хелпера в  Application controller, <code>self</code> переменная здесь является самим контроллером.&nbsp;<a class="arrow" href="#fnref:9.7">&uarr;</a></li>
 <li id="fn:9.8">Фактически, эти двое полностью эквивалентны; <code>attr_accessor</code> это просто удобный способ создать именно такие getter/setter методы автоматически.&nbsp;<a class="arrow" href="#fnref:9.8">&uarr;</a></li>
-<li id="fn:9.9">Как правило, это означает присвоение переменных, которые изначально <code>nil</code>, но не ложные (<code>false</code>) значения также будут переписаны оператором <code>||=</code>.&nbsp;<a class="arrow" href="#fnref:9.9">&uarr;</a></li>
+<li id="fn:9.9">Как правило, это означает присвоение переменных, которые изначально <code>nil</code>, но обратите внимание, что ложные (<code>false</code>) значения также будут переписаны оператором <code>||=</code>.&nbsp;<a class="arrow" href="#fnref:9.9">&uarr;</a></li>
 <li id="fn:9.10">Этот метод оптимизации, позволяющий избежать повторных вызовов функции известен как <a href="http://ru.wikipedia.org/wiki/Мемоизация"><em>мемоизация</em></a>.&nbsp;<a class="arrow" href="#fnref:9.10">&uarr;</a></li>
 <li id="fn:9.11">Это вызывает чувство, как будто хвост виляет собакой, но это цена, которую мы платим за использование передовых технологий.&nbsp;<a class="arrow" href="#fnref:9.11">&uarr;</a></li>
 <li id="fn:9.12">Если вы используете Spork, она будет расположена внутри блока <code>Spork.prefork</code>.&nbsp;<a class="arrow" href="#fnref:9.12">&uarr;</a></li>
