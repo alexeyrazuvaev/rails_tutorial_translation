@@ -23,6 +23,17 @@
           </tr>
         </table>
       </div><!-- <div class='connect'> -->
+      <div class="section">
+        <div class="switcher custom">
+          <span class="switcher_link <%= params[:version] ? '' : 'title round' %>">
+            <a href="/chapters/beginning">Rails 3.2</a>
+          </span>
+          •
+          <span class="switcher_link <%= params[:version] ? 'title round' : '' %>">
+            <a href="/chapters/beginning?version=3.0">Rails 3.0</a>
+          </span>
+        </div>
+      </div>
       <a rel="nofollow" href="http://orphus.ru" id="orphus" target="_blank">
         <img alt="Система Orphus" src="/images/orphus.gif" border="0" width="88" height="31" />
       </a>

@@ -2,9 +2,10 @@
   <div id="book_top">
   </div>
     <div id="book">
-<%= render 'layouts/contents' %>
-<%= render 'layouts/preamble' %>
-<%= raw @content %>
+      <% version = params[:version] ? '_3_0' : '' %>
+      <%= render "layouts/contents#{version}" %>
+      <%= render "layouts/preamble#{version}" %>
+      <%= raw @content %>
     </div>
   <div id="book_bottom">
   </div>
