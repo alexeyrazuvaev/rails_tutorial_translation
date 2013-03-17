@@ -1,0 +1,21 @@
+.origin {
+  padding: 10px 10px 0 10px;
+  border: 2px solid red;
+}
+
+body.book #sidebar #navtool .section .switcher .title {
+  padding-right: 2px !important;
+  margin-right: 5px;
+}
+
+
+body.book #sidebar #navtool .section .switcher.custom {
+  text-align: center;
+  margin-top: 7px;
+  padding-bottom: 6px;
+  border-bottom: none;
+}
+
+body.book #sidebar #navtool .section .switcher .switcher_link.title a {
+  color: white;
+}
