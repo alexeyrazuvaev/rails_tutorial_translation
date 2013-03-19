@@ -1,14 +1,14 @@
 <div id="top"></div>
 
 
-<h1 class="chapter"><a id="sec:3" href="static-pages#top" class="heading"><span class="number">Глава 3</span> В основном статические страницы</a></h1>
+<h1 class="chapter"><a id="sec-3" href="static-pages#top" class="heading"><span class="number">Глава 3</span> В основном статические страницы</a></h1>
 
 
 <p>В этой главе мы начнем разработку примера приложения, которое будет служить нам образцом в остальной части этого учебника. Хотя в примере приложения, в конечном счете будут пользователи, сообщения и полная система входа и аутентификации, мы начнем с, казалось бы, ограниченной темы: с создания статических страниц. Несмотря на свою кажущуюся простоту, создание статических страниц весьма поучительное упражнение — идеальное начало для нашего зарождающегося приложения.</p>
 
 <p>Хотя Rails предназначен для создания динамических веб сайтов, поддерживаемых базой данных, он также хорош при создании статических страниц, которые мы могли бы сделать на чистом HTML. В самом деле, использование Rails даже для статических страниц дает неоспоримое преимущество: мы можем легко добавлять лишь <em>небольшое</em> количество динамического содержания. В этой главе мы узнаем, как. По пути мы получим наш первый опыт <em>автоматического тестирования</em>, которое поможет нам быть более уверенными, в том, что наш код является правильным. Кроме того, хороший набор тестов позволит нам <em> реорганизовывать (refactor)</em> наш код с уверенностью, изменяя его форму, не меняя функций.</p>
 
-<p>В этой главе довольно много кода, особенно в <a class="ref" href="static-pages#sec:first_tests">Разделе&nbsp;3.2</a> и <a class="ref" href="static-pages#sec:slightly_dynamic_pages">Разделе&nbsp;3.3</a> и если вы новичок в Руби, вам не стоит беспокоиться о полном понимании происходящего. Как отмечалось вn <a class="ref" href="beginning#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, один из возможных вариантов - копипастинг тестов и использование их для проверки кода приложения, не особо заботясь в этой точке о понимании того как они работают. К тому же, <a class="ref" href="rails-flavored-ruby#top">Глава&nbsp;4</a> раскрывает тему Руби более полно, так что у этих идей будет масса возможностей осесть в вашей голове. Наконец, RSpec тесты  будут часто повторяться на протяжении учебника, так что если вы застрянете, я рекомендую прорываться вперед; вы будете поражены тем, как, буквально через несколько глав, изначально непостижимый код совершенно внезапно окажется простым.</p>
+<p>В этой главе довольно много кода, особенно в <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a> и <a class="ref" href="static-pages#sec-slightly_dynamic_pages">Разделе&nbsp;3.3</a> и если вы новичок в Руби, вам не стоит беспокоиться о полном понимании происходящего. Как отмечалось вn <a class="ref" href="beginning#sec-comments_for_various_readers">Разделе&nbsp;1.1.1</a>, один из возможных вариантов - копипастинг тестов и использование их для проверки кода приложения, не особо заботясь в этой точке о понимании того как они работают. К тому же, <a class="ref" href="rails-flavored-ruby#top">Глава&nbsp;4</a> раскрывает тему Руби более полно, так что у этих идей будет масса возможностей осесть в вашей голове. Наконец, RSpec тесты  будут часто повторяться на протяжении учебника, так что если вы застрянете, я рекомендую прорываться вперед; вы будете поражены тем, как, буквально через несколько глав, изначально непостижимый код совершенно внезапно окажется простым.</p>
 
 <p>Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, перед началом работы нам необходимо создать новый Rails-проект, который мы в этот раз назовем <code>sample_app</code>:</p>
 
@@ -19,11 +19,11 @@
 </div>
 
 
-<p>Здесь <tt class="verb">--skip-test-unit</tt> опция команды <code>rails</code> говорит Rails не генерировать директорию <code>test</code>, связанную с дефолтным <code>Test::Unit</code> фреймворком. И это вовсе не потому что мы не хотим писать тесты; наоборот, начиная с <a class="ref" href="static-pages#sec:first_tests">Раздела&nbsp;3.2</a> мы будем использовать альтернативный тестовый фреймворк <em>RSpec</em> для написания основательного набора тестов.</p>
+<p>Здесь <tt class="verb">--skip-test-unit</tt> опция команды <code>rails</code> говорит Rails не генерировать директорию <code>test</code>, связанную с дефолтным <code>Test::Unit</code> фреймворком. И это вовсе не потому что мы не хотим писать тесты; наоборот, начиная с <a class="ref" href="static-pages#sec-first_tests">Раздела&nbsp;3.2</a> мы будем использовать альтернативный тестовый фреймворк <em>RSpec</em> для написания основательного набора тестов.</p>
 
-<p>Как и в <a class="ref" href="a-demo-app#sec:planning_the_application">Разделе&nbsp;2.1</a>, нашим следующим шагом будет использование текстового редактора для добавления в <code>Gemfile</code> гемов, необходимых нашему приложению. Также, для примера приложения нам понадобятся два гема, в которых мы ранее не нуждались: гем для RSpec и гем для Rails-специфичной RSpec библиотеки . Код для их включения показан в <a class="ref" href="static-pages#code:gemfile_rspec">Листинге&nbsp;3.1</a>. (<em>Примечание</em>: если вы хотите установить <em>все</em> гемы, необходимые для примера приложения, вам следует использовать код из <a class="ref" href="updating-showing-and-deleting-users#code:final_gemfile">Листинга&nbsp;9.49</a>.)</p>
+<p>Как и в <a class="ref" href="a-demo-app#sec-planning_the_application">Разделе&nbsp;2.1</a>, нашим следующим шагом будет использование текстового редактора для добавления в <code>Gemfile</code> гемов, необходимых нашему приложению. Также, для примера приложения нам понадобятся два гема, в которых мы ранее не нуждались: гем для RSpec и гем для Rails-специфичной RSpec библиотеки . Код для их включения показан в <a class="ref" href="static-pages#code-gemfile_rspec">Листинге&nbsp;3.1</a>. (<em>Примечание</em>: если вы хотите установить <em>все</em> гемы, необходимые для примера приложения, вам следует использовать код из <a class="ref" href="updating-showing-and-deleting-users#code-final_gemfile">Листинга&nbsp;9.49</a>.)</p>
 
-<div class="label" id="code:gemfile_rspec"></div>
+<div class="label" id="code-gemfile_rspec"></div>
 
 
 <div class="codelisting">
@@ -31,22 +31,22 @@
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.6&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.12&#39;</span>
 
 <span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.5&#39;</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.11.0&#39;</span>
 <span class="k">end</span>
 
 <span class="c1"># Gems used only for assets and not required</span>
 <span class="c1"># in production environments by default.</span>
 <span class="n">group</span> <span class="ss">:assets</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.4&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.5&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;coffee-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.2&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;uglifier&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.3&#39;</span>
 <span class="k">end</span>
 
-<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.0&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span>
 
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
@@ -59,7 +59,7 @@
 </div></div>
 
 
-<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис.<sup class="footnote" id="fnref:3.1"><a href="#fn:3.1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить PostgreSQL гем в <em>production</em> для развертывания на Heroku:</p>
+<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис.<sup class="footnote" id="fnref-3_1"><a href="#fn-3_1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить PostgreSQL гем в <em>production</em> для развертывания на Heroku:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">group</span> <span class="ss">:production</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;pg&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12.2&#39;</span>
@@ -68,16 +68,16 @@
 </div>
 
 
-<p>Heroku не рекомендует использовать разные базы данных для девелопмент и продакшн окружений; но для примера приложения это не будет иметь никакого значения, и SQLite <em>намного</em> проще чем PostgreSQL в установке и конфигурировании. Установку и конфигурирование PostgreSQL на вашей локальной машине остается в качестве амбициозного задания для авантюристов и мазохистов (<a class="ref" href="static-pages#sec:static_pages_exercises">Раздел&nbsp;3.5</a>).</p>
+<p>Heroku не рекомендует использовать разные базы данных для девелопмент и продакшн окружений; но для примера приложения это не будет иметь никакого значения, и SQLite <em>намного</em> проще чем PostgreSQL в установке и конфигурировании. Установку и конфигурирование PostgreSQL на вашей локальной машине остается в качестве амбициозного задания для авантюристов и мазохистов (<a class="ref" href="static-pages#sec-static_pages_exercises">Раздел&nbsp;3.5</a>).</p>
 
-<p>Для установки и подключения новых гемов мы, как обычно, запускаем <code>bundle</code>:</p>
+<p>Для установки и подключения новых гемов мы запускаем <code>bundle update</code> и <code>bundle install</code>:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle install --without production
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle update
+<span class="gp">$</span> bundle install --without production
 </pre></div>
 </div>
 
-
-<p>Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы предотвратили установку продакшн гемов используя опцию <tt class="verb">--without</tt> <tt class="verb">production</tt>. Это &ldquo;запоминаемая опция&rdquo;, и это означает что нам не придется добавлять каждый раз при вызове Bundler. Вместо этого мы можем просто писать <code>bundle install</code>.<sup class="footnote" id="fnref:3.2"><a href="#fn:3.2">2</a></sup></p>
+<p>Аналогично <a class="ref" href="beginning#sec-heroku_setup">Разделу&nbsp;1.4.1</a> и <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы предотвратили установку продакшн гемов используя опцию <tt class="verb">--without</tt> <tt class="verb">production</tt>. Это &ldquo;запоминаемая опция&rdquo; и это означает что нам не придется добавлять ее каждый раз при вызове Bundler. Вместо этого мы можем просто писать <code>bundle install</code> и production гемы будут игнорированы автоматически.<sup class="footnote" id="fnref-3_2"><a href="#fn-3_2">2</a></sup></p>
 
 <p>Затем нам необходимо сконфигурировать Rails для использования RSpec вместо <code>Test::Unit</code>. Это может быть достигнуто с помощью <code>rails generate rspec:install</code>:</p>
 
@@ -88,7 +88,7 @@
 
 <p>Если ваша система жалуется на отсутствие <em>JavaScript runtime</em>, посетите <a href="https://github.com/sstephenson/execjs#">execjs страницу на GitHub</a>, где приведен список возможных решений. Я особенно рекомендую установку <a href="http://nodejs.org/">Node.js</a>.</p>
 
-<p>Все что нам осталось&nbsp;&mdash;&nbsp;инициализировать Git репозиторий:<sup class="footnote" id="fnref:3.3"><a href="#fn:3.3">3</a></sup></p>
+<p>Все что нам осталось&nbsp;&mdash;&nbsp;инициализировать Git репозиторий:<sup class="footnote" id="fnref-3_3"><a href="#fn-3_3">3</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git init
 <span class="gp">$</span> git add .
@@ -97,9 +97,9 @@
 </div>
 
 
-<p>Как и с первым приложением, я советую обновить <code>README</code> файл (находится в корневой директории приложения) чтобы сделать его более полезным и описательным, как показано в <a class="ref" href="static-pages#code:sample_app_readme">Листинге&nbsp;3.2</a>.</p>
+<p>Как и с первым приложением, я советую обновить <code>README</code> файл (находится в корневой директории приложения) чтобы сделать его более полезным и описательным, как показано в <a class="ref" href="static-pages#code-sample_app_readme">Листинге&nbsp;3.2</a>.</p>
 
-<div class="label" id="code:sample_app_readme"></div>
+<div class="label" id="code-sample_app_readme"></div>
 
 
 <div class="codelisting">
@@ -124,13 +124,13 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="fig:create_repository"></div>
+<div class="label" id="fig-create_repository"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/create_repository.png" alt="create_repository" /></span></div><div class="caption"><span class="header">Рис. 3.1: </span><span class="description">Создание sample_app репозитория на GitHub.&nbsp;<a href="http://railstutorial.org/images/figures/create_repository-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Так как мы будем использовать этот пример приложения в остальной части книги, хорошей идеей будет создать репозиторий (хранилище) на GitHub (<a class="ref" href="static-pages#fig:create_repository">Рис. 3.1</a>) и отправить в него наше приложение:</p>
+<p>Так как мы будем использовать этот пример приложения в остальной части книги, хорошей идеей будет создать репозиторий (хранилище) на GitHub (<a class="ref" href="static-pages#fig-create_repository">Рис. 3.1</a>) и отправить в него наше приложение:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git remote add origin git@github.com:&lt;username&gt;/sample_app.git
 <span class="gp">$</span> git push -u origin master
@@ -138,7 +138,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>В результате выполнения мною этого шага вы можете найти <a href="https://github.com/railstutorial/sample_app_2nd_ed">код примера приложения на GitHub</a> (с немного другим названием).<sup class="footnote" id="fnref:3.4"><a href="#fn:3.4">4</a></sup></p>
+<p>В результате выполнения мною этого шага вы можете найти <a href="https://github.com/railstutorial/sample_app_2nd_ed">код примера приложения на GitHub</a> (с немного другим названием).<sup class="footnote" id="fnref-3_4"><a href="#fn-3_4">4</a></sup></p>
 
 <p>Конечно, можно дополнительно развернуть приложение на Heroku даже на этом раннем этапе:</p>
 
@@ -165,15 +165,15 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Теперь, мы готовы начать разработку примера приложения.</p>
 
-<div class="label" id="sec:static_pages"></div>
+<div class="label" id="sec-static_pages"></div>
 
 
-<h2><a id="sec:3.1" href="static-pages#sec:static_pages" class="heading"><span class="number">3.1</span> Статические страницы</a></h2>
+<h2><a id="sec-3_1" href="static-pages#sec-static_pages" class="heading"><span class="number">3.1</span> Статические страницы</a></h2>
 
 
 <p>Rails имеет два основных способа создания статических веб-страниц. Во-первых, Рельсы могут обрабатывать <em>истинно</em> статические страницы, состоящие из чистых HTML файлов. Во-вторых, Рельсы могут определить <em>представления</em>, содержащие чистый HTML, которые Рельсы могут <em>интерпретировать</em> таким образом, что веб-сервер сможет отправить их в браузер.</p>
 
-<p>Для того, чтобы сориентироваться, полезно вспомнить структуру каталогов Rails из <a class="ref" href="beginning#sec:the_first_application">Раздела&nbsp;1.2.3</a> (<a class="ref" href="beginning#fig:directory_structure_rails_3_2">Рис. 1.2</a>). В этом разделе мы будем работать в основном в <code>app/controllers</code> и <code>app/views</code> директориях. (В <a class="ref" href="static-pages#sec:first_tests">Разделе&nbsp;3.2</a> мы даже добавим свою собственную директорию.)</p>
+<p>Для того, чтобы сориентироваться, полезно вспомнить структуру каталогов Rails из <a class="ref" href="beginning#sec-the_first_application">Раздела&nbsp;1.2.3</a> (<a class="ref" href="beginning#fig-directory_structure_rails_3_2">Рис. 1.2</a>). В этом разделе мы будем работать в основном в <code>app/controllers</code> и <code>app/views</code> директориях. (В <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a> мы даже добавим свою собственную директорию.)</p>
 
 <p>Это первый раздел в котором пригодится возможность открывать всю Rails директорию в вашем текстовом редакторе или IDE. К сожалению, способ сделать это зависит от системы, но в большинстве случаев вы можете открыть текущую диреторию приложения, представленную в Unix точкой <code>.</code>, используя консольную команду для выбранного вами редактора:</p>
 
@@ -192,30 +192,30 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Для Vim вы наберете <code>vim .</code>, <code>gvim .</code>, или <code>mvim .</code> в зависимости от используемого вами Vim-а.</p>
 
-<div class="label" id="sec:truly_static_pages"></div>
+<div class="label" id="sec-truly_static_pages"></div>
 
 
-<h3><a id="sec:3.1.1" href="static-pages#sec:truly_static_pages" class="heading"><span class="number">3.1.1</span> Истинно статические страницы.</a></h3>
+<h3><a id="sec-3_1_1" href="static-pages#sec-truly_static_pages" class="heading"><span class="number">3.1.1</span> Истинно статические страницы.</a></h3>
 
 
-<p>Мы начнем с по-настоящему статических страниц. Напомно из <a class="ref" href="beginning#sec:rails_server">Раздела&nbsp;1.2.5</a> что, благодаря <code>rails</code> сценарию, каждый новый Rails - проект поставляется как минимально рабочее приложение с дефолтной (по умолчанию) страницей приветствия по адресу <a href="http://localhost:3000/">http://localhost:3000/</a> (<a class="ref" href="beginning#fig:riding_rails_31">Рис. 1.3</a>).</p>
+<p>Мы начнем с по-настоящему статических страниц. Напомно из <a class="ref" href="beginning#sec-rails_server">Раздела&nbsp;1.2.5</a> что, благодаря <code>rails</code> сценарию, каждый новый Rails - проект поставляется как минимально рабочее приложение с дефолтной (по умолчанию) страницей приветствия по адресу <a href="http://localhost:3000/">http://localhost:3000/</a> (<a class="ref" href="beginning#fig-riding_rails_31">Рис. 1.3</a>).</p>
 
-<div class="label" id="fig:public_index_rails_3"></div>
+<div class="label" id="fig-public_index_rails_3"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/public_index_rails_3.png" alt="public_index_rails_3" /></span></div><div class="caption"><span class="header">Рис. 3.2: </span><span class="description">Файл <code>public/index.html</code>.&nbsp;<a href="http://railstutorial.org/images/figures/public_index_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы узнать, откуда берется эта страница, взгляните на файл <code>public/index.html</code> (<a class="ref" href="static-pages#fig:public_index_rails_3">Рис. 3.2</a>). Он немного грязноват, так как содержит свою собственную информацию о стилях, но он выполняет свою работу: по умолчанию, Rails обрабатывает любые файлы из <code>public</code> каталога, отправляя их непосредственно в браузер.<sup class="footnote" id="fnref:3.5"><a href="#fn:3.5">5</a></sup> В случае специального <code>index.html</code> файла, по умолчанию, вы можете даже не указывать файл в URI, как <code>index.html</code> Хотя вы можете включить его, если хотите; адреса <pre class="verbatim">http://localhost:3000/</pre> и <pre class="verbatim">http://localhost:3000/index.html</pre> эквивалентны.</p>
+<p>Чтобы узнать, откуда берется эта страница, взгляните на файл <code>public/index.html</code> (<a class="ref" href="static-pages#fig-public_index_rails_3">Рис. 3.2</a>). Он немного грязноват, так как содержит свою собственную информацию о стилях, но он выполняет свою работу: по умолчанию, Rails обрабатывает любые файлы из <code>public</code> каталога, отправляя их непосредственно в браузер.<sup class="footnote" id="fnref-3_5"><a href="#fn-3_5">5</a></sup> В случае специального <code>index.html</code> файла, по умолчанию, вы можете даже не указывать файл в URI, как <code>index.html</code> Хотя вы можете включить его, если хотите; адреса <pre class="verbatim">http://localhost:3000/</pre> и <pre class="verbatim">http://localhost:3000/index.html</pre> эквивалентны.</p>
 
-<p>Как и следовало ожидать, если захотим, мы можем сделать наши собственные статические файлы HTML и положить их в тот же <code>public</code> каталог как и <code>index.html</code>. Например, давайте создадим файл с дружеским приветствием  (<a class="ref" href="static-pages#code:hello_world">Листинг&nbsp;3.3</a>):<sup class="footnote" id="fnref:3.6"><a href="#fn:3.6">6</a></sup></p>
+<p>Как и следовало ожидать, если захотим, мы можем сделать наши собственные статические файлы HTML и положить их в тот же <code>public</code> каталог как и <code>index.html</code>. Например, давайте создадим файл с дружеским приветствием  (<a class="ref" href="static-pages#code-hello_world">Листинг&nbsp;3.3</a>):<sup class="footnote" id="fnref-3_6"><a href="#fn-3_6">6</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> subl public/hello.html
 </pre></div>
 </div>
 
 
-<div class="label" id="code:hello_world"></div>
+<div class="label" id="code-hello_world"></div>
 
 
 <div class="codelisting">
@@ -234,7 +234,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Мы видим в <a class="ref" href="static-pages#code:hello_world">Листинге&nbsp;3.3</a> типичную структуру HTML документа: <em>тип документа</em>, или doctype, заявление вверху, говорящее браузерам, какую версию HTML мы используем; (в данном случае, <a href="http://ru.wikipedia.org/wiki/HTML5">HTML5</a>);<sup class="footnote" id="fnref:3.7"><a href="#fn:3.7">7</a></sup> <code>head</code> раздел, в данном случае с &ldquo;Greeting&rdquo; внутри <code>title</code> тега; и <code>body</code> раздел, в данном случае с &ldquo;Hello, world!&rdquo; внутри <code>p</code> (параграф) тега. (Отступ не является обязательным, HTML не чувствителен к пробелам, и игнорирует как табуляции так и пробелы, но это делает структуру документа легко читаемой.)</p>
+<p>Мы видим в <a class="ref" href="static-pages#code-hello_world">Листинге&nbsp;3.3</a> типичную структуру HTML документа: <em>тип документа</em>, или doctype, заявление вверху, говорящее браузерам, какую версию HTML мы используем; (в данном случае, <a href="http://ru.wikipedia.org/wiki/HTML5">HTML5</a>);<sup class="footnote" id="fnref-3_7"><a href="#fn-3_7">7</a></sup> <code>head</code> раздел, в данном случае с &ldquo;Greeting&rdquo; внутри <code>title</code> тега; и <code>body</code> раздел, в данном случае с &ldquo;Hello, world!&rdquo; внутри <code>p</code> (параграф) тега. (Отступ не является обязательным, HTML не чувствителен к пробелам, и игнорирует как табуляции так и пробелы, но это делает структуру документа легко читаемой.)</p>
 
 <p>Теперь запустите локальный сервер с помощью</p>
 
@@ -242,9 +242,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </pre></div>
 </div>
 
-<p>и перейдите на <a href="http://localhost:3000/hello.html">http://localhost:3000/hello.html</a>. Как и было обещано, Rails незамедлительно отобразил страницу (<a class="ref" href="static-pages#fig:hello_world">Рис. 3.3</a>). Обратите внимание, что название, отображаемое в верхней части окна браузера в <a class="ref" href="static-pages#fig:hello_world">Рис. 3.3</a> это просто содержимое <code>title</code> тега  —  &ldquo;Greeting&rdquo;.</p>
+<p>и перейдите на <a href="http://localhost:3000/hello.html">http://localhost:3000/hello.html</a>. Как и было обещано, Rails незамедлительно отобразил страницу (<a class="ref" href="static-pages#fig-hello_world">Рис. 3.3</a>). Обратите внимание, что название, отображаемое в верхней части окна браузера в <a class="ref" href="static-pages#fig-hello_world">Рис. 3.3</a> это просто содержимое <code>title</code> тега  —  &ldquo;Greeting&rdquo;.</p>
 
-<div class="label" id="fig:hello_world"></div>
+<div class="label" id="fig-hello_world"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/hello_world.png" alt="hello_world" /></span></div><div class="caption"><span class="header">Рис. 3.3: </span><span class="description">Новый статический HTML файл.&nbsp;<a href="http://railstutorial.org/images/figures/hello_world-full.png">(полный размер)</a></span></div></div>
@@ -253,39 +253,34 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <p>Так как этот файл предназначен лишь для демонстрационных целей, и, в действительности, мы не хотим, чтобы он стал частью нашего примера приложения, лучше удалить его:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rm public/hello.html
-</pre></div>
-</div>
+</pre></div></div>
 
 
-<p>Пока мы оставим <code>index.html</code> файл, но, конечно, в итоге мы удалим и его: мы ведь не хотим, чтобы главной страницей нашего приложения была дефолтная страница Rails показанная на <a class="ref" href="beginning#fig:riding_rails_31">Рис. 1.3</a>. В <a class="ref" href="filling-in-the-layout#sec:layout_links">Разделе&nbsp;5.3</a> мы увидим, что нужно изменить, чтобы адрес <a href="http://localhost:3000/">http://localhost:3000/</a> указывал на нечто иное, нежели <code>public/index.html</code>.</p>
+<p>Пока мы оставим <code>index.html</code> файл, но, конечно, в итоге мы удалим и его: мы ведь не хотим, чтобы главной страницей нашего приложения была дефолтная страница Rails показанная на <a class="ref" href="beginning#fig-riding_rails_31">Рис. 1.3</a>. В <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a> мы увидим, что нужно изменить, чтобы адрес <a href="http://localhost:3000/">http://localhost:3000/</a> указывал на нечто иное, нежели <code>public/index.html</code>.</p>
 
-<div class="label" id="sec:static_pages_with_rails"></div>
-
-
-<h3><a id="sec:3.1.2" href="static-pages#sec:static_pages_with_rails" class="heading"><span class="number">3.1.2</span> Статические страницы с Rails</a></h3>
+<div class="label" id="sec-static_pages_with_rails"></div>
 
 
-<p>Возможность возвращать (показывать) статические HTML файлы это хорошо, но это не особенно полезно для создания динамических веб-приложений. В этом разделе мы сделаем первый шаг на пути создания динамических страниц, создав несколько Rails <em>действий</em>, которые являются более мощным средством для определения URL(-ов), нежели статические файлы.<sup class="footnote" id="fnref:3.8"><a href="#fn:3.8">8</a></sup> Rails действия взаимосвязаны внутри
-<em>контроллера (Controller)</em> (C в MVC из <a class="ref" href="beginning#sec:mvc">Раздела&nbsp;1.2.6</a>), который содержит ряд actions (действий), связанных общей целью. Мы получили представление о контроллерах в  <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a> и придем к еще более глубокому пониманию их когда изучим
+<h3><a id="sec-3_1_2" href="static-pages#sec-static_pages_with_rails" class="heading"><span class="number">3.1.2</span> Статические страницы с Rails</a></h3>
+
+
+<p>Возможность возвращать (показывать) статические HTML файлы это хорошо, но это не особенно полезно для создания динамических веб-приложений. В этом разделе мы сделаем первый шаг на пути создания динамических страниц, создав несколько Rails <em>действий</em>, которые являются более мощным средством для определения URL(-ов), нежели статические файлы.<sup class="footnote" id="fnref-3_8"><a href="#fn-3_8">8</a></sup> Rails действия взаимосвязаны внутри
+<em>контроллера (Controller)</em> (C в MVC из <a class="ref" href="beginning#sec-mvc">Раздела&nbsp;1.2.6</a>), который содержит ряд actions (действий), связанных общей целью. Мы получили представление о контроллерах в  <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a> и придем к еще более глубокому пониманию их когда изучим
 <a href="http://ru.wikipedia.org/wiki/REST">REST архитектуру</a> более полно (начиная с<a class="ref" href="modeling-users#top">Главы&nbsp;6</a>); в сущности, контроллер это контейнер для группы (возможно, динамических) веб-страниц.</p>
 
-<p>Для начала, вспомним из <a class="ref" href="beginning#sec:git_commands">Раздела&nbsp;1.3.5</a>, что, при использовании Git, хорошо бы делать нашу работу в ветке с отдельной темой, а не в мастер ветке. Если вы используете Git для управления версиями, вам следует выполнить следующую команду:</p>
+<p>Для начала, вспомним из <a class="ref" href="beginning#sec-git_commands">Раздела&nbsp;1.3.5</a>, что, при использовании Git, хорошо бы делать нашу работу в ветке с отдельной темой, а не в мастер ветке. Если вы используете Git для управления версиями, вам следует выполнить следующую команду:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git checkout -b static-pages
-</pre></div>
-</div>
-
+</pre></div></div>
 
 <p>Rails поставляется со скриптом для создания контроллеров называемым <code>generate</code>; имя контроллера это все, что ему (скрипту) нужно для его магической работы. Для того чтобы использовать <code>generate</code> совместно с RSpec, вам необходимо выполнить команду RSpec <code>generator</code> если вы этого не сделали во введении к этой главе:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate rspec:install
-</pre></div>
-</div>
+</pre></div></div>
 
+<p>Так как мы делаем этот контроллер для обработки статических страниц, мы назовем его StaticPages контроллер Мы также запланируем сделать actions (действия) для Home, Help и About страниц. <code>Generate</code> скрипт принимает, дополнительно, перечень действий, поэтому мы включим некоторые из наших первоначальных действий непосредственно в командную строку: (<a class="ref" href="static-pages#code-generating_pages">Листинг&nbsp;3.4</a>).</p>
 
-<p>Так как мы делаем этот контроллер для обработки статических страниц, мы назовем его StaticPages контроллер Мы также запланируем сделать actions (действия) для Home, Help и About страниц. <code>Generate</code> скрипт принимает, дополнительно, перечень действий, поэтому мы включим некоторые из наших первоначальных действий непосредственно в командную строку: (<a class="ref" href="static-pages#code:generating_pages">Листинг&nbsp;3.4</a>).</p>
-
-<div class="label" id="code:generating_pages"></div>
+<div class="label" id="code-generating_pages"></div>
 
 
 <div class="codelisting">
@@ -310,17 +305,26 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Обратите внимание на опцию <tt class="verb">--no-test-framework</tt> используемую для подавления генерации дефолтных RSpec тестов, которые мы не планируем использовать. Вместо этого мы создадим тесты вручную в <a class="ref" href="static-pages#sec:first_tests">Разделе&nbsp;3.2</a>. Мы также намеренно не включили <code>about</code> действие в аргументы команды из <a class="ref" href="static-pages#code:generating_pages">Листинга&nbsp;3.4</a> поэтому мы сможем увидеть как добавить его используя разработку через тестирование, или TDD (<a class="ref" href="static-pages#sec:first_tests">Раздел&nbsp;3.2</a>).</p>
+<p>Обратите внимание на опцию <tt class="verb">--no-test-framework</tt> используемую для подавления генерации дефолтных RSpec тестов, которые мы не планируем использовать. Вместо этого мы создадим тесты вручную в <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a>. Мы также намеренно не включили <code>about</code> действие в аргументы команды из <a class="ref" href="static-pages#code-generating_pages">Листинга&nbsp;3.4</a> поэтому мы сможем увидеть как добавить его используя разработку через тестирование, или TDD (<a class="ref" href="static-pages#sec-first_tests">Раздел&nbsp;3.2</a>).</p>
 
-<p>Кстати, на случай если вы когда-либо сделаете ошибку при генерации кода, вам пригодятся знания о том как обратить процесс. См. в <a class="ref" href="static-pages#sidebar:undoing_things">Блоке&nbsp;3.1</a> несколько техник переделывания в Rails.</p>
+<p>В <a class="ref" href="static-pages#code-generating_pages">Листинге&nbsp;3.4</a>, обратите внимание на то что мы передали имя контроллера в так называемом <a href="https://ru.wikipedia.org/wiki/CamelCase">CamelCase</a>, что привело к созданию файла контроллера, название которого написано в <a href="https://en.wikipedia.org/wiki/Snake_case">snake_case</a>, таким образом контроллер названный StaticPages привел к файлу названному <code>static_pages_controller.rb</code>. Это просто соглашение и, фактически, использование snake_case в командной строке допустимо: команда</p>
 
-<div class="label" id="sidebar:undoing_things"></div>
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate controller static_pages ...
+</pre></div>
+</div>
+
+
+<p>тоже сгенерирует контроллер с названием <code>static_pages_controller.rb</code>. Поскольку Ruby использует CamelCase для имен классов (<a class="ref" href="rails-flavored-ruby#sec-ruby_classes">Раздел&nbsp;4.4</a>), при упоминании контроллеров я предпочитаю использовать их названия в CamelCase, но это дело вкуса. (Поскольку Рубишные названия файлов обычно используют snake_case, Rails генератор конвертирует CamelCase в snake_case с помощью метода <a href="http://api.rubyonrails.org/classes/ActiveSupport/Inflector.html#method-i-underscore"><tt>underscore</tt></a>.)</p>
+
+<p>Кстати, на случай если вы когда-либо сделаете ошибку при генерации кода, вам пригодятся знания о том как обратить процесс. См. в <a class="ref" href="static-pages#sidebar-undoing_things">Блоке&nbsp;3.1</a> несколько техник переделывания в Rails.</p>
+
+<div class="label" id="sidebar-undoing_things"></div>
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 3.1.</span><span class="description">Переделки</span></span>
 <p>Даже если вы очень осторожны, все же некоторые вещи иногда могут пойти не так при разработке Rails приложений. К счастью, в Rails есть несколько возможностей которые могут помочь вам откатить изменения.</p>
 
-<p>Одним возможным сценарием является желание откатить генерацию кода связанное с необходимостью изменить название контроллера. При генерации контроллера, Rails создает гораздо большее количество файлов чем сам файл контроллера (как видно из <a class="ref" href="static-pages#code:generating_pages">Листинга&nbsp;3.4</a>). Откат генерации подразумевает не только удаление не только основного, но и всех сгенерированных вспомогательных файлов. (Фактически мы также хотим отменить все автоматические правки сделанные в файле <tt>routes.rb</tt>.) В Rails, это может быть осуществлено с помощью <tt>rails destroy</tt>. В частности, эти две команды отменяют друг друга:</p>
+<p>Одним возможным сценарием является желание откатить генерацию кода связанное с необходимостью изменить название контроллера. При генерации контроллера, Rails создает гораздо большее количество файлов чем сам файл контроллера (как видно из <a class="ref" href="static-pages#code-generating_pages">Листинга&nbsp;3.4</a>). Откат генерации подразумевает не только удаление не только основного, но и всех сгенерированных вспомогательных файлов. (Фактически мы также хотим отменить все автоматические правки сделанные в файле <tt>routes.rb</tt>.) В Rails, это может быть осуществлено с помощью <tt>rails destroy</tt>. В частности, эти две команды отменяют друг друга:</p>
 
 <pre class="verbatim">  $ rails generate controller FooBars baz quux
   $ rails destroy  controller FooBars baz quux</pre>
@@ -358,17 +362,17 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <p>С этими техниками на руках мы хорошо упакованы для того чтобы справиться с неизбежными при разработке <a href="http://en.wikipedia.org/wiki/SNAFU#SNAFU">казусами</a>.</p>
 </div>
 
-<p>Генерация контроллера StaticPages в <a class="ref" href="static-pages#code:generating_pages">Листинге&nbsp;3.4</a> автоматически обновляет <em>routes</em> файл, из каталога <code>config/routes.rb</code>, который Rails использует для определения соответствий между URI и веб страницами. Tак как это наше первое знакомство с <code>config</code> директорией, полезно взглянуть на нее (<a class="ref" href="static-pages#fig:config_directory_rails_3">Рис. 3.4</a>). <code>Сonfig</code>&nbsp;&mdash;&nbsp;директория где Rails хранит файлы, необходимые для  <em>конфиг</em>урации приложения&nbsp;&mdash;&nbsp;отсюда и название.</p>
+<p>Генерация контроллера StaticPages в <a class="ref" href="static-pages#code-generating_pages">Листинге&nbsp;3.4</a> автоматически обновляет <em>routes</em> файл, из каталога <code>config/routes.rb</code>, который Rails использует для определения соответствий между URI и веб страницами. Tак как это наше первое знакомство с <code>config</code> директорией, полезно взглянуть на нее (<a class="ref" href="static-pages#fig-config_directory_rails_3">Рис. 3.4</a>). <code>Сonfig</code>&nbsp;&mdash;&nbsp;директория где Rails хранит файлы, необходимые для  <em>конфиг</em>урации приложения&nbsp;&mdash;&nbsp;отсюда и название.</p>
 
-<div class="label" id="fig:config_directory_rails_3"></div>
+<div class="label" id="fig-config_directory_rails_3"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/config_directory_rails_3.png" alt="config_directory_rails_3" /></span></div><div class="caption"><span class="header">Рис. 3.4: </span><span class="description">Содержимое <code>config</code> директории примера приложения.&nbsp;<a href="http://railstutorial.org/images/figures/config_directory_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Так как мы сгенерировали <code>home</code> и <code>help</code> действия, файл маршрутов уже имеет правила для каждого из них, что видно в <a class="ref" href="static-pages#code:pages_routes">Листинге&nbsp;3.5</a>.</p>
+<p>Так как мы сгенерировали <code>home</code> и <code>help</code> действия, файл маршрутов уже имеет правила для каждого из них, что видно в <a class="ref" href="static-pages#code-pages_routes">Листинге&nbsp;3.5</a>.</p>
 
-<div class="label" id="code:pages_routes"></div>
+<div class="label" id="code-pages_routes"></div>
 
 
 <div class="codelisting">
@@ -393,10 +397,10 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 <p>направляет запрос для URI <tt>/static_pages/home</tt> в <code>home</code> действие контроллера StaticPages. Более того, используя <code>get</code> мы приговариваем маршрут отвечать на <tt>GET</tt>
-запрос, который является одним из фундаментальных <em>HTTP глаголов</em> поддерживаемых протоколом передачи гипертекста (<a class="ref" href="static-pages#sidebar:get_etc">Блок&nbsp;3.2</a>). В нашем случае это значит, что когда мы сгенерировали
-<code>home</code> действие внутри контроллера StaticPages мы автоматически получили страницу по адресу <tt>/pages/home</tt>. Чтобы увидеть результаты, убейте сервер, нажав Ctrl-C, запустите <code>rails server</code>, а затем перейдите на <a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a> (<a class="ref" href="static-pages#fig:raw_home_view">Рис. 3.5</a>).</p>
+запрос, который является одним из фундаментальных <em>HTTP глаголов</em> поддерживаемых протоколом передачи гипертекста (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.2</a>). В нашем случае это значит, что когда мы сгенерировали
+<code>home</code> действие внутри контроллера StaticPages мы автоматически получили страницу по адресу <tt>/pages/home</tt>. Чтобы увидеть результаты, убейте сервер, нажав Ctrl-C, запустите <code>rails server</code>, а затем перейдите на <a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a> (<a class="ref" href="static-pages#fig-raw_home_view">Рис. 3.5</a>).</p>
 
-<div class="label" id="fig:raw_home_view"></div>
+<div class="label" id="fig-raw_home_view"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/raw_home_view_31.png" alt="raw_home_view_31" /></span></div><div class="caption"><span class="header">Рис. 3.5: </span><span class="description">Cырое home представление (<a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/raw_home_view_31-full.png">(полный размер)</a></span></div></div>
@@ -404,7 +408,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sidebar:get_etc"></div>
+<div class="label" id="sidebar-get_etc"></div>
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 3.2.</span><span class="description"><tt>GET</tt>, <a href="http://ru.wikipedia.org/wiki/Etc.">et cet.</a></span></span>
@@ -416,13 +420,13 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Чтобы понять, откуда появилась эта страница, для начала посмотрите на контроллер StaticPages в текстовом редакторе, вы должны увидеть что-то вроде <a class="ref" href="static-pages#code:static_pages_controller">Листинга&nbsp;3.6</a>. Вы можете отметить, что, в отличие от демо контроллеров Users и Microposts из <a class="ref" href="a-demo-app#top">Главы&nbsp;2</a>, , контроллер StaticPages не использует стандартные REST действия. И это нормально для набора статических страниц — REST архитектура — не панацея для всех проблем.</p>
+<p>Чтобы понять, откуда появилась эта страница, для начала посмотрите на контроллер StaticPages в текстовом редакторе, вы должны увидеть что-то вроде <a class="ref" href="static-pages#code-static_pages_controller">Листинга&nbsp;3.6</a>. Вы можете отметить, что, в отличие от демо контроллеров Users и Microposts из <a class="ref" href="a-demo-app#top">Главы&nbsp;2</a>, , контроллер StaticPages не использует стандартные REST действия. И это нормально для набора статических страниц — REST архитектура — не панацея для всех проблем.</p>
 
-<div class="label" id="code:static_pages_controller"></div>
+<div class="label" id="code-static_pages_controller"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 3.6.</span> <span class="description">StaticPages контроллер созданный <a class="ref" href="static-pages#code:generating_pages">Листингом&nbsp;3.4</a>. <br /> <code>app/controllers/static_pages_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 3.6.</span> <span class="description">StaticPages контроллер созданный <a class="ref" href="static-pages#code-generating_pages">Листингом&nbsp;3.4</a>. <br /> <code>app/controllers/static_pages_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">StaticPagesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
 
@@ -436,7 +440,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Здесь мы видим что <code>static_pages_controller.rb</code> определяет <em>class</em> называемый <code>StaticPagesController</code>.  Классы это всего лишь удобный способ организации  <em>функций</em> (также называемых <em>методами</em>) таких как <code>home</code> и <code>help</code> действия, определяемых с помощью ключевого слова <code>def</code>. Угловая скобка <code></code> указывает на то, что <code>StaticPagesController</code> <em>наследует</em> от  Rails класса <code>ApplicationController</code>; как мы увидим через мгновение, это означает, что наши страницы оснащены большим количеством Rails-специфичных функций. (Мы узнаем больше об этих двух классах и наследовании в <a class="ref" href="rails-flavored-ruby#sec:ruby_classes">Section&nbsp;4.4</a>.)</p>
+<p>Здесь мы видим что <code>static_pages_controller.rb</code> определяет <em>class</em> называемый <code>StaticPagesController</code>.  Классы это всего лишь удобный способ организации  <em>функций</em> (также называемых <em>методами</em>) таких как <code>home</code> и <code>help</code> действия, определяемых с помощью ключевого слова <code>def</code>. Угловая скобка <code></code> указывает на то, что <code>StaticPagesController</code> <em>наследует</em> от  Rails класса <code>ApplicationController</code>; как мы увидим через мгновение, это означает, что наши страницы оснащены большим количеством Rails-специфичных функций. (Мы узнаем больше об этих двух классах и наследовании в <a class="ref" href="rails-flavored-ruby#sec-ruby_classes">Section&nbsp;4.4</a>.)</p>
 
 <p>В случае со StaticPages контроллером, оба его метода изначально пусты:</p>
 
@@ -449,11 +453,11 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>В переводе на простой Ruby, эти методы просто ничего не делают. В Rails, ситуация иная; <code>StaticPagesController</code> это класс Ruby, но благодаря тому, что он наследует от <code>ApplicationController</code> поведение его методов специфично для Rails: при посещении URI <tt>/static_pages/home</tt>, Rails смотрит в контроллер StaticPages и выполняет код в <code>home</code> действии, а затем рендерит <em>представление</em> ( V в MVC из <a class="ref" href="beginning#sec:mvc">Раздела&nbsp;1.2.6</a>) соответствующее данному действию. в данном случае  <code>home</code> действие пустое, поэтому все посещения <tt>/static_pages/home</tt> просто рендерят (отображают) представления. Итак, как же выглядит представление, и как мы можем его найти?</p>
+<p>В переводе на простой Ruby, эти методы просто ничего не делают. В Rails, ситуация иная; <code>StaticPagesController</code> это класс Ruby, но благодаря тому, что он наследует от <code>ApplicationController</code> поведение его методов специфично для Rails: при посещении URI <tt>/static_pages/home</tt>, Rails смотрит в контроллер StaticPages и выполняет код в <code>home</code> действии, а затем рендерит <em>представление</em> ( V в MVC из <a class="ref" href="beginning#sec-mvc">Раздела&nbsp;1.2.6</a>) соответствующее данному действию. в данном случае  <code>home</code> действие пустое, поэтому все посещения <tt>/static_pages/home</tt> просто рендерят (отображают) представления. Итак, как же выглядит представление, и как мы можем его найти?</p>
 
-<p>Если вы еще раз посмотрите на вывод в <a class="ref" href="static-pages#code:generating_pages">Листинге&nbsp;3.4</a>, вы можете найти соответствие между действиями и представлениями: действие, такое как <code>home</code> имеет соответствующее представление <code>home.html.erb</code>. Мы узнаем в <a class="ref" href="static-pages#sec:slightly_dynamic_pages">Разделе&nbsp;3.3</a>, что означает <code>.erb</code> часть расширения;  <code>.html</code> часть расширения подсказывает, что представление, в основном, выглядит как HTML (<a class="ref" href="static-pages#code:raw_home_view">Листинг&nbsp;3.7</a>).</p>
+<p>Если вы еще раз посмотрите на вывод в <a class="ref" href="static-pages#code-generating_pages">Листинге&nbsp;3.4</a>, вы можете найти соответствие между действиями и представлениями: действие, такое как <code>home</code> имеет соответствующее представление <code>home.html.erb</code>. Мы узнаем в <a class="ref" href="static-pages#sec-slightly_dynamic_pages">Разделе&nbsp;3.3</a>, что означает <code>.erb</code> часть расширения;  <code>.html</code> часть расширения подсказывает, что представление, в основном, выглядит как HTML (<a class="ref" href="static-pages#code-raw_home_view">Листинг&nbsp;3.7</a>).</p>
 
-<div class="label" id="code:raw_home_view"></div>
+<div class="label" id="code-raw_home_view"></div>
 
 
 <div class="codelisting">
@@ -465,9 +469,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Представление для <code>help</code> действия аналогично (<a class="ref" href="static-pages#code:raw_help_view">Listing&nbsp;3.8</a>).</p>
+<p>Представление для <code>help</code> действия аналогично (<a class="ref" href="static-pages#code-raw_help_view">Listing&nbsp;3.8</a>).</p>
 
-<div class="label" id="code:raw_help_view"></div>
+<div class="label" id="code-raw_help_view"></div>
 
 
 <div class="codelisting">
@@ -479,9 +483,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Оба эти представления&nbsp;&mdash;&nbsp;лишь заглушки: у них есть заголовок (внутри <code>h1</code> тега) и абзац (<code>p</code>тег) с указанием полного пути к соответствующему файлу. Мы добавим немного (очень немного) динамического контента, начиная с <a class="ref" href="static-pages#sec:slightly_dynamic_pages">Раздела&nbsp;3.3</a>, но пока они статичны, эти представления подчеркивают важный момент: Rails представления могут просто содержать статический HTML. Что касается браузера, то, чистые HTML файлы из <a class="ref" href="static-pages#sec:truly_static_pages">Раздела&nbsp;3.1.1</a> и контроллер / действие метод доставки страниц неразличимы: все, что видит браузер, это HTML.</p>
+<p>Оба эти представления&nbsp;&mdash;&nbsp;лишь заглушки: у них есть заголовок (внутри <code>h1</code> тега) и абзац (<code>p</code>тег) с указанием полного пути к соответствующему файлу. Мы добавим немного (очень немного) динамического контента, начиная с <a class="ref" href="static-pages#sec-slightly_dynamic_pages">Раздела&nbsp;3.3</a>, но пока они статичны, эти представления подчеркивают важный момент: Rails представления могут просто содержать статический HTML. Что касается браузера, то, чистые HTML файлы из <a class="ref" href="static-pages#sec-truly_static_pages">Раздела&nbsp;3.1.1</a> и контроллер / действие метод доставки страниц неразличимы: все, что видит браузер, это HTML.</p>
 
-<p>В оставшейся части этой главы мы добавим немного собственного контента в Home и Help страницы, а затем добавим About страницу которую мы пропустили в <a class="ref" href="static-pages#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Затем добавим очень небольшое количество динамического содержимого заменив статичный тайтл на тайтл меняющийся в зависимости от страницы.</p>
+<p>В оставшейся части этой главы мы добавим немного собственного контента в Home и Help страницы, а затем добавим About страницу которую мы пропустили в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Затем добавим очень небольшое количество динамического содержимого заменив статичный тайтл на тайтл меняющийся в зависимости от страницы.</p>
 
 <p>Прежде чем двинуться дальше, если вы используете Git, хорошей идеей будет добавление файлов для StaticPages контроллера в репозиторий:</p>
 
@@ -493,24 +497,24 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sec:first_tests"></div>
+<div class="label" id="sec-first_tests"></div>
 
 
-<h2><a id="sec:3.2" href="static-pages#sec:first_tests" class="heading"><span class="number">3.2</span> Наши первые тесты</a></h2>
+<h2><a id="sec-3_2" href="static-pages#sec-first_tests" class="heading"><span class="number">3.2</span> Наши первые тесты</a></h2>
 
 
-<p><em>Rails Tutorial</em> имеет интуитивно понятный подход к тестированию, который уделяет особое внимание поведению приложения, а не деталям его реализации, что является вариантом разработки через тестирование (TDD) известным как разработка через поведение (BDD). Нашими основными инструментами будут  <em>интеграционные тесты</em> (начиная с этого раздела) и <em>юнит тесты</em> (начиная с <a class="ref" href="modeling-users#top">Главы&nbsp;6</a>). Интеграционные тесты, известные в контексте RSpec как <em>request specs</em>, позволят нам симулировать действия пользователя взаимодействующего с нашим приложением через веб браузер. Совместно с замечательным синтаксисом предоставляемым Capybara, интеграционные тесты обеспечивают мощную методику тестирования функционала нашего приложения без необходимости вручную проверять каждую страницу в браузере. (Другой популярный инструмент для  BDD, называемый Cucumber, будет представлен в <a class="ref" href="sign-in-sign-out#sec:cucumber">Разделе&nbsp;8.3</a>.)</p>
+<p><em>Rails Tutorial</em> имеет интуитивно понятный подход к тестированию, который уделяет особое внимание поведению приложения, а не деталям его реализации, что является вариантом разработки через тестирование (TDD) известным как разработка через поведение (BDD). Нашими основными инструментами будут  <em>интеграционные тесты</em> (начиная с этого раздела) и <em>юнит тесты</em> (начиная с <a class="ref" href="modeling-users#top">Главы&nbsp;6</a>). Интеграционные тесты, известные в контексте RSpec как <em>request specs</em>, позволят нам симулировать действия пользователя взаимодействующего с нашим приложением через веб браузер. Совместно с замечательным синтаксисом предоставляемым Capybara, интеграционные тесты обеспечивают мощную методику тестирования функционала нашего приложения без необходимости вручную проверять каждую страницу в браузере. (Другой популярный инструмент для  BDD, называемый Cucumber, будет представлен в <a class="ref" href="sign-in-sign-out#sec-cucumber">Разделе&nbsp;8.3</a>.)</p>
 
 <p>Основополагающий принцип TDD это написание тестов <em>до</em>, написания кода приложения. Вначале это может оказаться непривычным и потребуется некоторое врмя для того чтобы привыкнуть, но оно того стоит. Написание <em>провального</em> теста и последующая реализация кода приложения для его прохождения увеличивает нашу уверенность в том, что данный тест действительно покрывает функциональность для которой он был написан. Кроме того, цикл разработки провал-реализация-прохождение вызывает <a href="http://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%82%D0%BE%D0%BA_%28%D0%BF%D1%81%D0%B8%D1%85%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F%29">потоковое состояние</a>, что приводит к получению удовольствия от кодинга и высокой производительности. Наконец, тесты играют роль <em>клиента</em> для кода приложения, что обычно приводит к более элегантному дизайну софта.</p>
 
 <p>Важно понимать, что TDD не всегда правильный инструмент для работы. В частности, когда вы не полностью уверены, в том, как решить данную проблему программирования, часто бывает полезным пропустить тесты и писать только код приложения, просто чтобы получить представление о том, как решение будет выглядеть. (На языке <a href="http://ru.wikipedia.org/wiki/Экстремальное_программирование">Экстремального Программирования (XP)</a> этот поисковый этап называется <a href="http://lingvo.yandex.ru/spike/"> <em>spike</em> </a>.) Как только вы увидите общую форму решения, вы сможете использовать TDD для реализации более изысканной версии.</p>
 
-<p>В этом разделе мы будем запускать тесты используя <code>rspec</code> команду, предоставляемую гемом RSpec. Такая практика эффективна но не идеальна, и если вы являетесь более продвинутым пользователем, то я советую настроить вашу систему как это описано в <a class="ref" href="static-pages#sec:advanced_setup">Разделе&nbsp;3.6</a>.</p>
+<p>В этом разделе мы будем запускать тесты используя <code>rspec</code> команду, предоставляемую гемом RSpec. Такая практика эффективна но не идеальна, и если вы являетесь более продвинутым пользователем, то я советую настроить вашу систему как это описано в <a class="ref" href="static-pages#sec-advanced_setup">Разделе&nbsp;3.6</a>.</p>
 
-<div class="label" id="sec:TDD"></div>
+<div class="label" id="sec-TDD"></div>
 
 
-<h3><a id="sec:3.2.1" href="static-pages#sec:TDD" class="heading"><span class="number">3.2.1</span> Разработка через тестирование</a></h3>
+<h3><a id="sec-3_2_1" href="static-pages#sec-TDD" class="heading"><span class="number">3.2.1</span> Разработка через тестирование</a></h3>
 
 
 <p>В Test-Driven Development, мы вначале пишем <em>провальный</em> тест, который в большинстве инструментов тестирования представлен красным цветом. Затем мы реализуем код необходимый для прохождения теста, проходящий тест обычно представлен зеленым цветом. Наконец, если необходимо, мы реорганизуем (рефакторим) код, меняя его форму  (например, устраняя повторения) не меняя его функций. Этот цикл известен как &ldquo;Красный, Зеленый, Реорганизация&rdquo;.</p>
@@ -524,9 +528,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Это создает <code>static_pages_spec.rb</code> в директории <code>spec/requests</code>. Как и бОльшая часть генерируемого кода, полученный результат удручает, так что мы откроем <code>static_pages_spec.rb</code> в текстовом редакторе и заменим его содержимым <a class="ref" href="static-pages#code:home_page_content_spec">Листинга&nbsp;3.9</a>.</p>
+<p>Это создает <code>static_pages_spec.rb</code> в директории <code>spec/requests</code>. Как и бОльшая часть генерируемого кода, полученный результат удручает, так что мы откроем <code>static_pages_spec.rb</code> в текстовом редакторе и заменим его содержимым <a class="ref" href="static-pages#code-home_page_content_spec">Листинга&nbsp;3.9</a>.</p>
 
-<div class="label" id="code:home_page_content_spec"></div>
+<div class="label" id="code-home_page_content_spec"></div>
 
 
 <div class="codelisting">
@@ -548,9 +552,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Код в <a class="ref" href="static-pages#code:home_page_content_spec">Листинге&nbsp;3.9</a> является чистым Ruby, но даже если вы изучали Ruby прежде, он, вероятно, выглядит не очень знакомым. Это происходит потому, что RSpec использует общую гибкость Ruby для определения <em>предметно-ориентированного языка</em> (DSL) созданного только для тестирования. Важным моментом является то, что <em>вам не нужно понимать синтаксис RSpec, чтобы иметь возможность использовать RSpec</em>. На первый взгляд это может показаться магией, но RSpec и Capybara разработаны так, чтобы быть более или менее похожими на английский, и если вы будете следовать примерам <code>generate</code> скрипта и другим примерам в этом учебнике вы разберетесь с ним довольно быстро.</p>
+<p>Код в <a class="ref" href="static-pages#code-home_page_content_spec">Листинге&nbsp;3.9</a> является чистым Ruby, но даже если вы изучали Ruby прежде, он, вероятно, выглядит не очень знакомым. Это происходит потому, что RSpec использует общую гибкость Ruby для определения <em>предметно-ориентированного языка</em> (DSL) созданного только для тестирования. Важным моментом является то, что <em>вам не нужно понимать синтаксис RSpec, чтобы иметь возможность использовать RSpec</em>. На первый взгляд это может показаться магией, но RSpec и Capybara разработаны так, чтобы быть более или менее похожими на английский, и если вы будете следовать примерам <code>generate</code> скрипта и другим примерам в этом учебнике вы разберетесь с ним довольно быстро.</p>
 
-<p><a class="ref" href="static-pages#code:home_page_content_spec">Листинг&nbsp;3.9</a> содержит <code>describe</code> блок с одним <em>примером</em>, т.е., блоком, начинающимся с <code>it "&hellip;" do</code>:</p>
+<p><a class="ref" href="static-pages#code-home_page_content_spec">Листинг&nbsp;3.9</a> содержит <code>describe</code> блок с одним <em>примером</em>, т.е., блоком, начинающимся с <code>it "&hellip;" do</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
 
@@ -579,24 +583,24 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>использует переменную <code>page</code> (также предоставленную Capybara) для проверки того что данная страница содержит правильный контент.</p>
 
-<p>Существует несколько способов запуска тестов, в том числе удобные, но более продвинутые инструменты описанные в <a class="ref" href="static-pages#sec:advanced_setup">Разделе&nbsp;3.6</a>. В данный момент мы будем использовать консольную команду <code>rspec</code> (выполняемую с <code>bundle exec</code> для вящей уверенности в том что RSpec запускает ее в окружении которое определено нашим <code>Gemfile</code>):<sup class="footnote" id="fnref:3.9"><a href="#fn:3.9">9</a></sup></p>
+<p>Существует несколько способов запуска тестов, в том числе удобные, но более продвинутые инструменты описанные в <a class="ref" href="static-pages#sec-advanced_setup">Разделе&nbsp;3.6</a>. В данный момент мы будем использовать консольную команду <code>rspec</code> (выполняемую с <code>bundle exec</code> для вящей уверенности в том что RSpec запускает ее в окружении которое определено нашим <code>Gemfile</code>):<sup class="footnote" id="fnref-3_9"><a href="#fn-3_9">9</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
 </div>
 
 
-<p>Что выдаст провальный тест. Внешиний вид результата зависит от вашей системы; на моей системе красный провальный тест выглядит как на <a class="ref" href="static-pages#fig:red_failing_spec">Рис.&nbsp;3.6</a>.<sup class="footnote" id="fnref:3.10"><a href="#fn:3.10">10</a></sup> (Скриншот показывает работу в <tt>master</tt> ветке вместо <tt>static-pages</tt>, но это не должно быть для вас поводом для беспокойства.)</p>
+<p>Что выдаст провальный тест. Внешиний вид результата зависит от вашей системы; на моей системе красный провальный тест выглядит как на <a class="ref" href="static-pages#fig-red_failing_spec">Рис.&nbsp;3.6</a>.<sup class="footnote" id="fnref-3_10"><a href="#fn-3_10">10</a></sup> (Скриншот показывает работу в <tt>master</tt> ветке вместо <tt>static-pages</tt>, но это не должно быть для вас поводом для беспокойства.)</p>
 
-<div class="label" id="fig:red_failing_spec"></div>
+<div class="label" id="fig-red_failing_spec"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/red_failing_spec.png" alt="red_failing_spec" /></span></div><div class="caption"><span class="header">Рис. 3.6: </span><span class="description">Красный (провальный) тест.&nbsp;<a href="http://railstutorial.org/images/figures/red_failing_spec-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Для прохождения первого теста мы заменим текст дефолтной Home страницы на HTML из <a class="ref" href="static-pages#code:home_page_passing">Листинга&nbsp;3.10</a>.</p>
+<p>Для прохождения первого теста мы заменим текст дефолтной Home страницы на HTML из <a class="ref" href="static-pages#code-home_page_passing">Листинга&nbsp;3.10</a>.</p>
 
-<div class="label" id="code:home_page_passing"></div>
+<div class="label" id="code-home_page_passing"></div>
 
 
 <div class="codelisting">
@@ -626,17 +630,17 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>На моей системе проходящий тест выглядит как на <a class="ref" href="static-pages#fig:green_passing_spec">Рис. 3.7</a>.</p>
+<p>На моей системе проходящий тест выглядит как на <a class="ref" href="static-pages#fig-green_passing_spec">Рис. 3.7</a>.</p>
 
-<div class="label" id="fig:green_passing_spec"></div>
+<div class="label" id="fig-green_passing_spec"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/green_passing_spec.png" alt="green_passing_spec" /></span></div><div class="caption"><span class="header">Рис. 3.7: </span><span class="description">Зеленый (проходящий) тест.&nbsp;<a href="http://railstutorial.org/images/figures/green_passing_spec-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Опираясь на пример Home страницы вы возможно предвидите аналогичный тест и код приложения для страницы Help. Мы начнем с тестирования на наличие значимого контента, в данном случае, строки <code>&rsquo;Help&rsquo;</code> (<a class="ref" href="static-pages#code:help_content_spec">Листинг&nbsp;3.11</a>).</p>
+<p>Опираясь на пример Home страницы вы возможно предвидите аналогичный тест и код приложения для страницы Help. Мы начнем с тестирования на наличие значимого контента, в данном случае, строки <code>&rsquo;Help&rsquo;</code> (<a class="ref" href="static-pages#code-help_content_spec">Листинг&nbsp;3.11</a>).</p>
 
-<div class="label" id="code:help_content_spec"></div>
+<div class="label" id="code-help_content_spec"></div>
 
 
 <div class="codelisting">
@@ -675,9 +679,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Один тест должен провалиться. (Поскольку системы будут развиваться, и в связи с тем, что при таком количестве тестов отслеживание этих изменений  на каждой итерации учебника это ночной кошмар техподдержки, я буду опускать вывод RSpec с этого момента.)</p>
 
-<p>Как видно из <a class="ref" href="static-pages#code:help_page_passing">Листинга 3.12</a>, код приложения (который пока является чистым HTML) аналогичен коду из <a class="ref" href="static-pages#code:home_page_passing">Листинга 3.10</a>.
+<p>Как видно из <a class="ref" href="static-pages#code-help_page_passing">Листинга 3.12</a>, код приложения (который пока является чистым HTML) аналогичен коду из <a class="ref" href="static-pages#code-home_page_passing">Листинга 3.10</a>.
 
-<div class="label" id="code:help_page_passing"></div>
+<div class="label" id="code-help_page_passing"></div>
 
 
 <div class="codelisting">
@@ -701,23 +705,23 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<div class="label" id="sec:adding_a_page"></div>
+<div class="label" id="sec-adding_a_page"></div>
 
 
-<h3><a id="sec:3.2.2" href="static-pages#sec:adding_a_page" class="heading"><span class="number">3.2.2</span> Добавление страницы</a></h3>
+<h3><a id="sec-3_2_2" href="static-pages#sec-adding_a_page" class="heading"><span class="number">3.2.2</span> Добавление страницы</a></h3>
 
 
-<p>Посмотрев на разработку через тестирование в действии на простом примере, мы используем ту же технику для решения немного более сложной задачи по добавлению новой страницы, а именно, страницы About которую мы умышленно пропусили в <a class="ref" href="static-pages#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Посредством написания теста и запуска  RSpec на каждом шаге, мы увидим как TDD может играть роль проводника при разработке кода нашего приложения.</p>
+<p>Посмотрев на разработку через тестирование в действии на простом примере, мы используем ту же технику для решения немного более сложной задачи по добавлению новой страницы, а именно, страницы About которую мы умышленно пропусили в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Посредством написания теста и запуска  RSpec на каждом шаге, мы увидим как TDD может играть роль проводника при разработке кода нашего приложения.</p>
 
-<div class="label" id="sec:red"></div>
-
-
-<h4><a id="sec:3.2.2.1" href="static-pages#sec:red" class="heading">Red</a></h4>
+<div class="label" id="sec-red"></div>
 
 
-<p>Мы доберемся до Красной части цикла Красный-Зеленый написав провальный тест для страницы About. Следуя модели из <a class="ref" href="static-pages#code:help_content_spec">Листинга&nbsp;3.11</a>, вы, вероятно, можете предугадать правильный тест (<a class="ref" href="static-pages#code:about_page_content_spec">Листинг&nbsp;3.13</a>).</p>
+<h4><a id="sec-3_2_2_1" href="static-pages#sec-red" class="heading">Red</a></h4>
 
-<div class="label" id="code:about_page_content_spec"></div>
+
+<p>Мы доберемся до Красной части цикла Красный-Зеленый написав провальный тест для страницы About. Следуя модели из <a class="ref" href="static-pages#code-help_content_spec">Листинга&nbsp;3.11</a>, вы, вероятно, можете предугадать правильный тест (<a class="ref" href="static-pages#code-about_page_content_spec">Листинг&nbsp;3.13</a>).</p>
+
+<div class="label" id="code-about_page_content_spec"></div>
 
 
 <div class="codelisting">
@@ -757,13 +761,13 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sec:green"></div>
+<div class="label" id="sec-green"></div>
 
 
-<h4><a id="sec:3.2.2.2" href="static-pages#sec:green" class="heading">Зеленый</a></h4>
+<h4><a id="sec-3_2_2_2" href="static-pages#sec-green" class="heading">Зеленый</a></h4>
 
 
-<p>Вспомним из <a class="ref" href="static-pages#sec:static_pages_with_rails">Раздела&nbsp;3.1.2</a> что в Rails мы можем генерировать статические страницы создавая действие и соответствующее ему представление с названием страницы. В нашем случае, странице About в первую очередь понадобится действие <code>about</code> в контроллере StaticPages. Имея написанный провальный тест, мы можем быть уверены в том, что получив его прохождение, мы действительно создали рабочую страницу About.</p>
+<p>Вспомним из <a class="ref" href="static-pages#sec-static_pages_with_rails">Раздела&nbsp;3.1.2</a> что в Rails мы можем генерировать статические страницы создавая действие и соответствующее ему представление с названием страницы. В нашем случае, странице About в первую очередь понадобится действие <code>about</code> в контроллере StaticPages. Имея написанный провальный тест, мы можем быть уверены в том, что получив его прохождение, мы действительно создали рабочую страницу About.</p>
 
 <p>Если вы запускаете RSpec используя</p>
 
@@ -779,9 +783,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Что намекает на необхоимость добавления правила для URI <code>/static_pages/about</code> в файле маршрутов, мы можем сделать это следуя паттерну из <a class="ref" href="static-pages#code:pages_routes">Листинга&nbsp;3.5</a>, как это показано в  <a class="ref" href="static-pages#code:about_route">Листинге&nbsp;3.14</a>.</p>
+<p>Что намекает на необхоимость добавления правила для URI <code>/static_pages/about</code> в файле маршрутов, мы можем сделать это следуя паттерну из <a class="ref" href="static-pages#code-pages_routes">Листинга&nbsp;3.5</a>, как это показано в  <a class="ref" href="static-pages#code-about_route">Листинге&nbsp;3.14</a>.</p>
 
-<div class="label" id="code:about_route"></div>
+<div class="label" id="code-about_route"></div>
 
 
 <div class="codelisting">
@@ -813,9 +817,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Для решения этой проблемы мы последуем  примеру <code>home</code> и <code>help</code> из <a class="ref" href="static-pages#code:static_pages_controller">Листинга&nbsp;3.6</a>, добавив <code>about</code> действие в StaticPages контроллер (<a class="ref" href="static-pages#code:adding_the_about_page">Листинг&nbsp;3.15</a>).</p>
+<p>Для решения этой проблемы мы последуем  примеру <code>home</code> и <code>help</code> из <a class="ref" href="static-pages#code-static_pages_controller">Листинга&nbsp;3.6</a>, добавив <code>about</code> действие в StaticPages контроллер (<a class="ref" href="static-pages#code-adding_the_about_page">Листинг&nbsp;3.15</a>).</p>
 
-<div class="label" id="code:adding_the_about_page"></div>
+<div class="label" id="code-adding_the_about_page"></div>
 
 
 <div class="codelisting">
@@ -851,9 +855,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>для решения этой проблемы мы добавим <code>about</code> представление. Для этого потребуется создать новый файл <code>about.html.erb</code> в директории <code>app/views/static_pages</code> с контентом показанным в <a class="ref" href="static-pages#code:about_view">Листинге&nbsp;3.16</a>.</p>
+<p>для решения этой проблемы мы добавим <code>about</code> представление. Для этого потребуется создать новый файл <code>about.html.erb</code> в директории <code>app/views/static_pages</code> с контентом показанным в <a class="ref" href="static-pages#code-about_view">Листинге&nbsp;3.16</a>.</p>
 
-<div class="label" id="code:about_view"></div>
+<div class="label" id="code-about_view"></div>
 
 
 <div class="codelisting">
@@ -877,9 +881,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Конечно, это никогда не плохая идея, чтобы посмотреть на страницу в браузере, чтобы убедиться, что наши тесты не являются абсолютно сумасшедшими (<a class="ref" href="static-pages#fig:about_us">Рис. 3.8</a>).</p>
+<p>Конечно, это никогда не плохая идея, чтобы посмотреть на страницу в браузере, чтобы убедиться, что наши тесты не являются абсолютно сумасшедшими (<a class="ref" href="static-pages#fig-about_us">Рис. 3.8</a>).</p>
 
-<div class="label" id="fig:about_us"></div>
+<div class="label" id="fig-about_us"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/about_us_2nd_edition.png" alt="about_us_2nd_edition" /></span></div><div class="caption"><span class="header">Рис. 3.8: </span><span class="description">Новая страница About (<a href="http://localhost:3000/static_pages/about"><tt>/static_pages/about</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/about_us_2nd_edition-full.png">(полный размер)</a></span></div></div>
@@ -887,30 +891,30 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sec:refactor"></div>
+<div class="label" id="sec-refactor"></div>
 
 
-<h4><a id="sec:3.2.2.3" href="static-pages#sec:refactor" class="heading">Реорганизация</a></h4>
+<h4><a id="sec-3_2_2_3" href="static-pages#sec-refactor" class="heading">Реорганизация</a></h4>
 
 
 <p>Теперь, когда мы Позеленели, мы свободны, чтобы <em>реорганизовать</em> наш код, изменяя его форму не меняя функции. Часто код начинает &ldquo;вонять&rdquo;, что означает, что он становится уродливым, раздутым, или наполненным повторениями. Компьютеру, конечно, все равно, но не людям, поэтому важно хранить базу кода в чистоте, часто делая рефакторинг (реорганизацию). Наличие хорошего набора тестов является бесценным инструментом в этой связи, так как это резко снижает вероятность внесения ошибки в процессе рефакторинга.</p>
 
-<p>Наш пример приложения слишком мал, чтобы реорганизовать его прямо сейчас, но вонь от кода проникает в каждую трещину, так что нам не придется долго ждать: мы займемся рефакторингом (реорганизацией) в <a class="ref" href="static-pages#sec:layouts">Разделе&nbsp;3.3.4</a>.</p>
+<p>Наш пример приложения слишком мал, чтобы реорганизовать его прямо сейчас, но вонь от кода проникает в каждую трещину, так что нам не придется долго ждать: мы займемся рефакторингом (реорганизацией) в <a class="ref" href="static-pages#sec-layouts">Разделе&nbsp;3.3.4</a>.</p>
 
-<div class="label" id="sec:slightly_dynamic_pages"></div>
+<div class="label" id="sec-slightly_dynamic_pages"></div>
 
 
-<h2><a id="sec:3.3" href="static-pages#sec:slightly_dynamic_pages" class="heading"><span class="number">3.3</span> Немного динамические страницы</a></h2>
+<h2><a id="sec-3_3" href="static-pages#sec-slightly_dynamic_pages" class="heading"><span class="number">3.3</span> Немного динамические страницы</a></h2>
 
 
 <p>Теперь, когда мы создали действия и представления для нескольких статических страниц, мы сделаем их <em>чуть-чуть</em> динамическими, добавив содержимое, которое будет меняться на каждой странице: мы получим заголовок (тайтл) каждой страницы, изменяющийся, отражая ее содержание. Является ли это <em>действительно</em> динамическим контентом&nbsp;&mdash;&nbsp;спорно, но это в любом случае закладывает необходимую основу для однозначно динамического содержимого в <a class="ref" href="sign-up#top">Главе&nbsp;7</a>.</p>
 
-<p>Если вы пропустили TDD материал в <a class="ref" href="static-pages#sec:first_tests">Разделе&nbsp;3.2</a>, убедитесь что к этому моменту вы создали About страницу используя код из <a class="ref" href="static-pages#code:about_route">Листинга&nbsp;3.14</a>, <a class="ref" href="static-pages#code:adding_the_about_page">Листинга&nbsp;3.15</a> и <a class="ref" href="static-pages#code:about_view">Листинга&nbsp;3.16</a>.</p>
+<p>Если вы пропустили TDD материал в <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a>, убедитесь что к этому моменту вы создали About страницу используя код из <a class="ref" href="static-pages#code-about_route">Листинга&nbsp;3.14</a>, <a class="ref" href="static-pages#code-adding_the_about_page">Листинга&nbsp;3.15</a> и <a class="ref" href="static-pages#code-about_view">Листинга&nbsp;3.16</a>.</p>
 
-<div class="label" id="sec:testing_a_title_change"></div>
+<div class="label" id="sec-testing_a_title_change"></div>
 
 
-<h3><a id="sec:3.3.1" href="static-pages#sec:testing_a_title_change" class="heading"><span class="number">3.3.1</span> Тестирование изменения заголовка</a></h3>
+<h3><a id="sec-3_3_1" href="static-pages#sec-testing_a_title_change" class="heading"><span class="number">3.3.1</span> Тестирование изменения заголовка</a></h3>
 
 
 <p>Наш план заключается в добавлении к страницам Home, Help, и About заголовка (тайтла) меняющегося на каждой странице. Это повлечет за собой использование <code>&lt;title&gt;</code> тега в представления наших страниц. Большинство браузеров отображают содержимое  title тега в верхней части окна браузера  (Google Chrome является странным исключением из этого правила), к тому же он важен для поисковой оптимизации. Мы начнем с написания тестов для заголовков, затем добавим сами заголовки, а затем используем  <em>layout</em> файл для рефакторинга получившихся страниц и устранения повторяющегося кода.</p>
@@ -924,16 +928,16 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>(<code>mv</code> это Unix команда; на Windows вам возможно придется переименовать файл используя файловый браузер  или команду <code>rename</code>.) Обычно этого не нужно делать в реальном приложении, но нам проще будет понять его назначение если мы предварительно выведем его из строя.</p>
 
-<div class="label" id="table:static_pages"></div>
+<div class="label" id="table-static_pages"></div>
 
 
 <div class="table"><div class="center">
 <table class="tabular"><tr><th class="align_center"><strong>Страница</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Базовый заголовок</strong></th><th class="align_left"><strong>Изменяющийся заголовок</strong></th></tr><tr class="top_bar"><td class="align_center">Home</td><td class="align_left"><tt>/static_pages/home</tt></td><td class="align_left"><code>"Ruby on Rails Tutorial Sample App"</code></td><td class="align_left"><code>"Home"</code></td></tr><tr><td class="align_center">Help</td><td class="align_left"><tt>/static_pages/help</tt></td><td class="align_left"><code>"Ruby on Rails Tutorial Sample App"</code></td><td class="align_left"><code>"Help"</code></td></tr><tr><td class="align_center">About</td><td class="align_left"><tt>/static_pages/about</tt></td><td class="align_left"><code>"Ruby on Rails Tutorial Sample App"</code></td><td class="align_left"><code>"About"</code></td></tr></table></div><div class="caption"><span class="header">Таблица 3.1: </span><span class="description">(В основном) статические страницы для примера приложения.</span></div></div>
 
 
-<p>К концу этого раздела, все три наши статические страницы будут иметь заголовок (тайтл) вида &ldquo;Ruby on Rails Tutorial Sample App | Home&rdquo;, где последняя часть заголовка будет меняться в зависимости от страницы (<a class="ref" href="static-pages#table:static_pages">Таблица&nbsp;3.1</a>). Мы достроим тесты из <a class="ref" href="static-pages#code:about_page_content_spec">Листинга&nbsp;3.13</a>, , добавив тесты заголовка (тайтла) в соответствии с моделью в <a class="ref" href="static-pages#code:title_test">Листинге&nbsp;3.17</a>.</p>
+<p>К концу этого раздела, все три наши статические страницы будут иметь заголовок (тайтл) вида &ldquo;Ruby on Rails Tutorial Sample App | Home&rdquo;, где последняя часть заголовка будет меняться в зависимости от страницы (<a class="ref" href="static-pages#table-static_pages">Таблица&nbsp;3.1</a>). Мы достроим тесты из <a class="ref" href="static-pages#code-about_page_content_spec">Листинга&nbsp;3.13</a>, , добавив тесты заголовка (тайтла) в соответствии с моделью в <a class="ref" href="static-pages#code-title_test">Листинге&nbsp;3.17</a>.</p>
 
-<div class="label" id="code:title_test"></div>
+<div class="label" id="code-title_test"></div>
 
 
 <div class="codelisting">
@@ -962,7 +966,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </pre></div>
 </div>
 
-<p>(В <a class="ref" href="rails-flavored-ruby#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a> мы узнаем что синтаксическая конструкция <code>:text =&gt; "&hellip;"</code> это <em>хэш</em> использующий <em>символ</em> в качестве ключа.) Важно отметить что контент не должен быть абсолютно идентичным; достаточно совпадения лишь некоторой части текста, т.е.</p>
+<p>(В <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Разделе&nbsp;4.3.3</a> мы узнаем что синтаксическая конструкция <code>:text =&gt; "&hellip;"</code> это <em>хэш</em> использующий <em>символ</em> в качестве ключа.) Важно отметить что контент не должен быть абсолютно идентичным; достаточно совпадения лишь некоторой части текста, т.е.</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">:text</span> <span class="o">=&gt;</span> <span class="s2">&quot; | Home&quot;</span><span class="p">)</span>
 </pre></div>
@@ -971,11 +975,11 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>сработает также как и полный текст заголовка.</p>
 
-<p>Обратите внимание, что в <a class="ref" href="static-pages#code:title_test">Листинге&nbsp;3.17</a> мы разбили материал внутри <code>have_selector</code> на две строки; это говорит вам нечто важное о синтаксисе Ruby: Ruby не заботится о новых строках.<sup class="footnote" id="fnref:3.11"><a href="#fn:3.11">11</a></sup> <em>Причиной</em> по которой я решил разорвать код на куски является то, что я предпочитаю не применять строки исходного кода длиной более 80 символов — для читабельности.<sup class="footnote" id="fnref:3.12"><a href="#fn:3.12">12</a></sup> В настоящий момент я все еще нахожу этот формат кода довольно уродливым; в <a class="ref" href="static-pages#sec:static_pages_exercises">Разделе&nbsp;3.5</a> есть упражнение по рефакторингу, которое сделает его намного более симпатичным, и  <a class="ref" href="filling-in-the-layout#sec:pretty_rspec">Раздел&nbsp;5.3.4</a> полностью переписывает StaticPages тесты в соответствии с последними веяниями RSpec.</p>
+<p>Обратите внимание, что в <a class="ref" href="static-pages#code-title_test">Листинге&nbsp;3.17</a> мы разбили материал внутри <code>have_selector</code> на две строки; это говорит вам нечто важное о синтаксисе Ruby: Ruby не заботится о новых строках.<sup class="footnote" id="fnref-3_11"><a href="#fn-3_11">11</a></sup> <em>Причиной</em> по которой я решил разорвать код на куски является то, что я предпочитаю не применять строки исходного кода длиной более 80 символов — для читабельности.<sup class="footnote" id="fnref-3_12"><a href="#fn-3_12">12</a></sup> В настоящий момент я все еще нахожу этот формат кода довольно уродливым; в <a class="ref" href="static-pages#sec-static_pages_exercises">Разделе&nbsp;3.5</a> есть упражнение по рефакторингу, которое сделает его намного более симпатичным, и  <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Раздел&nbsp;5.3.4</a> полностью переписывает StaticPages тесты в соответствии с последними веяниями RSpec.</p>
 
-<p>Добавление новых тестов для каждой из трех статических страниц, следуя модели из <a class="ref" href="static-pages#code:title_test">Листинга&nbsp;3.17</a>, приводит нас к новому StaticPages тесту (<a class="ref" href="static-pages#code:pages_controller_spec_title">Листинг&nbsp;3.18</a>).</p>
+<p>Добавление новых тестов для каждой из трех статических страниц, следуя модели из <a class="ref" href="static-pages#code-title_test">Листинга&nbsp;3.17</a>, приводит нас к новому StaticPages тесту (<a class="ref" href="static-pages#code-pages_controller_spec_title">Листинг&nbsp;3.18</a>).</p>
 
-<div class="label" id="code:pages_controller_spec_title"></div>
+<div class="label" id="code-pages_controller_spec_title"></div>
 
 
 <div class="codelisting">
@@ -1033,7 +1037,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Обратите внимание на то, что мы заменили <code>have_content</code> на <code>have_selector(&rsquo;h1&rsquo;, &hellip;)</code>. Посмотрим сможете ли вы понять зачем. (<em>Подсказка:</em> Что произойдет в случае, если заголовок содержит, например, &lsquo;Help&rsquo;, но контент внутри <code>h1</code> тега вместо этого содержит &lsquo;Helf&rsquo;?)</p>
 
-<p>Поместив тесты из <a class="ref" href="static-pages#code:pages_controller_spec_title">Листинга&nbsp;3.18</a> куда следует, нужно запустить</p>
+<p>Поместив тесты из <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинга&nbsp;3.18</a> куда следует, нужно запустить</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
@@ -1042,15 +1046,15 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>чтобы проверить что наш код в Красном (провальные тесты).</p>
 
-<div class="label" id="sec:passing_title_tests"></div>
+<div class="label" id="sec-passing_title_tests"></div>
 
 
-<h3><a id="sec:3.3.2" href="static-pages#sec:passing_title_tests" class="heading"><span class="number">3.3.2</span> Прохождение тестов заголовка</a></h3>
+<h3><a id="sec-3_3_2" href="static-pages#sec-passing_title_tests" class="heading"><span class="number">3.3.2</span> Прохождение тестов заголовка</a></h3>
 
 
-<p>Теперь мы заставим тесты заголовков пройти, и в то же время добавим полную структуру HTML чтобы сделать валидные веб-страницы. Давайте начнем с Home страницы (<a class="ref" href="static-pages#code:home_view_full_html">Листинг&nbsp;3.19</a>), используя тот же основной скелет HTML, что и в &ldquo;hello&rdquo; странице из <a class="ref" href="static-pages#code:hello_world">Листинга&nbsp;3.3</a>.</p>
+<p>Теперь мы заставим тесты заголовков пройти, и в то же время добавим полную структуру HTML чтобы сделать валидные веб-страницы. Давайте начнем с Home страницы (<a class="ref" href="static-pages#code-home_view_full_html">Листинг&nbsp;3.19</a>), используя тот же основной скелет HTML, что и в &ldquo;hello&rdquo; странице из <a class="ref" href="static-pages#code-hello_world">Листинга&nbsp;3.3</a>.</p>
 
-<div class="label" id="code:home_view_full_html"></div>
+<div class="label" id="code-home_view_full_html"></div>
 
 
 <div class="codelisting">
@@ -1074,16 +1078,16 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p><a class="ref" href="static-pages#code:home_view_full_html">Листинг&nbsp;3.19</a> использует заголовки протестированные в <a class="ref" href="static-pages#code:pages_controller_spec_title">Листинге&nbsp;3.18</a>:</p>
+<p><a class="ref" href="static-pages#code-home_view_full_html">Листинг&nbsp;3.19</a> использует заголовки протестированные в <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинге&nbsp;3.18</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | Home<span class="nt">&lt;/title&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных Contact и About тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code:help_view_full_html">Листинга&nbsp;3.20</a> и <a class="ref" href="static-pages#code:about_view_full_html">Листинга&nbsp;3.21</a>.</p>
+<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных Contact и About тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code-help_view_full_html">Листинга&nbsp;3.20</a> и <a class="ref" href="static-pages#code-about_view_full_html">Листинга&nbsp;3.21</a>.</p>
 
-<div class="label" id="code:help_view_full_html"></div>
+<div class="label" id="code-help_view_full_html"></div>
 
 
 <div class="codelisting">
@@ -1110,7 +1114,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:about_view_full_html"></div>
+<div class="label" id="code-about_view_full_html"></div>
 
 
 <div class="codelisting">
@@ -1137,10 +1141,10 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sec:embedded_ruby"></div>
+<div class="label" id="sec-embedded_ruby"></div>
 
 
-<h3><a id="sec:3.3.3" href="static-pages#sec:embedded_ruby" class="heading"><span class="number">3.3.3</span> Embedded (встроенный) Ruby</a></h3>
+<h3><a id="sec-3_3_3" href="static-pages#sec-embedded_ruby" class="heading"><span class="number">3.3.3</span> Embedded (встроенный) Ruby</a></h3>
 
 
 <p>Мы уже многого добились в этом разделе, создав три валидные страницы с использованием Rails контроллеров и действий, но они содержат совершенно статический HTML и, следовательно, не раскрывают возможностей Rails. Кроме того, они страдают от ужасного дублирования:</p>
@@ -1156,9 +1160,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Как это ни парадоксально, но первым шагом на пути устранения дублирования будет усиление дублирования: мы сделаем названия страниц, которые в настоящее время очень похожи, <em>полностью</em> совпадающими. Это позволит легко удалить все повторения одним махом.</p>
 
-<p>Техника включает в себя использование <em>Embedded Ruby</em> в наших представлениях. Поскольку  заголовки страниц Home, Help, и About имеют переменную составляющую, мы будем использовать специальную Rails функцию называемую <code>provide</code> для установки отличающегося заголовка на каждой странице. Мы можем увидеть как это работает заменив буквальный заголовок &ldquo;Home&rdquo; в представлении  <code>home.html.erb</code> кодом из <a class="ref" href="static-pages#code:home_view_erb_title">Листинга&nbsp;3.22</a>.</p>
+<p>Техника включает в себя использование <em>Embedded Ruby</em> в наших представлениях. Поскольку  заголовки страниц Home, Help, и About имеют переменную составляющую, мы будем использовать специальную Rails функцию называемую <code>provide</code> для установки отличающегося заголовка на каждой странице. Мы можем увидеть как это работает заменив буквальный заголовок &ldquo;Home&rdquo; в представлении  <code>home.html.erb</code> кодом из <a class="ref" href="static-pages#code-home_view_erb_title">Листинга&nbsp;3.22</a>.</p>
 
-<div class="label" id="code:home_view_erb_title"></div>
+<div class="label" id="code-home_view_erb_title"></div>
 
 
 <div class="codelisting">
@@ -1183,32 +1187,31 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p><a class="ref" href="static-pages#code:home_view_erb_title">Листинг&nbsp;3.22</a> это наш первый пример Embedded Ruby, также называемого <em>ERb</em>. (Теперь вы знаете, почему HTML представления имеют расширение <code>.html.erb</code>.) ERb это основная <a href="http://ru.wikipedia.org/wiki/%D0%92%D0%B5%D0%B1-%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD">система шаблонов</a> для включения динамического контента в веб-страницы.<sup class="footnote" id="fnref:3.13"><a href="#fn:3.13">13</a></sup> Код</p>
+<p><a class="ref" href="static-pages#code-home_view_erb_title">Листинг&nbsp;3.22</a> это наш первый пример Embedded Ruby, также называемого <em>ERb</em>. (Теперь вы знаете, почему HTML представления имеют расширение <code>.html.erb</code>.) ERb это основная <a href="http://ru.wikipedia.org/wiki/%D0%92%D0%B5%D0%B1-%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD">система шаблонов</a> для включения динамического контента в веб-страницы.<sup class="footnote" id="fnref-3_13"><a href="#fn-3_13">13</a></sup> Код</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s1">&#39;Home&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>указывает с помощью <tt class="verb">&lt;% ... %&gt;</tt> что Rails должны вызвать функцию <code>provide</code> и связать строку <code>&rsquo;Home&rsquo;</code> с label <code>:title</code>.<sup class="footnote" id="fnref:3.14"><a href="#fn:3.14">14</a></sup> Затем, в заголовке, мы используем тестно связанную нотацию <tt class="verb">&lt;%= ... %&gt;</tt> для вставки заголовка в шаблон используя Ruby-функцию <code>yield</code>:<sup class="footnote" id="fnref:3.15"><a href="#fn:3.15">15</a></sup></p>
+<p>указывает с помощью <tt class="verb">&lt;% ... %&gt;</tt> что Rails должны вызвать функцию <code>provide</code> и связать строку <code>&rsquo;Home&rsquo;</code> с label <code>:title</code>.<sup class="footnote" id="fnref-3_14"><a href="#fn-3_14">14</a></sup> Затем, в заголовке, мы используем тестно связанную нотацию <tt class="verb">&lt;%= ... %&gt;</tt> для вставки заголовка в шаблон используя Ruby-функцию <code>yield</code>:<sup class="footnote" id="fnref-3_15"><a href="#fn-3_15">15</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
-</pre></div>
-</div>
+</pre></div></div>
 
 
 <p>(Разница между этими двумя типами встроенного Ruby заключается в том, что  <tt class="verb">&lt;% ... %&gt;</tt> <em>исполняет</em> код внутри, в то время как <tt class="verb">&lt;%= ... %&gt;</tt> исполняет и  <em>вставляет</em> его в шаблон.) Получившаяся в результате страница совершенно не изменилась, вот только изменяющаяся часть заголовка динамически сгенерирована встроенным Руби.</p>
 
-<p>Мы можем проверить что все это работает запустив тесты из <a class="ref" href="static-pages#sec:testing_a_title_change">Раздела&nbsp;3.3.1</a> и увидев что они все еще проходят:</p>
+<p>Мы можем проверить что все это работает запустив тесты из <a class="ref" href="static-pages#sec-testing_a_title_change">Раздела&nbsp;3.3.1</a> и увидев что они все еще проходят:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
 </div>
 
 
-<p>Затем мы можем сделать соответствующие замены для Help и About страниц (<a class="ref" href="static-pages#code:help_view_erb_title">Листинг&nbsp;3.23</a> и <a class="ref" href="static-pages#code:about_view_erb_title">Листинг&nbsp;3.24</a>).</p>
+<p>Затем мы можем сделать соответствующие замены для Help и About страниц (<a class="ref" href="static-pages#code-help_view_erb_title">Листинг&nbsp;3.23</a> и <a class="ref" href="static-pages#code-about_view_erb_title">Листинг&nbsp;3.24</a>).</p>
 
-<div class="label" id="code:help_view_erb_title"></div>
+<div class="label" id="code-help_view_erb_title"></div>
 
 
 <div class="codelisting">
@@ -1236,7 +1239,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:about_view_erb_title"></div>
+<div class="label" id="code-about_view_erb_title"></div>
 
 
 <div class="codelisting">
@@ -1264,10 +1267,10 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="sec:layouts"></div>
+<div class="label" id="sec-layouts"></div>
 
 
-<h3><a id="sec:3.3.4" href="static-pages#sec:layouts" class="heading"><span class="number">3.3.4</span> Устранение дублирования макетами</a></h3>
+<h3><a id="sec-3_3_4" href="static-pages#sec-layouts" class="heading"><span class="number">3.3.4</span> Устранение дублирования макетами</a></h3>
 
 
 <p>Теперь, когда мы заменили переменную часть заголовков страниц на ERb, каждая из наших страниц выглядит примерно так:</p>
@@ -1288,23 +1291,21 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Другими словами, <em>все</em> наши страницы имеют одинаковую структуру, в том числе, заголовки (из-за Embedded Ruby), исключая содержимое <code>body</code> тега.</p>
 
-<p>Для того чтобы факторизировать ("вынести за скобки") эту повторяющуюся структуру, Rails предоставляет специальный <em>layout</em> файл называемый <code>application.html.erb</code>, который мы переименовали в <a class="ref" href="static-pages#sec:testing_a_title_change">Разделе&nbsp;3.3.1</a> и который мы теперь восстановим:</p>
+<p>Для того чтобы факторизировать ("вынести за скобки") эту повторяющуюся структуру, Rails предоставляет специальный <em>layout</em> файл называемый <code>application.html.erb</code>, который мы переименовали в <a class="ref" href="static-pages#sec-testing_a_title_change">Разделе&nbsp;3.3.1</a> и который мы теперь восстановим:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> mv foobar app/views/layouts/application.html.erb
-</pre></div>
-</div>
+</pre></div></div>
 
 
 <p>Для того чтобы получить работающий макет, мы должны заменить дефолтный заголовок на  Embedded Ruby из примеров выше:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
-</pre></div>
-</div>
+</pre></div></div>
 
 
-<p>Получившийся макет представлен в <a class="ref" href="static-pages#code:application_layout">Листинге&nbsp;3.25</a>.</p>
+<p>Получившийся макет представлен в <a class="ref" href="static-pages#code-application_layout">Листинге&nbsp;3.25</a>.</p>
 
-<div class="label" id="code:application_layout"></div>
+<div class="label" id="code-application_layout"></div>
 
 
 <div class="codelisting">
@@ -1329,8 +1330,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <p>Обратите здесь внимание на специальную строку</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="k">yield</span> <span class="cp">%&gt;</span>
-</pre></div>
-</div>
+</pre></div></div>
 
 
 <p>Этот код отвечает за вставку содержимого каждой страницы в макет. Нет необходимости понимать как это на самом деле работает; куда важнее то, что использование этого макета обеспечивает, например,  преобразование содержимого <code>home.html.erb</code> в HTML и последующую его вставку на место <tt class="verb">&lt;%= yield %&gt;</tt>.</p>
@@ -1340,15 +1340,14 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
 <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
 <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
-</pre></div>
-</div>
+</pre></div></div>
 
 
-<p>Этот код организует подключение стилей и JavaScript приложения, являющихся частью файлопровода (<a class="ref" href="filling-in-the-layout#sec:the_asset_pipeline">Раздел&nbsp;5.2.1</a>), совместно с Rails методом <code>csrf_meta_tags</code>, который предотвращает <a href="http://ru.wikipedia.org/wiki/CSRF">подделку межсайтовых запросов</a> (CSRF), вид злонамеренной веб-атаки.</p>
+<p>Этот код организует подключение стилей и JavaScript приложения, являющихся частью файлопровода (<a class="ref" href="filling-in-the-layout#sec-the_asset_pipeline">Раздел&nbsp;5.2.1</a>), совместно с Rails методом <code>csrf_meta_tags</code>, который предотвращает <a href="http://ru.wikipedia.org/wiki/CSRF">подделку межсайтовых запросов</a> (CSRF), вид злонамеренной веб-атаки.</p>
 
-<p>Конечно, представления в <a class="ref" href="static-pages#code:home_view_erb_title">Листинге&nbsp;3.22</a>, <a class="ref" href="static-pages#code:help_view_erb_title">Листинге&nbsp;3.23</a>, и <a class="ref" href="static-pages#code:about_view_erb_title">Листинге&nbsp;3.24</a> по-прежнему заполнены полной  HTML структурой включенной в макет, так что мы должны удалить ее, оставив только внутреннее содержимое. Получившиеся после очистки представления представлены в  <a class="ref" href="static-pages#code:home_view_interior">Листинге&nbsp;3.26</a>, <a class="ref" href="static-pages#code:help_view_interior">Листинге&nbsp;3.27</a>, и <a class="ref" href="static-pages#code:about_view_interior">Листинге&nbsp;3.28</a>.</p>
+<p>Конечно, представления в <a class="ref" href="static-pages#code-home_view_erb_title">Листинге&nbsp;3.22</a>, <a class="ref" href="static-pages#code-help_view_erb_title">Листинге&nbsp;3.23</a>, и <a class="ref" href="static-pages#code-about_view_erb_title">Листинге&nbsp;3.24</a> по-прежнему заполнены полной  HTML структурой включенной в макет, так что мы должны удалить ее, оставив только внутреннее содержимое. Получившиеся после очистки представления представлены в  <a class="ref" href="static-pages#code-home_view_interior">Листинге&nbsp;3.26</a>, <a class="ref" href="static-pages#code-help_view_interior">Листинге&nbsp;3.27</a>, и <a class="ref" href="static-pages#code-about_view_interior">Листинге&nbsp;3.28</a>.</p>
 
-<div class="label" id="code:home_view_interior"></div>
+<div class="label" id="code-home_view_interior"></div>
 
 
 <div class="codelisting">
@@ -1367,7 +1366,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:help_view_interior"></div>
+<div class="label" id="code-help_view_interior"></div>
 
 
 <div class="codelisting">
@@ -1387,7 +1386,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:about_view_interior"></div>
+<div class="label" id="code-about_view_interior"></div>
 
 
 <div class="codelisting">
@@ -1408,74 +1407,69 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <p>С таким определением представлений, Home, Help, и About страницы точно такие же, как и прежде, но дублирования стало гораздо меньше. Проверка того что набор тестов по-прежнему проходит даст нам уверенность в том что этот рефакторинг кода прошел успешно:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
-</pre></div>
-</div>
+</pre></div></div>
 
 
 
 
-<div class="label" id="sec:static_pages_conclusion"></div>
+<div class="label" id="sec-static_pages_conclusion"></div>
 
 
-<h2><a id="sec:3.4" href="static-pages#sec:static_pages_conclusion" class="heading"><span class="number">3.4</span> Заключение</a></h2>
+<h2><a id="sec-3_4" href="static-pages#sec-static_pages_conclusion" class="heading"><span class="number">3.4</span> Заключение</a></h2>
 
 
 <p>При взгляде со стороны, в этой главе мы вряд ли чего то добились: мы начали со статических страниц, а закончили&hellip; <em>в основном</em> статическими страницами. Но внешность обманчива: разрабатывая в терминах Rails, контроллеры, действия и представления, мы теперь в состоянии добавить произвольное количество динамического содержимого на нашем сайте.</p>
 
-<p>Прежде чем двигаться дальше, давайте потратим минуту, чтобы закоммитить наши изменения и объединить их с мастер веткой. Еще в <a class="ref" href="static-pages#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a> мы создали в Git ветку для разработки статических страниц. Если вы не делали коммиты во время чтения, сначала сделайте коммит указывающий что мы достигли точки остановки:</p>
+<p>Прежде чем двигаться дальше, давайте потратим минуту, чтобы закоммитить наши изменения и объединить их с мастер веткой. Еще в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a> мы создали в Git ветку для разработки статических страниц. Если вы не делали коммиты во время чтения, сначала сделайте коммит указывающий что мы достигли точки остановки:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
 <span class="gp">$</span> git commit -m <span class="s2">&quot;Finish static pages&quot;</span>
-</pre></div>
-</div>
+</pre></div></div>
 
 
-<p>Затем объедините изменения с мастер веткой, используя ту же технику, что и в <a class="ref" href="beginning#sec:git_commands">Разделе&nbsp;1.3.5</a>:</p>
+<p>Затем объедините изменения с мастер веткой, используя ту же технику, что и в <a class="ref" href="beginning#sec-git_commands">Разделе&nbsp;1.3.5</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git checkout master
 <span class="gp">$</span> git merge static-pages
-</pre></div>
-</div>
+</pre></div></div>
 
 
-<p>Как только вы достигаете точки остановки, такой как эта, обычно это хорошая идея, чтобы отправить (to push) ваш код в удаленное хранилище (которым, если вы следовали шагам в <a class="ref" href="beginning#sec:github">Разделе&nbsp;1.3.4</a>, будет GitHub):</p>
+<p>Как только вы достигаете точки остановки, такой как эта, обычно это хорошая идея, чтобы отправить (to push) ваш код в удаленное хранилище (которым, если вы следовали шагам в <a class="ref" href="beginning#sec-github">Разделе&nbsp;1.3.4</a>, будет GitHub):</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git push
-</pre></div>
-</div>
+</pre></div></div>
 
 
 <p>Если вы хотите, в этот момент вы даже можете развернуть обновленное приложение на Heroku:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git push heroku
-</pre></div>
-</div>
+</pre></div></div>
 
 
 
 
-<div class="label" id="sec:static_pages_exercises"></div>
+<div class="label" id="sec-static_pages_exercises"></div>
 
 
-<h2><a id="sec:3.5" href="static-pages#sec:static_pages_exercises" class="heading"><span class="number">3.5</span> Упражнения</a></h2>
+<h2><a id="sec-3_5" href="static-pages#sec-static_pages_exercises" class="heading"><span class="number">3.5</span> Упражнения</a></h2>
 
 
 
 
 <ol>
 
-<li>Создайте страницу Contact для примера приложения. Сначала напишите тесты на существовани страницы на URI <tt>/static_pages/contact</tt>. (<em>Подсказка</em>: тестируйте правильность заголовка.) Затем напишите второй тест для заголовка &ldquo;Ruby on Rails Tutorial Sample App | Contact&rdquo;. Получите прохождение ваших тестов, а затем заполните страницу Contact содержимым из <a class="ref" href="static-pages#code:proposed_contact_page">Листинга&nbsp;3.29</a>. (Решение этого упражнения является частью <a class="ref" href="filling-in-the-layout#sec:layout_links">Раздела&nbsp;5.3</a>.)</li>
+<li>Создайте страницу Contact для примера приложения. Следуя модели в <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинге&nbsp;3.18</a>, сначала напишите тесты на существовани страницы по URI <tt>/static_pages/contact</tt> которые проверяют правильность содержимого тега <code>h1</code>, а затем напишите второй тест для тайтла &ldquo;Ruby on Rails Tutorial Sample App | Contact&rdquo;. Добейтесь прохождения тестов и затем заполните страницу Contact содержимым из <a class="ref" href="static-pages#code-proposed_contact_page">Листинга&nbsp;3.29</a>. (Решение этого упражнения является частью <a class="ref" href="filling-in-the-layout#sec-layout_links">Раздела&nbsp;5.3</a>.)</li>
 
-<li>Вы могли заметить некоторые повторения в спеке StaticPages контроллера (<a class="ref" href="static-pages#code:pages_controller_spec_title">Листинг&nbsp;3.18</a>). В частности, базовый заголовок, &ldquo;Ruby on Rails Tutorial Sample App&rdquo;, одинаков для каждого теста заголовка. Используя RSpec функцию <code>let</code> которая создает переменную соответствующую ее аргументу, проверьте что тесты в <a class="ref" href="static-pages#code:pages_controller_spec_exercise">Листинге&nbsp;3.30</a> все еще проходят. <a class="ref" href="static-pages#code:pages_controller_spec_exercise">Листинг&nbsp;3.30</a> вводит <em>интерполяцию строк</em> о которой будет рассказано в <a class="ref" href="rails-flavored-ruby#sec:strings">Разделе&nbsp;4.2.2</a>. </li>
+<li>Вы могли заметить некоторые повторения в спеке StaticPages контроллера (<a class="ref" href="static-pages#code-pages_controller_spec_title">Листинг&nbsp;3.18</a>). В частности, базовый заголовок, &ldquo;Ruby on Rails Tutorial Sample App&rdquo;, одинаков для каждого теста заголовка. Используя RSpec функцию <code>let</code> которая создает переменную соответствующую ее аргументу, проверьте что тесты в <a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинге&nbsp;3.30</a> все еще проходят. <a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинг&nbsp;3.30</a> вводит <em>интерполяцию строк</em> о которой будет рассказано в <a class="ref" href="rails-flavored-ruby#sec-strings">Разделе&nbsp;4.2.2</a>. </li>
 
-<li><strong>(продвинутое)</strong> Как отмечается в <a href="http://devcenter.heroku.com/articles/how-do-i-use-sqlite3-for-development">Heroku page on using <tt>sqlite3</tt> for development</a>, , хорошей идеей является использование одинаковой базы данных в девелопмент, тест и продакшн окружениях для минимизации  возможных несовместимостей. Следуя <a href="http://devcenter.heroku.com/articles/local-postgresql">Heroku instructions for local PostgreSQL installation</a> установите базу данных PostgreSQL на вашей локальной системе. Обновите ваш <code>Gemfile</code> как показано в <a class="ref" href="static-pages#code:Gemfile_pg_gem">Листинге&nbsp;3.31</a> для устранения гема <tt>sqlite3</tt> и использования только <tt>pg</tt> гема. Вам также следует разузнать о файле <code>config/database.yml</code> и локальном запуске PostgreSQL. Вашей целью должно быть создание и конфигурирование девелопмент и тестовой баз данных  для использования PostgreSQL. <strong>Предупреждение:</strong> Это упражнение является крайне сложным и может разрушить вашу жизнь. На самом деле безумием будет даже попытка сделать это. Если вы застрянете, не стесняйтесь пропустить это упражнение. И не переживайте — как было отмечено ранее, пример пиложения разрабатываемый в этом учебнике полностью совместим как со SQLite так и с PostgreSQL. </li>
+<li><strong>(продвинутое)</strong> Как отмечается в <a href="http://devcenter.heroku.com/articles/how-do-i-use-sqlite3-for-development">Heroku page on using <tt>sqlite3</tt> for development</a>, , хорошей идеей является использование одинаковой базы данных в девелопмент, тест и продакшн окружениях для минимизации  возможных несовместимостей. Следуя <a href="http://devcenter.heroku.com/articles/local-postgresql">Heroku instructions for local PostgreSQL installation</a> установите базу данных PostgreSQL на вашей локальной системе. Обновите ваш <code>Gemfile</code> как показано в <a class="ref" href="static-pages#code-Gemfile_pg_gem">Листинге&nbsp;3.31</a> для устранения гема <tt>sqlite3</tt> и использования только <tt>pg</tt> гема. Вам также следует разузнать о файле <code>config/database.yml</code> и локальном запуске PostgreSQL. Вашей целью должно быть создание и конфигурирование девелопмент и тестовой баз данных  для использования PostgreSQL. <strong>Предупреждение:</strong> Это упражнение является крайне сложным и может разрушить вашу жизнь. На самом деле безумием будет даже попытка сделать это. Если вы застрянете, не стесняйтесь пропустить это упражнение. И не переживайте — как было отмечено ранее, пример пиложения разрабатываемый в этом учебнике полностью совместим как со SQLite так и с PostgreSQL. </li>
 
 </ol>
 
 
 
 
-<div class="label" id="code:proposed_contact_page"></div>
+<div class="label" id="code-proposed_contact_page"></div>
 
 
 <div class="codelisting">
@@ -1493,7 +1487,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:pages_controller_spec_exercise"></div>
+<div class="label" id="code-pages_controller_spec_exercise"></div>
 
 
 <div class="codelisting">
@@ -1563,7 +1557,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 
 
-<div class="label" id="code:Gemfile_pg_gem"></div>
+<div class="label" id="code-Gemfile_pg_gem"></div>
 
 
 <div class="codelisting">
@@ -1571,22 +1565,22 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.3&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.12&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;pg&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12.2&#39;</span>
 
 <span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.9.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.11.0&#39;</span>
 <span class="k">end</span>
 
 <span class="c1"># Gems used only for assets and not required</span>
 <span class="c1"># in production environments by default.</span>
 <span class="n">group</span> <span class="ss">:assets</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.4&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.5&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;coffee-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.2&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;uglifier&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.3&#39;</span>
 <span class="k">end</span>
 
-<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.0&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span>
 
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
@@ -1595,33 +1589,48 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
+<div class="label" id="sec-advanced_setup"></div>
 
 
-<div class="label" id="sec:advanced_setup"></div>
+<h2><a id="sec-3_6" href="static-pages#sec-advanced_setup" class="heading"><span class="number">3.6</span> Продвинутая настройка</a></h2>
 
 
-<h2><a id="sec:3.6" href="static-pages#sec:advanced_setup" class="heading"><span class="number">3.6</span> Продвинутая настройка</a></h2>
-
-
-<p>Как упоминалось в <a class="ref" href="static-pages#sec:first_tests">Разделе&nbsp;3.2</a>, непосредственное  использование команды <code>rspec</code> не лишено недостатков. В этом разделе мы вначале обсудим способ устранения необходимости каждый раз набирать <code>bundle exec</code>, а затем настроим установку тестов для автоматизации запуска набора тестов с помошью Guard (<a class="ref" href="static-pages#sec:guard">Раздел&nbsp;3.6.2</a>) и, опционально,  Spork (<a class="ref" href="static-pages#sec:spork">Раздел&nbsp;3.6.3</a>). Наконец мы упомянем о способе запуска тестов непосредственно внутри Sublime Text - технике, особенно полезной в паре со  Spork.</p>
+<p>Как упоминалось в <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a>, непосредственное  использование команды <code>rspec</code> не лишено недостатков. В этом разделе мы вначале обсудим способ устранения необходимости каждый раз набирать <code>bundle exec</code>, а затем настроим установку тестов для автоматизации запуска набора тестов с помошью Guard (<a class="ref" href="static-pages#sec-guard">Раздел&nbsp;3.6.2</a>) и, опционально,  Spork (<a class="ref" href="static-pages#sec-spork">Раздел&nbsp;3.6.3</a>). Наконец мы упомянем о способе запуска тестов непосредственно внутри Sublime Text - технике, особенно полезной в паре со  Spork.</p>
 
 <p>Этот раздел предназначен для довольно подвинутых пользователей и может быть пропущен без каких либо потерь целостности. Помимо всего прочего, этот материал вероятно устареет гораздо быстрее чем остальные  части учебника, так что не стоит ожидать что на вашей системе все будет происходить в точности как это показано в примерах, и вам возможно даже придется погуглить для того чтобы заставить все работать.</p>
 
-<div class="label" id="sec:eliminating_bundle_exec"></div>
+<div class="label" id="sec-eliminating_bundle_exec"></div>
 
 
-<h3><a id="sec:3.6.1" href="static-pages#sec:eliminating_bundle_exec" class="heading"><span class="number">3.6.1</span> Устранение <tt>bundle exec</tt></a></h3>
+<h3><a id="sec-3_6_1" href="static-pages#sec-eliminating_bundle_exec" class="heading"><span class="number">3.6.1</span> Устранение <tt>bundle exec</tt></a></h3>
 
 
-<p>Как было вкратце отмечено в <a class="ref" href="static-pages#sec:TDD">Разделе&nbsp;3.2.1</a>, зачастую необходимо предварять такие команды как  <code>rake</code> или <code>rspec</code> командой <code>bundle exec</code> для того чтобы программы запускались с набором гемов прописанных в вашем  <code>Gemfile</code>. (По техническим причинам единственным исключением является сама команда  <code>rails</code>.) Такая практика является довольно громоздкой и в этом разделе мы обсудим два способа устранения этой необходимости.</p>
+<p>Как было вкратце отмечено в <a class="ref" href="static-pages#sec-TDD">Разделе&nbsp;3.2.1</a>, зачастую необходимо предварять такие команды как  <code>rake</code> или <code>rspec</code> командой <code>bundle exec</code> для того чтобы программы запускались с набором гемов прописанных в вашем  <code>Gemfile</code>. (По техническим причинам единственным исключением является сама команда  <code>rails</code>.) Такая практика является довольно громоздкой и в этом разделе мы обсудим два способа устранения этой необходимости.</p>
 
-<div class="label" id="sec:rvm_bundler_integration"></div>
-
-
-<h4><a id="sec:3.6.1.1" href="static-pages#sec:rvm_bundler_integration" class="heading">RVM Bundler интеграция</a></h4>
+<div class="label" id="sec-rvm_bundler_integration"></div>
 
 
-<p>Лучший и предпочтительный способ это использование <a href="http://www.beginrescueend.com/integration/bundler/">RVM Bundler интеграции</a><sup class="footnote" id="fnref:3.16"><a href="#fn:3.16">16</a></sup> для того чтобы сконфигурировать Ruby Version Manager для автоматического включения правильных исполняемых файлов в локальном окружении. Для начала выполните следующие две команды:</p>
+<h4><a id="sec-3_6_1_1" href="static-pages#sec-rvm_bundler_integration" class="heading">RVM Bundler интеграция</a></h4>
+
+
+<p>Первый и наиболее предпочтительный метод заключается в использовании RVM, который включает интеграцию с Bundler начиная с версии 1.11. Вы можете проверить что у вас достаточно свежая версия RVM следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rvm get head <span class="o">&amp;&amp;</span> rvm reload
+<span class="gp">$</span> rvm -v
+
+<span class="go">rvm 1.15.6 (master)</span>
+</pre></div>
+</div>
+
+<p>До тех пор пока версия больше чем 1.11.x, установленные гемы будут автоматически извлекаться в правильном Bundler окружении, так что вы можете писать (например)</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rspec spec/
+</pre></div>
+</div>
+
+<p>опуская <code>bundle exec</code>. Если это ваш случай, вам следует пропустить остальную часть этого раздела.</p>
+
+<p>Если вы по каким-либо причинам ограничены более ранней версией RVM, вы все же можете избежать <code>bundle exec</code> с помощью <a href="http://rvm.io/integration/bundler/">RVM Bundler интеграции</a><sup class="footnote" id="fnref-3_16"><a href="#fn-3_16">16</a></sup> для конфигурирования Менеджера Версий Руби таким образом чтобы он в локальном окружении включал правильные программы автоматически. Шаги просты, хотя и немного загадочны. Для начала, выполните эти две команды:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rvm get head <span class="o">&amp;&amp;</span> rvm reload
 <span class="gp">$</span> chmod +x <span class="nv">$rvm_path</span>/hooks/after_cd_bundler
@@ -1629,7 +1638,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Затем эти:</p>
+<p>Затем выполните эти:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd</span> ~/rails_projects/sample_app
 <span class="gp">$</span> bundle install --without production --binstubs<span class="o">=</span>./bundler_stubs
@@ -1637,9 +1646,9 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Эти команды комбинируют магию RVM и Bundler с тем чтобы обеспечить выполнение таких команд как <code>rake</code> и <code>rspec</code> в правильном окружении. Поскольку эти файлы специфичны для вашей локальной настройки, вы должны добавить <code>bundler_stubs</code> директорию в ваш <code>.gitignore</code> файл (<a class="ref" href="static-pages#code:bundler_stubs_gitignore">Листинг&nbsp;3.32</a>).</p>
+<p>Эти команды комбинируют магию RVM и Bundler с тем чтобы обеспечить выполнение таких команд как <code>rake</code> и <code>rspec</code> в правильном окружении. Поскольку эти файлы специфичны для вашей локальной настройки, вы должны добавить <code>bundler_stubs</code> директорию в ваш <code>.gitignore</code> файл (<a class="ref" href="static-pages#code-bundler_stubs_gitignore">Листинг&nbsp;3.32</a>).</p>
 
-<div class="label" id="code:bundler_stubs_gitignore"></div>
+<div class="label" id="code-bundler_stubs_gitignore"></div>
 
 
 <div class="codelisting">
@@ -1666,7 +1675,7 @@ bundler_stubs/
 </div></div>
 
 
-<p>При добавлении другой исполняемой задачи (такой как <code>guard</code> в <a class="ref" href="static-pages#sec:guard">Разделе&nbsp;3.6.2</a>), вам нужно перезапускать комманду <code>bundle install</code>:</p>
+<p>При добавлении другой исполняемой задачи (такой как <code>guard</code> в <a class="ref" href="static-pages#sec-guard">Разделе&nbsp;3.6.2</a>), вам нужно перезапустить команду <code>bundle install</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle --binstubs<span class="o">=</span>./bundler_stubs
 </pre></div>
@@ -1675,10 +1684,10 @@ bundler_stubs/
 
 
 
-<div class="label" id="sec:binstubs"></div>
+<div class="label" id="sec-binstubs"></div>
 
 
-<h4><a id="sec:3.6.1.2" href="static-pages#sec:binstubs" class="heading">binstubs</a></h4>
+<h4><a id="sec-3_6_1_2" href="static-pages#sec-binstubs" class="heading">binstubs</a></h4>
 
 
 <p>Если вы не используете RVM, вы все же можете избежать набора <code>bundle exec</code>. Bundler позволяет создавать связанные бинарники следующим образом:</p>
@@ -1702,21 +1711,21 @@ bundler_stubs/
 </div>
 
 
-<p>При добавлении другой исполняемой задачи (такой как <code>guard</code> в <a class="ref" href="static-pages#sec:guard">Разделе&nbsp;3.6.2</a>), вам нужно перезапускать комманду <tt class="verb">bundle</tt> <tt class="verb">--binstubs</tt> command.</p>
+<p>При добавлении другой исполняемой задачи (такой как <code>guard</code> в <a class="ref" href="static-pages#sec-guard">Разделе&nbsp;3.6.2</a>), вам нужно перезапускать комманду <tt class="verb">bundle</tt> <tt class="verb">--binstubs</tt> command.</p>
 
 <p>Ради читателей пропустивших этот раздел, остальная часть этого учебника  будет ошибаться в сторону осторожности и явно использовать <code>bundle exec</code>, но, конечно же, вы запросто можете использовать более компактную версию если ваша система сконфигурирована должным образом.</p>
 
-<div class="label" id="sec:guard"></div>
+<div class="label" id="sec-guard"></div>
 
 
-<h3><a id="sec:3.6.2" href="static-pages#sec:guard" class="heading"><span class="number">3.6.2</span> Автоматизированные тесты с Guard</a></h3>
+<h3><a id="sec-3_6_2" href="static-pages#sec-guard" class="heading"><span class="number">3.6.2</span> Автоматизированные тесты с Guard</a></h3>
 
 
-<p>Одно из неудобств связанных с использованием команды <code>rspec</code> это необходимость переключаться на командную строку и запускать тесты вручную. (Второе неудобство - медленный запуск набора тестов рассматривается в <a class="ref" href="static-pages#sec:spork">Разделе&nbsp;3.6.3</a>.) В этом разделе мы покажем как использовать <a href="https://github.com/guard/guard">Guard</a> для автоматизации запуска тестов. Guard отслеживает изменения в файловой системе так что, например, когда мы изменяем файл <code>static_pages_spec.rb</code> запустится только этот тест. Более того, мы можем настроить Guard таким образом, что при, скажем, изменении файла <code>home.html.erb</code> автоматически запустится  <code>static_pages_spec.rb</code>.</p>
+<p>Одно из неудобств связанных с использованием команды <code>rspec</code> это необходимость переключаться на командную строку и запускать тесты вручную. (Второе неудобство - медленный запуск набора тестов рассматривается в <a class="ref" href="static-pages#sec-spork">Разделе&nbsp;3.6.3</a>.) В этом разделе мы покажем как использовать <a href="https://github.com/guard/guard">Guard</a> для автоматизации запуска тестов. Guard отслеживает изменения в файловой системе так что, например, когда мы изменяем файл <code>static_pages_spec.rb</code> запустится только этот тест. Более того, мы можем настроить Guard таким образом, что при, скажем, изменении файла <code>home.html.erb</code> автоматически запустится  <code>static_pages_spec.rb</code>.</p>
 
-<p>Вначале мы добавим <code>guard-rspec</code> в <code>Gemfile</code> (<a class="ref" href="static-pages#code:gemfile_guard">Листинг&nbsp;3.33</a>).</p>
+<p>Вначале мы добавим <code>guard-rspec</code> в <code>Gemfile</code> (<a class="ref" href="static-pages#code-gemfile_guard">Листинг&nbsp;3.33</a>).</p>
 
-<div class="label" id="code:gemfile_guard"></div>
+<div class="label" id="code-gemfile_guard"></div>
 
 
 <div class="codelisting">
@@ -1724,26 +1733,25 @@ bundler_stubs/
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.6&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.12&#39;</span>
 
-<span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
+<span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.5&#39;</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
-  <span class="n">gem</span> <span class="s1">&#39;guard-rspec&#39;</span><span class="p">,</span> <span class="s1">&#39;0.5.5&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.11.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;guard-rspec&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.1&#39;</span>
 <span class="k">end</span>
 
 <span class="c1"># Gems used only for assets and not required</span>
 <span class="c1"># in production environments by default.</span>
 <span class="n">group</span> <span class="ss">:assets</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.4&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span>   <span class="s1">&#39;3.2.5&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;coffee-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.2&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;uglifier&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.3&#39;</span>
 <span class="k">end</span>
 
-<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.0&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;jquery-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.0.2&#39;</span>
 
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
   <span class="c1"># System-dependent gems</span>
 <span class="k">end</span>
@@ -1759,9 +1767,8 @@ bundler_stubs/
 
 <div class="code"><div class="highlight"><pre><span class="c1"># Тестовые гемы для Macintosh OS X</span>
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
-  <span class="n">gem</span> <span class="s1">&#39;rb-fsevent&#39;</span><span class="p">,</span> <span class="s1">&#39;0.4.3.1&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+  <span class="n">gem</span> <span class="s1">&#39;rb-fsevent&#39;</span><span class="p">,</span> <span class="s1">&#39;0.9.1&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="kp">false</span>
   <span class="n">gem</span> <span class="s1">&#39;growl&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.3&#39;</span>
 <span class="k">end</span>
 </pre></div>
@@ -1770,7 +1777,6 @@ bundler_stubs/
 
 <div class="code"><div class="highlight"><pre><span class="c1"># Тестовые гемы для Linux</span>
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;rb-inotify&#39;</span><span class="p">,</span> <span class="s1">&#39;0.8.8&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;libnotify&#39;</span><span class="p">,</span> <span class="s1">&#39;0.5.9&#39;</span>
@@ -1781,7 +1787,6 @@ bundler_stubs/
 
 <div class="code"><div class="highlight"><pre><span class="c1"># Тестовые гемы для Windows</span>
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.10.0&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;capybara&#39;</span><span class="p">,</span> <span class="s1">&#39;1.1.2&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;rb-fchange&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0.5&#39;</span>
   <span class="n">gem</span> <span class="s1">&#39;rb-notifu&#39;</span><span class="p">,</span> <span class="s1">&#39;0.0.4&#39;</span>
@@ -1807,9 +1812,9 @@ bundler_stubs/
 </div>
 
 
-<p>Теперь отредактируем сгенерированный <code>Guardfile</code> так чтобы Guard запускал правильные тесты после обновления интеграционных тестов и представлений (<a class="ref" href="static-pages#code:guardfile">Листинг&nbsp;3.34</a>).</p>
+<p>Теперь отредактируем сгенерированный <code>Guardfile</code> так чтобы Guard запускал правильные тесты после обновления интеграционных тестов и представлений (<a class="ref" href="static-pages#code-guardfile">Листинг&nbsp;3.34</a>).</p>
 
-<div class="label" id="code:guardfile"></div>
+<div class="label" id="code-guardfile"></div>
 
 
 <div class="codelisting">
@@ -1825,11 +1830,12 @@ bundler_stubs/
     <span class="o">[</span><span class="s2">&quot;spec/routing/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_routing_spec.rb&quot;</span><span class="p">,</span>
      <span class="s2">&quot;spec/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="si">}</span><span class="s2">s/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span><span class="p">,</span>
      <span class="s2">&quot;spec/acceptance/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span><span class="p">,</span>
-     <span class="p">(</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">][/</span><span class="n">_pages</span><span class="o">/]</span> <span class="p">?</span> <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">:</span>
+     <span class="p">(</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="sr">/_pages/</span><span class="o">]</span> <span class="p">?</span> <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">:</span>
                        <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">singularize</span><span class="si">}</span><span class="s2">_pages_spec.rb&quot;</span><span class="p">)</span><span class="o">]</span>
   <span class="k">end</span>
   <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^app/views/(.+)/}</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">m</span><span class="o">|</span>
-    <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">singularize</span><span class="si">}</span><span class="s2">_pages_spec.rb&quot;</span>
+    <span class="p">(</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">][</span><span class="sr">/_pages/</span><span class="o">]</span> <span class="p">?</span> <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="si">}</span><span class="s2">_spec.rb&quot;</span> <span class="p">:</span>
+                       <span class="s2">&quot;spec/requests/</span><span class="si">#{</span><span class="n">m</span><span class="o">[</span><span class="mi">1</span><span class="o">].</span><span class="n">singularize</span><span class="si">}</span><span class="s2">_pages_spec.rb&quot;</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1855,19 +1861,25 @@ bundler_stubs/
 </div>
 
 
-<p>Для того чтобы избавиться от необходимости запускать команду с префиксом <code>bundle exec</code>, повторите шаги из <a class="ref" href="static-pages#sec:eliminating_bundle_exec">Раздела&nbsp;3.6.1</a>.</p>
+<p>Для того чтобы избавиться от необходимости запускать команду с префиксом <code>bundle exec</code>, повторите шаги из <a class="ref" href="static-pages#sec-eliminating_bundle_exec">Раздела&nbsp;3.6.1</a>.</p>
 
-<div class="label" id="sec:spork"></div>
+<p>Кстати, если Guard будет жаловаться на отсутствие директории <code>spec/routing</code>, вы можете исправить ситуацию создав пустую директорию с соответствующим названием:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> mkdir spec/routing
+</pre></div>
+</div>
+
+<div class="label" id="sec-spork"></div>
 
 
-<h3><a id="sec:3.6.3" href="static-pages#sec:spork" class="heading"><span class="number">3.6.3</span> Ускорение тестов со Spork</a></h3>
+<h3><a id="sec-3_6_3" href="static-pages#sec-spork" class="heading"><span class="number">3.6.3</span> Ускорение тестов со Spork</a></h3>
 
 
-<p>При запуске <code>bundle exec rspec</code> вы могли заметить что перед началом запуска тестов проходит несколько секунд, тогда как выполнение самих тестов происходит довольно быстро. Это связано с тем, что при каждом запуске тестов RSpec должен перезагрузить все Рельсовое окружение. <a href="http://github.com/sporkrb/spork">Тестовый сервер Spork </a><sup class="footnote" id="fnref:3.17"><a href="#fn:3.17">17</a></sup> предназначен для решения этой проблемы. Spork загружает окружение <em>однократно</em>, а затем поддерживает пул процессов для запуска следующих тестов. Spork особенно полезен в комбинации с Guard (<a class="ref" href="static-pages#sec:guard">Раздел&nbsp;3.6.2</a>).</p>
+<p>При запуске <code>bundle exec rspec</code> вы могли заметить что перед началом запуска тестов проходит несколько секунд, тогда как выполнение самих тестов происходит довольно быстро. Это связано с тем, что при каждом запуске тестов RSpec должен перезагрузить все Рельсовое окружение. <a href="http://github.com/sporkrb/spork">Тестовый сервер Spork </a><sup class="footnote" id="fnref-3_17"><a href="#fn-3_17">17</a></sup> предназначен для решения этой проблемы. Spork загружает окружение <em>однократно</em>, а затем поддерживает пул процессов для запуска следующих тестов. Spork особенно полезен в комбинации с Guard (<a class="ref" href="static-pages#sec-guard">Раздел&nbsp;3.6.2</a>).</p>
 
-<p>Первый шаг это добавление <code>spork</code> гем зависимости в <code>Gemfile</code> (<a class="ref" href="static-pages#code:gemfile_spork">Листинг&nbsp;3.35</a>).</p>
+<p>Первый шаг это добавление <code>spork</code> гем зависимости в <code>Gemfile</code> (<a class="ref" href="static-pages#code-gemfile_spork">Листинг&nbsp;3.35</a>).</p>
 
-<div class="label" id="code:gemfile_spork"></div>
+<div class="label" id="code-gemfile_spork"></div>
 
 
 <div class="codelisting">
@@ -1875,17 +1887,20 @@ bundler_stubs/
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.3&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.12&#39;</span>
 <span class="o">.</span>
 <span class="o">.</span>
 <span class="o">.</span>
-<span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+<span class="n">group</span> <span class="ss">:development</span><span class="p">,</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
-  <span class="n">gem</span> <span class="s1">&#39;guard-spork&#39;</span><span class="p">,</span> <span class="s1">&#39;0.3.2&#39;</span>
-  <span class="n">gem</span> <span class="s1">&#39;spork&#39;</span><span class="p">,</span> <span class="s1">&#39;0.9.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;guard-spork&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;spork&#39;</span><span class="p">,</span> <span class="s1">&#39;0.9.2&#39;</span>
 <span class="k">end</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
 </pre></div>
 </div></div>
 
@@ -1904,9 +1919,9 @@ bundler_stubs/
 </div>
 
 
-<p>Теперь нам необходимо отредактировать конфигурационный файл RSpec  <code>spec/spec_helper.rb</code> таким образом, чтобы окружение загружалось в блоке <em>prefork</em> который обеспечит его однократную загрузку (<a class="ref" href="static-pages#code:spork_spec_helper">Листинг&nbsp;3.36</a>).</p>
+<p>Теперь нам необходимо отредактировать конфигурационный файл RSpec  <code>spec/spec_helper.rb</code> таким образом, чтобы окружение загружалось в блоке <em>prefork</em> который обеспечит его однократную загрузку (<a class="ref" href="static-pages#code-spork_spec_helper">Листинг&nbsp;3.36</a>).</p>
 
-<div class="label" id="code:spork_spec_helper"></div>
+<div class="label" id="code-spork_spec_helper"></div>
 
 
 <div class="codelisting">
@@ -1961,7 +1976,6 @@ bundler_stubs/
 </pre></div>
 </div></div>
 
-
 <p>Перед запуском Spork мы можем сделать контрольный замер времени необходимого на прохождения тестов следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">time </span>bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
@@ -1986,7 +2000,7 @@ bundler_stubs/
 </div>
 
 
-<p>(Для того чтобы избавиться от необходимости запускать команду с префиксом <code>bundle exec</code>, повторите шаги из <a class="ref" href="static-pages#sec:eliminating_bundle_exec">Раздела&nbsp;3.6.1</a>.) В другом терминальном окне, мы теперь можем запустить наш набор тестов с <tt class="verb">--drb</tt> опцией (&ldquo;распределенный Ruby&rdquo;) и проверить что издержки, связанные с постоянной перезагрузкой окружения значительно сократились:</p>
+<p>(Для того чтобы избавиться от необходимости запускать команду с префиксом <code>bundle exec</code>, повторите шаги из <a class="ref" href="static-pages#sec-eliminating_bundle_exec">Раздела&nbsp;3.6.1</a>.) В другом терминальном окне, мы теперь можем запустить наш набор тестов с <tt class="verb">--drb</tt> опцией (&ldquo;распределенный Ruby&rdquo;) и проверить что издержки, связанные с постоянной перезагрузкой окружения значительно сократились:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">time </span>bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb --drb
 <span class="go">......</span>
@@ -2000,9 +2014,9 @@ bundler_stubs/
 </div>
 
 
-<p>Включать опцию <tt class="verb">--drb</tt> при каждом запуске <code>rspec</code> довольно неудобно, поэтому я рекомендую добавить ее в <code>.rspec</code> файл расположенный в корневой директории проекта, как это показано в <a class="ref" href="static-pages#code:rspec_drb">Листинге&nbsp;3.37</a>.</p>
+<p>Включать опцию <tt class="verb">--drb</tt> при каждом запуске <code>rspec</code> довольно неудобно, поэтому я рекомендую добавить ее в <code>.rspec</code> файл расположенный в корневой директории проекта, как это показано в <a class="ref" href="static-pages#code-rspec_drb">Листинге&nbsp;3.37</a>.</p>
 
-<div class="label" id="code:rspec_drb"></div>
+<div class="label" id="code-rspec_drb"></div>
 
 
 <div class="codelisting">
@@ -2014,7 +2028,7 @@ bundler_stubs/
 </div></div>
 
 
-<p>Небольшой совет касательно использования Spork: если ваши тесты провальны, а вы думаете, что они должны проходить, проблема может быть связана со Spork, который иногда может не перегружать необходимые файлы. (Например, это часто происходит при изменении конфигурационных файлов, таких как <code>routes.rb</code>.) При возникновении подобных сомнений, отключите Spork сервер командой <tt>Control-C</tt> и рестартуйте его:</p>
+<p>Небольшой совет касательно использования Spork: если ваши тесты провальны, а вы думаете, что они должны проходить, проблема может быть связана со Spork, который иногда может не перегружать необходимые файлы. (Например, это часто происходит при изменении конфигурационных файлов, таких как <code>routes.rb</code>.) При возникновении подобных сомнений, отключите Spork сервер командой <tt>Ctrl-C</tt> и рестартуйте его:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>spork
 <span class="go">Using RSpec</span>
@@ -2026,10 +2040,10 @@ bundler_stubs/
 </div>
 
 
-<div class="label" id="sec:spork_and_guard"></div>
+<div class="label" id="sec-spork_and_guard"></div>
 
 
-<h4><a id="sec:3.6.3.1" href="static-pages#sec:spork_and_guard" class="heading">Guard with Spork</a></h4>
+<h4><a id="sec-3_6_3_1" href="static-pages#sec-spork_and_guard" class="heading">Guard with Spork</a></h4>
 
 
 <p>Спорк особенно полезен в комбинации с Guard, мы можем подружить их следующим образом:</p>
@@ -2039,15 +2053,17 @@ bundler_stubs/
 </div>
 
 
-<p>Затем нам необходимо изменить <code>Guardfile</code> as in <a class="ref" href="static-pages#code:spork_guardfile">Листинг&nbsp;3.38</a>.</p>
+<p>Затем нам необходимо изменить <code>Guardfile</code> as in <a class="ref" href="static-pages#code-spork_guardfile">Листинг&nbsp;3.38</a>.</p>
 
-<div class="label" id="code:spork_guardfile"></div>
+<div class="label" id="code-spork_guardfile"></div>
 
 
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 3.38.</span> <span class="description"><code>Guardfile</code> обновленный для использования Spork. <br /> <code>Guardfile</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="n">guard</span> <span class="s1">&#39;spork&#39;</span><span class="p">,</span> <span class="ss">:rspec_env</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="s1">&#39;RAILS_ENV&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;test&#39;</span> <span class="p">}</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;active_support/core_ext&#39;</span>
+
+<span class="n">guard</span> <span class="s1">&#39;spork&#39;</span><span class="p">,</span> <span class="ss">:rspec_env</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="s1">&#39;RAILS_ENV&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;test&#39;</span> <span class="p">}</span> <span class="k">do</span>
   <span class="n">watch</span><span class="p">(</span><span class="s1">&#39;config/application.rb&#39;</span><span class="p">)</span>
   <span class="n">watch</span><span class="p">(</span><span class="s1">&#39;config/environment.rb&#39;</span><span class="p">)</span>
   <span class="n">watch</span><span class="p">(</span><span class="sr">%r{^config/environments/.+\.rb$}</span><span class="p">)</span>
@@ -2068,6 +2084,7 @@ bundler_stubs/
 </div></div>
 
 
+
 <p>Обратите внимание что мы обновили аргументы <code>guard</code> включив <tt class="verb">:cli =&gt; --drb</tt>, которая обеспечивает использовани Guard-ом интерфейса командной строки (cli) для Spork сервера. Мы также добавили команду для слежения за директорией <code>spec/support/</code>, которую мы начнем менять начиная с <a class="ref" href="filling-in-the-layout#top">Главы&nbsp;5</a>.</p>
 
 <p>Закончив с конфигурацией, мы можем одновременно стартовать Guard и Spork командой <code>guard</code>:</p>
@@ -2079,15 +2096,15 @@ bundler_stubs/
 
 <p>Guard автоматически стартует Spork сервер, кардинально уменьшая издержки при запуске тестов.</p>
 
-<p>Хорошо сконфигурированное тестовое окружение с Guard, Spork и (опционально) уведомлениями вызывают привыкание к  разработке через тестирование. См. более подробно об этом в <a href="http://railstutorial.org/screencasts">скринкастах Rails Tutorial</a><sup class="footnote" id="fnref:3.18"><a href="#fn:3.18">18</a></sup>.</p>
+<p>Хорошо сконфигурированное тестовое окружение с Guard, Spork и (опционально) уведомлениями вызывают привыкание к  разработке через тестирование. См. более подробно об этом в <a href="http://railstutorial.org/screencasts">скринкастах Rails Tutorial</a><sup class="footnote" id="fnref-3_18"><a href="#fn-3_18">18</a></sup>.</p>
 
-<div class="label" id="sec:tests_inside_sublime_text"></div>
-
-
-<h3><a id="sec:3.6.4" href="static-pages#sec:tests_inside_sublime_text" class="heading"><span class="number">3.6.4</span> Тесты в Sublime Text</a></h3>
+<div class="label" id="sec-tests_inside_sublime_text"></div>
 
 
-<p>Если вы используете Sublime Text, то у вас есть большое количество вспомогательных команд для запуска тестов непосредственно в редакторе. Для того чтобы научиться пользоваться ими, следуйте инструкциям для своей платформы на <a href="https://github.com/maltize/sublime-text-2-ruby-tests#">Sublime Text 2 Ruby Tests</a>.<sup class="footnote" id="fnref:3.19"><a href="#fn:3.19">19</a></sup> На моей платформе (Macintosh OS&nbsp;X), я могу установить команды следующим образом:</p>
+<h3><a id="sec-3_6_4" href="static-pages#sec-tests_inside_sublime_text" class="heading"><span class="number">3.6.4</span> Тесты в Sublime Text</a></h3>
+
+
+<p>Если вы используете Sublime Text, то у вас есть большое количество вспомогательных команд для запуска тестов непосредственно в редакторе. Для того чтобы научиться пользоваться ими, следуйте инструкциям для своей платформы на <a href="https://github.com/maltize/sublime-text-2-ruby-tests#">Sublime Text 2 Ruby Tests</a>.<sup class="footnote" id="fnref-3_19"><a href="#fn-3_19">19</a></sup> На моей платформе (Macintosh OS&nbsp;X), я могу установить команды следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd</span> ~/Library/Application<span class="se">\ </span>Support/Sublime<span class="se">\ </span>Text<span class="se">\ </span>2/Packages
 <span class="gp">$</span> git clone https://github.com/maltize/sublime-text-2-ruby-tests.git RubyTest
@@ -2095,7 +2112,7 @@ bundler_stubs/
 </div>
 
 
-<p>Вы также можете пока использовать инструкции по настройке для <a href="https://github.com/mhartl/rails_tutorial_sublime_text#">Rails Tutorial Sublime Text</a>.<sup class="footnote" id="fnref:3.20"><a href="#fn:3.20">20</a></sup></p>
+<p>Вы также можете пока использовать инструкции по настройке для <a href="https://github.com/mhartl/rails_tutorial_sublime_text#">Rails Tutorial Sublime Text</a>.<sup class="footnote" id="fnref-3_20"><a href="#fn-3_20">20</a></sup></p>
 
 <p>После перезапуска Sublime Text, пакет RubyTest предоставляет следующие команды:</p>
 
@@ -2129,25 +2146,25 @@ bundler_stubs/
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:3.1">Преемник <em>Webrat</em>, Capybara назван в честь  <a href="http://en.wikipedia.org/wiki/Capybara">крупнейшего грызуна</a>  в мире.&nbsp;<a class="arrow" href="#fnref:3.1">&uarr;</a></li>
-<li id="fn:3.2">Фактически, вы можете даже опустить <code>install</code> &mdash; <code>bundle</code> сам является алиасом для <code>bundle install</code>.&nbsp;<a class="arrow" href="#fnref:3.2">&uarr;</a></li>
-<li id="fn:3.3">Как и прежде, увеличенный файл из <a class="ref" href="beginning#code:gitignore">Листинга&nbsp;1.7</a> может оказаться более удобным.&nbsp;<a class="arrow" href="#fnref:3.3">&uarr;</a></li>
-<li id="fn:3.4">https://github.com/railstutorial/sample_app_2nd_ed&nbsp;<a class="arrow" href="#fnref:3.4">&uarr;</a></li>
-<li id="fn:3.5">Фактически, Rails обеспечивает непопадание запросов на такие файлы в основной стек Rails; они поставляются непосредственно из файловой системы. (См. <a href="http://www.amazon.com/gp/product/0321601661"><em>The Rails&nbsp;3 Way</em></a>.)&nbsp;<a class="arrow" href="#fnref:3.5">&uarr;</a></li>
-<li id="fn:3.6">Как обычно, замените <code>subl</code> на команду для своего текстового редактора.&nbsp;<a class="arrow" href="#fnref:3.6">&uarr;</a></li>
-<li id="fn:3.7">HTML изменяется со временем; явно декларируя doctype  мы даем браузерам возможность отображать наши страницы должным образом в будущем. Чрезвычайно простой doctype <code>&lt;!DOCTYPE html&gt;</code> характерен для последнего стандарта HTML - HTML5.&nbsp;<a class="arrow" href="#fnref:3.7">&uarr;</a></li>
-<li id="fn:3.8">Наш метод создания статических страниц является, вероятно, самым простым, но это не единственный путь. Оптимальный метод действительно зависит от ваших потребностей; если вы ожидаете, <em>большое</em> количество статических страниц, использование  контроллера Pages  может стать довольно громоздким, но в нашем демонстрационном приложении нам понадобятся лишь несколько. См. этот <a href="http://blog.hasmanythrough.com/2008/4/2/simple-pages">blog post on simple pages at <tt>has_many :through</tt></a> для обзора методов, изготовления статических страниц с Rails. <em>Предупреждение:</em> обсуждение довольно продвинутое, так что, вы можете захотеть подождать некоторое время прежде, чем попытаться понять его.&nbsp;<a class="arrow" href="#fnref:3.8">&uarr;</a></li>
-<li id="fn:3.9">Постоянно писать <code>bundle exec</code> это довольно обременительно; в <a class="ref" href="static-pages#sec:advanced_setup">разделе&nbsp;3.6</a> описано несколько способов избежать этого.&nbsp;<a class="arrow" href="#fnref:3.9">&uarr;</a></li>
-<li id="fn:3.10">Я на самом деле использую черный фон и для терминала и для редактора, но светлый фон лучше выглядит на скриншотах.&nbsp;<a class="arrow" href="#fnref:3.10">&uarr;</a></li>
-<li id="fn:3.11">Символ новой строки это то чем заканчивается строка, тем самым начиная новую строку. В коде это представлено символами <tt class="verb">\n</tt>.&nbsp;<a class="arrow" href="#fnref:3.11">&uarr;</a></li>
-<li id="fn:3.12"><em>Подсчет</em> столбцов вручную можг бы свести вас с ума, вот почему у многих текстовых редакторов есть визуальное средство для помощи вам. Например, если вы присмотритесь к <a class="ref" href="beginning#fig:editor_shell">Рис. 1.1</a>, вы увидите небольшую вертикальную линию справа, помогающую сохранить код в размере не более 80 символов. (Фактически это 78 столбцов, что дает вам небольшое поле для ошибки.) Если вы используете TextMate, можно найти эту функцию в <tt>View &gt; Wrap Column &gt; 78</tt>. В Sublime Text, вы можете использовать <tt>View &gt; Ruler &gt; 78</tt> или <tt>View &gt; Ruler &gt; 80</tt>.&nbsp;<a class="arrow" href="#fnref:3.12">&uarr;</a></li>
-<li id="fn:3.13">Есть вторая популярная система шаблонов  под названием <a href="http://haml-lang.com/">Haml</a>, которую я лично люблю, но она все же <em>достаточно</em> нестандартна для использования во вводном учебном руководстве.&nbsp;<a class="arrow" href="#fnref:3.13">&uarr;</a></li>
-<li id="fn:3.14">Опытные Rails программисты возможно ожидали увидеть здесь <code>content_for</code>, но он плохо работает с файлопроводом. Функция <code>provide</code> это его замена.&nbsp;<a class="arrow" href="#fnref:3.14">&uarr;</a></li>
-<li id="fn:3.15">Если вы изучали Ruby прежде, вы могли бы подозревать, что <em>передает</em> содержимое в блок, и ваша догадка была бы правильной. Но для разработки веб-приложений с Rails это не имеет значения.&nbsp;<a class="arrow" href="#fnref:3.15">&uarr;</a></li>
-<li id="fn:3.16">http://www.beginrescueend.com/integration/bundler/&nbsp;<a class="arrow" href="#fnref:3.16">&uarr;</a></li>
-<li id="fn:3.17"><em>Spork</em> это комбинация spoon-fork (ложка-вилка). Название проекта обыгрывает использование Spork-ом <a href="http://ru.wikipedia.org/wiki/%D0%A4%D0%BE%D1%80%D0%BA">форков</a> <a href="http://ru.wikipedia.org/wiki/POSIX">POSIX-а</a>.&nbsp;<a class="arrow" href="#fnref:3.17">&uarr;</a></li>
-<li id="fn:3.18">http://railstutorial.org/screencasts&nbsp;<a class="arrow" href="#fnref:3.18">&uarr;</a></li>
-<li id="fn:3.19">https://github.com/maltize/sublime-text-2-ruby-tests&nbsp;<a class="arrow" href="#fnref:3.19">&uarr;</a></li>
-<li id="fn:3.20">https://github.com/mhartl/rails_tutorial_sublime_text&nbsp;<a class="arrow" href="#fnref:3.20">&uarr;</a></li>
+<li id="fn-3_1">Преемник <em>Webrat</em>, Capybara назван в честь  <a href="http://en.wikipedia.org/wiki/Capybara">крупнейшего грызуна</a>  в мире.&nbsp;<a class="arrow" href="#fnref-3_1">&uarr;</a></li>
+<li id="fn-3_2">Фактически, вы можете даже опустить <code>install</code> &mdash; <code>bundle</code> сам является алиасом для <code>bundle install</code>.&nbsp;<a class="arrow" href="#fnref-3_2">&uarr;</a></li>
+<li id="fn-3_3">Как и прежде, увеличенный файл из <a class="ref" href="beginning#code-gitignore">Листинга&nbsp;1.7</a> может оказаться более удобным.&nbsp;<a class="arrow" href="#fnref-3_3">&uarr;</a></li>
+<li id="fn-3_4">https://github.com/railstutorial/sample_app_2nd_ed&nbsp;<a class="arrow" href="#fnref-3_4">&uarr;</a></li>
+<li id="fn-3_5">Фактически, Rails обеспечивает непопадание запросов на такие файлы в основной стек Rails; они поставляются непосредственно из файловой системы. (См. <a href="http://www.amazon.com/gp/product/0321601661"><em>The Rails&nbsp;3 Way</em></a>.)&nbsp;<a class="arrow" href="#fnref-3_5">&uarr;</a></li>
+<li id="fn-3_6">Как обычно, замените <code>subl</code> на команду для своего текстового редактора.&nbsp;<a class="arrow" href="#fnref-3_6">&uarr;</a></li>
+<li id="fn-3_7">HTML изменяется со временем; явно декларируя doctype  мы даем браузерам возможность отображать наши страницы должным образом в будущем. Чрезвычайно простой doctype <code>&lt;!DOCTYPE html&gt;</code> характерен для последнего стандарта HTML - HTML5.&nbsp;<a class="arrow" href="#fnref-3_7">&uarr;</a></li>
+<li id="fn-3_8">Наш метод создания статических страниц является, вероятно, самым простым, но это не единственный путь. Оптимальный метод действительно зависит от ваших потребностей; если вы ожидаете, <em>большое</em> количество статических страниц, использование  контроллера Pages  может стать довольно громоздким, но в нашем демонстрационном приложении нам понадобятся лишь несколько. См. этот <a href="http://blog.hasmanythrough.com/2008/4/2/simple-pages">blog post on simple pages at <tt>has_many :through</tt></a> для обзора методов, изготовления статических страниц с Rails. <em>Предупреждение:</em> обсуждение довольно продвинутое, так что, вы можете захотеть подождать некоторое время прежде, чем попытаться понять его.&nbsp;<a class="arrow" href="#fnref-3_8">&uarr;</a></li>
+<li id="fn-3_9">Постоянно писать <code>bundle exec</code> это довольно обременительно; в <a class="ref" href="static-pages#sec-advanced_setup">разделе&nbsp;3.6</a> описано несколько способов избежать этого.&nbsp;<a class="arrow" href="#fnref-3_9">&uarr;</a></li>
+<li id="fn-3_10">Я на самом деле использую черный фон и для терминала и для редактора, но светлый фон лучше выглядит на скриншотах.&nbsp;<a class="arrow" href="#fnref-3_10">&uarr;</a></li>
+<li id="fn-3_11">Символ новой строки это то чем заканчивается строка, тем самым начиная новую строку. В коде это представлено символами <tt class="verb">\n</tt>.&nbsp;<a class="arrow" href="#fnref-3_11">&uarr;</a></li>
+<li id="fn-3_12"><em>Подсчет</em> столбцов вручную можг бы свести вас с ума, вот почему у многих текстовых редакторов есть визуальное средство для помощи вам. Например, если вы присмотритесь к <a class="ref" href="beginning#fig-editor_shell">Рис. 1.1</a>, вы увидите небольшую вертикальную линию справа, помогающую сохранить код в размере не более 80 символов. (Фактически это 78 столбцов, что дает вам небольшое поле для ошибки.) Если вы используете TextMate, можно найти эту функцию в <tt>View &gt; Wrap Column &gt; 78</tt>. В Sublime Text, вы можете использовать <tt>View &gt; Ruler &gt; 78</tt> или <tt>View &gt; Ruler &gt; 80</tt>.&nbsp;<a class="arrow" href="#fnref-3_12">&uarr;</a></li>
+<li id="fn-3_13">Есть вторая популярная система шаблонов  под названием <a href="http://haml-lang.com/">Haml</a>, которую я лично люблю, но она все же <em>достаточно</em> нестандартна для использования во вводном учебном руководстве.&nbsp;<a class="arrow" href="#fnref-3_13">&uarr;</a></li>
+<li id="fn-3_14">Опытные Rails программисты возможно ожидали увидеть здесь <code>content_for</code>, но он плохо работает с файлопроводом. Функция <code>provide</code> это его замена.&nbsp;<a class="arrow" href="#fnref-3_14">&uarr;</a></li>
+<li id="fn-3_15">Если вы изучали Ruby прежде, вы могли бы подозревать, что <em>передает</em> содержимое в блок, и ваша догадка была бы правильной. Но для разработки веб-приложений с Rails это не имеет значения.&nbsp;<a class="arrow" href="#fnref-3_15">&uarr;</a></li>
+<li id="fn-3_16">http://rvm.io/integration/bundler/&nbsp;<a class="arrow" href="#fnref-3_16">&uarr;</a></li>
+<li id="fn-3_17"><em>Spork</em> это комбинация spoon-fork (ложка-вилка). Название проекта обыгрывает использование Spork-ом <a href="http://ru.wikipedia.org/wiki/%D0%A4%D0%BE%D1%80%D0%BA">форков</a> <a href="http://ru.wikipedia.org/wiki/POSIX">POSIX-а</a>.&nbsp;<a class="arrow" href="#fnref-3_17">&uarr;</a></li>
+<li id="fn-3_18">http://railstutorial.org/screencasts&nbsp;<a class="arrow" href="#fnref-3_18">&uarr;</a></li>
+<li id="fn-3_19">https://github.com/maltize/sublime-text-2-ruby-tests&nbsp;<a class="arrow" href="#fnref-3_19">&uarr;</a></li>
+<li id="fn-3_20">https://github.com/mhartl/rails_tutorial_sublime_text&nbsp;<a class="arrow" href="#fnref-3_20">&uarr;</a></li>
 </ol>
 </div>
