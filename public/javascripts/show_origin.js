@@ -8,8 +8,8 @@ $(document).ready(function(){
       $("p").css("background-color","");
       $('div.origin').remove();
 
-      var version = window.location.search.split('=')[1] || ''
-      var chapter = window.location.pathname.split('/')[2] || 'beginning'
+      var version = window.location.search.split('=')[1] || '';
+      var chapter = window.location.pathname.split('/')[2] || 'beginning';
 
       var index = $("p").index(this);
       var p_for_load = '/origin' + version + '/' + chapter + '_fragment.html p:eq(' + index + ')';
