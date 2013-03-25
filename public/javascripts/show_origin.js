@@ -1,4 +1,8 @@
 $(document).ready(function(){
+  if (document.location.pathname =='/help') {
+    return;
+  }
+
   $("a").click(function (event) {
     event.stopPropagation();
   });
