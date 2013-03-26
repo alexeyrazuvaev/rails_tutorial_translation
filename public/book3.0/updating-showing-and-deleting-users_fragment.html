@@ -27,7 +27,7 @@
 <h3><a id="sec:10.1.1" href="updating-showing-and-deleting-users?version=3.0#sec:edit_form" class="heading"><span class="number">10.1.1</span> Форма для редактирования</a></h3>
 
 
-<p>Начнем с тестов для  формы редактирования, макет которой показан на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_mockup">Рис.&nbsp;10.1</a>.<sup class="footnote" id="fnref:10.1"><a href="#fn:10.1">1</a></sup> Два аналогичных теста для <code>new</code> user страницы, проверяющие на правильный ответ и заголовок, мы видели в (<a class="ref" href="sign-up?version=3.0#code:new_users_tests">Листинге&nbsp;8.1</a>; третий тест проверяет существование ссылки для редактирования изображения Gravatarа пользователя (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:a_name_and_a_gravatar">Раздел&nbsp;7.3.2</a>). Если вы покопаетесь в сайте Gravatar, вы увидите, что страница для добавления или изменения изображений (что несколько странно), расположена на <a href="http://gravatar.com/emails"><tt>http://gravatar.com/emails</tt></a>, поэтому мы тестируем <code>edit</code> страницу на наличие ссылки на этот URL.<sup class="footnote" id="fnref:10.2"><a href="#fn:10.2">2</a></sup> Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_specs">Листинге&nbsp;10.1</a>.</p>
+<p>Начнем с тестов для  формы редактирования, макет которой показан на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:edit_user_mockup">Рис.&nbsp;10.1</a>.<sup class="footnote" id="fnref:10.1"><a href="?version=3.0#fn:10.1">1</a></sup> Два аналогичных теста для <code>new</code> user страницы, проверяющие на правильный ответ и заголовок, мы видели в (<a class="ref" href="sign-up?version=3.0#code:new_users_tests">Листинге&nbsp;8.1</a>; третий тест проверяет существование ссылки для редактирования изображения Gravatarа пользователя (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:a_name_and_a_gravatar">Раздел&nbsp;7.3.2</a>). Если вы покопаетесь в сайте Gravatar, вы увидите, что страница для добавления или изменения изображений (что несколько странно), расположена на <a href="http://gravatar.com/emails"><tt>http://gravatar.com/emails</tt></a>, поэтому мы тестируем <code>edit</code> страницу на наличие ссылки на этот URL.<sup class="footnote" id="fnref:10.2"><a href="?version=3.0#fn:10.2">2</a></sup> Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_specs">Листинге&nbsp;10.1</a>.</p>
 
 <div class="label" id="fig:edit_user_mockup"></div>
 
@@ -177,7 +177,7 @@
 </div></div>
 
 
-<p>Пока мы здесь, мы также обновим форму регистрации с более общим кодом (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:signup_errors_updated">Листинг&nbsp;10.5</a>).</p>
+<p>Здесь используется метод <code>any?</code> который мы видели в <a class="ref" href="sign-up?version=3.0#sec:signup_error_messages">Разделе&nbsp;8.2.3</a>. Пока мы здесь, мы также обновим форму регистрации с более общим кодом (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:signup_errors_updated">Листинг&nbsp;10.5</a>).</p>
 
 <div class="label" id="code:signup_errors_updated"></div>
 
@@ -197,7 +197,7 @@
 </div></div>
 
 
-<p>Мы также добавим ссылку на страницу редактирования пользователя в навигацию сайта (мы назовем ее  &ldquo;Settings&rdquo; (#"настройки"), как показано на макете в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:profile_settings_link_mockup">Рис.&nbsp;10.2</a><sup class="footnote" id="fnref:10.3"><a href="#fn:10.3">3</a></sup> и <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:settings_link">Листинге&nbsp;10.6</a>.</p>
+<p>Мы также добавим ссылку на страницу редактирования пользователя в навигацию сайта (мы назовем ее  &ldquo;Settings&rdquo; (#"настройки"), как показано на макете в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:profile_settings_link_mockup">Рис.&nbsp;10.2</a><sup class="footnote" id="fnref:10.3"><a href="?version=3.0#fn:10.3">3</a></sup> и <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:settings_link">Листинге&nbsp;10.6</a>.</p>
 
 <div class="label" id="fig:profile_settings_link_mockup"></div>
 
@@ -267,9 +267,9 @@
 </div>
 
 
-<p>Так как веб-браузеры не могут напрямую отправлять <tt>PUT</tt> запросы (в соответствии с требованиями REST конвенции из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>), Rails подделывает их с помощью <tt>POST</tt> запроса и скрытого <code>input</code> поля.<sup class="footnote" id="fnref:10.4"><a href="#fn:10.4">4</a></sup></p>
+<p>Так как веб-браузеры не могут напрямую отправлять <tt>PUT</tt> запросы (в соответствии с требованиями REST конвенции из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблицы&nbsp;6.2</a>), Rails подделывает их с помощью <tt>POST</tt> запроса и скрытого <code>input</code> поля.<sup class="footnote" id="fnref:10.4"><a href="?version=3.0#fn:10.4">4</a></sup></p>
 
-<p>Здесь стоит обратить внимание на еще одну тонкость: код <code>form_for(@user)</code> в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинге&nbsp;8.2</a>&mdash;откуда Rails знает, что нужно использовать <tt>POST</tt> запрос для  новых пользователей и <tt>PUT</tt> для редактирования пользователей? Ответ кроется в возможности определения того, что мы имеем дело с новым или уже существующим в базе данных пользователем, посредством булевого метода <code>new_record?</code> (который мы видели в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>):</p>
+<p>Здесь стоит обратить внимание на еще одну тонкость: код <code>form_for(@user)</code> в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_edit_view">Листинге&nbsp;10.3</a> <em>абсолютно идентичен</em> коду в <a class="ref" href="sign-up?version=3.0#code:new_user_form">Листинге&nbsp;8.2</a> &mdash; откуда Rails знает, что нужно использовать <tt>POST</tt> запрос для  новых пользователей и <tt>PUT</tt> для редактирования пользователей? Ответ кроется в возможности определения того, что мы имеем дело с новым или уже существующим в базе данных пользователем, посредством булевого метода <code>new_record?</code> библиотеки ActiveRecord:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="o">.</span><span class="n">new_record?</span>
@@ -696,7 +696,7 @@
 
 <p>(Как отмечено в комментарии, интеграционный тест <em>follows</em> redirects (# переходит на страницу к которой ведет переадресация), поэтому тестирование того, что ответ <code>should redirect_to</code> (# должен перенаправлять_к) некоторому URL - не будет работать. Это знание мне дорогого стоило.)</p>
 
-<p>Теперь реализация.<sup class="footnote" id="fnref:10.5"><a href="#fn:10.5">5</a></sup> Для того чтобы перенаправить пользователей к запрашиваемой ими странице, нам нужно где-то сохранить запрашиваемую страницу, а затем переадресовать к ней. Хранение будет осуществляться посредством <code>session</code> - объекта, предоставляемого Rails, о котором вы можете думать как об экземпляре переменной <code>cookies</code> из <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Раздела&nbsp;9.3.2</a>, которая автоматически истекает при закрытии браузера.<sup class="footnote" id="fnref:10.6"><a href="#fn:10.6">6</a></sup> Мы также используем <code>request</code> объект для получения <code>request_uri</code>, т.е., URL запрашиваемой страницы. Результирующий код приложения показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_forwarding_code">Листинге&nbsp;10.17</a>.</p>
+<p>Теперь реализация.<sup class="footnote" id="fnref:10.5"><a href="?version=3.0#fn:10.5">5</a></sup> Для того чтобы перенаправить пользователей к запрашиваемой ими странице, нам нужно где-то сохранить запрашиваемую страницу, а затем переадресовать к ней. Хранение будет осуществляться посредством <code>session</code> - объекта, предоставляемого Rails, о котором вы можете думать как об экземпляре переменной <code>cookies</code> из <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Раздела&nbsp;9.3.2</a>, которая автоматически истекает при закрытии браузера.<sup class="footnote" id="fnref:10.6"><a href="?version=3.0#fn:10.6">6</a></sup> Мы также используем <code>request</code> объект для получения <code>fullpath</code>, т.е. полный адрес запрашиваемой страницы. Результирующий код приложения показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:friendly_forwarding_code">Листинге&nbsp;10.17</a>.</p>
 
 <div class="label" id="code:friendly_forwarding_code"></div>
 
@@ -775,7 +775,7 @@
 
 <h2><a id="sec:10.3" href="updating-showing-and-deleting-users?version=3.0#sec:showing_users" class="heading"><span class="number">10.3</span> Просмотр всех пользователей сайта</a></h2>
 
-<p>В этом разделе мы добавим предпоследнее user действие <code>index</code>, которое предназначено для отображения <em>всех</em> пользователей, а не одного из них. По пути, мы узнаем о наполнении базы данных образцами пользователей и <em>пагинации (разбиения на страницы)</em> вывода пользователей, таким образом index страница может быть масштабирована для отображения потенциально большого количества пользователей. Макет результата&nbsp;&mdash;&nbsp;пользователи, постраничные ссылки, и &ldquo;Users&rdquo; навигационная ссылка&nbsp;&mdash;&nbsp;представлены на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_mockup">Рис.&nbsp;10.7</a>.<sup class="footnote" id="fnref:10.7"><a href="#fn:10.7">7</a></sup> В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:destroying_users">Разделе&nbsp;10.4</a>, мы также добавим административный интерфейс к user index таким образом (предположительно проблемные) пользователи смогут быть удалены.</p>
+<p>В этом разделе мы добавим предпоследнее user действие <code>index</code>, которое предназначено для отображения <em>всех</em> пользователей, а не одного из них. По пути, мы узнаем о наполнении базы данных образцами пользователей и <em>пагинации (разбиения на страницы)</em> вывода пользователей, таким образом index страница может быть масштабирована для отображения потенциально большого количества пользователей. Макет результата&nbsp;&mdash;&nbsp;пользователи, постраничные ссылки, и &ldquo;Users&rdquo; навигационная ссылка&nbsp;&mdash;&nbsp;представлены на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_mockup">Рис.&nbsp;10.7</a>.<sup class="footnote" id="fnref:10.7"><a href="?version=3.0#fn:10.7">7</a></sup> В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:destroying_users">Разделе&nbsp;10.4</a>, мы также добавим административный интерфейс к user index таким образом (предположительно проблемные) пользователи смогут быть удалены.</p>
 
 <div class="label" id="fig:user_index_mockup"></div>
 
@@ -998,7 +998,7 @@
 
 <p>Затем установите как обычно:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle install
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle
 </pre></div>
 </div>
 
@@ -1015,13 +1015,13 @@
 <div class="code"><div class="highlight"><pre><span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
   <span class="n">desc</span> <span class="s2">&quot;Fill database with sample data&quot;</span>
   <span class="n">task</span> <span class="ss">:populate</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
-    <span class="no">Rake</span><span class="o">::</span><span class="no">Task</span><span class="o">[</span><span class="s1">&#39;db:reset&#39;</span><span class="o">].</span><span class="n">invoke</span>
+    <span class="ss">Rake::Task</span><span class="o">[</span><span class="s1">&#39;db:reset&#39;</span><span class="o">].</span><span class="n">invoke</span>
     <span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span>
                  <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;example@railstutorial.org&quot;</span><span class="p">,</span>
                  <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>
                  <span class="ss">:password_confirmation</span> <span class="o">=&gt;</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
     <span class="mi">99</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
-      <span class="nb">name</span>  <span class="o">=</span> <span class="no">Faker</span><span class="o">::</span><span class="no">Name</span><span class="o">.</span><span class="n">name</span>
+      <span class="nb">name</span>  <span class="o">=</span> <span class="ss">Faker::Name</span><span class="o">.</span><span class="n">name</span>
       <span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;example-</span><span class="si">#{</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">@railstutorial.org&quot;</span>
       <span class="n">password</span>  <span class="o">=</span> <span class="s2">&quot;password&quot;</span>
       <span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="nb">name</span><span class="p">,</span>
@@ -1066,7 +1066,7 @@
 
 <p>Решив проблему слишком малого количества образцов пользователей, мы столкнулись с противоположной проблемой: наличие слишком большого числа пользователей на странице. Сейчас их сто, что уже достаточно большое число, а на реальном сайте это могут быть и тысячи. Решение заключается в <em>пагинации (разбиении на страницы, постраничном выводе)</em> пользователей, так, чтобы (например) показывать только 30 на каждой странице одновременно.</p>
 
-<p>В Rails есть несколько способов разбиения на страницы, мы будем использовать один из самых простых и надежных, он называется <a href="http://wiki.github.com/mislav/will_paginate/"><tt>will_paginate</tt></a>. Для его использования, нам, как обычно, необходимо обновить <code>Gemfile</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_gem">Листинг&nbsp;10.26</a>).</p>
+<p>В Rails есть несколько способов разбиения на страницы, мы будем использовать один из самых простых и надежных, он называется <a href="http://wiki.github.com/mislav/will_paginate/"><tt>will_paginate</tt></a>. Для его использования, нам, как обычно, необходимо обновить <code>Gemfile</code> (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_gem">Листинг&nbsp;10.26</a>). Вам также следует рестартовать веб-сервер для того чтобы <tt>will_paginate</tt> гарантированно загрузился как следует.</p>
 
 <div class="label" id="code:will_paginate_gem"></div>
 
@@ -1076,7 +1076,7 @@
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;http://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.9&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.12&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;gravatar_image_tag&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0.pre2&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;will_paginate&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.pre2&#39;</span>
@@ -1087,9 +1087,9 @@
 </div></div>
 
 
-<p>Затем <code>bundle install</code>:</p>
+<p>Затем <code>bundle</code>:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle install
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle
 </pre></div>
 </div>
 
@@ -1158,7 +1158,7 @@
 </div></div>
 
 
-<p>Страница user index теперь должна работать как представлено на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_pagination_rails_3">Рис.&nbsp;10.10</a>; так как мы включили <code>will_paginate</code> сверху и снизу списка пользователей, ссылки на страницы появились в обоих местах.</p>
+<p>Страница user index теперь должна работать как представлено на <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:user_index_pagination_rails_3">Рис.&nbsp;10.10</a>. (На некоторых системах вам может потребоваться рестарт Rails-сервера в этой точке.) Так как мы включили <code>will_paginate</code> сверху и снизу списка пользователей, ссылки на страницы появились в обоих местах.</p>
 
 <div class="label" id="fig:user_index_pagination_rails_3"></div>
 
@@ -1199,6 +1199,10 @@
   <span class="n">user</span><span class="o">.</span><span class="n">password_confirmation</span> <span class="s2">&quot;foobar&quot;</span>
 <span class="k">end</span>
 
+<span class="no">Factory</span><span class="o">.</span><span class="n">sequence</span> <span class="ss">:name</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
+  <span class="s2">&quot;Person </span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="k">end</span>
+
 <span class="no">Factory</span><span class="o">.</span><span class="n">sequence</span> <span class="ss">:email</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
   <span class="s2">&quot;person-</span><span class="si">#{</span><span class="n">n</span><span class="si">}</span><span class="s2">@example.com&quot;</span>
 <span class="k">end</span>
@@ -1212,6 +1216,7 @@
 </pre></div>
 </div>
 
+<p>Обратите внимание: <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:factory_sequence">Листинг&nbsp;10.29</a> также добавляет аналогичную последовательность для создания уникальных пользовательских имен.</p>
 
 <p>Применяя идею фабричных последовательностей (циклов), мы можем сделать 31 пользователя (исходный <code>@user</code> плюс еще 30) внутри теста, а затем проверить, что ответ имеет HTML, ожидаемый от  <tt>will_paginate</tt> (который вы должны суметь определить с помощью Firebug или просмотра исходного кода страницы). Результат показан в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:will_paginate_test">Листинге&nbsp;10.30</a>.</p>
 
@@ -1238,7 +1243,8 @@
         <span class="o">.</span>
         <span class="vi">@users</span> <span class="o">=</span> <span class="o">[</span><span class="vi">@user</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="n">third</span><span class="o">]</span>
         <span class="mi">30</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-          <span class="vi">@users</span> <span class="o">&lt;&lt;</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:user</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="ss">:email</span><span class="p">))</span>
+          <span class="vi">@users</span> <span class="o">&lt;&lt;</span> <span class="no">Factory</span><span class="p">(</span><span class="ss">:user</span><span class="p">,</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="ss">:name</span><span class="p">),</span>
+                                   <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="no">Factory</span><span class="o">.</span><span class="n">next</span><span class="p">(</span><span class="ss">:email</span><span class="p">))</span>
         <span class="k">end</span>
       <span class="k">end</span>
       <span class="o">.</span>
@@ -1270,7 +1276,7 @@
 </div></div>
 
 
-<p>Этот код обеспечивает вызов тестами пагинации, добавлением 30<sup class="footnote" id="fnref:10.8"><a href="#fn:10.8">8</a></sup> пользователей в переменную <code>@users</code> используя <code>Array</code> push нотацию&nbsp;<code>&lt;&lt;</code>, которая добавляет элемент в существующий массив:</p>
+<p>Этот код обеспечивает вызов тестами пагинации, добавлением 30<sup class="footnote" id="fnref:10.8"><a href="?version=3.0#fn:10.8">8</a></sup> пользователей в переменную <code>@users</code> используя <code>Array</code> push нотацию&nbsp;<code>&lt;&lt;</code>, которая добавляет элемент в существующий массив:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="o">]</span>
@@ -1324,7 +1330,7 @@
 </div></div>
 
 
-<p>Здесь мы вызываем  <code>render</code> не на строку с именем партиала, а на перемнную <code>user</code> класса <code>User</code>;<sup class="footnote" id="fnref:10.9"><a href="#fn:10.9">9</a></sup> в этом контексте, Rails автоматически ищет партиал с названием <code>_user.html.erb</code>, который мы должны создать (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_partial">Листинг&nbsp;10.32</a>).</p>
+<p>Здесь мы вызываем  <code>render</code> не на строку с именем партиала, а на перемнную <code>user</code> класса <code>User</code>;<sup class="footnote" id="fnref:10.9"><a href="?version=3.0#fn:10.9">9</a></sup> в этом контексте, Rails автоматически ищет партиал с названием <code>_user.html.erb</code>, который мы должны создать (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:user_partial">Листинг&nbsp;10.32</a>).</p>
 
 <div class="label" id="code:user_partial"></div>
 
@@ -1444,7 +1450,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 10.35.</span> <span class="description">Миграция для добавления булевого атрибута <code>admin</code> к пользователям. <br /> <code>db/migrate/&lt;timestamp&gt;_add_admin_to_users.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddAdminToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddAdminToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
     <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:admin</span><span class="p">,</span> <span class="ss">:boolean</span><span class="p">,</span> <span class="ss">:default</span> <span class="o">=&gt;</span> <span class="kp">false</span>
   <span class="k">end</span>
@@ -1473,7 +1479,7 @@
 </div>
 
 
-<p>Как и ожидалось, Rails догадывается о булевом характере атрибута <code>admin</code> и автоматически добавляет метод со знаком вопроса <code>admin?</code>:<sup class="footnote" id="fnref:10.10"><a href="#fn:10.10">10</a></sup></p>
+<p>Как и ожидалось, Rails догадывается о булевом характере атрибута <code>admin</code> и автоматически добавляет метод со знаком вопроса <code>admin?</code>:<sup class="footnote" id="fnref:10.10"><a href="?version=3.0#fn:10.10">10</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
@@ -1500,7 +1506,7 @@
 <div class="code"><div class="highlight"><pre><span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
   <span class="n">desc</span> <span class="s2">&quot;Fill database with sample data&quot;</span>
   <span class="n">task</span> <span class="ss">:populate</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
-    <span class="no">Rake</span><span class="o">::</span><span class="no">Task</span><span class="o">[</span><span class="s1">&#39;db:reset&#39;</span><span class="o">].</span><span class="n">invoke</span>
+    <span class="ss">Rake::Task</span><span class="o">[</span><span class="s1">&#39;db:reset&#39;</span><span class="o">].</span><span class="n">invoke</span>
     <span class="n">admin</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span>
                          <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;example@railstutorial.org&quot;</span><span class="p">,</span>
                          <span class="ss">:password</span> <span class="o">=&gt;</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>
@@ -1537,7 +1543,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 10.37.</span> <span class="description"><code>attr_accessible</code> атрибуты модели User <em>без</em> атрибута <code>:admin</code>.  <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="kp">attr_accessor</span> <span class="ss">:password</span>
   <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span>
   <span class="o">.</span>
@@ -1548,7 +1554,7 @@
 </div></div>
 
 
-<p>Явное определение доступных атрибутов имеет решающее значение для хорошей безопасности сайта. Если бы мы опустили список <code>attr_accessible</code> в модели User (или безрассудно добавили бы в список <code>:admin</code>), злоумышленник мог бы послать запрос <tt>PUT</tt> следующим образом:<sup class="footnote" id="fnref:10.11"><a href="#fn:10.11">11</a></sup></p>
+<p>Явное определение доступных атрибутов имеет решающее значение для хорошей безопасности сайта. Если бы мы опустили список <code>attr_accessible</code> в модели User (или безрассудно добавили бы в список <code>:admin</code>), злоумышленник мог бы послать запрос <tt>PUT</tt> следующим образом:<sup class="footnote" id="fnref:10.11"><a href="?version=3.0#fn:10.11">11</a></sup></p>
 
 <div class="code"><div class="highlight"><pre>put /users/17?admin=1
 </pre></div>
@@ -1584,7 +1590,7 @@
 
 <p>Обратите внимание на аргумент <code>:method =&gt; :delete</code>, который организует выдачу ссылками необходимого запроса <tt>DELETE</tt>. Мы также обернули каждую ссылку в&nbsp;<code>if</code> выражение, таким образом они видны только администраторам. Результат, видимый нашим административным пользователям, представлен в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#fig:index_delete_links_rails_3">Рис.&nbsp;10.14</a>.</p>
 
-<p>Изначально, веб браузеры не могут отправлять <tt>DELETE</tt> запросы, и  Rails подделывает их с помощью JavaScript.<sup class="footnote" id="fnref:10.12"><a href="#fn:10.12">12</a></sup> Поэтому, для того, чтобы получить рабочие удаляющие ссылки, мы должны включить дефолтные Rails JavaScript библиотеки, что мы сделаем, добавив строку</p>
+<p>Изначально, веб браузеры не могут отправлять <tt>DELETE</tt> запросы, и  Rails подделывает их с помощью JavaScript.<sup class="footnote" id="fnref:10.12"><a href="?version=3.0#fn:10.12">12</a></sup> Поэтому, для того, чтобы получить рабочие удаляющие ссылки, мы должны включить дефолтные Rails JavaScript библиотеки, что мы сделаем, добавив строку</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="ss">:defaults</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1746,7 +1752,7 @@
 <p>Прежде чем двигаться дальше, убедитесь, что объединили все изменения в мастер ветку:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
-<span class="gp">$</span> git commit -m <span class="s2">&quot;Done with user edit/update, index, and destroy actions&quot;</span>
+<span class="gp">$</span> git commit -m <span class="s2">&quot;Finish user edit, update, index, and destroy actions&quot;</span>
 <span class="gp">$</span> git checkout master
 <span class="gp">$</span> git merge updating-users
 </pre></div>
@@ -1761,24 +1767,24 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 10.42.</span> <span class="description">Окончательный вариант <code>Gemfile</code> для примера приложения.</span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">'http://rubygems.org'</span>
+<div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;http://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">'rails'</span><span class="p">,</span> <span class="s1">'3.0.9'</span>
-<span class="n">gem</span> <span class="s1">'sqlite3'</span><span class="p">,</span> <span class="s1">'1.3.3'</span>
-<span class="n">gem</span> <span class="s1">'gravatar_image_tag'</span><span class="p">,</span> <span class="s1">'1.0.0.pre2'</span>
-<span class="n">gem</span> <span class="s1">'will_paginate'</span><span class="p">,</span> <span class="s1">'3.0.pre2'</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.12&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;gravatar_image_tag&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0.pre2&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;will_paginate&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.pre2&#39;</span>
 
 <span class="n">group</span> <span class="ss">:development</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">'rspec-rails'</span><span class="p">,</span> <span class="s1">'2.6.1'</span>
-  <span class="n">gem</span> <span class="s1">'annotate'</span><span class="p">,</span> <span class="s1">'2.4.0'</span>
-  <span class="n">gem</span> <span class="s1">'faker'</span><span class="p">,</span> <span class="s1">'0.3.1'</span>
+  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.6.1&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;annotate&#39;</span><span class="p">,</span> <span class="s1">&#39;2.4.0&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;faker&#39;</span><span class="p">,</span> <span class="s1">&#39;0.3.1&#39;</span>
 <span class="k">end</span>
 
 <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-  <span class="n">gem</span> <span class="s1">'rspec-rails'</span><span class="p">,</span> <span class="s1">'2.6.1'</span>
-  <span class="n">gem</span> <span class="s1">'webrat'</span><span class="p">,</span> <span class="s1">'0.7.1'</span>
-  <span class="n">gem</span> <span class="s1">'spork'</span><span class="p">,</span> <span class="s1">'0.9.0.rc8'</span>
-  <span class="n">gem</span> <span class="s1">'factory_girl_rails'</span><span class="p">,</span> <span class="s1">'1.0'</span>
+  <span class="n">gem</span> <span class="s1">&#39;rspec-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;2.6.1&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;webrat&#39;</span><span class="p">,</span> <span class="s1">&#39;0.7.1&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;spork&#39;</span><span class="p">,</span> <span class="s1">&#39;0.9.0.rc8&#39;</span>
+  <span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -1868,18 +1874,18 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:10.1">Изображение взято на <a href="http://www.flickr.com/photos/sashawolff/4598355045/">http://www.flickr.com/photos/sashawolff/4598355045/</a>.&nbsp;<a class="arrow" href="#fnref:10.1">&uarr;</a></li>
-<li id="fn:10.2">Сайт Gravatar на самом деле переадресует на <a href="http://en.gravatar.com/emails"><tt>http://en.gravatar.com/emails</tt></a>, предназначенную для англоговорящих пользователей, но я опустил <tt>en</tt> часть для возможного использования других языков.&nbsp;<a class="arrow" href="#fnref:10.2">&uarr;</a></li>
-<li id="fn:10.3">Изображение взято на <a href="http://www.flickr.com/photos/sashawolff/4598355045/">http://www.flickr.com/photos/sashawolff/4598355045/</a>.&nbsp;<a class="arrow" href="#fnref:10.3">&uarr;</a></li>
-<li id="fn:10.4">Не беспокойтесь о том, как это работает, детали, представляют интерес для разработчиков самого фреймворка Rails, но по замыслу не имеют значения для разработчиков Rails приложений.&nbsp;<a class="arrow" href="#fnref:10.4">&uarr;</a></li>
-<li id="fn:10.5">Код в этом разделе это адаптация (переделка) гема <a href="http://github.com/thoughtbot/clearance">Clearance</a> команды разработчиков <a href="http://thoughtbot.com/">thoughtbot</a>.&nbsp;<a class="arrow" href="#fnref:10.5">&uarr;</a></li>
-<li id="fn:10.6">Действительно, как отмечалось в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sign_in_out_exercises">Разделе&nbsp;9.6</a>, <code>session</code> реализуется именно этим способом.&nbsp;<a class="arrow" href="#fnref:10.6">&uarr;</a></li>
-<li id="fn:10.7">Фотография ребенка из <a href="http://www.flickr.com/photos/glasgows/338937124/">http://www.flickr.com/photos/glasgows/338937124/</a>.&nbsp;<a class="arrow" href="#fnref:10.7">&uarr;</a></li>
-<li id="fn:10.8">Технически, нам требуется создать только 28 дополнительных "сфабрикованных" пользователей, так как три пользователя у нас уже есть, но я считаю создание 30 более однозначным.&nbsp;<a class="arrow" href="#fnref:10.8">&uarr;</a></li>
-<li id="fn:10.9">Имя <code>user</code> непринципиально&nbsp;&mdash;&nbsp;мы могли бы написать <code>@users.each do |foobar|</code>, а затем использовать <code>render foobar</code>. Ключом является <em>класс</em> объекта&nbsp;&mdash;&nbsp;в данном случае, <code>User</code>.&nbsp;<a class="arrow" href="#fnref:10.9">&uarr;</a></li>
-<li id="fn:10.10">Метод <code>toggle!</code> вызывает колбэки Active Record но не валидации, так что мы должны установить атрибут <code>password</code> (но не подтверждение) с тем чтобы иметь не чистый пароль в обратном вызове <code>encrypt_password</code>.&nbsp;<a class="arrow" href="#fnref:10.10">&uarr;</a></li>
-<li id="fn:10.11">Инструменты командной строки, такие как <tt>curl</tt> (см. <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блок&nbsp;3.2</a>) могут выдавать <tt>PUT</tt> запросы этой формы.&nbsp;<a class="arrow" href="#fnref:10.11">&uarr;</a></li>
-<li id="fn:10.12">Это означает, что ссылки на удаление не будут работать если у пользователя нет (или отключен) JavaScript. Если вы обязаны поддерживать браузеры без включенного JavaScript, вы можете подделать запрос <tt>DELETE</tt> используя форму и запрос <tt>POST</tt>, что будет работать даже в отсутствие JavaScript; см. об этом более подробно Railscast на &ldquo;<a href="http://railscasts.com/episodes/77-destroy-without-javascript">Destroy Without JavaScript</a>&rdquo;.&nbsp;<a class="arrow" href="#fnref:10.12">&uarr;</a></li>
+<li id="fn:10.1">Изображение взято на <a href="http://www.flickr.com/photos/sashawolff/4598355045/">http://www.flickr.com/photos/sashawolff/4598355045/</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.1">&uarr;</a></li>
+<li id="fn:10.2">Сайт Gravatar на самом деле переадресует на <a href="http://en.gravatar.com/emails"><tt>http://en.gravatar.com/emails</tt></a>, предназначенную для англоговорящих пользователей, но я опустил <tt>en</tt> часть для возможного использования других языков.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.2">&uarr;</a></li>
+<li id="fn:10.3">Изображение взято на <a href="http://www.flickr.com/photos/sashawolff/4598355045/">http://www.flickr.com/photos/sashawolff/4598355045/</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.3">&uarr;</a></li>
+<li id="fn:10.4">Не беспокойтесь о том, как это работает, детали, представляют интерес для разработчиков самого фреймворка Rails, но по замыслу не имеют значения для разработчиков Rails приложений.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.4">&uarr;</a></li>
+<li id="fn:10.5">Код в этом разделе это адаптация (переделка) гема <a href="http://github.com/thoughtbot/clearance">Clearance</a> команды разработчиков <a href="http://thoughtbot.com/">thoughtbot</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.5">&uarr;</a></li>
+<li id="fn:10.6">Действительно, как отмечалось в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sign_in_out_exercises">Разделе&nbsp;9.6</a>, <code>session</code> реализуется именно этим способом.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.6">&uarr;</a></li>
+<li id="fn:10.7">Фотография ребенка из <a href="http://www.flickr.com/photos/glasgows/338937124/">http://www.flickr.com/photos/glasgows/338937124/</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.7">&uarr;</a></li>
+<li id="fn:10.8">Технически, нам требуется создать только 28 дополнительных "сфабрикованных" пользователей, так как три пользователя у нас уже есть, но я считаю создание 30 более однозначным.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.8">&uarr;</a></li>
+<li id="fn:10.9">Имя <code>user</code> непринципиально&nbsp;&mdash;&nbsp;мы могли бы написать <code>@users.each do |foobar|</code>, а затем использовать <code>render foobar</code>. Ключом является <em>класс</em> объекта&nbsp;&mdash;&nbsp;в данном случае, <code>User</code>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.9">&uarr;</a></li>
+<li id="fn:10.10">Метод <code>toggle!</code> вызывает колбэки Active Record но не валидации, так что мы должны установить атрибут <code>password</code> (но не подтверждение) с тем чтобы иметь не чистый пароль в обратном вызове <code>encrypt_password</code>.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.10">&uarr;</a></li>
+<li id="fn:10.11">Инструменты командной строки, такие как <tt>curl</tt> (см. <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блок&nbsp;3.2</a>) могут выдавать <tt>PUT</tt> запросы этой формы.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.11">&uarr;</a></li>
+<li id="fn:10.12">Это означает, что ссылки на удаление не будут работать если у пользователя нет (или отключен) JavaScript. Если вы обязаны поддерживать браузеры без включенного JavaScript, вы можете подделать запрос <tt>DELETE</tt> используя форму и запрос <tt>POST</tt>, что будет работать даже в отсутствие JavaScript; см. об этом более подробно Railscast на &ldquo;<a href="http://railscasts.com/episodes/77-destroy-without-javascript">Destroy Without JavaScript</a>&rdquo;.&nbsp;<a class="arrow" href="?version=3.0#fnref:10.12">&uarr;</a></li>
 </ol>
 </div>
 
