@@ -142,7 +142,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.2.</span> <span class="description">Валидации для атрибута <code>password</code>. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="kp">attr_accessor</span> <span class="ss">:password</span>
   <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span>
   <span class="o">.</span>
@@ -172,7 +172,7 @@
 </div>
 
 
-<p>Вместо этого, для проверки длины пароля мы использовали <code>:within</code> ("в&nbsp;пределах") опцию, передав ей <em>диапазон</em><sup class="footnote" id="fnref:7.1"><a href="#fn:7.1">1</a></sup> <code>6..40</code> для обеспечения желаемого ограничения длины.</p>
+<p>Вместо этого, для проверки длины пароля мы использовали <code>:within</code> ("в&nbsp;пределах") опцию, передав ей <em>диапазон</em><sup class="footnote" id="fnref:7.1"><a href="?version=3.0#fn:7.1">1</a></sup> <code>6..40</code> для обеспечения желаемого ограничения длины.</p>
 
 <div class="label" id="sec:password_migration"></div>
 
@@ -238,7 +238,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.4.</span> <span class="description">Миграция для добавления столбца <code>encrypted_password</code> к <code>users</code> таблице. <br /> <code>db/migrate/&lt;timestamp&gt;_add_password_to_users.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddPasswordToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddPasswordToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
     <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:encrypted_password</span><span class="p">,</span> <span class="ss">:string</span>
   <span class="k">end</span>
@@ -284,7 +284,7 @@
 <h3><a id="sec:7.1.3" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback" class="heading"><span class="number">7.1.3</span> Обратный вызов Active Record</a></h3>
 
 
-<p>Теперь, когда наша модель User имеет атрибут для хранения паролей, мы должны организовать генерацию и сохранение зашифрованного пароля, при сохранении Active Record пользователя в базе данных. Мы будем делать это техникой, называемой <a   href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>обратный вызов</em></a> (колбэк), которая представляет собой метод, который вызывается  в определенный момент  жизни  объекта Active Record. В данном случае, мы будем использовать обратный вызов <code>before_save</code> для создания <code>encrypted_password</code> непосредственно перед сохранением пользователя.<sup class="footnote" id="fnref:7.2"><a href="#fn:7.2">2</a></sup></p>
+<p>Теперь, когда наша модель User имеет атрибут для хранения паролей, мы должны организовать генерацию и сохранение зашифрованного пароля, при сохранении Active Record пользователя в базе данных. Мы будем делать это техникой, называемой <a   href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>обратный вызов</em></a> (колбэк), которая представляет собой метод, который вызывается  в определенный момент  жизни  объекта Active Record. В данном случае, мы будем использовать обратный вызов <code>before_save</code> для создания <code>encrypted_password</code> непосредственно перед сохранением пользователя.<sup class="footnote" id="fnref:7.2"><a href="?version=3.0#fn:7.2">2</a></sup></p>
 
 <p>Начнем с теста для атрибута зашифрованного пароля. Так как мы отложили детали реализации и, в частности, метод шифрования, до <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Раздел&nbsp;7.2</a>, в этом разделе мы просто убедимся, что у сохраненного пользователя атрибут <code>encrypted_password</code> не является пустым. Мы сделаем это путем комбинации <code>blank?</code> метода на строке (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:a_class_of_our_own">Раздел&nbsp;4.4.2</a>) с RSpec конвенцией для булевых методов (впервые показано в контексте <code>valid?</code>/<code>be_valid</code> в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:failing_validates_name_spec">Листинге&nbsp;6.11</a>), что приведет нас к тесту в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypted_password_not_empty_test">Листинге&nbsp;7.5</a>.</p>
 
@@ -325,7 +325,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.6.</span> <span class="description">Обратный вызов <code>before_save</code> для создания атрибута <code>encrypted_password</code>. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -351,7 +351,7 @@
 
 <p>Здесь обратный вызов <code>encrypt_password</code>  делегирует реальное шифрование методу <code>encrypt</code>; как отмечалось в комментарии, это лишь временная реализация - сейчас <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинг&nbsp;7.6</a> просто устанавливает зашифрованным <em>нешифрованный</em> пароль, чтобы достигнуть цели. Но этого достаточно для прохождения наших тестов, и мы сделаем действительно шифрующий метод <code>encrypt</code> в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords">Раздел&nbsp;7.2</a>.</p>
 
-<p>Прежде чем вы попытаетесь понять реализацию, отмечу, что методы шифрования идут после ключевого слова <code>private</code>; внутри Ruby классов, все методы, определенные <em>после</em> <code>private</code> используются внутри объекта и не предназначены для публичного использования.<sup class="footnote" id="fnref:7.3"><a href="#fn:7.3">3</a></sup> Для примера мы можем взглянуть на объект User в консоли:</p>
+<p>Прежде чем вы попытаетесь понять реализацию, отмечу, что методы шифрования идут после ключевого слова <code>private</code>; внутри Ruby классов, все методы, определенные <em>после</em> <code>private</code> используются внутри объекта и не предназначены для публичного использования.<sup class="footnote" id="fnref:7.3"><a href="?version=3.0#fn:7.3">3</a></sup> Для примера мы можем взглянуть на объект User в консоли:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">.</span><span class="n">encrypt_password</span>
@@ -362,7 +362,7 @@
 
 <p>Здесь Ruby вызывает исключение <code>NoMethodError</code> и выдает предупреждение, что <code>encrypt_password</code> это приватный метод.</p>
 
-<p>В данном контексте, делать <code>encrypt_password</code> и <code>encrypt</code> методы приватными не обязательно, но делать их закрытыми, если они не нужны для открытого интерфейса это хорошая практика.<sup class="footnote" id="fnref:7.4"><a href="#fn:7.4">4</a></sup></p>
+<p>В данном контексте, делать <code>encrypt_password</code> и <code>encrypt</code> методы приватными не обязательно, но делать их закрытыми, если они не нужны для открытого интерфейса это хорошая практика.<sup class="footnote" id="fnref:7.4"><a href="?version=3.0#fn:7.4">4</a></sup></p>
 
 <p>Теперь, когда мы понимаем назначение ключевого слова <code>private</code>, давайте еще раз взглянем на метод <code>encrypt_password</code>:</p>
 
@@ -419,7 +419,7 @@
 <h2><a id="sec:7.2" href="modeling-and-viewing-users-two?version=3.0#sec:secure_passwords" class="heading"><span class="number">7.2</span> Безопасные пароли</a></h2>
 
 
-<p>С кодом из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a>, в принципе мы сделали: хотя "зашифрованный" пароль совпадает с незашифрованным паролем, и пока мы готовы хранить незашифрованные пароли в базе данных, мы имеем необходимую основу для входа и аутентификации пользователей.<sup class="footnote" id="fnref:7.5"><a href="#fn:7.5">5</a></sup> Наши стандарты в Rails Учебнике значительно более высокие, хотя: любой веб-разработчик, который не зря ест свой хлеб, должен знать, как реализовать систему паролей с <em>безопасным односторонним хэшированием</em>. В этом разделе мы будем опираться на материал из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a> для реализации именно такой, промышленного уровня, системы  паролей.</p>
+<p>С кодом из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a>, в принципе мы сделали: хотя "зашифрованный" пароль совпадает с незашифрованным паролем, и пока мы готовы хранить незашифрованные пароли в базе данных, мы имеем необходимую основу для входа и аутентификации пользователей.<sup class="footnote" id="fnref:7.5"><a href="?version=3.0#fn:7.5">5</a></sup> Наши стандарты в Rails Учебнике значительно более высокие, хотя: любой веб-разработчик, который не зря ест свой хлеб, должен знать, как реализовать систему паролей с <em>безопасным односторонним хэшированием</em>. В этом разделе мы будем опираться на материал из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:insecure_passwords">Раздела&nbsp;7.1</a> для реализации именно такой, промышленного уровня, системы  паролей.</p>
 
 <div class="label" id="sec:a_secure_password_test"></div>
 
@@ -429,7 +429,7 @@
 
 <p>Как намекалось в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, весь механизм шифрования паролей будет спрятан в <code>private</code> регионе модели User, который представляет собой проблему для тестирования. Нам нужен какой-то <em>публичный интерфейс</em> который мы можем выставить в остальной части приложения. Одним из полезных аспектов разработки через тестирование является то, что, выступая в качестве клиента для нашего кода приложения, тесты мотивируют нас разрабатывать юзабельный интерфейс с самого начала.</p>
 
-<p>Аутентификация пользователей предполагает сравнение зашифрованной версии подтверждаемого (отправляемого) пароля с (зашифрованным) паролем данного пользователя. Это означает, что мы должны определить какой-то метод для выполнения сравнения, мы назовем его <code>has_password?</code>; он и будет нашим публичным интерфейсом для машинерии шифрования.<sup class="footnote" id="fnref:7.6"><a href="#fn:7.6">6</a></sup> Метод  <code>has_password?</code> будет проверять имеет ли пользователь тот же пароль, что и отправленный в форме входа (будет сделана в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>); скелет метода <code>has_password?</code> показан в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_skeleton">Листинге&nbsp;7.7</a>.</p>
+<p>Аутентификация пользователей предполагает сравнение зашифрованной версии подтверждаемого (отправляемого) пароля с (зашифрованным) паролем данного пользователя. Это означает, что мы должны определить какой-то метод для выполнения сравнения, мы назовем его <code>has_password?</code>; он и будет нашим публичным интерфейсом для машинерии шифрования.<sup class="footnote" id="fnref:7.6"><a href="?version=3.0#fn:7.6">6</a></sup> Метод  <code>has_password?</code> будет проверять имеет ли пользователь тот же пароль, что и отправленный в форме входа (будет сделана в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>); скелет метода <code>has_password?</code> показан в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_skeleton">Листинге&nbsp;7.7</a>.</p>
 
 <div class="label" id="code:has_password_skeleton"></div>
 
@@ -437,7 +437,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.7.</span> <span class="description">Метод  <code>has_password?</code> для пользователей.<br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -507,7 +507,7 @@
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="nb">require</span> <span class="s1">&#39;digest&#39;</span>
 <span class="gp">&gt;&gt; </span><span class="k">def</span> <span class="nf">secure_hash</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-<span class="gp">&gt;&gt; </span>  <span class="no">Digest</span><span class="o">::</span><span class="no">SHA2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span>  <span class="ss">Digest::SHA2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
 <span class="gp">&gt;&gt; </span><span class="k">end</span>
 <span class="go">=&gt; nil</span>
 <span class="gp">&gt;&gt; </span><span class="n">password</span> <span class="o">=</span> <span class="s2">&quot;secret&quot;</span>
@@ -522,7 +522,7 @@
 </div>
 
 
-<p>Здесь мы определили функцию <code>secure_hash</code> которая использует криптографическую хеш-функцию SHA2, часть <a   href="http://ru.wikipedia.org/wiki/SHA">SHA семейства криптографических хеш-функций</a>, которую мы включаем в Ruby через <code>digest</code> библиотеку. <sup class="footnote" id="fnref:7.7"><a href="#fn:7.7">7</a></sup> Не важно как именно работает эта хэш-функция; Для наших целей важно то, что они являются односторонними: нет вычислительного способа обнаружить, что </p>
+<p>Здесь мы определили функцию <code>secure_hash</code> которая использует криптографическую хеш-функцию SHA2, часть <a   href="http://ru.wikipedia.org/wiki/SHA">SHA семейства криптографических хеш-функций</a>, которую мы включаем в Ruby через <code>digest</code> библиотеку. <sup class="footnote" id="fnref:7.7"><a href="?version=3.0#fn:7.7">7</a></sup> Не важно как именно работает эта хэш-функция; Для наших целей важно то, что они являются односторонними: нет вычислительного способа обнаружить, что </p>
 
 <pre class="verbatim">2bb80d537b1da3e38bd30361aa855686bde0eacd7162fef6a25fe97bf527a25b</pre>
 
@@ -542,9 +542,9 @@
 </div>
 
 
-<p>Таким образом, у нашего злоумышленника есть очень плохие новости для всех пользователей с паролем <code>"secret"</code>. Эта техника также известна как <em>атака с применением <a   href="http://ru.wikipedia.org/wiki/Радужная_таблица"><em>радужных таблиц</em></a></em>.</p>
+<p>Таким образом, у нашего злоумышленника есть очень плохие новости для всех пользователей с паролем <code>"secret"</code>.</p>
 
-<p>Чтобы помешать потенциальной атаке с применением радужных таблиц, мы можем использовать, <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Salt#.D0.A3.D1.80.D0.BE.D0.B2.D0.BD.D0.B8_.D0.B7.D0.B0.D1.89.D0.B8.D1.82.D1.8B"><em>salt («соль», или «затравка»)</em></a>, которая представляет собой случайную и различную строку для каждого пользователя.<sup class="footnote" id="fnref:7.8"><a href="#fn:7.8">8</a></sup> Один из распространенных способов (почти) обеспечить уникальность заключается в хэшировании текущего времени (в <a  href="http://ru.wikipedia.org/wiki/UTC">UTC</a> чтобы не зависить от часового пояса) вместе с паролем, так что два пользователя будут иметь одинаковые соли, только если они создают в одно и то же время один и тот же пароль. Давайте посмотрим, как это работает, используя <code>secure_hash</code> функцию, определенную в консоли выше:</p>
+<p>Чтобы помешать такой, основанной на угадывании пароля, атаке, мы можем использовать, <a href="http://ru.wikipedia.org/wiki/Salt"><em>salt («соль», или «затравка»)</em></a>, которая представляет собой уникальную строку для каждого пользователя. Один из распространенных способов (почти) обеспечить уникальность заключается в хэшировании текущего времени (в <a  href="http://ru.wikipedia.org/wiki/UTC">UTC</a> чтобы не зависить от часового пояса) вместе с паролем, так что два пользователя будут иметь одинаковые соли, только если они создают в одно и то же время один и тот же пароль. Давайте посмотрим как это работает используя <code>secure_hash</code> функцию, определенную в консоли выше:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="no">Time</span><span class="o">.</span><span class="n">now</span><span class="o">.</span><span class="n">utc</span>
 <span class="go">=&gt; Fri Jan 29 18:11:27 UTC 2010</span>
@@ -592,7 +592,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.9.</span> <span class="description">Миграция для добавления <code>salt</code> столбца к <code>users</code> таблице. <br /> <code>db/migrate/&lt;timestamp&gt;_add_salt_to_users.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddSaltToUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddSaltToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
     <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:salt</span><span class="p">,</span> <span class="ss">:string</span>
   <span class="k">end</span>
@@ -621,7 +621,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_model_salt.png" alt="user_model_salt" /></span></div><div class="caption"><span class="header">Рисунок  7.3: </span><span class="description">User модель с добавленной солью.</span></div></div>
 
 
-<p>Наконец, мы готовы к полной реализации. Когда мы последний раз видели <code>encrypt</code> функцию (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинг&nbsp;7.6</a>), она ничего не делала, просто возвращала строку в аргумент. С идеями из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздела&nbsp;7.2.2</a>, теперь мы готовы использовать вместо этого безопасный хэш  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинг&nbsp;7.10</a>).<sup class="footnote" id="fnref:7.9"><a href="#fn:7.9">9</a></sup></p>
+<p>Наконец, мы готовы к полной реализации. Когда мы последний раз видели <code>encrypt</code> функцию (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:encrypt_password_callback">Листинг&nbsp;7.6</a>), она ничего не делала, просто возвращала строку в аргумент. С идеями из <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздела&nbsp;7.2.2</a>, теперь мы готовы использовать вместо этого безопасный хэш  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинг&nbsp;7.10</a>).<sup class="footnote" id="fnref:7.8"><a href="?version=3.0#fn:7.8">8</a></sup></p>
 
 <div class="label" id="code:has_password_with_encrypt"></div>
 
@@ -630,7 +630,7 @@
 <div class="listing"><span class="header">Листинг 7.10.</span> <span class="description">Метод <code>has_password?</code> с безопасным шифрованием. <br /> <code>app/models/user.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;digest&#39;</span>
-<span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -643,7 +643,7 @@
   <span class="kp">private</span>
 
     <span class="k">def</span> <span class="nf">encrypt_password</span>
-      <span class="nb">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">make_salt</span> <span class="k">if</span> <span class="n">new_record?</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">make_salt</span> <span class="k">unless</span> <span class="n">has_password?</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
       <span class="nb">self</span><span class="o">.</span><span class="n">encrypted_password</span> <span class="o">=</span> <span class="n">encrypt</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
     <span class="k">end</span>
 
@@ -656,7 +656,7 @@
     <span class="k">end</span>
 
     <span class="k">def</span> <span class="nf">secure_hash</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
-      <span class="no">Digest</span><span class="o">::</span><span class="no">SHA2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+      <span class="ss">Digest::SHA2</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
     <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -665,7 +665,7 @@
 
 <p>Этот код содержит те же две тонкости, упомянутые в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:an_active_record_callback">Разделе&nbsp;7.1.3</a>, а именно, присвоение атрибута Active Record в строке</p>
 
-<div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">make_salt</span> <span class="k">if</span> <span class="n">new_record?</span>
+<div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">salt</span> <span class="o">=</span> <span class="n">make_salt</span> <span class="k">unless</span> <span class="n">has_password?</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
 </pre></div>
 </div>
 
@@ -681,7 +681,7 @@
 
 <p>Так как мы находимся внутри класса User, Ruby знает, что <code>salt</code> ссылается на пользовательский атрибут <code>salt</code>.</p>
 
-<p>Важно также отметить использование булевого <code>new_record?</code> метода Active Record, который возвращает истину, если объект еще не был сохранен в базе данных. Поскольку соль это уникальный идентификатор для каждого пользователя, мы не хотим, чтобы он менялся каждый раз, когда пользователь обновляется (как в <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users">Разделе&nbsp;10.1</a>), и включением <code>new_record?</code> мы обеспечиваем однократное создание соли, происходящее только при добавлении нового пользователя.<sup class="footnote" id="fnref:7.10"><a href="#fn:7.10">10</a></sup> (Эта тонкость не важна сейчас, но она понадобится, когда мы реализуем функцию "запомнить меня" в   <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>.)</p>
+<p>Важно также отметить использование булевого метода <code>has_password?</code>. Это обеспечивает замену соли при каждом изменении пароля. (Эта тонкость не важна сейчас, но она понадобится, когда мы реализуем функцию "запомнить меня" в <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>.)</p>
 
 <p>В данный момент, тесты из  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_tests">Листинга&nbsp;7.8</a> должны пройти:</p>
 
@@ -721,7 +721,7 @@
 
 <p>Иметь метод <code>has_password?</code> для каждого пользователя это хорошо, но само по себе это не очень полезно. Мы закончим наше обсуждение паролей написав с помощью <code>has_password?</code> метод для аутентификации пользователя на основе электронной почты и пароля. В <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>, мы будем использовать этот <code>authenticate</code> метод при регистрации пользователей на нашем сайте.</p>
 
-<p>Мы можем получить подсказку о том, как это будет работать с помощью консоли. Во-первых, мы создадим пользователя, а затем отыщем этого пользователя по адресу электронной почты чтобы проверить что он имеет данный пароль:<sup class="footnote" id="fnref:7.11"><a href="#fn:7.11">11</a></sup></p>
+<p>Мы можем получить подсказку о том, как это будет работать с помощью консоли. Во-первых, мы создадим пользователя, а затем отыщем этого пользователя по адресу электронной почты чтобы проверить что он имеет данный пароль:<sup class="footnote" id="fnref:7.9"><a href="?version=3.0#fn:7.9">9</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console --sandbox</span>
 <span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;mhartl@example.com&quot;</span><span class="p">,</span>
@@ -788,7 +788,7 @@
 <p>Мы говорили о том, что <code>self</code> это “сам объект”, но конкретное значение зависит от контекста. Внутри обычного метода, <code>self</code> ссылается на <em>экземпляр</em> класса, то есть, обозначает сам объект. Например, в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:has_password_with_encrypt">Листинге&nbsp;7.10</a>, <code>self</code> это <em>user</em>:</p>
 
 <pre class="verbatim">  def encrypt_password
-    self.salt = make_salt if new_record?
+    self.salt = make_salt if has_password?(password)
     self.encrypted_password = encrypt(password)
   end</pre>
 
@@ -837,7 +837,7 @@
   end</pre>
 
 
-<p>Странное <code>class &lt;&lt; self</code> начинает блок в котором все новые методы автоматически являются методами класса. Я считаю этот синтаксис довольно запутанным, но вполне возможно, Вы встретите его в чужом коде, так что стоит знать, что он делает. (Я рекомендую <a href="http://www.amazon.com/gp/product/1933988657?ie=UTF8&amp;tag=httpwwwrailst-20&amp;linkCode=as2&amp;camp=1789&amp;creative=9325&amp;creativeASIN=1933988657"><em>The Well-Grounded Rubyist</em></a> David&nbsp;A. Black если вы хотите погрузиться в подробности Ruby.)</p>
+<p>Странное <code>class &lt;&lt; self</code> начинает блок в котором все новые методы автоматически являются методами класса. Я считаю этот синтаксис довольно странным, но вполне возможно что вы встретите его в чужом коде, так что вам стоит знать что он делает. (Я рекомендую <a href="http://www.amazon.com/gp/product/1933988657"><em>The Well-Grounded Rubyist</em></a> David&nbsp;A. Black если вы хотите погрузиться в подробности Ruby.)</p>
 </div>
 
 
@@ -849,7 +849,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 7.12.</span> <span class="description">Метод <code>User.authenticate</code>. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -880,7 +880,7 @@
 <h2><a id="sec:7.3" href="modeling-and-viewing-users-two?version=3.0#sec:better_user_views" class="heading"><span class="number">7.3</span> Улучшение отображения пользователя</a></h2>
 
 
-<p>Теперь, когда User модель практически завершена,<sup class="footnote" id="fnref:7.12"><a href="#fn:7.12">12</a></sup> мы можем добавить образец пользователя в базу данных разработки и сделать <code>show</code> страницу, чтобы показать информацию о пользователе. По пути, мы добавим некоторые тесты к Users контроллеру spec из <a class="ref" href="filling-in-the-layout?version=3.0#sec:users_controller">Раздела&nbsp;5.3.1</a>.</p>
+<p>Теперь, когда User модель практически завершена,<sup class="footnote" id="fnref:7.10"><a href="?version=3.0#fn:7.10">10</a></sup> мы можем добавить образец пользователя в базу данных разработки и сделать <code>show</code> страницу, чтобы показать информацию о пользователе. По пути, мы добавим некоторые тесты к Users контроллеру spec из <a class="ref" href="filling-in-the-layout?version=3.0#sec:users_controller">Раздела&nbsp;5.3.1</a>.</p>
 
 <p>Перед тем как продолжить, полезно посмотреть, где мы остановились, вспомнив как сейчас выглядит Users контроллер spec (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_new_user_spec_review">Листинг&nbsp;7.13</a>). Наши тесты для  страницы показывающей пользователя будут следовать этому примеру, но мы увидим, что, в отличие от тестов для <code>new</code> действия, тесты для <code>show</code> действия требуют использования экземпляра User модели. Мы ответим на брошенный вызов используя технику, называемую <em>factories</em> (фабрики).</p>
 
@@ -920,7 +920,7 @@
 <h3><a id="sec:7.3.1" href="modeling-and-viewing-users-two?version=3.0#sec:tests_with_factories" class="heading"><span class="number">7.3.1</span> Тестирование страницы просмотра пользователя (с factories)</a></h3>
 
 
-<p>Тестам для контроллера Users потребуются экземпляры объектов модели User, желательно с заранее определенными значениями. Например, как показано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_reminder">Листинге&nbsp;7.14</a>, <code>show</code> действию контроллера Users необходим экземпляр класса User, поэтому тесты на это действие будут требовать, чтобы мы как-то создали <code>@user</code>. Мы достигнем этой цели с user <em>factory</em>, которая является удобным способом определения объекта user и добавления его в тестовую базу данных.<sup class="footnote" id="fnref:7.13"><a href="#fn:7.13">13</a></sup></p>
+<p>Тестам для контроллера Users потребуются экземпляры объектов модели User, желательно с заранее определенными значениями. Например, как показано в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_reminder">Листинге&nbsp;7.14</a>, <code>show</code> действию контроллера Users необходим экземпляр класса User, поэтому тесты на это действие будут требовать, чтобы мы как-то создали <code>@user</code>. Мы достигнем этой цели с user <em>factory</em>, которая является удобным способом определения объекта user и добавления его в тестовую базу данных.<sup class="footnote" id="fnref:7.11"><a href="?version=3.0#fn:7.11">11</a></sup></p>
 
 <div class="label" id="code:user_show_reminder"></div>
 
@@ -941,7 +941,7 @@
 </div></div>
 
 
-<p>Мы будем использовать factories сгенерированные <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>,<sup class="footnote" id="fnref:7.14"><a href="#fn:7.14">14</a></sup> Ruby гем, сделанный хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и другие Ruby гемы, мы можем установить его добавив соответствующую строку в <code>Gemfile</code> используя Bundler  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_factory_girl">Листинг&nbsp;7.15</a>). (Так как Factory Girl необходима только в тестах, мы включим его в <code>:test</code> группу.)</p>
+<p>Мы будем использовать factories сгенерированные <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a>,<sup class="footnote" id="fnref:7.12"><a href="?version=3.0#fn:7.12">12</a></sup> Ruby гем, сделанный хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и другие Ruby гемы, мы можем установить его добавив соответствующую строку в <code>Gemfile</code> используя Bundler  (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_factory_girl">Листинг&nbsp;7.15</a>). (Так как Factory Girl необходима только в тестах, мы включим его в <code>:test</code> группу.)</p>
 
 <div class="label" id="code:gemfile_factory_girl"></div>
 
@@ -1094,7 +1094,7 @@
 </div>
 
 
-<p>делают одно и то же, но при тестировании каноничных REST действий (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблица&nbsp;6.2</a>) я предпочитаю использовать символы, которые почему-то кажутся мне более естественными в этом контексте.<sup class="footnote" id="fnref:7.15"><a href="#fn:7.15">15</a></sup> Во-вторых, обратите внимание, что значение хэш-ключа <code>:id</code>, вместо того чтобы быть <code>id</code> атрибутом пользователя <code>@user.id</code>, является самим объектом user:</p>
+<p>делают одно и то же, но при тестировании каноничных REST действий (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#table:RESTful_users">Таблица&nbsp;6.2</a>) я предпочитаю использовать символы, которые почему-то кажутся мне более естественными в этом контексте.<sup class="footnote" id="fnref:7.13"><a href="?version=3.0#fn:7.13">13</a></sup> Во-вторых, обратите внимание, что значение хэш-ключа <code>:id</code>, вместо того чтобы быть <code>id</code> атрибутом пользователя <code>@user.id</code>, является самим объектом user:</p>
 
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="vi">@user</span>
@@ -1109,7 +1109,7 @@
 </div>
 
 
-<p>чтобы сделать то же самое, но в этом контексте Rails автоматически преобразует объект user  в соответствующий id.<sup class="footnote" id="fnref:7.16"><a href="#fn:7.16">16</a></sup> Использование более краткой конструкции</p>
+<p>чтобы сделать то же самое, но в этом контексте Rails автоматически преобразует объект user  в соответствующий id.<sup class="footnote" id="fnref:7.14"><a href="?version=3.0#fn:7.14">14</a></sup> Использование более краткой конструкции</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="ss">:show</span><span class="p">,</span> <span class="ss">:id</span> <span class="o">=&gt;</span> <span class="vi">@user</span>
 </pre></div>
@@ -1185,7 +1185,7 @@
 </div></div>
 
 
-<p>Здесь RSpec’s <code>have_selector</code> метод RSpec's проверяет наличие <code>title</code> и <code>h1</code> тегов содержащих имя пользователя. Третий пример вводит новый элемент через код <code>h1&gt;img</code>, который гарантирует что тег <code>img</code> находится <em>внутри</em> тега <code>h1</code>.<sup class="footnote" id="fnref:7.17"><a href="#fn:7.17">17</a></sup> Кроме того, мы видим, что <code>have_selector</code> может принимать опцию <code>:class</code> для тестирования CSS класса элемента о котором идет речь.</p>
+<p>Здесь RSpec’s <code>have_selector</code> метод RSpec's проверяет наличие <code>title</code> и <code>h1</code> тегов содержащих имя пользователя. Третий пример вводит новый элемент через код <code>h1&gt;img</code>, который гарантирует что тег <code>img</code> находится <em>внутри</em> тега <code>h1</code>.<sup class="footnote" id="fnref:7.15"><a href="?version=3.0#fn:7.15">15</a></sup> Кроме того, мы видим, что <code>have_selector</code> может принимать опцию <code>:class</code> для тестирования CSS класса элемента о котором идет речь.</p>
 
 <p>Мы можем получить прохождение теста путем установки <code>@title</code> переменной для использования в <code>title</code> хелпере (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:title_helper">Раздел&nbsp;4.1.1</a>),  в этом случае установив ей имя пользователя (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_title">Листинг&nbsp;7.19</a>).</p>
 
@@ -1209,7 +1209,7 @@
 </div></div>
 
 
-<p>Этот код представляет потенциальную проблему: пользователь может ввести имя с вредоносным кодом—так называемый <a   href="http://ru.wikipedia.org/wiki/XSS">межсайтовый скриптинг</a> который может быть внедрен в наше приложение посредством <code>title</code> хелпера определенного в <a class="ref" href="rails-flavored-ruby?version=3.0#code:title_helper">Листинге&nbsp;4.2</a>. До выхода Rails 3, решеним было <em>маскировать</em>  потенциально проблемный код, используя метод&nbsp;<code>h</code> (сокращение от <code>html_escape</code>), но в случае Rails&nbsp;3.0 весь Embedded Ruby текст маскирован по умолчанию.<sup class="footnote" id="fnref:7.18"><a href="#fn:7.18">18</a></sup> Например, если пользователь пытается внедрить вредоносные программы JavaScript с помощью <code>&lt;script&gt;</code> в своем имени, автоматический HTML маскировщик преобразует его в <code>&amp;lt;script&amp;gt;</code>, что сделает его совершенно безвредным.</p>
+<p>Этот код представляет потенциальную проблему: пользователь может ввести имя с вредоносным кодом—так называемый <a   href="http://ru.wikipedia.org/wiki/XSS">межсайтовый скриптинг</a> который может быть внедрен в наше приложение посредством <code>title</code> хелпера определенного в <a class="ref" href="rails-flavored-ruby?version=3.0#code:title_helper">Листинге&nbsp;4.2</a>. До выхода Rails 3, решеним было <em>маскировать</em>  потенциально проблемный код, используя метод&nbsp;<code>h</code> (сокращение от <code>html_escape</code>), но в случае Rails&nbsp;3.0 весь Embedded Ruby текст маскирован по умолчанию.<sup class="footnote" id="fnref:7.16"><a href="?version=3.0#fn:7.16">16</a></sup> Например, если пользователь пытается внедрить вредоносные программы JavaScript с помощью <code>&lt;script&gt;</code> в своем имени, автоматический HTML маскировщик преобразует его в <code>&amp;lt;script&amp;gt;</code>, что сделает его совершенно безвредным.</p>
 
 <p>Теперь для других тестов. Создание <code>h1</code> с (авто-маскированным) пользовательским именем это просто (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_view_with_name">Листинг&nbsp;7.20</a>).</p>
 
@@ -1226,7 +1226,7 @@
 </div></div>
 
 
-<p>Получение проходящего <code>img</code> теста сложнее.  Первым шагом является установка <a href="http://github.com/mdeering/gravatar_image_tag"><tt>gravatar_image_tag</tt> гема</a> для обработки каждого пользовательского <a href="http://ru.gravatar.com/">Gravatar</a>,<sup class="footnote" id="fnref:7.19"><a href="#fn:7.19">19</a></sup> что означает <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Gravatar"> &ldquo;globally recognized avatar&rdquo;</a>.<sup class="footnote" id="fnref:7.20"><a href="#fn:7.20">20</a></sup> Как обычно, мы включим  гем в <code>Gemfile</code> (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_gravatar">Листинг&nbsp;7.21</a>).</p>
+<p>Получение проходящего <code>img</code> теста сложнее.  Первым шагом является установка <a href="http://github.com/mdeering/gravatar_image_tag"><tt>gravatar_image_tag</tt> гема</a> для обработки каждого пользовательского <a href="http://ru.gravatar.com/">Gravatar</a>,<sup class="footnote" id="fnref:7.17"><a href="?version=3.0#fn:7.17">17</a></sup> что означает <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Gravatar"> &ldquo;globally recognized avatar&rdquo;</a>.<sup class="footnote" id="fnref:7.18"><a href="?version=3.0#fn:7.18">18</a></sup> Как обычно, мы включим  гем в <code>Gemfile</code> (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:gemfile_gravatar">Листинг&nbsp;7.21</a>).</p>
 
 <div class="label" id="code:gemfile_gravatar"></div>
 
@@ -1236,7 +1236,7 @@
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;http://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.9&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.12&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;gravatar_image_tag&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0.pre2&#39;</span>
 <span class="o">.</span>
@@ -1255,7 +1255,7 @@
 
 <p>Вы должны также перезапустить веб-сервер в данный момент для правильной загрузки гема Gravatar.</p>
 
-<p>Gravatars являются удобным способом включать изображения для профиля пользователя, минуя проблемы управления загрузкой изображений, обрезки и хранения.<sup class="footnote" id="fnref:7.21"><a href="#fn:7.21">21</a></sup> Каждый Gravatar связан с адресом электронной почты, поэтому гем Gravatar поставляется со вспомогательным методом <code>gravatar_image_tag</code>, который принимает  адрес электронной почты в качестве аргумента:</p>
+<p>Gravatars являются удобным способом включать изображения для профиля пользователя, минуя проблемы управления загрузкой изображений, обрезки и хранения.<sup class="footnote" id="fnref:7.19"><a href="?version=3.0#fn:7.19">19</a></sup> Каждый Gravatar связан с адресом электронной почты, поэтому гем Gravatar поставляется со вспомогательным методом <code>gravatar_image_tag</code>, который принимает  адрес электронной почты в качестве аргумента:</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">gravatar_image_tag</span> <span class="s1">&#39;example@railstutorial.org&#39;</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1342,7 +1342,7 @@
 <div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">UsersHelper</span>
 
   <span class="k">def</span> <span class="nf">gravatar_for</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">options</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">50</span> <span class="p">})</span>
-    <span class="n">gravatar_image_tag</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">downcase</span><span class="p">,</span> <span class="ss">:alt</span> <span class="o">=&gt;</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+    <span class="n">gravatar_image_tag</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">downcase</span><span class="p">,</span> <span class="ss">:alt</span> <span class="o">=&gt;</span> <span class="n">h</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">),</span>
                                             <span class="ss">:class</span> <span class="o">=&gt;</span> <span class="s1">&#39;gravatar&#39;</span><span class="p">,</span>
                                             <span class="ss">:gravatar</span> <span class="o">=&gt;</span> <span class="n">options</span><span class="p">)</span>
   <span class="k">end</span>
@@ -1351,14 +1351,14 @@
 </div></div>
 
 
-<p>Первый аргумент в вызове <code>gravatar_image_tag</code> передает строчную версию пользовательского email адреса (используя метод <code>downcase</code>).<sup class="footnote" id="fnref:7.22"><a href="#fn:7.22">22</a></sup> Затем первая опция  <code>gravatar_image_tag</code> присваивает пользовательское имя атрибуту <code>alt</code> тега <code>img</code> (который отображается в устройствах не показывающих изображения), в то время как вторая опция устанавливает CSS класс получившегося Gravatar. Третья опция передает хэш <code>options</code> используя ключ <code>:gravatar</code>, который (в соответствии с <a href="http://github.com/mdeering/gravatar_image_tag"><tt>gravatar_image_tag</tt> гем документацией</a>) устанавливает (или добавляет) опции для для <code>gravatar_image_tag</code>. Отметьте, что определение функции устанавливает <em>дефолтную опцию</em><sup class="footnote" id="fnref:7.23"><a href="#fn:7.23">23</a></sup> для размера Gravatar<sup class="footnote" id="fnref:7.24"><a href="#fn:7.24">24</a></sup> используя</p>
+<p>Первый аргумент в вызове <code>gravatar_image_tag</code> передает строчную версию пользовательского email адреса (используя метод <code>downcase</code>).<sup class="footnote" id="fnref:7.20"><a href="?version=3.0#fn:7.20">20</a></sup> Затем первая опция <code>gravatar_image_tag</code> использует метод&nbsp;<code>h</code> для присвоения HTML-маскированной версии пользовательского имени атрибуту <code>alt</code> тега <code>img</code> который отображается в случае если изображение не можент быть показано. (Обратите внимание: хотя вставляемый текст маскирован по умолчанию в Rails&nbsp;3, это не распространяется на alt атрибуты, которые должны быть маскированы явным образом.) Вторая опция устанавливает CSS класс получившегося Gravatar. Третья опция передает хэш <code>options</code> используя ключ <code>:gravatar</code>, который (в соответствии с <a href="http://github.com/mdeering/gravatar_image_tag">документацией гема <tt>gravatar_image_tag</tt></a>) устанавливает (или добавляет) опции для для <code>gravatar_image_tag</code>. Отметьте, что определение функции устанавливает <em>дефолтную опцию</em><sup class="footnote" id="fnref:7.21"><a href="?version=3.0#fn:7.21">21</a></sup> для размера Gravatar<sup class="footnote" id="fnref:7.24"><a href="?version=3.0#fn:7.24">24</a></sup> используя</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">option</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">50</span> <span class="p">}</span>
 </pre></div>
 </div>
 
 
-<p>Что устанавливает дефолтный размер Gravatar <tt>50x50</tt>, а также позволяет переопределить размер по умолчанию с помощью кода</p>
+<p>Что устанавливает дефолтный размер Gravatar равным <tt>50x50</tt>, а также позволяет переопределить размер по умолчанию с помощью кода</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">gravatar_for</span> <span class="vi">@user</span><span class="p">,</span> <span class="ss">:size</span> <span class="o">=&gt;</span> <span class="mi">30</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1397,7 +1397,7 @@
 <h3><a id="sec:7.3.3" href="modeling-and-viewing-users-two?version=3.0#sec:a_user_sidebar" class="heading"><span class="number">7.3.3</span> Боковая панель пользователя</a></h3>
 
 
-<p>Хотя наши тесты в настоящее время проходят, и страница пользователя значительно улучшилась, все же хорошо бы ее еще немного отполировать. В <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>, у нас есть  таблица в <code>table</code> теге с одной строкой (<code>tr</code>) и двумя ячейками (<code>td</code>).<sup class="footnote" id="fnref:7.25"><a href="#fn:7.25">25</a></sup></p>
+<p>Хотя наши тесты в настоящее время проходят, и страница пользователя значительно улучшилась, все же хорошо бы ее еще немного отполировать. В <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_show_with_sidebar">Листинге&nbsp;7.25</a>, у нас есть  таблица в <code>table</code> теге с одной строкой (<code>tr</code>) и двумя ячейками (<code>td</code>).<sup class="footnote" id="fnref:7.23"><a href="?version=3.0#fn:7.23">23</a></sup></p>
 
 <div class="label" id="code:user_show_with_sidebar"></div>
 
@@ -1480,17 +1480,17 @@
 <span class="c">/* User show page */</span>
 
 <span class="nt">table</span><span class="nc">.profile</span> <span class="p">{</span>
-  <span class="k">width</span><span class="o">:</span> <span class="m">100%</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">100</span><span class="o">%</span><span class="p">;</span>
   <span class="k">margin-bottom</span><span class="o">:</span> <span class="m">0</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="nt">td</span><span class="nc">.main</span> <span class="p">{</span>
-  <span class="k">width</span><span class="o">:</span> <span class="m">70%</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">70</span><span class="o">%</span><span class="p">;</span>
   <span class="k">padding</span><span class="o">:</span> <span class="m">1em</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="nt">td</span><span class="nc">.sidebar</span> <span class="p">{</span>
-  <span class="k">width</span><span class="o">:</span> <span class="m">30%</span><span class="p">;</span>
+  <span class="k">width</span><span class="o">:</span> <span class="m">30</span><span class="o">%</span><span class="p">;</span>
   <span class="k">padding</span><span class="o">:</span> <span class="m">1em</span><span class="p">;</span>
   <span class="k">vertical-align</span><span class="o">:</span> <span class="k">top</span><span class="p">;</span>
   <span class="k">background</span><span class="o">:</span> <span class="m">#ffc</span><span class="p">;</span>
@@ -1522,7 +1522,7 @@
 <h3><a id="sec:7.4.1" href="modeling-and-viewing-users-two?version=3.0#sec:7.4.1" class="heading"><span class="number">7.4.1</span> Git commit</a></h3>
 
 
-<p>Прежде чем двигаться дальше, мы должны завершить цикл Git, начатый во введении <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главы&nbsp;6</a> сделав финальную фиксацию для ветки <code>modeling-users</code> и объединив ее с <code>master</code>.<sup class="footnote" id="fnref:7.26"><a href="#fn:7.26">26</a></sup> Во-первых, убедимся, что мы находимся на веткe <code>modeling-users</code>:</p>
+<p>Прежде чем двигаться дальше, мы должны завершить цикл Git, начатый во введении <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главы&nbsp;6</a> сделав финальную фиксацию для ветки <code>modeling-users</code> и объединив ее с <code>master</code>.<sup class="footnote" id="fnref:7.24"><a href="?version=3.0#fn:7.24">24</a></sup> Во-первых, убедимся, что мы находимся на веткe <code>modeling-users</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git branch
 <span class="go">  master</span>
@@ -1531,7 +1531,7 @@
 </div>
 
 
-<p>Как отмечалось в <a class="ref" href="beginning?version=3.0#sec:git_branch">Разделе&nbsp;1.3.5.1</a>, звездочка здесь идентифицирует текущую ветку, так что мы действительно готовы к фиксации  и объединению:<sup class="footnote" id="fnref:7.27"><a href="#fn:7.27">27</a></sup></p>
+<p>Как отмечалось в <a class="ref" href="beginning?version=3.0#sec:git_branch">Разделе&nbsp;1.3.5.1</a>, звездочка здесь идентифицирует текущую ветку, так что мы действительно готовы к фиксации  и объединению:<sup class="footnote" id="fnref:7.25"><a href="?version=3.0#fn:7.25">25</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
 <span class="gp">$</span> git commit -m <span class="s2">&quot;User model with passwords, and user show page&quot;</span>
@@ -1693,33 +1693,31 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:7.1">Мы видели диапазоны ранее в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Разделе&nbsp;4.3.1</a>.&nbsp;<a class="arrow" href="#fnref:7.1">&uarr;</a></li>
-<li id="fn:7.2">За более подробной информацией о видах обратных вызовов поддерживаемых Active Record, обращайтесь к к статье <a  rel="nofollow" href="http://www.rusrails.ru/active-record-validations-and-callbacks">Валидации и колбэки Active Record</a> на сайте <a  rel="nofollow" href="http://www.rusrails.ru">http://www.rusrails.ru</a>&nbsp;<a class="arrow" href="#fnref:7.2">&uarr;</a></li>
-<li id="fn:7.3">Дополнительный отступ это типографское напоминание о том, что мы находимся в приватном разделе; в противном случае можно легко пропустить <code>private</code> ключевое слово и запутаться при попытке доступа к приватному методу, думая что он публичный. Я думал, что дополнительные отступы это просто глупая конвенция, пока я не убил час на эту проблему пару лет назад. Теперь я добавляю дополнительные отступы&hellip;&nbsp;<a class="arrow" href="#fnref:7.3">&uarr;</a></li>
-<li id="fn:7.4">В Ruby есть тесно связаное ключевое слово <code>protected</code> чем-то отличающееся от <code>private</code>. Насколько я могу судить, единственный повод узнать разницу между ними это то, что у вас будет козырь на собеседовании, когда вас спросят “В Ruby, в чем разница между  <code>private</code> и <code>protected</code>?” Но вы действительно хотите работать в компании, которая задает такие хромые вопросы на собеседовании? В своем выступлении на RubyConf в 2008, Dave Thomas (автор <em>Programming Ruby</em>) предлагал ликвидировать <code>protected</code> в будущих версиях Ruby, и я полностью с ним согласен. Просто используйте <code>private</code> и все будет хорошо.&nbsp;<a class="arrow" href="#fnref:7.4">&uarr;</a></li>
-<li id="fn:7.5">Мне стыдно признаться, что именно так мы реализовывали пароли в <em>RailsSpace</em>. Считайте этот раздел моим покаянием.&nbsp;<a class="arrow" href="#fnref:7.5">&uarr;</a></li>
-<li id="fn:7.6">The alert reader may notice that none of what we do in this section <em>requires</em> encryption, but, once we develop some of the theory of secure passwords and write a basic implementation (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздел&nbsp;7.2.2</a>), the only way for the <code>has_password?</code> method to work properly is for all the encryption machinery to work properly as well. (??)&nbsp;<a class="arrow" href="#fnref:7.6">&uarr;</a></li>
-<li id="fn:7.7">В моей установке, строка <code>require ’digest’</code> не является необходимой, но несколько читателей сообщили о получении <code>NameError</code> исключения, если они не включали его явно. Это не вредит в любом случае, поэтому я включил явное <code>require</code> на всякий случай.&nbsp;<a class="arrow" href="#fnref:7.7">&uarr;</a></li>
-<li id="fn:7.8">Технически, атака с использованием радужных таблиц все же может добиться успеха, но использование соленого хэша делает ее вычислительно невозможной (сложной?) (computationally unfeasible)(??).&nbsp;<a class="arrow" href="#fnref:7.8">&uarr;</a></li>
-<li id="fn:7.9">Как отмечалось в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Разделе&nbsp;7.2.2</a>, строка с явным <code>require ’digest’</code> необязательна на некоторых системах, но ее включение не навредит.&nbsp;<a class="arrow" href="#fnref:7.9">&uarr;</a></li>
-<li id="fn:7.10">В прошлых версиях Rails, мы могли бы использовать обратный вызов <code>after_validation_before_create</code> для установки соли но он был ликвидирован в Rails&nbsp;3. Между тем, мы не можем использовать обратный вызов <code>before_create</code> потому что он выполняется <em>после</em> обратного вызова <code>before_save</code> и обратному вызову <code>before_save</code> нужна соль.&nbsp;<a class="arrow" href="#fnref:7.10">&uarr;</a></li>
-<li id="fn:7.11">Напомним, из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блока&nbsp;6.2</a> что <em>индекс</em> на <code>email</code> столбце гарантирует что этот поиск является эффективным.&nbsp;<a class="arrow" href="#fnref:7.11">&uarr;</a></li>
-<li id="fn:7.12">Мы планируем добавить еще пару атрибутов (один для идентификации административных пользователей и один для функции "запомнить меня"), но они не являются строго необходимыми. Все <em>необходимые</em> атрибуты пользователей в настоящее время определены.&nbsp;<a class="arrow" href="#fnref:7.12">&uarr;</a></li>
-<li id="fn:7.13">Многие опытные Rails програмисты находят этот фабричный подход более гибким нежели <em>fixtures</em>, которые Rails использует по умолчанию но могут быть хрупкими и сложными в обслуживании.&nbsp;<a class="arrow" href="#fnref:7.13">&uarr;</a></li>
-<li id="fn:7.14">Предположительно, &ldquo;Factory Girl&rdquo; это ссылка на <a href="http://www.imdb.com/title/tt0432402/">фильм с одноименным названием</a>.&nbsp;<a class="arrow" href="#fnref:7.14">&uarr;</a></li>
-<li id="fn:7.15">Я использовал <code>get &rsquo;new&rsquo;</code> в <a class="ref" href="filling-in-the-layout?version=3.0#code:get_new_user_spec">Листинге&nbsp;5.24</a> и последующих тестах для <code>new</code> действия  поскольку на тот момент мы еще не сталкивались с идеей стандартных REST действий. Я переключусь на <code>get :new</code> в будущих тестах.&nbsp;<a class="arrow" href="#fnref:7.15">&uarr;</a></li>
-<li id="fn:7.16">Он делает это путем вызова <code>to_param</code> метода на переменной <code>@user</code>.<a class="arrow" href="#fnref:7.16">&uarr;</a></li>
-<li id="fn:7.17">Это не всегда хорошая идея  делать HTML тесты настолько специфичными, поскольку мы не всегда хотим ограничивать макет HTML настолько сильно. Не стесняйтесь экспериментировать и найдите нужный уровень детализации для ваших проектов.&nbsp;<a class="arrow" href="#fnref:7.17">&uarr;</a></li>
-<li id="fn:7.18">Вместо этого, если вам нужен <em>немаскированный</em> текст, вы должны использовать  метод <code>raw</code>, например <tt class="verb">&lt;%= raw @title %&gt;</tt>.&nbsp;<a class="arrow" href="#fnref:7.18">&uarr;</a></li>
-<li id="fn:7.19">Gravatar был создан Tom Preston-Werner, одним из основателей <a href="http://github.com/">GitHub</a>, и был приобретен и масштабирован <a href="http://automattic.com/">Automattic</a> (более известные как создатели  <a href="http://wordpress.com/">WordPress</a>).&nbsp;<a class="arrow" href="#fnref:7.19">&uarr;</a></li>
-<li id="fn:7.20">В индуизме, аватар это форма проявление божества в человеке или животном. В более широком смысле термин <em>avatar</em> обычно используется для обозначения  персонализации пользователя, особенно в виртуальной среде. Но вы видели фильм, так что вы уже знаете об этом.&nbsp;<a class="arrow" href="#fnref:7.20">&uarr;</a></li>
-<li id="fn:7.21">Если вашему приложению требуется обработка изображений или загрузка других файлов, обратите внимание на <a href="http://github.com/thoughtbot/paperclip">Paperclip</a> Как и Factory Girl, Paperclip предоставляется <a href="http://thoughtbot.com/">thoughtbot</a>. (Хотя я знаю несколько человек оттуда, у меня нет личной заинтересованности в продвижении thoughtbot; Они просто делают хорошее программное обеспечение.)&nbsp;<a class="arrow" href="#fnref:7.21">&uarr;</a></li>
-<li id="fn:7.22">Благодарю анонимного читателя, который отметил, что плагин Gravatar чувствителен к регистру в этом контексте.&nbsp;<a class="arrow" href="#fnref:7.22">&uarr;</a></li>
-<li id="fn:7.23">На самом деле есть возможность сбросить дефолтный размер в файле конфигурации, но я считаю  этот способ более чистым.&nbsp;<a class="arrow" href="#fnref:7.23">&uarr;</a></li>
-<li id="fn:7.24">Gravatars квадратные, поэтому единственный параметр определяет их размер однозначно.&nbsp;<a class="arrow" href="#fnref:7.24">&uarr;</a></li>
-<li id="fn:7.25">Если кто либо обругает вас за использование, о ужас, <em>таблицы для разметки</em>, попросите этого умника посмотреть на боковую панель Твиттера в Firebug и сказать вам что он видит. В самом деле, вы обнаружите что, в то время как “семантичная разметка” использующая <code>div</code>ы и <code>span</code>ы получает все большее распространение, практически все сайты прибегают к таблицам для разметки при случае. В данном случае, получение вертикального  выравнивания только справа <em>намного</em> легче реализовать с помощью таблицы.&nbsp;<a class="arrow" href="#fnref:7.25">&uarr;</a></li>
-<li id="fn:7.26">Обычно, я рекомендую делать более частые, меньшие фиксации, но частые Git фиксации на протяжении всего учебника будет трудно поддерживать и это будет разбивать поток обсуждения.&nbsp;<a class="arrow" href="#fnref:7.26">&uarr;</a></li>
-<li id="fn:7.27">Если вы <em>не</em> на нужной ветке, запустите <code>git checkout modeling-users</code> перед продолжением.&nbsp;<a class="arrow" href="#fnref:7.27">&uarr;</a></li>
+<li id="fn:7.1">Мы видели диапазоны ранее в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Разделе&nbsp;4.3.1</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.1">&uarr;</a></li>
+<li id="fn:7.2">За более подробной информацией о видах обратных вызовов поддерживаемых Active Record, обращайтесь к к статье <a href="http://www.rusrails.ru/active-record-validations-and-callbacks">Валидации и колбэки Active Record</a> на сайте <a href="http://www.rusrails.ru">http://www.rusrails.ru</a>&nbsp;<a class="arrow" href="?version=3.0#fnref:7.2">&uarr;</a></li>
+<li id="fn:7.3">Дополнительный отступ это типографское напоминание о том, что мы находимся в приватном разделе; в противном случае можно легко пропустить <code>private</code> ключевое слово и запутаться при попытке доступа к приватному методу, думая что он публичный. Я думал, что дополнительные отступы это просто глупая конвенция, пока я не убил час на эту проблему пару лет назад. Теперь я добавляю дополнительные отступы&hellip;&nbsp;<a class="arrow" href="?version=3.0#fnref:7.3">&uarr;</a></li>
+<li id="fn:7.4">В Ruby есть тесно связаное ключевое слово <code>protected</code> чем-то отличающееся от <code>private</code>. Насколько я могу судить, единственный повод узнать разницу между ними это то, что у вас будет козырь на собеседовании, когда вас спросят “В Ruby, в чем разница между  <code>private</code> и <code>protected</code>?” Но вы действительно хотите работать в компании, которая задает такие хромые вопросы на собеседовании? В своем выступлении на RubyConf в 2008, Dave Thomas (автор <em>Programming Ruby</em>) предлагал ликвидировать <code>protected</code> в будущих версиях Ruby и я полностью с ним согласен. Просто используйте <code>private</code> и все будет хорошо.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.4">&uarr;</a></li>
+<li id="fn:7.5">Мне стыдно признаться, но именно так мы реализовывали пароли в <em>RailsSpace</em>. Считайте этот раздел моим покаянием.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.5">&uarr;</a></li>
+<li id="fn:7.6">Внимательный читатель мог заметить что ничего из того что мы делаем в этом разделе <em>не требует</em> шифрования, но, после того как мы проработаем теорию безопасных паролей и напишем базовую реализацию (<a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Раздел&nbsp;7.2.2</a>), только хорошо работающий механизм шифрования позволит методу <code>has_password?</code> работать как следует.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.6">&uarr;</a></li>
+<li id="fn:7.7">В моей установке, строка <code>require &rsquo;digest&rsquo;</code> не является необходимой, но несколько читателей сообщили о получении <code>NameError</code> исключения, если они не включали его явно. Это не вредит в любом случае, поэтому я включил явное <code>require</code> на всякий случай.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.7">&uarr;</a></li>
+<li id="fn:7.8">Как отмечалось в  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#sec:secure_password_theory">Разделе&nbsp;7.2.2</a>, строка с явным <code>require &rsquo;digest&rsquo;</code> необязательна на некоторых системах, но ее включение не навредит.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.8">&uarr;</a></li>
+<li id="fn:7.9">Напомним из <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блока&nbsp;6.2</a> что <em>индекс</em> на <code>email</code> столбце гарантирует что этот поиск является эффективным.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.9">&uarr;</a></li>
+<li id="fn:7.10">Мы планируем добавить еще пару атрибутов (один для идентификации административных пользователей и один для функции "запомнить меня"), но они не являются строго необходимыми. Все <em>необходимые</em> атрибуты пользователей в настоящее время определены.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.10">&uarr;</a></li>
+<li id="fn:7.11">Многие опытные Rails програмисты находят этот фабричный подход более гибким нежели <em>fixtures</em>, которые Rails использует по умолчанию но могут быть хрупкими и сложными в обслуживании.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.11">&uarr;</a></li>
+<li id="fn:7.12">Предположительно, &ldquo;Factory Girl&rdquo; это ссылка на <a href="http://www.imdb.com/title/tt0432402/">фильм с одноименным названием</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.12">&uarr;</a></li>
+<li id="fn:7.13">Я использовал <code>get &rsquo;new&rsquo;</code> в <a class="ref" href="filling-in-the-layout?version=3.0#code:get_new_user_spec">Листинге&nbsp;5.24</a> и последующих тестах для <code>new</code> действия  поскольку на тот момент мы еще не сталкивались с идеей стандартных REST действий. Я переключусь на <code>get :new</code> в будущих тестах.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.13">&uarr;</a></li>
+<li id="fn:7.14">Он делает это путем вызова <code>to_param</code> метода на переменной <code>@user</code>.<a class="arrow" href="?version=3.0#fnref:7.14">&uarr;</a></li>
+<li id="fn:7.15">Это не всегда хорошая идея  делать HTML тесты настолько специфичными, поскольку мы не всегда хотим ограничивать макет HTML настолько сильно. Не стесняйтесь экспериментировать и найдите нужный уровень детализации для ваших проектов.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.15">&uarr;</a></li>
+<li id="fn:7.16">Вместо этого, если вам нужен <em>немаскированный</em> текст, вы должны использовать  метод <code>raw</code>, например <tt class="verb">&lt;%= raw @title %&gt;</tt>.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.16">&uarr;</a></li>
+<li id="fn:7.17">Gravatar был создан Tom Preston-Werner, одним из основателей <a href="http://github.com/">GitHub</a>, и был приобретен и масштабирован <a href="http://automattic.com/">Automattic</a> (более известные как создатели  <a href="http://wordpress.com/">WordPress</a>).&nbsp;<a class="arrow" href="?version=3.0#fnref:7.17">&uarr;</a></li>
+<li id="fn:7.18">В индуизме, аватар это форма проявление божества в человеке или животном. В более широком смысле термин <em>avatar</em> обычно используется для обозначения  персонализации пользователя, особенно в виртуальной среде. Но вы видели фильм, так что вы уже знаете об этом.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.18">&uarr;</a></li>
+<li id="fn:7.19">Если вашему приложению требуется обработка изображений или загрузка других файлов, обратите внимание на <a href="http://github.com/thoughtbot/paperclip">Paperclip</a> Как и Factory Girl, Paperclip предоставляется <a href="http://thoughtbot.com/">thoughtbot</a>. (Хотя я знаю несколько человек оттуда, у меня нет личной заинтересованности в продвижении thoughtbot; Они просто делают хорошее программное обеспечение.)&nbsp;<a class="arrow" href="?version=3.0#fnref:7.19">&uarr;</a></li>
+<li id="fn:7.20">Благодарю анонимного читателя, который отметил, что плагин Gravatar чувствителен к регистру в этом контексте.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.20">&uarr;</a></li>
+<li id="fn:7.21">На самом деле есть возможность сбросить дефолтный размер в файле конфигурации, но я считаю  этот способ более чистым.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.21">&uarr;</a></li>
+<li id="fn:7.22">Gravatars квадратные, поэтому единственный параметр определяет их размер однозначно.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.22">&uarr;</a></li>
+<li id="fn:7.23">Если кто либо обругает вас за использование, о ужас, <em>таблицы для разметки</em>, попросите этого умника посмотреть на боковую панель Твиттера в Firebug и сказать вам что он видит. В самом деле, вы обнаружите что, в то время как “семантичная разметка” использующая <code>div</code>ы и <code>span</code>ы получает все большее распространение, практически все сайты прибегают к таблицам для разметки при случае. В данном случае, получение вертикального  выравнивания только справа <em>намного</em> легче реализовать с помощью таблицы.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.25">&uarr;</a></li>
+<li id="fn:7.24">Обычно, я рекомендую делать более частые, меньшие фиксации, но частые Git фиксации на протяжении всего учебника будет трудно поддерживать и это будет разбивать поток обсуждения.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.24">&uarr;</a></li>
+<li id="fn:7.25">Если вы <em>не</em> на нужной ветке, запустите <code>git checkout modeling-users</code> перед продолжением.&nbsp;<a class="arrow" href="?version=3.0#fnref:7.25">&uarr;</a></li>
 </ol>
 </div>
 
