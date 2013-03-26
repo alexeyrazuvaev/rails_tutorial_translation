@@ -4,7 +4,7 @@
 <h1 class="chapter"><a id="sec:2" href="a-demo-app?version=3.0#top" class="heading"><span class="number">Глава 2</span> demo app</a></h1>
 
 
-<p>В этой главе мы разработаем простое демонстрационное приложение, чтобы показать мощь Rails. Цель -  получить общее представление о программировании на Ruby on Rails (и веб-разработке в целом), быстро сгенерировав приложение, используя <em>scaffold generators</em>.<sup class="footnote" id="fnref:2.1"><a href="#fn:2.1">1</a></sup> Как обсуждалось в  <a class="ref" href="beginning?version=3.0#sidebar:scaffolding">Блоке&nbsp;1.1</a>, остальная часть книги будет применять противоположный подход, постепенно разрабатывая приложение с объяснением всех новых понятий по мере их появления,  но для быстрого обзора (и некоторого быстрорастворимого удовлетворения) нет ничего лучше чем scaffolding. Конечное  демонстрационное приложение позволит нам взаимодействовать с ним через свой URL, дав нам понимание структуры Rails приложений, включая первый пример <em>REST архитектуры</em> предпочитаемой Rails.</p>
+<p>В этой главе мы разработаем простое демонстрационное приложение, чтобы показать мощь Rails. Цель -  получить общее представление о программировании на Ruby on Rails (и веб-разработке в целом), быстро сгенерировав приложение, используя <em>scaffold generators</em>.<sup class="footnote" id="fnref:2.1"><a href="?version=3.0#fn:2.1">1</a></sup> Как обсуждалось в  <a class="ref" href="beginning?version=3.0#sidebar:scaffolding">Блоке&nbsp;1.1</a>, остальная часть книги будет применять противоположный подход, постепенно разрабатывая приложение с объяснением всех новых понятий по мере их появления,  но для быстрого обзора (и некоторого быстрорастворимого удовлетворения) нет ничего лучше чем scaffolding. Конечное  демонстрационное приложение позволит нам взаимодействовать с ним через свой URL, дав нам понимание структуры Rails приложений, включая первый пример <em>REST архитектуры</em> предпочитаемой Rails.</p>
 
 <p>Как и предстоящий пример приложения, демонстрационное приложение будет состоять из <em>пользователей</em> и связанных с ними <em>микросообщений</em> (образуя минималистичное приложение в стиле Twitter). Функциональность будет совершенно слаборазвита и многие из шагов будут походить на волшебство, но не переживайте: полный пример приложения разработает подобное же приложение с нуля, начиная с <a class="ref" href="static-pages?version=3.0#top">Глава&nbsp;3</a>,  и я дам многочисленные ссылки на более поздний материал. Тем временем, имейте терпение и немного веры - все таки основная цель данного учебника - удержать вас  <em>вне</em> этого поверхностного, управляемого scaffold подхода, для достижения более глубокого понимания Rails.</p>
 
@@ -33,7 +33,7 @@
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;http://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.9&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.12&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
 </pre></div>
 </div></div>
@@ -46,7 +46,7 @@
 </div>
 
 
-<p>Наконец, мы инициализируем репозиторий Git и сделаем первую фиксацию (commit):<sup class="footnote" id="fnref:2.2"><a href="#fn:2.2">2</a></sup></p>
+<p>Наконец, мы инициализируем репозиторий Git и сделаем первую фиксацию (commit):<sup class="footnote" id="fnref:2.2"><a href="?version=3.0#fn:2.2">2</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git init
 <span class="gp">$</span> git add .
@@ -93,7 +93,7 @@
 <h3><a id="sec:2.1.2" href="a-demo-app?version=3.0#sec:modeling_microposts" class="heading"><span class="number">2.1.2</span> Моделирование микросообщений</a></h3>
 
 
-<p>Ядро модели данных микросообщений даже проще чем для пользователей: микросообщение имеет только <code>id</code> и поле <code>content</code> для текста микросообщения (тип- <code>string</code>).<sup class="footnote" id="fnref:2.3"><a href="#fn:2.3">3</a></sup> Есть дополнительная сложность: мы хотим <em>связать</em> каждое микросообщение с определенным пользователем; мы выполним это, записывая <code>user_id</code> владельца сообщения. Результаты показаны в  <a class="ref" href="a-demo-app?version=3.0#fig:demo_micropost_model">Рис.&nbsp;2.3</a>.</p>
+<p>Ядро модели данных микросообщений даже проще чем для пользователей: микросообщение имеет только <code>id</code> и поле <code>content</code> для текста микросообщения (тип- <code>string</code>).<sup class="footnote" id="fnref:2.3"><a href="?version=3.0#fn:2.3">3</a></sup> Есть дополнительная сложность: мы хотим <em>связать</em> каждое микросообщение с определенным пользователем; мы выполним это, записывая <code>user_id</code> владельца сообщения. Результаты показаны в  <a class="ref" href="a-demo-app?version=3.0#fig:demo_micropost_model">Рис.&nbsp;2.3</a>.</p>
 
 <div class="label" id="fig:demo_micropost_model"></div>
 
@@ -111,7 +111,7 @@
 
 <p>В этом разделе мы реализуем модель данных пользователей из <a class="ref" href="modeling_users#sec:modeling_users">Раздела&nbsp;2.1.1</a>, наряду с веб-интерфейсом к этой модели. Эта комбинация образует <em>ресурс Users</em>, который позволит нам думать о пользователях как об объектах, которые могут быть созданы, считаны, обновлены, и удалены через сеть с использованием <a   href="http://ru.wikipedia.org/wiki/HTTP-протокол">HTTP протокола</a>.</p>
 
-<p>Как обещалось во введении, наш ресурс Users будет создаваться программой scaffold generator, которая стандартно поставляется с каждым проектом Rails. Аргумент команды <code>scaffold</code> это имя ресурса в единственном числе (в данном случае, <code>User</code>), вместе с дополнительными параметрами для атрибутов модели данных:<sup class="footnote" id="fnref:2.4"><a href="#fn:2.4">4</a></sup></p>
+<p>Как обещалось во введении, наш ресурс Users будет создаваться программой scaffold generator, которая стандартно поставляется с каждым проектом Rails. Аргумент команды <code>scaffold</code> это имя ресурса в единственном числе (в данном случае, <code>User</code>), вместе с дополнительными параметрами для атрибутов модели данных:<sup class="footnote" id="fnref:2.4"><a href="?version=3.0#fn:2.4">4</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate scaffold User name:string email:string
 <span class="go">      invoke  active_record</span>
@@ -142,7 +142,7 @@
 </div>
 
 
-<p>Добавив <code>name:string</code> и <code>email:string</code>, мы добились того, что модель User приобрела форму из <a class="ref" href="a-demo-app?version=3.0#fig:demo_user_model">Рис.&nbsp;2.2</a>. (Отметьте, что нет надобности включать параметр для <code>id</code>; он создается Rails автоматически.<sup class="footnote" id="fnref:2.5"><a href="#fn:2.5">5</a></sup>)</p>
+<p>Добавив <code>name:string</code> и <code>email:string</code>, мы добились того, что модель User приобрела форму из <a class="ref" href="a-demo-app?version=3.0#fig:demo_user_model">Рис.&nbsp;2.2</a>. (Отметьте, что нет надобности включать параметр для <code>id</code>; он создается Rails автоматически.<sup class="footnote" id="fnref:2.5"><a href="?version=3.0#fn:2.5">5</a></sup>)</p>
 
 <p>Чтобы продолжить с демонстрационным приложением, мы сначала должны <em>migrate (мигрировать, переместить)</em> базу данных, используя <em>Rake</em> (<a class="ref" href="a-demo-app?version=3.0#sidebar:rake">Блок&nbsp;2.1</a>):</p>
 
@@ -199,7 +199,7 @@
 <h3><a id="sec:2.2.1" href="a-demo-app?version=3.0#sec:a_user_tour" class="heading"><span class="number">2.2.1</span> Обзор пользователя</a></h3>
 
 
-<p>При посещении корневого url&nbsp;<a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a> мы видим ту же самую дефолтную страницу Rails, что и на <a class="ref" href="beginning?version=3.0#fig:riding_rails_3">Рис.&nbsp;1.3</a>, но при генерировании ресурса Users scaffolding-ом мы также создали большое количество страниц для управления пользователями. Например, страницу для отображения списка всех пользователей в  <a href="http://localhost:3000/users">/users</a>, и страницу для создания нового пользователя в  <a href="http://localhost:3000/">/users/new</a>.<sup class="footnote" id="fnref:2.6"><a href="#fn:2.6">6</a></sup> Остальная часть этого Раздела, выделяется предпринятию ураганного тура через эти страницы пользователя (user). Поскольку мы продолжаем, полезно обратиться к <a class="ref" href="a-demo-app?version=3.0#table:user_urls">Table&nbsp;2.1</a>, которая показывает соответствие между страницами и URL.</p>
+<p>При посещении корневого url&nbsp;<a href="http://localhost:3000/"><tt>http://localhost:3000/</tt></a> мы видим ту же самую дефолтную страницу Rails, что и на <a class="ref" href="beginning?version=3.0#fig:riding_rails_3">Рис.&nbsp;1.3</a>, но при генерировании ресурса Users scaffolding-ом мы также создали большое количество страниц для управления пользователями. Например, страницу для отображения списка всех пользователей в  <a href="http://localhost:3000/users">/users</a>, и страницу для создания нового пользователя в  <a href="http://localhost:3000/">/users/new</a>.<sup class="footnote" id="fnref:2.6"><a href="?version=3.0#fn:2.6">6</a></sup> Остальная часть этого Раздела, выделяется предпринятию ураганного тура через эти страницы пользователя (user). Поскольку мы продолжаем, полезно обратиться к <a class="ref" href="a-demo-app?version=3.0#table:user_urls">Table&nbsp;2.1</a>, которая показывает соответствие между страницами и URL.</p>
 
 <div class="label" id="table:user_urls"></div>
 
@@ -231,7 +231,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/demo_show_user_rails_3.png" alt="demo_show_user_rails_3" /></span></div><div class="caption"><span class="header">Рис. 2.6: </span><span class="description">Страница показывающая пользователя (<a href="http://localhost:3000/users/1"><tt>/users/1</tt></a>).&nbsp;<a href="/images/figures/demo_show_user_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Для того, чтобы изменить информацию пользователя, мы посещаем страницу <a href="http://localhost:3000/users/1/edit"><tt>edit</tt></a>  (<a class="ref" href="a-demo-app?version=3.0#fig:demo_edit_user_rails_3">Рис.&nbsp;2.7</a>). Изменяя информацию о пользователе и нажимая кнопку Update, мы изменяем информацию о пользователя в демонстрационном приложении (<a class="ref" href="a-demo-app?version=3.0#fig:demo_update_user_rails_3">Рис.&nbsp;2.8</a>). (Как мы увидим в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>, эти данные пользователя хранятся в бэкэнде базы данных.) Мы добавим функции edit/update (редактировать/обновить) пользователя к примеру приложения в  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users">Разделе&nbsp;10.1</a>.</p>
+<p>Для того, чтобы изменить информацию пользователя, мы посещаем страницу <a href="http://localhost:3000/users/1/edit"><tt>edit</tt></a>  (<a class="ref" href="a-demo-app?version=3.0#fig:demo_edit_user_rails_3">Рис.&nbsp;2.7</a>). Изменяя информацию о пользователе и нажимая кнопку Update User, мы изменяем информацию о пользователя в демонстрационном приложении (<a class="ref" href="a-demo-app?version=3.0#fig:demo_update_user_rails_3">Рис.&nbsp;2.8</a>). (Как мы увидим в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>, эти данные пользователя хранятся в бэкэнде базы данных.) Мы добавим функции edit/update (редактировать/обновить) пользователя к примеру приложения в  <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:updating_users">Разделе&nbsp;10.1</a>.</p>
 
 <div class="label" id="fig:demo_edit_user_rails_3"></div>
 
@@ -288,11 +288,11 @@
 <li>Модель User возвращает список пользователей в контроллер.</li>
 <li>Контроллер получает пользователей в <code>@users</code> переменной, которую он передает <code>index</code> представлению.</li>
 <li>Представление использует Embedded (Встроенный) Ruby, чтобы визуализировать страницу как HTML.</li>
-<li>Контроллер возвращает HTML в браузер. <sup class="footnote" id="fnref:2.7"><a href="#fn:2.7">7</a></sup></li>
+<li>Контроллер возвращает HTML в браузер. <sup class="footnote" id="fnref:2.7"><a href="?version=3.0#fn:2.7">7</a></sup></li>
 </ol>
 
 
-<p>Мы начинаем с запроса, выданного браузером &mdash; то есть, с результата ввода URL в адресной строке или клика по ссылке (Шаг&nbsp;1 в <a class="ref" href="a-demo-app?version=3.0#fig:mvc_detailed">Рис.&nbsp;2.11</a>). Этот запрос вызывает <em>Rails маршрутизатор</em> (Шаг&nbsp;2), который отправляет к  надлежащему <em>действию контроллера</em>, основываясь на URL (и, как мы увидим в <a class="ref" href="static-pages?version=3.0#sidebar:get_etc">Блоке&nbsp;3.1</a>, на типе запроса). Код создающий перенаправление URL пользователя к действиям контроллера для ресурса Users представлен в <a class="ref" href="a-demo-app?version=3.0#code:rails_routes">Листинге&nbsp;2.2</a>;<sup class="footnote" id="fnref:2.8"><a href="#fn:2.8">8</a></sup> этот код  фактически устанавливает таблицу пар URL/Действие, которые мы видели в  <a class="ref" href="a-demo-app?version=3.0#table:user_urls">Таблице&nbsp;2.1</a>.</p>
+<p>Мы начинаем с запроса, выданного браузером &mdash; то есть, с результата ввода URL в адресной строке или клика по ссылке (Шаг&nbsp;1 в <a class="ref" href="a-demo-app?version=3.0#fig:mvc_detailed">Рис.&nbsp;2.11</a>). Этот запрос вызывает <em>Rails маршрутизатор</em> (Шаг&nbsp;2), который отправляет к  надлежащему <em>действию контроллера</em>, основываясь на URL (и, как мы увидим в <a class="ref" href="static-pages?version=3.0#sidebar:get_etc">Блоке&nbsp;3.1</a>, на типе запроса). Код создающий перенаправление URL пользователя к действиям контроллера для ресурса Users представлен в <a class="ref" href="a-demo-app?version=3.0#code:rails_routes">Листинге&nbsp;2.2</a>;<sup class="footnote" id="fnref:2.8"><a href="?version=3.0#fn:2.8">8</a></sup> этот код  фактически устанавливает таблицу пар URL/Действие, которые мы видели в  <a class="ref" href="a-demo-app?version=3.0#table:user_urls">Таблице&nbsp;2.1</a>.</p>
 
 <div class="label" id="code:rails_routes"></div>
 
@@ -300,7 +300,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.2.</span> <span class="description">Маршруты Rails, с правилом для ресурса Users. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">DemoApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">DemoApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">resources</span> <span class="ss">:users</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -386,7 +386,7 @@
 </div>
 
 
-<p>Чтобы исследовать отношения между контроллером Users и моделью User, давайте сосредоточимся на упрощенной версии <code>index</code> действия, показанной в <a class="ref" href="a-demo-app?version=3.0#code:demo_index_action">Листинге&nbsp;2.4</a>.<sup class="footnote" id="fnref:2.9"><a href="#fn:2.9">9</a></sup></p>
+<p>Чтобы исследовать отношения между контроллером Users и моделью User, давайте сосредоточимся на упрощенной версии <code>index</code> действия, показанной в <a class="ref" href="a-demo-app?version=3.0#code:demo_index_action">Листинге&nbsp;2.4</a>.<sup class="footnote" id="fnref:2.9"><a href="?version=3.0#fn:2.9">9</a></sup></p>
 
 <div class="label" id="code:demo_index_action"></div>
 
@@ -415,13 +415,13 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.5.</span> <span class="description">Модель User для демонстрационного приложения. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
 
 
-<p>Как только <code>@users</code> переменная определена, контроллер вызывает <em>представление </em> (Шаг&nbsp;6), показанное в <a class="ref" href="a-demo-app?version=3.0#code:demo_index_view">Листинге&nbsp;2.6</a>. Переменные, которые начинаются со знака <code>@</code>, называемые <em>переменными экземпляра</em>, автоматически доступны в представлении; в данном случае, представление <code>index.html.erb</code> в  <a class="ref" href="a-demo-app?version=3.0#code:demo_index_view">Листинге&nbsp;2.6</a> перебирает  список <code>@users</code> и выводит строку HTML для каждого.<sup class="footnote" id="fnref:2.10"><a href="#fn:2.10">10</a></sup></p>
+<p>Как только <code>@users</code> переменная определена, контроллер вызывает <em>представление </em> (Шаг&nbsp;6), показанное в <a class="ref" href="a-demo-app?version=3.0#code:demo_index_view">Листинге&nbsp;2.6</a>. Переменные, которые начинаются со знака <code>@</code>, называемые <em>переменными экземпляра</em>, автоматически доступны в представлении; в данном случае, представление <code>index.html.erb</code> в  <a class="ref" href="a-demo-app?version=3.0#code:demo_index_view">Листинге&nbsp;2.6</a> перебирает  список <code>@users</code> и выводит строку HTML для каждого.<sup class="footnote" id="fnref:2.10"><a href="?version=3.0#fn:2.10">10</a></sup></p>
 
 <div class="label" id="code:demo_index_view"></div>
 
@@ -492,7 +492,7 @@
 <h3><a id="sec:2.3.1" href="a-demo-app?version=3.0#sec:a_micropost_microtour" class="heading"><span class="number">2.3.1</span> Микрообзор микросообщений</a></h3>
 
 
-<p>Как и с ресурсом Users, мы генерируем код scaffold для ресурса Microposts, используя <code>rails generate scaffold</code>, в этом случае реализуя модель данных из <a class="ref" href="a-demo-app?version=3.0#fig:demo_micropost_model">Рис.&nbsp;2.3</a>:<sup class="footnote" id="fnref:2.11"><a href="#fn:2.11">11</a></sup></p>
+<p>Как и с ресурсом Users, мы генерируем код scaffold для ресурса Microposts, используя <code>rails generate scaffold</code>, в этом случае реализуя модель данных из <a class="ref" href="a-demo-app?version=3.0#fig:demo_micropost_model">Рис.&nbsp;2.3</a>:<sup class="footnote" id="fnref:2.11"><a href="?version=3.0#fn:2.11">11</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate scaffold Micropost content:string user_id:integer
 <span class="go">      invoke  active_record</span>
@@ -534,7 +534,7 @@
 </div>
 
 
-<p>Теперь мы имеем возможность создавать микропосты тем же образом, каким мы создавали пользователей в <a class="ref" href="a-demo-app?version=3.0#sec:a_user_tour">Разделе&nbsp;2.2.1</a>. Как вы могли бы предположить, генератор scaffold добавил в файл маршрутов Rails правило для ресурса Microposts, как видно в  <a class="ref" href="a-demo-app?version=3.0#code:demo_microposts_resource">Листинге&nbsp;2.7</a>.<sup class="footnote" id="fnref:2.12"><a href="#fn:2.12">12</a></sup> Как и с users, <code>resources :microposts</code> маршрутное правило направляет  URL микросообщений на действия в контроллере Microposts, как видно в  <a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_microposts">Таблице&nbsp;2.3</a>.</p>
+<p>Теперь мы имеем возможность создавать микропосты тем же образом, каким мы создавали пользователей в <a class="ref" href="a-demo-app?version=3.0#sec:a_user_tour">Разделе&nbsp;2.2.1</a>. Как вы могли бы предположить, генератор scaffold добавил в файл маршрутов Rails правило для ресурса Microposts, как видно в  <a class="ref" href="a-demo-app?version=3.0#code:demo_microposts_resource">Листинге&nbsp;2.7</a>.<sup class="footnote" id="fnref:2.12"><a href="?version=3.0#fn:2.12">12</a></sup> Как и с users, <code>resources :microposts</code> маршрутное правило направляет  URL микросообщений на действия в контроллере Microposts, как видно в  <a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_microposts">Таблице&nbsp;2.3</a>.</p>
 
 <div class="label" id="code:demo_microposts_resource"></div>
 
@@ -542,7 +542,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.7.</span> <span class="description">Маршруты Rails с новым правилом для ресурсов Microposts.<br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">DemoApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">DemoApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">resources</span> <span class="ss">:microposts</span>
   <span class="n">resources</span> <span class="ss">:users</span>
   <span class="o">.</span>
@@ -649,7 +649,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.9.</span> <span class="description">Ограничение микросообщений максимумом в 140 знаков посредством валидации длины.<br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">validates</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">:length</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:maximum</span> <span class="o">=&gt;</span> <span class="mi">140</span> <span class="p">}</span>
 <span class="k">end</span>
 </pre></div>
@@ -680,7 +680,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.10.</span> <span class="description">У пользователя есть много микросообщений (user has many microposts). <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">has_many</span> <span class="ss">:microposts</span>
 <span class="k">end</span>
 </pre></div>
@@ -695,7 +695,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.11.</span> <span class="description">Микросообщения принадлежат пользователю (micropost belongs to a user).<br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">belongs_to</span> <span class="ss">:user</span>
 
   <span class="n">validates</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">:length</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="ss">:maximum</span> <span class="o">=&gt;</span> <span class="mi">140</span> <span class="p">}</span>
@@ -712,7 +712,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/micropost_user_association.png" alt="micropost_user_association" /></span></div><div class="caption"><span class="header">Рис. 2.15: </span><span class="description">Связь между микросообщениями и пользователями.</span></div></div>
 
 
-<p>В  <a class="ref" href="user-microposts?version=3.0#top">Главе&nbsp;11</a> и <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы будем использовать ассоциацию пользователей и микросообщений и чтобы вывести на экран все микросообщения пользователя, и чтобы создать Twitter-подобную подачу микросообщений. Пока, мы можем исследовать применение связи микросообщения-пользователь с помощью <em>консоли</em>, которая является полезным инструментом для взаимодействия с Rails приложениями. Сначала мы вызовем консоль командой <code>rails console</code> в командной строке, а затем получим первого пользователя из базы данных, используя <code>User.first</code> (поместив результаты в переменную <code>first_user</code>):<sup class="footnote" id="fnref:2.13"><a href="#fn:2.13">13</a></sup></p>
+<p>В  <a class="ref" href="user-microposts?version=3.0#top">Главе&nbsp;11</a> и <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы будем использовать ассоциацию пользователей и микросообщений и чтобы вывести на экран все микросообщения пользователя, и чтобы создать Twitter-подобную подачу микросообщений. Пока, мы можем исследовать применение связи микросообщения-пользователь с помощью <em>консоли</em>, которая является полезным инструментом для взаимодействия с Rails приложениями. Сначала мы вызовем консоль командой <code>rails console</code> в командной строке, а затем получим первого пользователя из базы данных, используя <code>User.first</code> (поместив результаты в переменную <code>first_user</code>):<sup class="footnote" id="fnref:2.13"><a href="?version=3.0#fn:2.13">13</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">first_user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
@@ -746,7 +746,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.12.</span> <span class="description">Класс <code>User</code>, с наследованием.<br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -763,7 +763,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.13.</span> <span class="description">Класс <code>Micropost</code> с наследованием. <br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -822,7 +822,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 2.16.</span> <span class="description">Класс <code>ApplicationController</code>, с наследованием.<br /> <code>app/controllers/application_controller.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="no">ActionController</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -847,7 +847,7 @@
 <h3><a id="sec:2.3.5" href="a-demo-app?version=3.0#sec:deploying_the_demo_app" class="heading"><span class="number">2.3.5</span> Развертывание demo app</a></h3>
 
 
-<p>Закончив ресурс Microposts, мы можем отправить репозиторий на GitHub:<sup class="footnote" id="fnref:2.14"><a href="#fn:2.14">14</a></sup></p>
+<p>Закончив ресурс Microposts, мы можем отправить репозиторий на GitHub:<sup class="footnote" id="fnref:2.14"><a href="?version=3.0#fn:2.14">14</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
 <span class="gp">$</span> git commit -a -m <span class="s2">&quot;Done with the demo app&quot;</span>
@@ -867,12 +867,12 @@
 
 <p>(Если это не работает у вас, см. примечание для <a class="ref" href="beginning?version=3.0#code:gemfile_sqlite_heroku">Листинга&nbsp;1.9</a> для возможного исправления ошибки.) Отметим здесь заключительную строку, которая управляет миграциями базы данных на сервере Heroku. Это обновляет базу данных в Heroku с необходимой моделью данных пользователь/микросообщение. Если вы хотите также отправить <em>данные</em> можете сделать это используя <tt>taps</tt> gem и <code>db:push</code>:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="o">[</span>sudo<span class="o">]</span> gem install taps
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> gem install taps
 <span class="gp">$</span> heroku db:push
 </pre></div>
 </div>
 
-
+<p>(Если вы получили здесь ошибку связанную с правами доступа (permissions error), вспомните из <a class="ref" href="beginning?version=3.0#sec:conventions">Раздела&nbsp;1.1.3</a> что вам, возможно, следует использовать <code>sudo</code>.)</p>
 
 
 <h2><a id="sec:2.4" href="a-demo-app?version=3.0#sec:2.4" class="heading"><span class="number">2.4</span> Заключение</a></h2>
@@ -886,7 +886,7 @@
 <li>Введение в MVC</li>
 <li>Первый вкус архитектуры REST</li>
 <li>Начальное моделирование данных</li>
-<li>Живое, поддерживаемое базой данных веб-приложение в production<sup class="footnote" id="fnref:2.15"><a href="#fn:2.15">15</a></sup></li>
+<li>Живое, поддерживаемое базой данных веб-приложение в production<sup class="footnote" id="fnref:2.15"><a href="?version=3.0#fn:2.15">15</a></sup></li>
 </ul>
 
 
@@ -916,21 +916,21 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:2.1">Я советую вам не слишком присматриваться к сгенерированному коду; на данном этапе, это только смутит вас.&nbsp;<a class="arrow" href="#fnref:2.1">&uarr;</a></li>
-<li id="fn:2.2">Вспомните, что команда <code>rails</code> генерирует дефолтный <code>.gitignore</code> файл, но в зависимости от вашей системы можно найти, что увеличенный файл из <a class="ref" href="beginning?version=3.0#code:gitignore">Листинга&nbsp;1.6</a> более удобен.&nbsp;<a class="arrow" href="#fnref:2.2">&uarr;</a></li>
-<li id="fn:2.3">Моделируя более длинные сообщения,  для нормального (не микро) блога, следует использовать тип <code>text</code> вместо <code>string</code>.&nbsp;<a class="arrow" href="#fnref:2.3">&uarr;</a></li>
-<li id="fn:2.4">Имя scaffold следует за соглашением в соответствии с которым, <em>модели</em> имеют единственное число, в отличие от ресурсов и контроллеров, которые используются во множественном числе. Таким образом, у нас есть <em>User</em> вместо <em>Users</em>.&nbsp;<a class="arrow" href="#fnref:2.4">&uarr;</a></li>
-<li id="fn:2.5">User id необходим как <em>первичный ключ</em> в базе данных.&nbsp;<a class="arrow" href="#fnref:2.5">&uarr;</a></li>
-<li id="fn:2.6">Начиная отсюда <tt>http://localhost:3000</tt> часть адреса очевидна всякий раз, когда мы разрабатываем локально, и я буду обычно опускать ее.&nbsp;<a class="arrow" href="#fnref:2.6">&uarr;</a></li>
-<li id="fn:2.7">Некоторые источники утверждают, что представление возвращает HTML непосредственно браузеру (через веб-сервер, такой как Apache или Nginx). Независимо от деталей реализации я предпочитаю думать о контроллере как о центральном концентраторе через который проходят информационные потоки всего приложения.&nbsp;<a class="arrow" href="#fnref:2.7">&uarr;</a></li>
-<li id="fn:2.8">Странная запись <code>:users</code> является <em>символом</em>, о котором мы узнаем в  <a class="ref" href="rails-flavored-ruby?version=3.0#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>.&nbsp;<a class="arrow" href="#fnref:2.8">&uarr;</a></li>
-<li id="fn:2.9">Код scaffold является уродливым и запутывающим, поэтому я обрезал его.&nbsp;<a class="arrow" href="#fnref:2.9">&uarr;</a></li>
-<li id="fn:2.10">Помните, вы, как предполагается, не понимаете этот код сейчас. Он показан только в целях иллюстрации.&nbsp;<a class="arrow" href="#fnref:2.10">&uarr;</a></li>
-<li id="fn:2.11">Как и с User scaffold, генератор scaffold для микросообщений следует сингулярному соглашению для моделей Rails; таким образом, мы имеем, <code>generate Micropost</code>, а не <code>generate MicropostS</code>.&nbsp;<a class="arrow" href="#fnref:2.11">&uarr;</a></li>
-<li id="fn:2.12">У кода scaffold могут быть дополнительные новые строки по сравнению с <a class="ref" href="a-demo-app?version=3.0#code:demo_microposts_resource">Листингом&nbsp;2.7</a>; это не повод для беспокойства, поскольку Ruby игнорирует дополнительные новые строки.&nbsp;<a class="arrow" href="#fnref:2.12">&uarr;</a></li>
-<li id="fn:2.13">Ваше приглашение командной строки, вероятно, будет чем-то вроде <code>ruby-1.9.2-head &gt;</code>, но я буду использовать <code>&gt;&gt;</code> чтобы приглашение не было связано с определенной версией Ruby.&nbsp;<a class="arrow" href="#fnref:2.13">&uarr;</a></li>
-<li id="fn:2.14">Обычно, следует сделать меньшие, более частые фиксации, но для целей этой главы единственная большая фиксация в конце это нормально.&nbsp;<a class="arrow" href="#fnref:2.14">&uarr;</a></li>
-<li id="fn:2.15">Если вы развертывали в Heroku в <a class="ref" href="a-demo-app?version=3.0#sec:deploying_the_demo_app">Разделе&nbsp;2.3.5</a>.&nbsp;<a class="arrow" href="#fnref:2.15">&uarr;</a></li>
+<li id="fn:2.1">Я советую вам не слишком присматриваться к сгенерированному коду; на данном этапе, это только смутит вас.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.1">&uarr;</a></li>
+<li id="fn:2.2">Вспомните, что команда <code>rails</code> генерирует дефолтный <code>.gitignore</code> файл, но в зависимости от вашей системы можно найти, что увеличенный файл из <a class="ref" href="beginning?version=3.0#code:gitignore">Листинга&nbsp;1.6</a> более удобен.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.2">&uarr;</a></li>
+<li id="fn:2.3">Моделируя более длинные сообщения,  для нормального (не микро) блога, следует использовать тип <code>text</code> вместо <code>string</code>.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.3">&uarr;</a></li>
+<li id="fn:2.4">Имя scaffold следует за соглашением в соответствии с которым, <em>модели</em> имеют единственное число, в отличие от ресурсов и контроллеров, которые используются во множественном числе. Таким образом, у нас есть <em>User</em> вместо <em>Users</em>.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.4">&uarr;</a></li>
+<li id="fn:2.5">User id необходим как <em>первичный ключ</em> в базе данных.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.5">&uarr;</a></li>
+<li id="fn:2.6">Начиная отсюда <tt>http://localhost:3000</tt> часть адреса очевидна всякий раз, когда мы разрабатываем локально, и я буду обычно опускать ее.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.6">&uarr;</a></li>
+<li id="fn:2.7">Некоторые источники утверждают, что представление возвращает HTML непосредственно браузеру (через веб-сервер, такой как Apache или Nginx). Независимо от деталей реализации я предпочитаю думать о контроллере как о центральном концентраторе через который проходят информационные потоки всего приложения.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.7">&uarr;</a></li>
+<li id="fn:2.8">Странная запись <code>:users</code> является <em>символом</em>, о котором мы узнаем в  <a class="ref" href="rails-flavored-ruby?version=3.0#sec:hashes_and_symbols">Разделе&nbsp;4.3.3</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.8">&uarr;</a></li>
+<li id="fn:2.9">Код scaffold является уродливым и запутывающим, поэтому я обрезал его.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.9">&uarr;</a></li>
+<li id="fn:2.10">Помните, вы, как предполагается, не понимаете этот код сейчас. Он показан только в целях иллюстрации.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.10">&uarr;</a></li>
+<li id="fn:2.11">Как и с User scaffold, генератор scaffold для микросообщений следует сингулярному соглашению для моделей Rails; таким образом, мы имеем, <code>generate Micropost</code>, а не <code>generate MicropostS</code>.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.11">&uarr;</a></li>
+<li id="fn:2.12">У кода scaffold могут быть дополнительные новые строки по сравнению с <a class="ref" href="a-demo-app?version=3.0#code:demo_microposts_resource">Листингом&nbsp;2.7</a>; это не повод для беспокойства, поскольку Ruby игнорирует дополнительные новые строки.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.12">&uarr;</a></li>
+<li id="fn:2.13">Ваше приглашение командной строки, вероятно, будет чем-то вроде <code>ruby-1.9.2-head &gt;</code>, но я буду использовать <code>&gt;&gt;</code> чтобы приглашение не было связано с определенной версией Ruby.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.13">&uarr;</a></li>
+<li id="fn:2.14">Обычно, следует сделать меньшие, более частые фиксации, но для целей этой главы единственная большая фиксация в конце это нормально.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.14">&uarr;</a></li>
+<li id="fn:2.15">Если вы развертывали в Heroku в <a class="ref" href="a-demo-app?version=3.0#sec:deploying_the_demo_app">Разделе&nbsp;2.3.5</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:2.15">&uarr;</a></li>
 </ol>
 </div>
 
