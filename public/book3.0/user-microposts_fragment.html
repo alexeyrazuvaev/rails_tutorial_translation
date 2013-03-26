@@ -3,7 +3,7 @@
 
 <h1 class="chapter"><a id="sec:11" href="user-microposts?version=3.0#top" class="heading"><span class="number">Глава 11</span> Микросообщения пользователей</a></h1>
 
-<p>В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#top">Главе&nbsp;10</a> были закончены REST действия для ресурса Users, так что пришло время наконец-то добавить второй ресурс: пользовательские <em>микросообщения</em>.<sup class="footnote" id="fnref:11.1"><a href="#fn:11.1">1</a></sup> Эти короткие сообщения, связанные с конкретным пользователем, впервые были показаны (в зачаточной форме) в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>. В этой главе мы сделаем полноценную версию наброска из <a class="ref" href="a-demo-app?version=3.0#sec:microposts_resource">Раздела&nbsp;2.3</a>, сконструировав модель данных Micropost, связав ее с моделью User при помощи <code>has_many</code> и <code>belongs_to</code> методов, а затем сделав формы и партиалы, необходимые для манипулирования результатами и их отображения. В <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы завершим наш крохотный клон Twitter, добавив понятие  <em>слежения</em> за пользователями, чтобы получить <em>поток (feed)</em> их микросообщений.</p>
+<p>В <a class="ref" href="updating-showing-and-deleting-users?version=3.0#top">Главе&nbsp;10</a> были закончены REST действия для ресурса Users, так что пришло время наконец-то добавить второй ресурс: пользовательские <em>микросообщения</em>.<sup class="footnote" id="fnref:11.1"><a href="?version=3.0#fn:11.1">1</a></sup> Эти короткие сообщения, связанные с конкретным пользователем, впервые были показаны (в зачаточной форме) в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>. В этой главе мы сделаем полноценную версию наброска из <a class="ref" href="a-demo-app?version=3.0#sec:microposts_resource">Раздела&nbsp;2.3</a>, сконструировав модель данных Micropost, связав ее с моделью User при помощи <code>has_many</code> и <code>belongs_to</code> методов, а затем сделав формы и партиалы, необходимые для манипулирования результатами и их отображения. В <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a> мы завершим наш крохотный клон Twitter, добавив понятие  <em>слежения</em> за пользователями, чтобы получить <em>поток (feed)</em> их микросообщений.</p>
 
 <p>Если вы используете Git для управления версиями, я предлагаю сделать новую тему ветки, как обычно:</p>
 
@@ -27,7 +27,7 @@
 <h3><a id="sec:11.1.1" href="user-microposts?version=3.0#sec:the_basic_model" class="heading"><span class="number">11.1.1</span> Базовая модель</a></h3>
 
 
-<p>Модели Micropost необходимы лишь два атрибута: <code>content</code> атрибут, содержащий текст микросообщений,<sup class="footnote" id="fnref:11.2"><a href="#fn:11.2">2</a></sup> и <code>user_id</code>, связывающий микросообщения с конкретным пользователем. Как и в случае с моделью User (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:generate_user_model">Листинг&nbsp;6.1</a>), мы генерируем ее используя <code>generate model</code>:</p>
+<p>Модели Micropost необходимы лишь два атрибута: <code>content</code> атрибут, содержащий текст микросообщений,<sup class="footnote" id="fnref:11.2"><a href="?version=3.0#fn:11.2">2</a></sup> и <code>user_id</code>, связывающий микросообщения с конкретным пользователем. Как и в случае с моделью User (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#code:generate_user_model">Листинг&nbsp;6.1</a>), мы генерируем ее используя <code>generate model</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate model Micropost content:string user_id:integer
 </pre></div>
@@ -42,7 +42,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.1.</span> <span class="description">Миграция Micropost. (Обратите внимание на индекс <code>user_id</code>.) <br /> <code>db/migrate/&lt;timestamp&gt;_create_microposts.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateMicroposts</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateMicroposts</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
     <span class="n">create_table</span> <span class="ss">:microposts</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
       <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:content</span>
@@ -50,8 +50,7 @@
 
       <span class="n">t</span><span class="o">.</span><span class="n">timestamps</span>
     <span class="k">end</span>
-    <span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:user_id</span>
-    <span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:created_at</span>
+    <span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:user_id</span><span class="p">,</span> <span class="ss">:created_at</span><span class="o">]</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">down</span>
@@ -62,15 +61,14 @@
 </div></div>
 
 
-<p>Отметим, что, поскольку мы ожидаем извлечение всех микросообщений, связанных с данным&nbsp;id пользователя в порядке обратном их созданию, <a class="ref" href="user-microposts?version=3.0#code:micropost_migration">Листинг&nbsp;11.1</a> добавляет индексы (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блок&nbsp;6.2</a>) на столбцы <code>user_id</code> и <code>created_at</code>:</p>
+<p>Отметим, что, поскольку мы ожидаем извлечение всех микросообщений, связанных с данным&nbsp;id пользователя в порядке обратном их созданию, <a class="ref" href="user-microposts?version=3.0#code:micropost_migration">Листинг&nbsp;11.1</a> добавляет индекс (<a class="ref" href="modeling-and-viewing-users-one?version=3.0#sidebar:database_indices">Блок&nbsp;6.2</a>) на столбцы <code>user_id</code> и <code>created_at</code>:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:user_id</span>
-<span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:created_at</span>
+<div class="code"><div class="highlight"><pre><span class="n">add_index</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="o">[</span><span class="ss">:user_id</span><span class="p">,</span> <span class="ss">:created_at</span><span class="o">]</span>
 </pre></div>
 </div>
 
 
-<p>Отметим также строку <code>t.timestamps</code>, которая (как указано в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:database_migrations">Разделе&nbsp;6.1.1</a>) добавляет волшебные столбцы <code>created_at</code> и <code>updated_at</code>. Мы будем работать со столбцом <code>created_at</code> в <a class="ref" href="user-microposts?version=3.0#sec:ordering_and_dependency">Разделе&nbsp;11.1.3</a> и <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>.</p>
+<p>Включая оба <code>user_id</code> и <code>created_at</code> столбца в массив, мы тем самым говорим Rails создать <em>многоключевой индекс</em>, это означает что Active Record может использовать <em>оба</em> ключа одновременно. Отметим также строку <code>t.timestamps</code>, которая (как указано в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:database_migrations">Разделе&nbsp;6.1.1</a>) добавляет волшебные столбцы <code>created_at</code> и <code>updated_at</code>. Мы будем работать со столбцом <code>created_at</code> в <a class="ref" href="user-microposts?version=3.0#sec:ordering_and_dependency">Разделе&nbsp;11.1.3</a> и <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>.</p>
 
 <p>Мы можем запустить миграцию микросообщений как обычно (с учетом необходимости подготовки тестовой базы данных, поскольку модель данных изменилась):</p>
 
@@ -106,7 +104,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.2.</span> <span class="description">Открытие доступа к атрибуту <code>content</code> (и <em>только</em> к <code>content</code> атрибуту). <br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">attr_accessible</span> <span class="ss">:content</span>
 <span class="k">end</span>
 </pre></div>
@@ -294,7 +292,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.6.</span> <span class="description">Микросообщения <code>belongs_to</code> (принадлежат) пользователю. <br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">attr_accessible</span> <span class="ss">:content</span>
 
   <span class="n">belongs_to</span> <span class="ss">:user</span>
@@ -311,7 +309,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.7.</span> <span class="description">Пользователь <code>has_many</code> (имеет много) микросообщений. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="kp">attr_accessor</span> <span class="ss">:password</span>
   <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span>
 
@@ -342,7 +340,7 @@
 
 <p>Тесты <code>has_many</code> ассоциации в <a class="ref" href="user-microposts?version=3.0#code:user_has_many_microposts_spec">Листинге&nbsp;11.5</a> мало чего тестируют&nbsp;&mdash;&nbsp;они просто проверяют <em>существование</em> атрибута <code>microposts</code>. В этом разделе мы добавим <em>упорядочивание</em> и <em>зависимость</em> к микросообщениям, а также протестируем что <code>user.microposts</code> метод действительно возвращает массив микросообщений.</p>
 
-<p>Нам нужно будет построить несколько микросообщений в User model spec, что означает, что мы должны сделать фабрику микросообщений в этой точке. Для этого нам нужен способ для создания ассоциации в Factory Girl. К счастью, это легко&nbsp;&mdash;&nbsp;мы просто используем Factory Girl метод  <code>micropost.association</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_factory">Листинге&nbsp;11.8</a>.<sup class="footnote" id="fnref:11.3"><a href="#fn:11.3">3</a></sup></p>
+<p>Нам нужно будет построить несколько микросообщений в User model spec, что означает, что мы должны сделать фабрику микросообщений в этой точке. Для этого нам нужен способ для создания ассоциации в Factory Girl. К счастью, это легко&nbsp;&mdash;&nbsp;мы просто используем Factory Girl метод  <code>micropost.association</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:micropost_factory">Листинге&nbsp;11.8</a>.<sup class="footnote" id="fnref:11.3"><a href="?version=3.0#fn:11.3">3</a></sup></p>
 
 <div class="label" id="code:micropost_factory"></div>
 
@@ -386,7 +384,7 @@
 </div>
 
 
-<p>Здесь мы указываем, что второй пост был создан совсем недавно, <code>1.hour.ago</code> (один.час.назад), а второй пост был создан <code>1.day.ago</code> (один.день.назад). Обратите внимание, насколько удобна Factory Girl в использовании: мы можем не только назначать пользователя используя массовое назначение (так как фабрики пренебрегают <code>attr_accessible</code>), мы также можем установить <code>created_at</code> вручную, чего не позволяет делать Active Record.<sup class="footnote" id="fnref:11.4"><a href="#fn:11.4">4</a></sup></p>
+<p>Здесь мы указываем, что второй пост был создан совсем недавно, <code>1.hour.ago</code> (один.час.назад), а второй пост был создан <code>1.day.ago</code> (один.день.назад). Обратите внимание, насколько удобна Factory Girl в использовании: мы можем не только назначать пользователя используя массовое назначение (так как фабрики пренебрегают <code>attr_accessible</code>), мы также можем установить <code>created_at</code> вручную, чего не позволяет делать Active Record.<sup class="footnote" id="fnref:11.4"><a href="?version=3.0#fn:11.4">4</a></sup></p>
 
 <p>Большинство адаптеров баз данных (в том числе адаптер SQLite) возвращает микросообщения в порядке их id, поэтому мы можем организовать начальные тесты, которые почти наверняка провалятся, используя код в <a class="ref" href="user-microposts?version=3.0#code:micropost_ordering_test">Листинге&nbsp;11.9</a>.</p>
 
@@ -440,7 +438,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.10.</span> <span class="description">Упорядочивание микросообщений с <code>default_scope</code>.  <br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -499,7 +497,7 @@
 
 <div class="code"><div class="highlight"><pre><span class="nb">lambda</span> <span class="k">do</span>
   <span class="no">Micropost</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">micropost</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-<span class="k">end</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span><span class="p">(</span><span class="no">ActiveRecord</span><span class="o">::</span><span class="no">RecordNotFound</span><span class="p">)</span>
+<span class="k">end</span><span class="o">.</span><span class="n">should</span> <span class="n">raise_error</span><span class="p">(</span><span class="ss">ActiveRecord::RecordNotFound</span><span class="p">)</span>
 </pre></div>
 </div>
 
@@ -514,7 +512,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.12.</span> <span class="description">Обеспечение уничтожения микросообщений пользователя вместе с пользователем. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -610,7 +608,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.14.</span> <span class="description">Валидации модели Micropost. <br /> <code>app/models/micropost.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="n">attr_accessible</span> <span class="ss">:content</span>
 
   <span class="n">belongs_to</span> <span class="ss">:user</span>
@@ -687,7 +685,7 @@
 </div></div>
 
 
-<p>Хотя эти тесты не пройдут до <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>, мы начнем работу с кодом приложения, добавив таблицу микросообщений в страницу профиля пользователя, как показано в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts">Листинге&nbsp;11.16</a>.<sup class="footnote" id="fnref:11.5"><a href="#fn:11.5">5</a></sup></p>
+<p>Хотя эти тесты не пройдут до <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>, мы начнем работу с кодом приложения, добавив таблицу микросообщений в страницу профиля пользователя, как показано в <a class="ref" href="user-microposts?version=3.0#code:user_show_microposts">Листинге&nbsp;11.16</a>.<sup class="footnote" id="fnref:11.5"><a href="?version=3.0#fn:11.5">5</a></sup></p>
 
 <div class="label" id="code:user_show_microposts"></div>
 
@@ -695,7 +693,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.16.</span> <span class="description">Добавление микросообщений в страницу user <code>show</code>. <br /> <code>app/views/users/show.html.erb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;profile&quot;</span><span class="nt">&gt;</span>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">&quot;profile&quot;</span> <span class="na">summary=</span><span class="s">&quot;Profile information&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;tr&gt;</span>
     <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;main&quot;</span><span class="nt">&gt;</span>
       .
@@ -773,7 +771,7 @@
 </div>
 
 
-<p>Здесь <code>@user.microposts.count</code> является аналогом метода <code>User.count</code>, за исключением того, что он рассчитывает количество микросообщений, принадлежащих данному пользователю через ассоциацию пользователь/микросообщение.<sup class="footnote" id="fnref:11.6"><a href="#fn:11.6">6</a></sup></p>
+<p>Здесь <code>@user.microposts.count</code> является аналогом метода <code>User.count</code>, за исключением того, что он рассчитывает количество микросообщений, принадлежащих данному пользователю через ассоциацию пользователь/микросообщение.<sup class="footnote" id="fnref:11.6"><a href="?version=3.0#fn:11.6">6</a></sup></p>
 
 <p>Теперь о самой microposts <code>table</code>:</p>
 
@@ -844,7 +842,7 @@
 
 <p>Обратим здесь внимание, насколько умен <code>paginate</code>&nbsp;&mdash;&nbsp;он работает даже с ассоциацией микросообщений, конвертируя массив в объект  <code>WillPaginate::Collection</code> на лету.</p>
 
-<p>После добавления CSS из <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинга&nbsp;11.19</a> к нашему <code>custom.css</code> файлу,<sup class="footnote" id="fnref:11.7"><a href="#fn:11.7">7</a></sup> мы можем взглянуть на нашу новую страницу профиля пользователя в  <a class="ref" href="user-microposts?version=3.0#fig:user_profile_no_microposts">Рис.&nbsp;11.5</a>. Это довольно&hellip; печально. Конечно, это связано с тем, что в настоящее время у нас нет микросообщений. Пришло время изменить это.</p>
+<p>После добавления CSS из <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинга&nbsp;11.19</a> к нашему <code>custom.css</code> файлу,<sup class="footnote" id="fnref:11.7"><a href="?version=3.0#fn:11.7">7</a></sup> мы можем взглянуть на нашу новую страницу профиля пользователя в  <a class="ref" href="user-microposts?version=3.0#fig:user_profile_no_microposts">Рис.&nbsp;11.5</a>. Это довольно&hellip; печально. Конечно, это связано с тем, что в настоящее время у нас нет микросообщений. Пришло время изменить это.</p>
 
 <div class="label" id="code:micropost_css"></div>
 
@@ -881,7 +879,7 @@
 
 <span class="nt">table</span><span class="nc">.microposts</span> <span class="nt">tr</span> <span class="nt">td</span><span class="nc">.micropost</span> <span class="nt">span</span><span class="nc">.timestamp</span> <span class="p">{</span>
   <span class="k">display</span><span class="o">:</span> <span class="k">block</span><span class="p">;</span>
-  <span class="k">font-size</span><span class="o">:</span> <span class="m">85%</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">85</span><span class="o">%</span><span class="p">;</span>
   <span class="k">color</span><span class="o">:</span> <span class="m">#666</span><span class="p">;</span>
 <span class="p">}</span>
 
@@ -898,7 +896,7 @@
 <span class="p">}</span>
 
 <span class="nt">div</span><span class="nc">.user_info</span> <span class="nt">span</span><span class="nc">.microposts</span> <span class="p">{</span>
-  <span class="k">font-size</span><span class="o">:</span> <span class="m">80%</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">80</span><span class="o">%</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="nt">form</span><span class="nc">.new_micropost</span> <span class="p">{</span>
@@ -929,7 +927,7 @@
 <h3><a id="sec:11.2.2" href="user-microposts?version=3.0#sec:sample_microposts" class="heading"><span class="number">11.2.2</span> Образцы микросообщений</a></h3>
 
 
-<p>При всей проделанной работе по созданию шаблонов для микросообщений пользователя в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>, конец был довольно разочаровывающим. Мы можем исправить эту печальную ситуацию, добавив микросообщения во вноситель образцов данных из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:sample_users">Раздела&nbsp;10.3.2</a>. Добавление образцов микросообщений для <em>всех</em> пользователей займет довольно много времени, поэтому сначала мы выберем только первые шесть пользователей<sup class="footnote" id="fnref:11.8"><a href="#fn:11.8">8</a></sup> используя <code>:limit</code> опцию метода <code>User.all</code>:<sup class="footnote" id="fnref:11.9"><a href="#fn:11.9">9</a></sup></p>
+<p>При всей проделанной работе по созданию шаблонов для микросообщений пользователя в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a>, конец был довольно разочаровывающим. Мы можем исправить эту печальную ситуацию, добавив микросообщения во вноситель образцов данных из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:sample_users">Раздела&nbsp;10.3.2</a>. Добавление образцов микросообщений для <em>всех</em> пользователей займет довольно много времени, поэтому сначала мы выберем только первые шесть пользователей<sup class="footnote" id="fnref:11.8"><a href="?version=3.0#fn:11.8">8</a></sup> используя <code>:limit</code> опцию метода <code>User.all</code>:<sup class="footnote" id="fnref:11.9"><a href="?version=3.0#fn:11.9">9</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="ss">:limit</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">)</span>
 </pre></div>
@@ -946,15 +944,14 @@
 </div>
 
 <div class="code"><div class="highlight"><pre><span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
-
-  <span class="n">desc</span> <span class="s2">"Fill database with sample data"</span>
+  <span class="n">desc</span> <span class="s2">&quot;Fill database with sample data&quot;</span>
   <span class="n">task</span> <span class="ss">:populate</span> <span class="o">=&gt;</span> <span class="ss">:environment</span> <span class="k">do</span>
     <span class="o">.</span>
     <span class="o">.</span>
     <span class="o">.</span>
-    <span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="ss">:limit</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
-      <span class="mi">50</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
-        <span class="n">user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:content</span> <span class="o">=&gt;</span> <span class="no">Faker</span><span class="o">::</span><span class="no">Lorem</span><span class="o">.</span><span class="n">sentence</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+    <span class="mi">50</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span>
+      <span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="ss">:limit</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="ss">:content</span> <span class="o">=&gt;</span> <span class="ss">Faker::Lorem</span><span class="o">.</span><span class="n">sentence</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
@@ -970,7 +967,7 @@
 </div>
 
 
-<p>Теперь мы в состоянии воспользоваться плодами наших трудов в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a> отображая информацию для каждого микросообщеня.<sup class="footnote" id="fnref:11.10"><a href="#fn:11.10">10</a></sup> <a class="ref" href="user-microposts?version=3.0#fig:user_profile_with_microposts">Рис.&nbsp;11.6</a> показывает страницу профиля первого (вошедшего) пользователя, а  <a class="ref" href="user-microposts?version=3.0#fig:other_profile_with_microposts">Рис.&nbsp;11.7</a> показывает профиль второго пользователя. Наконец, <a class="ref" href="user-microposts?version=3.0#fig:user_profile_microposts_page_2_rails_3">Рис.&nbsp;11.8</a> показывает <em>вторую</em> страницу микросообщений первого пользователя, наряду с пагинационными ссылками в нижней части отображения. Заметим, что, во всех трех случаях, в каждом отображении микросообщения указывается время когда оно было создано (например, &ldquo;Posted 1 minute ago.&rdquo;); Это работа метода <code>time_ago_in_words</code> из <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>. Если вы подождете пару минут и перезагрузите страницу, вы увидите, как текст автоматически обновится в соответствии с новым временем.</p>
+<p>Теперь мы в состоянии воспользоваться плодами наших трудов в <a class="ref" href="user-microposts?version=3.0#sec:augmenting_the_user_show_page">Разделе&nbsp;11.2.1</a> отображая информацию для каждого микросообщеня.<sup class="footnote" id="fnref:11.10"><a href="?version=3.0#fn:11.10">10</a></sup> <a class="ref" href="user-microposts?version=3.0#fig:user_profile_with_microposts">Рис.&nbsp;11.6</a> показывает страницу профиля первого (вошедшего) пользователя, а  <a class="ref" href="user-microposts?version=3.0#fig:other_profile_with_microposts">Рис.&nbsp;11.7</a> показывает профиль второго пользователя. Наконец, <a class="ref" href="user-microposts?version=3.0#fig:user_profile_microposts_page_2_rails_3">Рис.&nbsp;11.8</a> показывает <em>вторую</em> страницу микросообщений первого пользователя, наряду с пагинационными ссылками в нижней части отображения. Заметим, что, во всех трех случаях, в каждом отображении микросообщения указывается время когда оно было создано (например, &ldquo;Posted 1 minute ago.&rdquo;); Это работа метода <code>time_ago_in_words</code> из <a class="ref" href="user-microposts?version=3.0#code:micropost_partial">Листинга&nbsp;11.17</a>. Если вы подождете пару минут и перезагрузите страницу, вы увидите, как текст автоматически обновится в соответствии с новым временем.</p>
 
 <div class="label" id="fig:user_profile_with_microposts"></div>
 
@@ -991,7 +988,7 @@
 <div class="label" id="fig:user_profile_microposts_page_2_rails_3"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_profile_microposts_page_2_rails_3.png" alt="user_profile_microposts_page_2_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  11.8: </span><span class="description">Вторая страница профиля с микросообщениями, с пагинационными ссылками (<a href="http://localhost:3000/users/1?page=2"><tt>/users/1?page=2</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/user_profile_microposts_page_2_rails_3-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_profile_microposts_page_2_rails_3.png" alt="user_profile_microposts_page_2_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  11.8: </span><span class="description">Пагинационные ссылки микросообщений (<a href="http://localhost:3000/users/1?page=2"><tt>/users/1?page=2</tt></a>).&nbsp;<a href="http://railstutorial.org/images/figures/user_profile_microposts_page_2_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -1001,7 +998,7 @@
 
 <h2><a id="sec:11.3" href="user-microposts?version=3.0#sec:manipulating_microposts" class="heading"><span class="number">11.3</span> Манипулирование микросообщениями</a></h2>
 
-<p>Закончив моделирование данных и  шаблоны для отображения микросообщений,  сейчас мы обратим наше внимание на интерфейс для их создания  через веб. Результатом будет наш третий пример использования формы HTML, для создания ресурса&nbsp;&mdash;&nbsp;в данном случае, ресурса Microposts.<sup class="footnote" id="fnref:11.11"><a href="#fn:11.11">11</a></sup> В этом разделе мы также увидим первый намек на <em>status feed</em>&nbsp;&mdash;&nbsp;понятие, полной реализацией которого мы займемся в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>. Наконец, как и с пользователями, мы сделаем возможным уничтожение микросообщений через веб.</p>
+<p>Закончив моделирование данных и  шаблоны для отображения микросообщений,  сейчас мы обратим наше внимание на интерфейс для их создания  через веб. Результатом будет наш третий пример использования формы HTML, для создания ресурса&nbsp;&mdash;&nbsp;в данном случае, ресурса Microposts.<sup class="footnote" id="fnref:11.11"><a href="?version=3.0#fn:11.11">11</a></sup> В этом разделе мы также увидим первый намек на <em>status feed</em>&nbsp;&mdash;&nbsp;понятие, полной реализацией которого мы займемся в <a class="ref" href="following-users?version=3.0#top">Главе&nbsp;12</a>. Наконец, как и с пользователями, мы сделаем возможным уничтожение микросообщений через веб.</p>
 
 <p>Существует один разрыв с предыдущими соглашениями, который стоит отметить: интерфейс ресурса Microposts будет работать главным образом за счет контроллеров Users и Pages, а не полагаться на собственный контроллер. Это означает, что маршруты для ресурса Microposts необычайно просты, как показано в <a class="ref" href="user-microposts?version=3.0#code:microposts_resource">Листинге&nbsp;11.21</a>. Код в <a class="ref" href="user-microposts?version=3.0#code:microposts_resource">Листинге&nbsp;11.21</a> в свою очередь приводит к RESTful маршрутам показанным в <a class="ref" href="user-microposts?version=3.0#table:RESTful_microposts">Таблице&nbsp;11.2</a>, которые являются сокращенным вариантом полного набора маршрутов виденного нами в <a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_microposts">Таблице&nbsp;2.3</a>. Конечно, эта простота является признаком того, что они <em>более</em> продвинутые&nbsp;&mdash;&nbsp;мы прошли долгий путь со времени нашей зависимости от  scaffolding в <a class="ref" href="a-demo-app?version=3.0#top">Главе&nbsp;2</a>, и нам более не нужна бОльшая часть их сложности.</p>
 
@@ -1011,7 +1008,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.21.</span> <span class="description">Маршруты для ресурса Microposts. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">SampleApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">resources</span> <span class="ss">:users</span>
   <span class="n">resources</span> <span class="ss">:sessions</span><span class="p">,</span>   <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
   <span class="n">resources</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
@@ -1068,7 +1065,7 @@
 </div></div>
 
 
-<p>Прежде чем начать писать код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts?version=3.0#code:micropost_access_control">Листинга&nbsp;11.22</a> требуется произвести небольшой рефакторинг. Вспомним из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:requiring_signed_in_users">Раздела&nbsp;10.2.1</a> что мы внедрили требование входа используя предфильтр который назывался <code>authenticate</code> метод (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authenticate_before_filter">Листинг&nbsp;10.11</a>). В то время <code>authenticate</code> был необходим только в Users контроллере, но теперь мы обнаружили, что он также необходим нам и в контроллере Microposts, так что мы переместим <code>authenticate</code> в Sessions хелпер, как показано в <a class="ref" href="user-microposts?version=3.0#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>.<sup class="footnote" id="fnref:11.12"><a href="#fn:11.12">12</a></sup></p>
+<p>Прежде чем начать писать код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts?version=3.0#code:micropost_access_control">Листинга&nbsp;11.22</a> требуется произвести небольшой рефакторинг. Вспомним из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#sec:requiring_signed_in_users">Раздела&nbsp;10.2.1</a> что мы внедрили требование входа используя предфильтр который назывался <code>authenticate</code> метод (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:authenticate_before_filter">Листинг&nbsp;10.11</a>). В то время <code>authenticate</code> был необходим только в Users контроллере, но теперь мы обнаружили, что он также необходим нам и в контроллере Microposts, так что мы переместим <code>authenticate</code> в Sessions хелпер, как показано в <a class="ref" href="user-microposts?version=3.0#code:sessions_helper_authenticate">Листинге&nbsp;11.23</a>.<sup class="footnote" id="fnref:11.12"><a href="?version=3.0#fn:11.12">12</a></sup></p>
 
 <div class="label" id="code:sessions_helper_authenticate"></div>
 
@@ -1123,6 +1120,9 @@
 
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MicropostsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="n">before_filter</span> <span class="ss">:authenticate</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+
+  <span class="k">def</span> <span class="nf">index</span>
+  <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">create</span>
   <span class="k">end</span>
@@ -1428,7 +1428,7 @@
 </div></div>
 
 
-<p>Эти тесты вводят метод массива <code>include?</code>, который просто проверяет что массив включает данный элемент:<sup class="footnote" id="fnref:11.13"><a href="#fn:11.13">13</a></sup></p>
+<p>Эти тесты вводят метод массива <code>include?</code>, который просто проверяет что массив включает данный элемент:<sup class="footnote" id="fnref:11.13"><a href="?version=3.0#fn:11.13">13</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="ss">:bar</span><span class="o">]</span>
@@ -1442,7 +1442,7 @@
 </div>
 
 
-<p>Мы можем организовать  <code>feed</code> соответствующих микросообщений, выбрав все микросообщения с  <code>user_id</code> равным id текущего пользователя, чего мы можем достигнуть используя <code>where</code> метод на модели <code>Micropost</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:proto_status_feed">Листинге&nbsp;11.32</a>.<sup class="footnote" id="fnref:11.14"><a href="#fn:11.14">14</a></sup></p>
+<p>Мы можем организовать  <code>feed</code> соответствующих микросообщений, выбрав все микросообщения с  <code>user_id</code> равным id текущего пользователя, чего мы можем достигнуть используя <code>where</code> метод на модели <code>Micropost</code>, как показано в <a class="ref" href="user-microposts?version=3.0#code:proto_status_feed">Листинге&nbsp;11.32</a>.<sup class="footnote" id="fnref:11.14"><a href="?version=3.0#fn:11.14">14</a></sup></p>
 
 <div class="label" id="code:proto_status_feed"></div>
 
@@ -1450,12 +1450,12 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 11.32.</span> <span class="description">Предварительная реализация ленты микросообщений. <br /> <code>app/models/user.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Base</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">feed</span>
-    <span class="c1"># This is preliminary. See Глава 12 for the full implementation.</span>
+    <span class="c1"># This is preliminary. See Chapter 12 for the full implementation.</span>
     <span class="no">Micropost</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;user_id = ?&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
   <span class="k">end</span>
   <span class="o">.</span>
@@ -1536,7 +1536,7 @@
 </div>
 
 
-<p>Здесь мы передаем параметр <code>:collection</code> с элементами потока сообщений, что заставляет  <code>render</code> использовать данный партиал (<code>&rsquo;feed_item&rsquo;</code> в данном случае) для рендеринга каждого элемента в коллекции. (Мы опустили параметр <code>:partial</code> в предыдущих рендерингах, используя запись, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам партиал элемента потока сообщений представлен в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a>; обратите внимание на добавление удаляющей ссылки в партиал feed item, следуя примеру из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:delete_links">Листинга&nbsp;10.38</a>.</p>
+<p>Здесь мы передаем параметр <code>:collection</code> с элементами потока сообщений, что заставляет  <code>render</code> использовать данный партиал (<code>&rsquo;feed_item&rsquo;</code> в данном случае) для рендеринга каждого элемента в коллекции. (Мы опустили параметр <code>:partial</code> в предыдущих рендерингах, используя запись, например, <code>render &rsquo;shared/micropost&rsquo;</code>, но с  <code>:collection</code> параметром этот синтаксис не работает.) Сам партиал элемента потока сообщений представлен в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a>.</p>
 
 <div class="label" id="code:feed_item_partial"></div>
 
@@ -1557,13 +1557,6 @@
       Posted <span class="cp">&lt;%=</span> <span class="n">time_ago_in_words</span><span class="p">(</span><span class="n">feed_item</span><span class="o">.</span><span class="n">created_at</span><span class="p">)</span> <span class="cp">%&gt;</span> ago.
     <span class="nt">&lt;/span&gt;</span>
   <span class="nt">&lt;/td&gt;</span>
-  <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user?</span><span class="p">(</span><span class="n">feed_item</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="cp">%&gt;</span>
-  <span class="nt">&lt;td&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">feed_item</span><span class="p">,</span> <span class="ss">:method</span> <span class="o">=&gt;</span> <span class="ss">:delete</span><span class="p">,</span>
-                                     <span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s2">&quot;You sure?&quot;</span><span class="p">,</span>
-                                     <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">content</span> <span class="cp">%&gt;</span>
-  <span class="nt">&lt;/td&gt;</span>
-  <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;/tr&gt;</span>
 </pre></div>
 </div></div>
@@ -1608,7 +1601,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_with_proto_feed.png" alt="home_with_proto_feed" /></span></div><div class="caption"><span class="header">Рисунок  11.13: </span><span class="description"> Home страница (<a href="http://localhost:3000/"><tt>/</tt></a>) с предварительной реализацией потока сообщений.&nbsp;<a href="http://railstutorial.org/images/figures/home_with_proto_feed-full.png">(полный размер)</a></span></div></div>
 
 
-<p>На данный момент, создание новых микросообщений работает как надо, что показано на <a class="ref" href="user-microposts?version=3.0#fig:micropost_created">Рис.&nbsp;11.14</a>. (Мы напишем интеграционный тест для этого эффекта в <a class="ref" href="user-microposts?version=3.0#sec:testing_the_new_home_page">Разделе&nbsp;11.3.5</a>.) Однако есть одна тонкость: при <em>неудачной</em> отправке микросообщения, Home страница ожидает переменную экземпляра <code>@feed_items</code>, таким образом провальная отправка в настоящее время не работает (что вы можете проверить запустив ваш набор тестов). Самым простым решением будет полное подавление потока сообщений присвоением ему пустого массива, как показано в <a class="ref" href="user-microposts?version=3.0#code:microposts_create_action_with_feed">Листинге&nbsp;11.37</a>.<sup class="footnote" id="fnref:11.15"><a href="#fn:11.15">15</a></sup></p>
+<p>На данный момент, создание новых микросообщений работает как надо, что показано на <a class="ref" href="user-microposts?version=3.0#fig:micropost_created">Рис.&nbsp;11.14</a>. (Мы напишем интеграционный тест для этого эффекта в <a class="ref" href="user-microposts?version=3.0#sec:testing_the_new_home_page">Разделе&nbsp;11.3.5</a>.) Однако есть одна тонкость: при <em>неудачной</em> отправке микросообщения, Home страница ожидает переменную экземпляра <code>@feed_items</code>, таким образом провальная отправка в настоящее время не работает (что вы можете проверить запустив ваш набор тестов). Самым простым решением будет полное подавление потока сообщений присвоением ему пустого массива, как показано в <a class="ref" href="user-microposts?version=3.0#code:microposts_create_action_with_feed">Листинге&nbsp;11.37</a>.<sup class="footnote" id="fnref:11.15"><a href="?version=3.0#fn:11.15">15</a></sup></p>
 
 <div class="label" id="fig:micropost_created"></div>
 
@@ -1662,13 +1655,13 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/micropost_delete_links_mockup.png" alt="micropost_delete_links_mockup" /></span></div><div class="caption"><span class="header">Рисунок  11.15: </span><span class="description">Макет предварительной реализации потока сообщений со ссылками на удаление микросообщений.&nbsp;<a href="http://railstutorial.org/images/figures/micropost_delete_links_mockup-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Нашим первым шагом является добавление удаляющей ссылки в партиал микросообщения как в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a>. Результат представлен в <a class="ref" href="user-microposts?version=3.0#code:micropost_partial_with_delete">Листинге&nbsp;11.38</a>.</p>
+<p>Нашим первым шагом является добавление удаляющей ссылки в партиал микросообщения как в <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинге&nbsp;11.35</a> и пока мы в нем, мы добавим аналогичную ссылку на партиал элемента потока сообщений из <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial">Листинга&nbsp;11.35</a>. Результат представлен в <a class="ref" href="user-microposts?version=3.0#code:micropost_partial_with_delete">Листинге&nbsp;11.38</a> и <a class="ref" href="user-microposts?version=3.0#code:feed_item_partial_with_delete">Листинге&nbsp;11.39</a>.</p>
 
 <div class="label" id="code:micropost_partial_with_delete"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.38.</span> <span class="description">Партиал для отображения отдельно взятого микросообщения. <br /> <code>app/views/microposts/_micropost.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 11.38.</span> <span class="description">Добавление удаляющей ссылки к партиалу микросообщения. <br /> <code>app/views/microposts/_micropost.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;tr&gt;</span>
   <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;micropost&quot;</span><span class="nt">&gt;</span>
@@ -1678,18 +1671,48 @@
     <span class="nt">&lt;/span&gt;</span>
   <span class="nt">&lt;/td&gt;</span>
   <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user?</span><span class="p">(</span><span class="n">micropost</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="cp">%&gt;</span>
-  <span class="nt">&lt;td&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">micropost</span><span class="p">,</span> <span class="ss">:method</span> <span class="o">=&gt;</span> <span class="ss">:delete</span><span class="p">,</span>
-                                     <span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s2">&quot;You sure?&quot;</span><span class="p">,</span>
-                                     <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="n">micropost</span><span class="o">.</span><span class="n">content</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;td&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">micropost</span><span class="p">,</span> <span class="ss">:method</span> <span class="o">=&gt;</span> <span class="ss">:delete</span><span class="p">,</span>
+                                       <span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s2">&quot;You sure?&quot;</span><span class="p">,</span>
+                                       <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="n">micropost</span><span class="o">.</span><span class="n">content</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/td&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;/tr&gt;</span>
+</pre></div>
+</div></div>
+
+<div class="label" id="code:feed_item_partial_with_delete"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 11.39.</span> <span class="description">Партиал элемента потока сообщений с добавленной ссылкой на удаление. <br /> <code>app/views/shared/_feed_item.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;tr&gt;</span>
+  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;gravatar&quot;</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="n">gravatar_for</span><span class="p">(</span><span class="n">feed_item</span><span class="o">.</span><span class="n">user</span><span class="p">),</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">user</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;/td&gt;</span>
+  <span class="nt">&lt;td</span> <span class="na">class=</span><span class="s">&quot;micropost&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;user&quot;</span><span class="nt">&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">user</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;content&quot;</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">content</span> <span class="cp">%&gt;</span><span class="nt">&lt;/span&gt;</span>
+    <span class="nt">&lt;span</span> <span class="na">class=</span><span class="s">&quot;timestamp&quot;</span><span class="nt">&gt;</span>
+      Posted <span class="cp">&lt;%=</span> <span class="n">time_ago_in_words</span><span class="p">(</span><span class="n">feed_item</span><span class="o">.</span><span class="n">created_at</span><span class="p">)</span> <span class="cp">%&gt;</span> ago.
+    <span class="nt">&lt;/span&gt;</span>
+  <span class="nt">&lt;/td&gt;</span>
+  <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user?</span><span class="p">(</span><span class="n">feed_item</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;td&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;delete&quot;</span><span class="p">,</span> <span class="n">feed_item</span><span class="p">,</span> <span class="ss">:method</span> <span class="o">=&gt;</span> <span class="ss">:delete</span><span class="p">,</span>
+                                       <span class="ss">:confirm</span> <span class="o">=&gt;</span> <span class="s2">&quot;You sure?&quot;</span><span class="p">,</span>
+                                       <span class="ss">:title</span> <span class="o">=&gt;</span> <span class="n">feed_item</span><span class="o">.</span><span class="n">content</span> <span class="cp">%&gt;</span>
+    <span class="nt">&lt;/td&gt;</span>
   <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;/tr&gt;</span>
 </pre></div>
 </div></div>
 
 
-<p><em>Примечание:</em> В последней версии  Rails&nbsp;3.0, я и несколько других читателей иногда сталкиваемся со странной ошибкой, при которой <code>micropost.user</code> ассоциация некорректно создается. В результате вызов  <code>micropost.user</code> вызывает исключение  <code>NoMethodError</code>. Пока этот Rails баг не исправили, в качестве обходного пути вы можете заменить строки</p>
+<p><em>Примечание:</em> В последней версии  Rails&nbsp;3.0 я и несколько других читателей иногда сталкиваемся со странной ошибкой, при которой некорректно создается ассоциация <code>micropost.user</code>. В результате вызов  <code>micropost.user</code> вызывает исключение  <code>NoMethodError</code>. Пока этот Rails баг не исправили, в качестве обходного пути вы можете заменить строки</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">current_user?</span><span class="p">(</span><span class="n">micropost</span><span class="o">.</span><span class="n">user</span><span class="p">)</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1706,13 +1729,13 @@
 
 <p>Когда обращение к <code>micropost.user</code> вызывает исключение, этот код ищет пользователя опираясь на <code>user_id</code> микросообщений.</p>
 
-<p>Тест для <code>destroy</code> действия это просто обобщение аналогичных тестов для уничтожения пользователей (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:destroy_tests">Листинг&nbsp;10.40</a>), как видно в <a class="ref" href="user-microposts?version=3.0#code:micropost_destroy_specs">Листинге&nbsp;11.39</a>.</p>
+<p>Тест для <code>destroy</code> действия это просто обобщение аналогичных тестов для уничтожения пользователей (<a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:destroy_tests">Листинг&nbsp;10.40</a>), как видно в <a class="ref" href="user-microposts?version=3.0#code:micropost_destroy_specs">Листинге&nbsp;11.40</a>.</p>
 
 <div class="label" id="code:micropost_destroy_specs"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.39.</span> <span class="description">Тесты для <code>destroy</code> действия контроллера Microposts. <br /> <code>spec/controllers/microposts_controller_spec.rb</code></span>
+<div class="listing"><span class="header">Листинг 11.40.</span> <span class="description">Тесты для <code>destroy</code> действия контроллера Microposts. <br /> <code>spec/controllers/microposts_controller_spec.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="no">MicropostsController</span> <span class="k">do</span>
   <span class="o">.</span>
@@ -1754,13 +1777,13 @@
 </div></div>
 
 
-<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинг&nbsp;11.40</a>, Листинге&nbsp;11.40</a>, и результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts?version=3.0#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
+<p>Код приложения также аналогичен коду для удаления пользователей из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:admin_destroy_before_filter">Листинга&nbsp;10.41</a>; главное отличие в том, что вместо использования предфильтра  <code>admin_user</code>, в случае микросообщений мы используем предфильтр <code>authorized_user</code> для проверки того, что текущий пользователь действительно имеет микросообщение с данным id. Код представлен в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинге&nbsp;11.41</a> и результаты уничтожения предпоследнего сообщения представлены на <a class="ref" href="user-microposts?version=3.0#fig:home_post_delete">Рис.&nbsp;11.16</a>.</p>
 
 <div class="label" id="code:microposts_destroy_action"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.40.</span> <span class="description"><code>destroy</code> действие контроллера Microposts. <br /> <code>app/controllers/microposts_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 11.41.</span> <span class="description"><code>destroy</code> действие контроллера Microposts. <br /> <code>app/controllers/microposts_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">MicropostsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="n">before_filter</span> <span class="ss">:authenticate</span><span class="p">,</span> <span class="ss">:only</span> <span class="o">=&gt;</span> <span class="o">[</span><span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
@@ -1783,14 +1806,14 @@
 </pre></div>
 </div></div>
 
-<p>Отметьте, что мы использовали метод <code>where</code> (представлен в <a class="ref" href="user-microposts?version=3.0#sec:a_proto_feed">Разделе&nbsp;11.3.3</a>) для поиска микросообщений <em>через</em> ассоциацию:</p>
+<p>Обратите внимание: в предфильтре <code>authorized_user</code> мы ищем микросообщения <em>через</em> ассоциацию:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">current_user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">find_by_id</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>Это автоматически обеспечивает поиск лишь микросообщений принадлежащих текущему пользователю. В данном случае мы используем <code>find_by_id</code> вместо <code>find</code> так как последнее вызывает исключение в случае если микросообщение не существует вместо того, чтобы вернуть <code>nil</code>. Кстати, если вы хорошо знакомы с исключениями в Ruby, вы также можете написать фильтр <code>authorized_user</code> вроде этого:</p>
+<p>Это автоматически обеспечивает поиск лишь среди микросообщений принадлежащих текущему пользователю. В данном случае мы используем <code>find_by_id</code> вместо <code>find</code> так как последнее вызывает исключение в случае если микросообщение не существует - вместо того чтобы просто вернуть <code>nil</code>. Кстати, если вы хорошо знакомы с исключениями в Ruby, вы также могли бы написать фильтр <code>authorized_user</code> вроде этого:</p>
 
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">authorized_user</span>
   <span class="vi">@micropost</span> <span class="o">=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
@@ -1801,7 +1824,7 @@
 </div>
 
 
-<p>Отметьте, что в фильтре <code>authorized_user</code> мы могли бы использовать модель <code>Micropost</code> непосредственно, как здесь:</p>
+<p>Или вы могли бы реализовать фильтр <code>authorized_user</code> используя непосредственно модель <code>Micropost</code>, как здесь:</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@micropost</span> <span class="o">=</span> <span class="no">Micropost</span><span class="o">.</span><span class="n">find_by_id</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:id</span><span class="o">]</span><span class="p">)</span>
 <span class="n">redirect_to</span> <span class="n">root_path</span> <span class="k">unless</span> <span class="n">current_user?</span><span class="p">(</span><span class="vi">@micropost</span><span class="o">.</span><span class="n">user</span><span class="p">)</span>
@@ -1809,7 +1832,7 @@
 </div>
 
 
-<p>Это было бы эквивалентно коду в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинге&nbsp;11.40</a>. Но, как объясняет <a href="http://www.rubyfocus.biz/">Wolfram Arnold</a> в своем блоге <a href="http://www.rubyfocus.biz/blog/2011/06/15/access_control_101_in_rails_and_the_citibank-hack.html">Access Control 101 in Rails and the Citibank Hack</a>, в целях безопасности, хорошей практикой является выполнение поиска только через ассоциацию.</p>
+<p>Это было бы эквивалентно коду в <a class="ref" href="user-microposts?version=3.0#code:microposts_destroy_action">Листинге&nbsp;11.41</a>, но, как объясняет <a href="http://www.rubyfocus.biz/">Wolfram Arnold</a> в своем блоге <a href="http://www.rubyfocus.biz/blog/2011/06/15/access_control_101_in_rails_and_the_citibank-hack.html">Access Control 101 in Rails and the Citibank Hack</a>, в целях безопасности, хорошей практикой является выполнение поиска только через ассоциацию.</p>
 
 
 <div class="label" id="fig:home_post_delete"></div>
@@ -1832,13 +1855,13 @@
 </div>
 
 
-<p>Тесты для провального и успешного создания микросообщения представлены в <a class="ref" href="user-microposts?version=3.0#code:microposts_integration_spec">Листинге&nbsp;11.41</a>.</p>
+<p>Тесты для провального и успешного создания микросообщения представлены в <a class="ref" href="user-microposts?version=3.0#code:microposts_integration_spec">Листинге&nbsp;11.42</a>.</p>
 
 <div class="label" id="code:microposts_integration_spec"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.41.</span> <span class="description">Интеграционный тест для микросообщений на  <code>home</code> странице. <br /> <code>spec/requests/microposts_spec.rb</code></span>
+<div class="listing"><span class="header">Листинг 11.42.</span> <span class="description">Интеграционный тест для микросообщений на  <code>home</code> странице. <br /> <code>spec/requests/microposts_spec.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
@@ -1926,7 +1949,7 @@
 <li>Сделать рефакторинг Home страницы чтобы использовать отдельные партиалы для двух ветвей выражения  <code>if</code>-<code>else</code>.</li>
 <li>Написать тест чтобы убедиться, что ссылки на удаление не появляются у микросообщений созданных не текущим пользователем.</li>
 <li>Добавить <a  rel="nofollow" href="http://www.rusrails.ru/rails-routing">вложенные маршруты</a> так, чтобы по адресу <tt>/users/1/microposts</tt> показывались все микросообщения пользователя&nbsp;1. (Вам также необходимо будет добавить в контроллер Microposts действие <code>index</code> и соответствующее представление.)</li>
-<li>Очень длинные слова в настоящее время крушат наш шаблон, как показано в <a class="ref" href="user-microposts?version=3.0#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему используя <code>wrap</code> хелпер определенный в <a class="ref" href="user-microposts?version=3.0#code:wrap">Листинге&nbsp;11.42</a>. (Обратите внимание на использование <code>raw</code> метода для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
+<li>Очень длинные слова в настоящее время крушат наш шаблон, как показано в <a class="ref" href="user-microposts?version=3.0#fig:long_word_micropost">Рис.&nbsp;11.17</a>. Исправьте эту проблему используя <code>wrap</code> хелпер определенный в <a class="ref" href="user-microposts?version=3.0#code:wrap">Листинге&nbsp;11.43</a>. (Обратите внимание на использование <code>raw</code> метода для предотвращения маскирования Рельсами результирующего HTML, совместно с  <code>sanitize</code> методом необходимым для предотвращения межсайтового скриптинга.)</li>
 </ol>
 
 
@@ -1944,7 +1967,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.42.</span> <span class="description">Хелпер для упаковки длинных слов. <br /> <code>app/helpers/microposts_helper.rb</code></span>
+<div class="listing"><span class="header">Листинг 11.43.</span> <span class="description">Хелпер для упаковки длинных слов. <br /> <code>app/helpers/microposts_helper.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">MicropostsHelper</span>
 
@@ -1975,21 +1998,21 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>, мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="#fnref:11.1">&uarr;</a></li>
-<li id="fn:11.2">Атрибут <code>content</code> будет <code>string</code>, но, как кратко отмечалось в <a class="ref" href="a-demo-app?version=3.0#sec:modeling_microposts">Разделе&nbsp;2.1.2</a>, для более длинных текстовых полей вам следует использовать тип данных  <code>text</code>.&nbsp;<a class="arrow" href="#fnref:11.2">&uarr;</a></li>
-<li id="fn:11.3">Более подробную информацию о Factory Girl ассоциациях, включая множество доступных опций, см. <a href="http://rdoc.info/projects/thoughtbot/factory_girl">Factory Girl documentation</a>.&nbsp;<a class="arrow" href="#fnref:11.3">&uarr;</a></li>
-<li id="fn:11.4">Вспомните, что <code>created_at</code> и <code>updated_at</code> это &ldquo;волшебные&rdquo; столбцы, так что все явные значения инициализации магическим образом перезаписываются.&nbsp;<a class="arrow" href="#fnref:11.4">&uarr;</a></li>
-<li id="fn:11.5">В смысле <a href="http://en.wikipedia.org/wiki/HTML#Semantic_HTML">семантической разметки</a>, вероятно, было бы лучше использовать  <a href="http://www.w3.org/MarkUp/html3/seqlists.html"><em>нумерованный список</em></a>, но в этом случае вертикальное выравнивания текста и изображений было бы гораздо более трудным, чем с таблицами.  См. упражнение в <a class="ref" href="user-microposts?version=3.0#sec:micropost_exercises">Раздел&nbsp;11.5</a> если вы настаиваете на трудностях с семантической версией.&nbsp;<a class="arrow" href="#fnref:11.5">&uarr;</a></li>
-<li id="fn:11.6">В случае, если вам интересно, метод ассоциаций <code>count</code> умен, и выполняет подсчет непосредственно в базе данных. В частности, он  <em>не</em> вытягивает все микросообщения из базы данных и не вызывает затем <code>length</code> на получившемся массиве, так как это стало бы страшно неэффективно при увеличении числа микросообщений. Вместо этого, он просит базу данных подсчитать количество микросообщений с данным <code>user_id</code>. Кстати, в  маловероятном случае при котором count все же будет узким местом в вашем приложении, вы можете сделать его еще быстрее с помощью <a href="http://railscasts.com/episodes/23-counter-cache-column"><em>counter cache</em></a>.&nbsp;<a class="arrow" href="#fnref:11.6">&uarr;</a></li>
-<li id="fn:11.7">Для удобства, <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинг&nbsp;11.19</a> на самом деле включает  <em>все</em> CSS необходимые для этой главы.&nbsp;<a class="arrow" href="#fnref:11.7">&uarr;</a></li>
-<li id="fn:11.8">(т.е., пять с пользовательскими Gravatar-ами, и один с дефолтным Gravatar)&nbsp;<a class="arrow" href="#fnref:11.8">&uarr;</a></li>
-<li id="fn:11.9">Следите за своим <code>log/development.log</code> файлом, если вам интересно, какой  SQL генерирует этот метод.&nbsp;<a class="arrow" href="#fnref:11.9">&uarr;</a></li>
-<li id="fn:11.10">Текст <em>lorem ipsum</em> гема Faker случаен, так что контент ваших образцов микросообщений будет отличаться.&nbsp;<a class="arrow" href="#fnref:11.10">&uarr;</a></li>
-<li id="fn:11.11">Остальные два ресурса это Users в <a class="ref" href="sign-up?version=3.0#sec:signup_form">Разделе&nbsp;8.1</a> и Sessions в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sessions">Разделе&nbsp;9.1</a>.&nbsp;<a class="arrow" href="#fnref:11.11">&uarr;</a></li>
-<li id="fn:11.12">Мы отмечали в  <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>, что вспомогательные методы по умолчанию доступны только в  <em>представлениях</em>, но мы сделали вспомогательный метод Sessions доступным  также и в контроллерах, добавив  <code>include SessionsHelper</code> в контроллер Application (<a class="ref" href="sign-in-sign-out?version=3.0#code:sessions_helper_include">Листинг&nbsp;9.11</a>).&nbsp;<a class="arrow" href="#fnref:11.12">&uarr;</a></li>
-<li id="fn:11.13">Изучение  методов, таких  как <code>include?</code> является одной из причин, по которым, как отмечалось в <a class="ref" href="beginning?version=3.0#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, я рекомендую читать книги о чистом Ruby после окончания этого учебника&nbsp;<a class="arrow" href="#fnref:11.13">&uarr;</a></li>
-<li id="fn:11.14">См. в Rails Guide  <a href="http://www.rusrails.ru/active-record-query-interface">Интерфейс запросов Active Record</a> for more on <code>where</code> and the like (#&nbsp;предположительно: непередаваемый канадский юмор).&nbsp;<a class="arrow" href="#fnref:11.14">&uarr;</a></li>
-<li id="fn:11.15">К сожалению, возвращение пагинированного потока сообщений не работает в данном случае. Реализуйте это и кликните по пагинационной ссылке чтобы увидеть почему. ( <a href="http://railstutorial.org/screencasts">Rails Tutorial screencasts</a> раскрывают этот вопрос более подробно.)&nbsp;<a class="arrow" href="#fnref:11.15">&uarr;</a></li>
+<li id="fn:11.1">Технически, в <a class="ref" href="sign-in-sign-out?version=3.0#top">Главе&nbsp;9</a>, мы обращались c сессиями как с ресурсом, но они не сохранялись в базе данных как пользователи и микросообщения.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.1">&uarr;</a></li>
+<li id="fn:11.2">Атрибут <code>content</code> будет <code>string</code>, но, как кратко отмечалось в <a class="ref" href="a-demo-app?version=3.0#sec:modeling_microposts">Разделе&nbsp;2.1.2</a>, для более длинных текстовых полей вам следует использовать тип данных  <code>text</code>.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.2">&uarr;</a></li>
+<li id="fn:11.3">Более подробную информацию о Factory Girl ассоциациях, включая множество доступных опций, см. <a href="http://rdoc.info/projects/thoughtbot/factory_girl">Factory Girl documentation</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.3">&uarr;</a></li>
+<li id="fn:11.4">Вспомните, что <code>created_at</code> и <code>updated_at</code> это &ldquo;волшебные&rdquo; столбцы, так что все явные значения инициализации магическим образом перезаписываются.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.4">&uarr;</a></li>
+<li id="fn:11.5">В смысле <a href="http://en.wikipedia.org/wiki/HTML#Semantic_HTML">семантической разметки</a>, вероятно, было бы лучше использовать  <a href="http://www.w3.org/MarkUp/html3/seqlists.html"><em>нумерованный список</em></a>, но в этом случае вертикальное выравнивания текста и изображений было бы гораздо более трудным, чем с таблицами.  См. упражнение в <a class="ref" href="user-microposts?version=3.0#sec:micropost_exercises">Раздел&nbsp;11.5</a> если вы настаиваете на трудностях с семантической версией.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.5">&uarr;</a></li>
+<li id="fn:11.6">В случае, если вам интересно, метод ассоциаций <code>count</code> умен, и выполняет подсчет непосредственно в базе данных. В частности, он  <em>не</em> вытягивает все микросообщения из базы данных и не вызывает затем <code>length</code> на получившемся массиве, так как это стало бы страшно неэффективно при увеличении числа микросообщений. Вместо этого, он просит базу данных подсчитать количество микросообщений с данным <code>user_id</code>. Кстати, в  маловероятном случае при котором count все же будет узким местом в вашем приложении, вы можете сделать его еще быстрее с помощью <a href="http://railscasts.com/episodes/23-counter-cache-column"><em>counter cache</em></a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.6">&uarr;</a></li>
+<li id="fn:11.7">Для удобства, <a class="ref" href="user-microposts?version=3.0#code:micropost_css">Листинг&nbsp;11.19</a> на самом деле включает  <em>все</em> CSS необходимые для этой главы.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.7">&uarr;</a></li>
+<li id="fn:11.8">(т.е., пять с пользовательскими Gravatar-ами, и один с дефолтным Gravatar)&nbsp;<a class="arrow" href="?version=3.0#fnref:11.8">&uarr;</a></li>
+<li id="fn:11.9">Следите за своим <code>log/development.log</code> файлом, если вам интересно, какой  SQL генерирует этот метод.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.9">&uarr;</a></li>
+<li id="fn:11.10">Текст <em>lorem ipsum</em> гема Faker случаен, так что контент ваших образцов микросообщений будет отличаться.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.10">&uarr;</a></li>
+<li id="fn:11.11">Остальные два ресурса это Users в <a class="ref" href="sign-up?version=3.0#sec:signup_form">Разделе&nbsp;8.1</a> и Sessions в <a class="ref" href="sign-in-sign-out?version=3.0#sec:sessions">Разделе&nbsp;9.1</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:11.11">&uarr;</a></li>
+<li id="fn:11.12">Мы отмечали в  <a class="ref" href="sign-in-sign-out?version=3.0#sec:remember_me">Разделе&nbsp;9.3.2</a>, что вспомогательные методы по умолчанию доступны только в  <em>представлениях</em>, но мы сделали вспомогательный метод Sessions доступным  также и в контроллерах, добавив  <code>include SessionsHelper</code> в контроллер Application (<a class="ref" href="sign-in-sign-out?version=3.0#code:sessions_helper_include">Листинг&nbsp;9.11</a>).&nbsp;<a class="arrow" href="?version=3.0#fnref:11.12">&uarr;</a></li>
+<li id="fn:11.13">Изучение  методов, таких  как <code>include?</code> является одной из причин, по которым, как отмечалось в <a class="ref" href="beginning?version=3.0#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, я рекомендую читать книги о чистом Ruby после окончания этого учебника&nbsp;<a class="arrow" href="?version=3.0#fnref:11.13">&uarr;</a></li>
+<li id="fn:11.14">См. в Rails Guide  <a href="http://www.rusrails.ru/active-record-query-interface">Интерфейс запросов Active Record</a> for more on <code>where</code> and the like (#&nbsp;предположительно: непередаваемый канадский юмор).&nbsp;<a class="arrow" href="?version=3.0#fnref:11.14">&uarr;</a></li>
+<li id="fn:11.15">К сожалению, возвращение пагинированного потока сообщений не работает в данном случае. Реализуйте это и кликните по пагинационной ссылке чтобы увидеть почему. ( <a href="http://railstutorial.org/screencasts">Rails Tutorial screencasts</a> раскрывают этот вопрос более подробно.)&nbsp;<a class="arrow" href="?version=3.0#fnref:11.15">&uarr;</a></li>
 </ol>
 </div>
 
