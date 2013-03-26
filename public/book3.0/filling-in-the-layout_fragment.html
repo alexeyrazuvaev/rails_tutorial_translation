@@ -14,7 +14,7 @@
 
 <p><em>Rails Учебник</em> это книга по веб-разработке, а не по веб-дизайну, но  работа над приложением, которое выглядит как <em>полное</em> дерьмо - удручает, поэтому, в этом разделе мы добавим некоторые структуры в шаблон и придадим ему минимальный дизайн с CSS. Мы также придадим нашему <em>коду</em> немного стиля, так сказать, используя <em>частичные шаблоны</em> почистим шаблон, поскольку он немного загроможден.</p>
 
-<p>При создании веб-приложений, часто бывает полезным получить  общий вид пользовательского интерфейса как можно раньше. Таким образом, на протяжении остальной части книги, я буду часто использовать <em>макеты</em> (в контексте Веб часто называемыми <em>каркасами</em>), которые являются грубыми набросками того, как приложение, возможно, будет выглядеть.<sup class="footnote" id="fnref:5.1"><a href="#fn:5.1">1</a></sup> В этой главе мы будем главным образом разрабатывать статические страницы введеные в <a class="ref" href="static-pages?version=3.0#sec:static_pages">Разделе&nbsp;3.1</a>, включая логотип сайта, заголовок с навигацией по сайту, и подвал сайта. Каркас для наиболее важной из страниц&nbsp;&mdash;&nbsp;Home страницы, представлен на <a class="ref" href="filling-in-the-layout?version=3.0#fig:home_page_mockup">Рис.&nbsp;5.1</a>. (Вы можете увидеть конечный результат на <a class="ref" href="filling-in-the-layout?version=3.0#fig:site_with_footer">Рис.&nbsp;5.8</a>. Он отличается в некоторых деталях, например, подвал имеет четыре ссылки вместо трех, но это нормально, так как каркас и не должен быть абсолютно точным.)</p>
+<p>При создании веб-приложений, часто бывает полезным получить  общий вид пользовательского интерфейса как можно раньше. Таким образом, на протяжении остальной части книги, я буду часто использовать <em>макеты</em> (в контексте Веб часто называемыми <em>каркасами</em>), которые являются грубыми набросками того, как приложение, возможно, будет выглядеть.<sup class="footnote" id="fnref:5.1"><a href="?version=3.0#fn:5.1">1</a></sup> В этой главе мы будем главным образом разрабатывать статические страницы введеные в <a class="ref" href="static-pages?version=3.0#sec:static_pages">Разделе&nbsp;3.1</a>, включая логотип сайта, заголовок с навигацией по сайту, и подвал сайта. Каркас для наиболее важной из страниц&nbsp;&mdash;&nbsp;Home страницы, представлен на <a class="ref" href="filling-in-the-layout?version=3.0#fig:home_page_mockup">Рис.&nbsp;5.1</a>. (Вы можете увидеть конечный результат на <a class="ref" href="filling-in-the-layout?version=3.0#fig:site_with_footer">Рис.&nbsp;5.8</a>. Он отличается в некоторых деталях, например, подвал имеет четыре ссылки вместо трех, но это нормально, так как каркас и не должен быть абсолютно точным.)</p>
 
 <div class="label" id="fig:home_page_mockup"></div>
 
@@ -137,7 +137,7 @@
 </div>
 
 
-<p><code>div</code> тег в HTML это generic division (<span class="c"># "родовое отделение"&nbsp;&mdash;&nbsp;если верить автопереводчику :) </span>); он не делает ничего, кроме разделения документа на отдельные части. В старом стиле HTML, <code>div</code> теги использовали почти для всех разделов сайта, но HTML5 добавил <code>header</code>, <code>nav</code>, и <code>section</code> элементы для разделов, общих для многих приложений. Всем элементам HTML, включая дивы и новые HTML5 элементы, могут быть присвоены <em>классы</em><sup class="footnote" id="fnref:5.2"><a href="#fn:5.2">2</a></sup> и <em>id</em> (идентификаторы); это всего лишь ярлыки, и они полезны для создания стиля с CSS (<a class="ref" href="filling-in-the-layout?version=3.0#sec:custom_css">Раздел&nbsp;5.1.2</a>). Основное различие между классами и идентификаторами, в том, что классы могут быть использованы несколько раз на странице, а идентификаторы могут быть использованы лишь один раз.</p>
+<p><code>div</code> тег в HTML это generic division (<span class="c"># "родовое отделение"&nbsp;&mdash;&nbsp;если верить автопереводчику :) </span>); он не делает ничего, кроме разделения документа на отдельные части. В старом стиле HTML, <code>div</code> теги использовали почти для всех разделов сайта, но HTML5 добавил <code>header</code>, <code>nav</code>, и <code>section</code> элементы для разделов, общих для многих приложений. Всем элементам HTML, включая дивы и новые HTML5 элементы, могут быть присвоены <em>классы</em><sup class="footnote" id="fnref:5.2"><a href="?version=3.0#fn:5.2">2</a></sup> и <em>id</em> (идентификаторы); это всего лишь ярлыки, и они полезны для создания стиля с CSS (<a class="ref" href="filling-in-the-layout?version=3.0#sec:custom_css">Раздел&nbsp;5.1.2</a>). Основное различие между классами и идентификаторами, в том, что классы могут быть использованы несколько раз на странице, а идентификаторы могут быть использованы лишь один раз.</p>
 
 <p>Внутри header находится Rails помощник, называемый <code>image_tag</code>:</p>
 
@@ -146,14 +146,14 @@
 </div>
 
 
-<p>Отметим, что, как и со <code>stylesheet_link_tag</code> (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:css_revisited">Раздел&nbsp;4.3.4</a>), мы передаем хэш опций, в данном случае для назначения <code>alt</code> и <code>class</code> атрибутов image тега, используются символы <code>:alt</code> и <code>:class</code>. Чтобы прояснить это, давайте посмотрим на HTML который этот тег производит:<sup class="footnote" id="fnref:5.3"><a href="#fn:5.3">3</a></sup></p>
+<p>Отметим, что, как и со <code>stylesheet_link_tag</code> (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:css_revisited">Раздел&nbsp;4.3.4</a>), мы передаем хэш опций, в данном случае для назначения <code>alt</code> и <code>class</code> атрибутов image тега, используются символы <code>:alt</code> и <code>:class</code>. Чтобы прояснить это, давайте посмотрим на HTML который этот тег производит:<sup class="footnote" id="fnref:5.3"><a href="?version=3.0#fn:5.3">3</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;img</span> <span class="na">alt=</span><span class="s">&quot;Sample App&quot;</span> <span class="na">class=</span><span class="s">&quot;round&quot;</span> <span class="na">src=</span><span class="s">&quot;/images/logo.png&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
 
 
-<p><code>alt</code> атрибут, это то, что будет отображаться, если нет изображения,<sup class="footnote" id="fnref:5.4"><a href="#fn:5.4">4</a></sup> и <code>class</code> будет использоваться для создания стиля в  <a class="ref" href="filling-in-the-layout?version=3.0#sec:custom_css">Разделе&nbsp;5.1.2</a>. (Rails хелперы часто принимают хэши опций именно таким образом, что позволяет нам гибко добавлять произвольные варианты HTML, не покидая Rails.) Вы можете увидеть результаты на <a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>; логотип мы добавим в конце этого раздела.</p>
+<p><code>alt</code> атрибут, это то, что будет отображаться, если нет изображения,<sup class="footnote" id="fnref:5.4"><a href="?version=3.0#fn:5.4">4</a></sup> и <code>class</code> будет использоваться для создания стиля в  <a class="ref" href="filling-in-the-layout?version=3.0#sec:custom_css">Разделе&nbsp;5.1.2</a>. (Rails хелперы часто принимают хэши опций именно таким образом, что позволяет нам гибко добавлять произвольные варианты HTML, не покидая Rails.) Вы можете увидеть результаты на <a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>; логотип мы добавим в конце этого раздела.</p>
 
 <p>Второй элемент внутри header это список навигационных ссылок, сделанный с использованием тега <em>ненумерованного списка</em>&nbsp;&mdash;&nbsp;<code>ul</code>, и тега <em>элемента списка</em> <code>li</code>:</p>
 
@@ -218,7 +218,7 @@
 
 <p>Это удобно для общего случая элемента с двумя различными типами стилей.</p>
 
-<p>Теперь мы, наконец, готовы увидеть плоды наших трудов (<a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>).<sup class="footnote" id="fnref:5.5"><a href="#fn:5.5">5</a></sup> Говорите "Не впечатляет"? Может быть. К счастью, однако, мы проделали хорошую работу, прописав для наших HTML элементов внятные классы и идентификаторы, которые позволят нам добавить стиль на сайт с помощью CSS.</p>
+<p>Теперь мы, наконец, готовы увидеть плоды наших трудов (<a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>).<sup class="footnote" id="fnref:5.5"><a href="?version=3.0#fn:5.5">5</a></sup> Говорите "Не впечатляет"? Может быть. К счастью, однако, мы проделали хорошую работу, прописав для наших HTML элементов внятные классы и идентификаторы, которые позволят нам добавить стиль на сайт с помощью CSS.</p>
 
 <div class="label" id="fig:layout_no_logo_or_custom_css"></div>
 
@@ -274,13 +274,13 @@
 
 <span class="nt">section</span> <span class="p">{</span>
   <span class="k">margin-top</span><span class="o">:</span> <span class="m">1em</span><span class="p">;</span>
-  <span class="k">font-size</span><span class="o">:</span> <span class="m">120%</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">120</span><span class="o">%</span><span class="p">;</span>
   <span class="k">padding</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
   <span class="k">background</span><span class="o">:</span> <span class="m">#fff</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="nt">section</span> <span class="nt">h1</span> <span class="p">{</span>
-  <span class="k">font-size</span><span class="o">:</span> <span class="m">200%</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">200</span><span class="o">%</span><span class="p">;</span>
 <span class="p">}</span>
 
 <span class="c">/* Links */</span>
@@ -321,7 +321,7 @@
 </div>
 
 
-<p>устанавливает ширину внутреннего отступа (padding) в один (одну) <code>em</code> (ширина строчной (маленькой) буквы <tt>m</tt>) вокруг изображения (<code>img</code>) внутри <code>header</code> тега. Это правило также делает цвет фона белым (<code>#fff</code>).<sup class="footnote" id="fnref:5.6"><a href="#fn:5.6">6</a></sup> Аналогичным образом,</p>
+<p>устанавливает ширину внутреннего отступа (padding) в один (одну) <code>em</code> (ширина строчной (маленькой) буквы <tt>m</tt>) вокруг изображения (<code>img</code>) внутри <code>header</code> тега. Это правило также делает цвет фона белым (<code>#fff</code>).<sup class="footnote" id="fnref:5.6"><a href="?version=3.0#fn:5.6">6</a></sup> Аналогичным образом,</p>
 
 <div class="code"><div class="highlight"><pre><span class="nc">.container</span> <span class="p">{</span>
   <span class="k">width</span><span class="o">:</span> <span class="m">710px</span><span class="p">;</span>
@@ -330,7 +330,7 @@
 </div>
 
 
-<p>стилизует элемент с классом <code>container</code>, в данном случае, придавая ему ширину в 710 пикселов (что соответствует 18 столбцам Blueprint).<sup class="footnote" id="fnref:5.7"><a href="#fn:5.7">7</a></sup> Точка <code>.</code> в <code>.container</code> обозначает что это правило для <em>класса</em> называемого &ldquo;container&rdquo;. (как мы увидим в <a class="ref" href="sign-up?version=3.0#sec:signup_error_messages">Разделе&nbsp;8.2.3</a>, знак фунт <code>#</code> указывает (также как и точка в случае CSS класса), что это правило для <em>id</em>.)</p>
+<p>стилизует элемент с классом <code>container</code>, в данном случае, придавая ему ширину в 710 пикселов (что соответствует 18 столбцам Blueprint).<sup class="footnote" id="fnref:5.7"><a href="?version=3.0#fn:5.7">7</a></sup> Точка <code>.</code> в <code>.container</code> обозначает что это правило для <em>класса</em> называемого &ldquo;container&rdquo;. (как мы увидим в <a class="ref" href="sign-up?version=3.0#sec:signup_error_messages">Разделе&nbsp;8.2.3</a>, знак фунт <code>#</code> указывает (также как и точка в случае CSS класса), что это правило для <em>id</em>.)</p>
 
 <div class="label" id="fig:layout_with_colors"></div>
 
@@ -418,7 +418,7 @@
   <span class="k">width</span><span class="o">:</span> <span class="m">190px</span><span class="p">;</span>
   <span class="k">color</span><span class="o">:</span> <span class="m">#fff</span><span class="p">;</span>
   <span class="k">background</span><span class="o">:</span> <span class="m">#006400</span><span class="p">;</span>
-  <span class="k">font-size</span><span class="o">:</span> <span class="m">150%</span><span class="p">;</span>
+  <span class="k">font-size</span><span class="o">:</span> <span class="m">150</span><span class="o">%</span><span class="p">;</span>
   <span class="k">font-weight</span><span class="o">:</span> <span class="k">bold</span><span class="p">;</span>
   <span class="k">padding</span><span class="o">:</span> <span class="m">20px</span><span class="p">;</span>
 <span class="p">}</span>
@@ -507,7 +507,7 @@
 </div>
 
 
-<p>Результатом этой строки является поиск файла, называемого <code>app/views/layouts/_stylesheets.html.erb</code>, оценка его содержания, и вставка результата оценки в представление.<sup class="footnote" id="fnref:5.8"><a href="#fn:5.8">8</a></sup> (Напомним, что <tt class="verb">&lt;%= ... %&gt;</tt> это Embedded Ruby  синтаксис, необходимый для оценки выражения Ruby и последующей вставки результата в шаблон. Обратите внимание на символ подчеркивания в имени файла <code>_stylesheets.html.erb</code>; это подчеркивание  - универсальное соглашение для именования частичных шаблонов, которое, среди прочего, позволяет идентифицировать все партиалы в каталоге с первого взгляда.</p>
+<p>Результатом этой строки является поиск файла, называемого <code>app/views/layouts/_stylesheets.html.erb</code>, оценка его содержания, и вставка результата оценки в представление.<sup class="footnote" id="fnref:5.8"><a href="?version=3.0#fn:5.8">8</a></sup> (Напомним, что <tt class="verb">&lt;%= ... %&gt;</tt> это Embedded Ruby  синтаксис, необходимый для оценки выражения Ruby и последующей вставки результата в шаблон. Обратите внимание на символ подчеркивания в имени файла <code>_stylesheets.html.erb</code>; это подчеркивание  - универсальное соглашение для именования частичных шаблонов, которое, среди прочего, позволяет идентифицировать все партиалы в каталоге с первого взгляда.</p>
 
 <p>Конечно, чтобы заполучить частичные шаблоны на работу, мы должны заполнить их некоторым содержанием; в случае частичного шаблона для таблиц стилей, это всего лишь четыре ссылки на таблицы стилей, взятые из <a class="ref" href="filling-in-the-layout?version=3.0#code:layout_new_structure">Листинга&nbsp;5.1</a>; результат представлен в <a class="ref" href="filling-in-the-layout?version=3.0#code:stylesheets_partial">Листинге&nbsp;5.8</a>. (Технически, HTML5 shiv включает JavaScript, а не CSS. C другой стороны, его назначение - дать возможность Internet Explorer-у понимать CSS с HTML5, так что, логически, он по-прежнему принадлежит к   _stylesheets партиалу.)</p>
 
@@ -847,7 +847,7 @@
 <h3><a id="sec:5.2.2" href="filling-in-the-layout?version=3.0#sec:rails_routes" class="heading"><span class="number">5.2.2</span> Rails маршруты</a></h3>
 
 
-<p>Теперь, когда у нас есть тесты  для URL, такие  как мы хотим, пришло время заставить их работать. Как отмечалось в <a class="ref" href="static-pages?version=3.0#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>, Rails использует для маршрутов файл <code>config/routes.rb</code>. Если вы посмотрите на дефолтный (по умолчанию) файл routes.rb, вы увидите беспорядок, но это полезный беспорядок — полный закомментированных примеров маршрутов. Я советую почитать его как-нибудь, а также взглянуть на <a   href="http://guides.rubyonrails.org/routing.html">Rails Guides article &ldquo;Rails Routing from the outside in&rdquo;</a> (<span class="c"># <a  href="http://www.rusrails.ru/rails-routing">перевод этой статьи</a>, а также многих других из данного руководства можно найти на сайте <a href="http://www.rusrails.ru/">http://www.rusrails.ru/</a></span>) для более углубленного изучения маршрутов. Сейчас, однако, мы будем придерживаться примеров в <a class="ref" href="filling-in-the-layout?version=3.0#code:static_page_routes">Листинге&nbsp;5.18</a>.<sup class="footnote" id="fnref:5.9"><a href="#fn:5.9">9</a></sup></p>
+<p>Теперь, когда у нас есть тесты  для URL, такие  как мы хотим, пришло время заставить их работать. Как отмечалось в <a class="ref" href="static-pages?version=3.0#sec:static_pages_with_rails">Разделе&nbsp;3.1.2</a>, Rails использует для маршрутов файл <code>config/routes.rb</code>. Если вы посмотрите на дефолтный (по умолчанию) файл routes.rb, вы увидите беспорядок, но это полезный беспорядок — полный закомментированных примеров маршрутов. Я советую почитать его как-нибудь, а также взглянуть на <a   href="http://guides.rubyonrails.org/routing.html">Rails Guides article &ldquo;Rails Routing from the outside in&rdquo;</a> (<span class="c"># <a  href="http://www.rusrails.ru/rails-routing">перевод этой статьи</a>, а также многих других из данного руководства можно найти на сайте <a href="http://www.rusrails.ru/">http://www.rusrails.ru/</a></span>) для более углубленного изучения маршрутов. Сейчас, однако, мы будем придерживаться примеров в <a class="ref" href="filling-in-the-layout?version=3.0#code:static_page_routes">Листинге&nbsp;5.18</a>.<sup class="footnote" id="fnref:5.9"><a href="?version=3.0#fn:5.9">9</a></sup></p>
 
 <div class="label" id="code:static_page_routes"></div>
 
@@ -855,7 +855,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 5.18.</span> <span class="description"> Маршруты для статических страниц. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">SampleApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#contact&#39;</span>
   <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#about&#39;</span>
   <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#help&#39;</span>
@@ -903,7 +903,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 5.19.</span> <span class="description">Закомментированная подсказка для определения root маршрута. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">SampleApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -926,7 +926,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 5.20.</span> <span class="description">Добавление соответствия для root маршрута. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">SampleApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#contact&#39;</span>
   <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#about&#39;</span>
   <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;pages#help&#39;</span>
@@ -1228,7 +1228,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 5.29.</span> <span class="description">Маршрут для страницы регистрации. <br /> <code>config/routes.rb</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">SampleApp</span><span class="o">::</span><span class="no">Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">get</span> <span class="s2">&quot;users/new&quot;</span>
 
   <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">:to</span> <span class="o">=&gt;</span> <span class="s1">&#39;users#new&#39;</span>
@@ -1413,15 +1413,15 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:5.1">Макеты в <em>Ruby on Rails Tutorial</em> сделаны с помощью замечательного онлайн приложения для создания макетов, называемого <a href="http://gomockingbird.com">Mockingbird</a>.&nbsp;<a class="arrow" href="#fnref:5.1">&uarr;</a></li>
-<li id="fn:5.2">Они абсолютно не связаны с классами Ruby.&nbsp;<a class="arrow" href="#fnref:5.2">&uarr;</a></li>
-<li id="fn:5.3">Вы моли заметить, что <code>img</code> tag, вместо сходства с <tt class="verb">&lt;img&gt;...&lt;/img&gt;</tt>, более похож на <tt class="verb">&lt;img ... /&gt;</tt>. Теги, соответствующие этой форме, известны как <em>самозакрывающиеся</em>.&nbsp;<a class="arrow" href="#fnref:5.3">&uarr;</a></li>
-<li id="fn:5.4"><code>alt</code> текст также, будет выведен на экран средствами чтения с экрана для людей со слабым зрением. Хотя люди иногда неаккуратны при включении  <code>alt</code> атрибута для изображений, фактически, это требуется HTML стандартом. К счастью, Rails включает дефолтный <code>alt</code> атрибут; если вы не укажете значение атрибута, в названии <code>image_tag</code>, Rails просто будет использовать имя файла изображения (за вычетом расширения). В этом случае, тем не менее, <code>Sample App</code> является более дескриптивным чем  <code>logo</code>, таким образом я предпочел указать <code>alt</code> текст явно.&nbsp;<a class="arrow" href="#fnref:5.4">&uarr;</a></li>
-<li id="fn:5.5">Отметьте, что пользователи Chrome и Safari будут видеть индикатор поврежденного изображения, вместо альтернативного текста &ldquo;Sample App&rdquo;.&nbsp;<a class="arrow" href="#fnref:5.5">&uarr;</a></li>
-<li id="fn:5.6">Цвета HTML могут быть кодированы тремя основными 16 (шестнадцатеричными) числами, каждое из которых обозначает один из трех основных цветов, Красный, Зеленый, и Синий. <code>#fff</code> это максимум всех трех цветов, что  приводит к чистому белому. За подробностями обращайтесь на сайт <a href="http://www.w3schools.com/html/html_colors.asp">HTML colors</a>.&nbsp;<a class="arrow" href="#fnref:5.6">&uarr;</a></li>
-<li id="fn:5.7">Blueprint CSS испльзует сетку из столбцов шириной 40 пикселей, 30 пикселей для самого столбца и 10 пикселей отступа. Самый правый столбец в отступе не нуждается, таким образом, 18 столбцов это 710 пикселей: 18 * 40 &ndash; 10 = 710.&nbsp;<a class="arrow" href="#fnref:5.7">&uarr;</a></li>
-<li id="fn:5.8">Многие Rails разработчики используют <code>shared</code> директорию для партиалов совместно используемых разными представлениями. Я предпочитаю использовать <code>shared</code> папку для "служебных" партиалов которые используются во множестве страниц, помещая партиалы, которые используются буквально на каждой странице (такие как части шаблона сайта) в <code>layouts</code> директорию. (Мы создадим <code>shared</code> директорию в <a class="ref" href="sign-up?version=3.0#top">Главе&nbsp;8</a>.) Это кажется мне более логичным, но помещение всех партиалов в папку <code>shared</code> тоже замечательно работает.&nbsp;<a class="arrow" href="#fnref:5.8">&uarr;</a></li>
-<li id="fn:5.9">В строке <code>SampleApp::Application.routes.draw do</code> вы могли распознать, что <code>draw</code> метод берет <em>block</em>, конструкцию, которую мы видели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:blocks">Разделе&nbsp;4.3.2</a>.&nbsp;<a class="arrow" href="#fnref:5.9">&uarr;</a></li>
+<li id="fn:5.1">Макеты в <em>Ruby on Rails Tutorial</em> сделаны с помощью замечательного онлайн приложения для создания макетов, называемого <a href="http://gomockingbird.com">Mockingbird</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.1">&uarr;</a></li>
+<li id="fn:5.2">Они абсолютно не связаны с классами Ruby.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.2">&uarr;</a></li>
+<li id="fn:5.3">Вы моли заметить, что <code>img</code> tag, вместо сходства с <tt class="verb">&lt;img&gt;...&lt;/img&gt;</tt>, более похож на <tt class="verb">&lt;img ... /&gt;</tt>. Теги, соответствующие этой форме, известны как <em>самозакрывающиеся</em>.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.3">&uarr;</a></li>
+<li id="fn:5.4"><code>alt</code> текст также, будет выведен на экран средствами чтения с экрана для людей со слабым зрением. Хотя люди иногда неаккуратны при включении  <code>alt</code> атрибута для изображений, фактически, это требуется HTML стандартом. К счастью, Rails включает дефолтный <code>alt</code> атрибут; если вы не укажете значение атрибута, в названии <code>image_tag</code>, Rails просто будет использовать имя файла изображения (за вычетом расширения). В этом случае, тем не менее, <code>Sample App</code> является более дескриптивным чем  <code>logo</code>, таким образом я предпочел указать <code>alt</code> текст явно.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.4">&uarr;</a></li>
+<li id="fn:5.5">Отметьте, что пользователи Chrome и Safari будут видеть индикатор поврежденного изображения, вместо альтернативного текста &ldquo;Sample App&rdquo;.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.5">&uarr;</a></li>
+<li id="fn:5.6">Цвета HTML могут быть кодированы тремя основными 16 (шестнадцатеричными) числами, каждое из которых обозначает один из трех основных цветов, Красный, Зеленый, и Синий. <code>#fff</code> это максимум всех трех цветов, что  приводит к чистому белому. За подробностями обращайтесь на сайт <a href="http://www.w3schools.com/html/html_colors.asp">HTML colors</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.6">&uarr;</a></li>
+<li id="fn:5.7">Blueprint CSS испльзует сетку из столбцов шириной 40 пикселей, 30 пикселей для самого столбца и 10 пикселей отступа. Самый правый столбец в отступе не нуждается, таким образом, 18 столбцов это 710 пикселей: 18 * 40 &ndash; 10 = 710.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.7">&uarr;</a></li>
+<li id="fn:5.8">Многие Rails разработчики используют <code>shared</code> директорию для партиалов совместно используемых разными представлениями. Я предпочитаю использовать <code>shared</code> папку для "служебных" партиалов которые используются во множестве страниц, помещая партиалы, которые используются буквально на каждой странице (такие как части шаблона сайта) в <code>layouts</code> директорию. (Мы создадим <code>shared</code> директорию в <a class="ref" href="sign-up?version=3.0#top">Главе&nbsp;8</a>.) Это кажется мне более логичным, но помещение всех партиалов в папку <code>shared</code> тоже замечательно работает.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.8">&uarr;</a></li>
+<li id="fn:5.9">В строке <code>SampleApp::Application.routes.draw do</code> вы могли распознать, что <code>draw</code> метод берет <em>block</em>, конструкцию, которую мы видели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:blocks">Разделе&nbsp;4.3.2</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:5.9">&uarr;</a></li>
 </ol>
 </div>
 
