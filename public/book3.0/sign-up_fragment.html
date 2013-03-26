@@ -154,7 +154,7 @@
 </div></div>
 
 
-<p>С определенной <code>@user</code> переменной, тесты вновь должны проходить,<sup class="footnote" id="fnref:8.1"><a href="#fn:8.1">1</a></sup> и теперь форма (чуть-чуть отстиленная <a class="ref" href="sign-up?version=3.0#code:form_css">Листингом&nbsp;8.4</a>) представлена на <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a>.</p>
+<p>С определенной <code>@user</code> переменной, тесты вновь должны проходить,<sup class="footnote" id="fnref:8.1"><a href="?version=3.0#fn:8.1">1</a></sup> и теперь форма (чуть-чуть отстиленная <a class="ref" href="sign-up?version=3.0#code:form_css">Листингом&nbsp;8.4</a>) представлена на <a class="ref" href="sign-up?version=3.0#fig:signup_form">Рис.&nbsp;8.3</a>.</p>
 
 <div class="label" id="code:form_css"></div>
 
@@ -420,7 +420,7 @@
 </div>
 
 
-<p>Вторая новая идея, это сворачивание <code>post :create</code> шага в package (пакет), используя Ruby конструкцию называемую <code>lambda</code>,<sup class="footnote" id="fnref:8.2"><a href="#fn:8.2">2</a></sup> которая позволяет нам проверить что он не меняет количество <code>User</code>:</p>
+<p>Вторая новая идея, это сворачивание <code>post :create</code> шага в package (пакет), используя Ruby конструкцию называемую <code>lambda</code>,<sup class="footnote" id="fnref:8.2"><a href="?version=3.0#fn:8.2">2</a></sup> которая позволяет нам проверить что он не меняет количество <code>User</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nb">lambda</span> <span class="k">do</span>
   <span class="n">post</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:user</span> <span class="o">=&gt;</span> <span class="vi">@attr</span>
@@ -564,7 +564,7 @@
 
 <p>Здесь объект <code>errors.full_messages</code> (который мы видели кратко в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:presence_validation">Разделе&nbsp;6.2.1</a>) содержит массив сообщений об ошибках.</p>
 
-<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузер, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up?version=3.0#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="#fn:8.3">3</a></sup></p>
+<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up?version=3.0#code:first_create_action">Листинге&nbsp;8.7</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузер, мы <code>render</code> партиал error_messages в user <code>new</code> страницу (<a class="ref" href="sign-up?version=3.0#code:f_error_messages">Листинг&nbsp;8.8</a>).<sup class="footnote" id="fnref:8.3"><a href="?version=3.0#fn:8.3">3</a></sup></p>
 
 <div class="label" id="code:f_error_messages"></div>
 
@@ -635,9 +635,9 @@
 
 <p>Мы видим здесь, что <code>empty?</code> метод, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает с массивами, возвращая <code>true</code> для пустого массива и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, он возвращает <code>true</code> если в массиве есть какие-нибудь элементы и <code>false</code> в противном случае.</p>
 
-<p>Другая новая идея это <code>pluralize</code> текст хелпер. Он не доступен в консоли, но мы можем включить его явно через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref:8.4"><a href="#fn:8.4">4</a></sup></p>
+<p>Другая новая идея это <code>pluralize</code> текст хелпер. Он не доступен в консоли, но мы можем включить его явно через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref:8.4"><a href="?version=3.0#fn:8.4">4</a></sup></p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">include</span> <span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">include</span> <span class="ss">ActionView::Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
 <span class="go">=&gt; Object </span>
 <span class="gp">&gt;&gt; </span><span class="n">pluralize</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
 <span class="go">=&gt; &quot;1 error&quot; </span>
@@ -744,7 +744,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 8.11.</span> <span class="description">Development log предыдущих (до 3) версий Rails с видимыми паролями. <br /> <code>log/development.log</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">Parameters</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;commit&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Sign up&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;create&quot;</span><span class="p">,</span>
+<div class="code"><div class="highlight"><pre><span class="ss">Parameters:</span> <span class="p">{</span><span class="s2">&quot;commit&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Sign up&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;create&quot;</span><span class="p">,</span>
 <span class="s2">&quot;authenticity_token&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;K1HchFF8uYE8ZaQKz5DVG9vF2KGoXJu4JGp/VE3NMjA=&quot;</span><span class="p">,</span>
 <span class="s2">&quot;controller&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;users&quot;</span><span class="p">,</span>
   <span class="s2">&quot;user&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Foo Bar&quot;</span><span class="p">,</span> <span class="s2">&quot;password_confirmation&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;dude&quot;</span><span class="p">,</span>
@@ -761,7 +761,7 @@
 <div class="codelisting">
 <div class="listing"><span class="header">Листинг 8.12.</span> <span class="description">Лог-файл с фильтруемыми паролями. <br /> <code>log/development.log</code></span>
 </div>
-<div class="code"><div class="highlight"><pre><span class="no">Parameters</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;commit&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Sign up&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;create&quot;</span><span class="p">,</span>
+<div class="code"><div class="highlight"><pre><span class="ss">Parameters:</span> <span class="p">{</span><span class="s2">&quot;commit&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Sign up&quot;</span><span class="p">,</span> <span class="s2">&quot;action&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;create&quot;</span><span class="p">,</span>
 <span class="s2">&quot;authenticity_token&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;K1HchFF8uYE8ZaQKz5DVG9vF2KGoXJu4JGp/VE3NMjA=&quot;</span><span class="p">,</span>
 <span class="s2">&quot;controller&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;users&quot;</span><span class="p">,</span>
   <span class="s2">&quot;user&quot;</span><span class="o">=&gt;</span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;Foo Bar&quot;</span><span class="p">,</span> <span class="s2">&quot;password_confirmation&quot;</span><span class="o">=&gt;</span><span class="s2">&quot;[FILTERED]&quot;</span><span class="p">,</span>
@@ -787,7 +787,7 @@
 <span class="no">Bundler</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:default</span><span class="p">,</span> <span class="no">Rails</span><span class="o">.</span><span class="n">env</span><span class="p">)</span> <span class="k">if</span> <span class="n">defined?</span><span class="p">(</span><span class="no">Bundler</span><span class="p">)</span>
 
 <span class="k">module</span> <span class="nn">SampleApp</span>
-  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">Application</span>
+  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails::Application</span>
     <span class="o">.</span>
     <span class="o">.</span>
     <span class="o">.</span>
@@ -797,6 +797,7 @@
 <span class="k">end</span>
 </pre></div>
 </div></div>
+
 
 
 <p>Если вы когда-нибудь будете писать Rails приложение с именем защищаемого параметра, <em>отличным</em> от <code>password</code>, вы должны добавить его в массив фильтруемых параметров. Например, если у вас включен секретный код как часть процесса регистрации, вы можете включить строку</p>
@@ -904,7 +905,7 @@
 </div>
 
 
-<p>Этот вид переадресации происходит при, практически, каждой успешной отправке формы в вебе, и, благодаря удобному синтаксису RSpec, вы не должны ничего знать о лежащем в его основе коде ответа HTTP.<sup class="footnote" id="fnref:8.5"><a href="#fn:8.5">5</a></sup> Сам URL генерируется с использованием именованного маршрута <code>user_path</code>, показанного в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#table:named_routes">Таблице&nbsp;7.1</a>.</p>
+<p>Этот вид переадресации происходит при, практически, каждой успешной отправке формы в вебе, и, благодаря удобному синтаксису RSpec, вы не должны ничего знать о лежащем в его основе коде ответа HTTP.<sup class="footnote" id="fnref:8.5"><a href="?version=3.0#fn:8.5">5</a></sup> Сам URL генерируется с использованием именованного маршрута <code>user_path</code>, показанного в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#table:named_routes">Таблице&nbsp;7.1</a>.</p>
 
 <div class="label" id="sec:the_finished_signup_form"></div>
 
@@ -998,14 +999,14 @@
 </div>
 
 
-<p>произведет такой HTML:<sup class="footnote" id="fnref:8.6"><a href="#fn:8.6">6</a></sup></p>
+<p>произведет такой HTML:<sup class="footnote" id="fnref:8.6"><a href="?version=3.0#fn:8.6">6</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;flash success&quot;</span><span class="nt">&gt;</span>Welcome to the Sample App!<span class="nt">&lt;/div&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Причина, по которой мы перебираем все возможные пары ключ/значение заключается в том, что благодаря этому мы сможем включать другие виды флэш сообщений; например, в <a class="ref" href="sign-in-sign-out?version=3.0#code:signin_failure">Листинге&nbsp;9.8</a> мы увидим <code>flash[:error]</code> используемое для индикации неудавшегося входа на сайт.<sup class="footnote" id="fnref:8.7"><a href="#fn:8.7">7</a></sup></p>
+<p>Причина, по которой мы перебираем все возможные пары ключ/значение заключается в том, что благодаря этому мы сможем включать другие виды флэш сообщений; например, в <a class="ref" href="sign-in-sign-out?version=3.0#code:signin_failure">Листинге&nbsp;9.8</a> мы увидим <code>flash[:error]</code> используемое для индикации неудавшегося входа на сайт.<sup class="footnote" id="fnref:8.7"><a href="?version=3.0#fn:8.7">7</a></sup></p>
 
 <p>Давайте протестируем флэш сообщение, чтобы убедиться в его правильности и в том, что оно появляется под ключом <code>:success</code> (<a class="ref" href="sign-up?version=3.0#code:signup_flash_test">Листинг&nbsp;8.17</a>).</p>
 
@@ -1053,7 +1054,7 @@
 </div>
 
 
-<p>Значения, возвращаемые здесь консолью, могут выглядеть странно: для несовпадения, regex сравнение возвращает <code>nil</code>; для совпадения оно возвращает <em>index</em> (позицию, место) в строке где началось совпадение.<sup class="footnote" id="fnref:8.8"><a href="#fn:8.8">8</a></sup> Обычно точный индекс не имеет значения, так как сравнение, как правило, используется в булевом контексте: вспомните из <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Раздела&nbsp;4.2.3</a> что <code>nil</code> это <code>false</code> в булевом контексте и что все остальное (даже&nbsp;<code>0</code>) является истиной. Таким образом, мы можем написать код, подобный этому:</p>
+<p>Значения, возвращаемые здесь консолью, могут выглядеть странно: для несовпадения, regex сравнение возвращает <code>nil</code>; для совпадения оно возвращает <em>index</em> (позицию, место) в строке где началось совпадение.<sup class="footnote" id="fnref:8.8"><a href="?version=3.0#fn:8.8">8</a></sup> Обычно точный индекс не имеет значения, так как сравнение, как правило, используется в булевом контексте: вспомните из <a class="ref" href="rails-flavored-ruby?version=3.0#sec:objects_and_message_passing">Раздела&nbsp;4.2.3</a> что <code>nil</code> это <code>false</code> в булевом контексте и что все остальное (даже&nbsp;<code>0</code>) является истиной. Таким образом, мы можем написать код, подобный этому:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">success</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the Sample App!&quot;</span>
 <span class="go">=&gt; &quot;Welcome to the Sample App!&quot;</span>
@@ -1152,7 +1153,7 @@
 <div class="sidebar"><span class="title"><span class="header">Box 8.1.</span><span class="description">Интеграционные альтернативы</span></span>
 <p>Как мы видели в этой и предыдущих главах, <em>Учебник Ruby On Rails</em> использует RSpec для всех испытаний, в том числе, для интеграционных тестов. На мой взгляд, нет ничего равносильного  простоте и мощи RSpec интеграционных тестов. Однако есть несколько реальных альтернатив. Одна из них это дефолтное Rails интеграционное тестирование с <tt>Test::Unit</tt>. Это нормально, если вы используете <tt>Test::Unit</tt> в другом месте, но мы используем RSpec в этом учебнике, и я предпочитаю не смешивать RSpec и <tt>Test::Unit</tt> в одном проекте.</p>
 
-<p>Второй вариант это <a href="http://cukes.info">Cucumber</a> (Огурец), который хорошо работает с RSpec и позволяет определять читаемый текст историй, описывающих поведение приложений. Многие программисты Rails находят Cucumber особенно удобным при работе с клиентами; так как они могут быть прочитаны даже неопытными пользователями, Cucumber тесты, или &ldquo;сценарии&rdquo;, могут использоваться совместно с (и иногда даже быть написанными) клиентом. Конечно, использование фреймворка тестирования, который не является чистым Ruby имеет и оборотную сторону, и я считаю, что текстовые истории могут быть излишне многословными и немного громоздкими (# в оригинале - "(cu)cumbersome"). Поскольку в Rails Tutorial у нас нет каких-либо  клиентских требований, и так как я решительно предпочитаю чисто Ruby-подход к тестированию в любом случае, мы будем придерживаться RSpec интеграционных тестов в этой книге. Тем не менее, я предлагаю взглянуть на некоторые <a   href="https://github.com/cucumber/cucumber/wiki/Tutorials-and-Related-Blog-Posts">Cucumber tutorials</a> чтобы посмотреть, подходит ли он вам.</p>
+<p>Второй вариант это <a href="http://cukes.info">Cucumber</a> (Огурец), который хорошо работает с RSpec и позволяет определять читаемый текст историй, описывающих поведение приложений. Многие программисты Rails находят Cucumber особенно удобным при работе с клиентами; так как они могут быть прочитаны даже неопытными пользователями, Cucumber тесты, или &ldquo;сценарии&rdquo;, могут использоваться совместно с (и иногда даже быть написанными) клиентом. Конечно, использование фреймворка тестирования, который не является чистым Ruby имеет и оборотную сторону, и я считаю, что текстовые истории могут быть излишне многословными и немного громоздкими (# в оригинале - "(cu)cumbersome"). Поскольку в Rails Tutorial у нас нет каких-либо  клиентских требований, и так как я решительно предпочитаю чисто Ruby-подход к тестированию в любом случае, мы будем придерживаться RSpec интеграционных тестов в этой книге. Тем не менее, я предлагаю взглянуть на некоторые <a   href="https://github.com/cucumber/cucumber/wiki/tutorials-and-related-blog-posts">Cucumber tutorials</a> чтобы посмотреть, подходит ли он вам.</p>
 </div>
 
 
@@ -1172,7 +1173,7 @@
 </div>
 
 
-<p>Однако это не единственный вид поддерживаемого синтаксиса, RSpec интеграционные тесты также поддерживают очень выразительный синтаксис веб-навигации.<sup class="footnote" id="fnref:8.9"><a href="#fn:8.9">9</a></sup> В этом разделе, мы увидим как использовать этот синтаксис для имитации заполнения регистрационной формы, используя код вида:</p>
+<p>Однако это не единственный вид поддерживаемого синтаксиса, RSpec интеграционные тесты также поддерживают очень выразительный синтаксис веб-навигации.<sup class="footnote" id="fnref:8.9"><a href="?version=3.0#fn:8.9">9</a></sup> В этом разделе, мы увидим как использовать этот синтаксис для имитации заполнения регистрационной формы, используя код вида:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">visit</span> <span class="n">signin_path</span>
 <span class="n">fill_in</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="ss">:with</span> <span class="o">=&gt;</span> <span class="s2">&quot;Example User&quot;</span>
@@ -1197,7 +1198,7 @@
 </div>
 
 
-<p>Как и в <a class="ref" href="filling-in-the-layout?version=3.0#sec:integration_tests">Разделе&nbsp;5.2.1</a>, генератор автоматически добавляет spec идентификатор, что приводит название файла теста к виду <code>users_spec.rb</code>.<sup class="footnote" id="fnref:8.10"><a href="#fn:8.10">10</a></sup></p>
+<p>Как и в <a class="ref" href="filling-in-the-layout?version=3.0#sec:integration_tests">Разделе&nbsp;5.2.1</a>, генератор автоматически добавляет spec идентификатор, что приводит название файла теста к виду <code>users_spec.rb</code>.<sup class="footnote" id="fnref:8.10"><a href="?version=3.0#fn:8.10">10</a></sup></p>
 
 <p>Мы начнем со сбоя регистрации. Простой способ организовать провальную регистрацию, это посетить signup URL и просто нажать на кнопку, в результате должна появиться страница как в <a class="ref" href="sign-up?version=3.0#fig:blank_signup">Рис.&nbsp;8.11</a>. После сбоя предоставления, ответ должен сформировать <code>users/new</code> шаблон.  Если вы проверите результирующий HTML, вы должны увидеть что-то вроде разметки в <a class="ref" href="sign-up?version=3.0#code:error_explanation">Листинге&nbsp;8.19</a>. Это означает, что мы можем проверить на наличие сообщений об ошибках, поиском тега <code>div</code> с CSS id <code>"error_explanation"</code>. Тест для этого шага представлен в <a class="ref" href="sign-up?version=3.0#code:signup_failure_test">Листинге&nbsp;8.20</a>.</p>
 
@@ -1359,7 +1360,7 @@
 </div></div>
 
 
-<p>Кстати, хотя это не очевидно из документации RSpec, вы можете использовать HTML-атрибут 'id' текстового поля вместо содержимого связанного тега label, так что <code>fill_in :user_name</code> тоже работает.<sup class="footnote" id="fnref:8.11"><a href="#fn:8.11">11</a></sup> (Это особенно хорошо для форм, которые не используют labels(??).)</p>
+<p>Кстати, хотя это не очевидно из документации RSpec, вы можете использовать HTML-атрибут 'id' текстового поля вместо содержимого связанного тега label, так что <code>fill_in :user_name</code> тоже работает.<sup class="footnote" id="fnref:8.11"><a href="?version=3.0#fn:8.11">11</a></sup> (Это особенно хорошо для форм, которые не используют labels(??).)</p>
 
 <p>Я надеюсь, вы согласитесь, что этот синтаксис веб-навигации невероятно естественный и краткий. Например, чтобы заполнить поля значениями, мы просто используем такой код:</p>
 
@@ -1515,17 +1516,17 @@
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:8.1">Если вы получили ошибку вроде <code>views/users/new.html.erb_spec.rb fails</code>, удалите этот мерзкий view specs командой <code>$ rm -rf spec/views</code> .&nbsp;<a class="arrow" href="#fnref:8.1">&uarr;</a></li>
-<li id="fn:8.2">Название происходит от <a  href="http://ru.wikipedia.org/wiki/Ламбда-исчисление">лямбда-исчисления</a>, математической системы для представления функций и их операций.&nbsp;<a class="arrow" href="#fnref:8.2">&uarr;</a></li>
-<li id="fn:8.3">До Rails&nbsp;3, отображение сообщений об ошибках было реализовано через магический вызов специального метода <code>error_messages</code> на объект формы&nbsp;<code>f</code>, следующим образом: <tt class="verb">&lt;%= f.error_messages %&gt;</tt>. Хотя зачастую это было удобно, этот волшебный метод было тяжело настроить, так что команда Rails Core решила рекомендовать использование Embedded Ruby для отображения ошибок вручную.&nbsp;<a class="arrow" href="#fnref:8.3">&uarr;</a></li>
-<li id="fn:8.4">Я выяснил это путем поиска <code>pluralize</code> в Rails API.&nbsp;<a class="arrow" href="#fnref:8.4">&uarr;</a></li>
-<li id="fn:8.5">В случае, если вам интересно, код ответа <tt>302</tt>, в отличие от &ldquo;постоянной переадресации&rdquo; <tt>301</tt> кратко обсуждаемой в <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блоке&nbsp;3.2</a>.&nbsp;<a class="arrow" href="#fnref:8.5">&uarr;</a></li>
-<li id="fn:8.6">Обратите внимание, что ключ <code>:success</code> является символом, но Embedded Ruby автоматически преобразует его в строку <code>"success"</code> перед вставкой в шаблон.&nbsp;<a class="arrow" href="#fnref:8.6">&uarr;</a></li>
-<li id="fn:8.7">На самом деле, мы будем использовать тесно связаный <code>flash.now</code>, но мы не будем акцентироваться на этом ньюансе, до тех пор, пока он нам не понадобится.&nbsp;<a class="arrow" href="#fnref:8.7">&uarr;</a></li>
-<li id="fn:8.8">Индексы имеют нулевое смещние, как и массивы (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Раздел&nbsp;4.3.1</a>), поэтому возвращаемое значение, <code>0</code> означает что строка совпадает с регулярным выражением, начиная с первого символа.&nbsp;<a class="arrow" href="#fnref:8.8">&uarr;</a></li>
-<li id="fn:8.9">Что касается этой записи, этот синтаксис доступен благодаря <a href="http://github.com/brynary/webrat">Webrat</a>, (# WebКрыса), которая предоставляется как гем зависимость для <tt>rspec-rails</tt>, но Webrat была написана до широкого внедрения <a  href="http://rack.rubyforge.org/">Rack</a> и в конечном итоге будет вытеснена проектом  <a  href="http://github.com/jnicklas/capybara">Capybara</a>. К счастью, <a  href="http://ru.wikipedia.org/wiki/%CA%E0%EF%E8%E1%E0%F0%E0">Capybara</a> разработан как прямая замена для Webrat, поэтому синтаксис должен остаться тем же.&nbsp;<a class="arrow" href="#fnref:8.9">&uarr;</a></li>
-<li id="fn:8.10">Обратите внимание на множественное число; это <em>не</em> User spec <code>user_spec.rb</code>, который является тестом модели, а не интеграционным тестом.&nbsp;<a class="arrow" href="#fnref:8.10">&uarr;</a></li>
-<li id="fn:8.11">Вы можете использовать Firebug или &rsquo;s &ldquo;Исходный код страницы&rdquo; вашего браузера, если вам необходимо выяснить id. Или вы можете заметить, что Rails использует имя ресурса и имя атрибута разделенные знаком подчеркивания, что приводит к <code>user_name</code>, <code>user_email</code>, и т.д..&nbsp;<a class="arrow" href="#fnref:8.11">&uarr;</a></li>
+<li id="fn:8.1">Если вы получили ошибку вроде <code>views/users/new.html.erb_spec.rb fails</code>, удалите этот мерзкий view specs командой <code>$ rm -rf spec/views</code> .&nbsp;<a class="arrow" href="?version=3.0#fnref:8.1">&uarr;</a></li>
+<li id="fn:8.2">Название происходит от <a  href="http://ru.wikipedia.org/wiki/Ламбда-исчисление">лямбда-исчисления</a>, математической системы для представления функций и их операций.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.2">&uarr;</a></li>
+<li id="fn:8.3">До Rails&nbsp;3, отображение сообщений об ошибках было реализовано через магический вызов специального метода <code>error_messages</code> на объект формы&nbsp;<code>f</code>, следующим образом: <tt class="verb">&lt;%= f.error_messages %&gt;</tt>. Хотя зачастую это было удобно, этот волшебный метод было тяжело настроить, так что команда Rails Core решила рекомендовать использование Embedded Ruby для отображения ошибок вручную.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.3">&uarr;</a></li>
+<li id="fn:8.4">Я выяснил это путем поиска <code>pluralize</code> в Rails API.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.4">&uarr;</a></li>
+<li id="fn:8.5">В случае, если вам интересно, код ответа <tt>302</tt>, в отличие от &ldquo;постоянной переадресации&rdquo; <tt>301</tt> кратко обсуждаемой в <a class="ref" href="static-pages?version=3.0#sidebar:response_codes">Блоке&nbsp;3.2</a>.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.5">&uarr;</a></li>
+<li id="fn:8.6">Обратите внимание, что ключ <code>:success</code> является символом, но Embedded Ruby автоматически преобразует его в строку <code>"success"</code> перед вставкой в шаблон.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.6">&uarr;</a></li>
+<li id="fn:8.7">На самом деле, мы будем использовать тесно связаный <code>flash.now</code>, но мы не будем акцентироваться на этом ньюансе, до тех пор, пока он нам не понадобится.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.7">&uarr;</a></li>
+<li id="fn:8.8">Индексы имеют нулевое смещние, как и массивы (<a class="ref" href="rails-flavored-ruby?version=3.0#sec:arrays_and_ranges">Раздел&nbsp;4.3.1</a>), поэтому возвращаемое значение, <code>0</code> означает что строка совпадает с регулярным выражением, начиная с первого символа.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.8">&uarr;</a></li>
+<li id="fn:8.9">Что касается этой записи, этот синтаксис доступен благодаря <a href="http://github.com/brynary/webrat">Webrat</a>, (# WebКрыса), которая предоставляется как гем зависимость для <tt>rspec-rails</tt>, но Webrat была написана до широкого внедрения <a  href="http://rack.rubyforge.org/">Rack</a> и в конечном итоге будет вытеснена проектом  <a  href="http://github.com/jnicklas/capybara">Capybara</a>. К счастью, <a  href="http://ru.wikipedia.org/wiki/%CA%E0%EF%E8%E1%E0%F0%E0">Capybara</a> разработан как прямая замена для Webrat, поэтому синтаксис должен остаться тем же.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.9">&uarr;</a></li>
+<li id="fn:8.10">Обратите внимание на множественное число; это <em>не</em> User spec <code>user_spec.rb</code>, который является тестом модели, а не интеграционным тестом.&nbsp;<a class="arrow" href="?version=3.0#fnref:8.10">&uarr;</a></li>
+<li id="fn:8.11">Вы можете использовать Firebug или &rsquo;s &ldquo;Исходный код страницы&rdquo; вашего браузера, если вам необходимо выяснить id. Или вы можете заметить, что Rails использует имя ресурса и имя атрибута разделенные знаком подчеркивания, что приводит к <code>user_name</code>, <code>user_email</code>, и т.д..&nbsp;<a class="arrow" href="?version=3.0#fnref:8.11">&uarr;</a></li>
 </ol>
 </div>
 
