@@ -20,7 +20,7 @@
 <h2><a id="sec:13.1" href="rails-3-1?version=3.0#sec:upgrading_the_sample_app" class="heading"><span class="number">13.1</span> Обновление примера приложения</a></h2>
 
 
-<p>Нашим первым шагом в приручении Rails&nbsp;3.1 является обновление примера приложения разрабатываемого с <a class="ref" href="static-pages?version=3.0#top">&nbsp;3</a> по <a class="ref" href="following-users?version=3.0#top">&nbsp;12</a> главы. Существуют две возможные стратегии для достижения этого. Во-первых, редактировать пример приложения непосредственно, меняя, <code>Gemfile</code> и конфигурационные файлы и обрабатывая возникающие поломки. Такие онлайн ресурсы, как <a href="http://jasonrudolph.com/blog/2011/06/06/helpful-resources-for-upgrading-to-rails-3-1/">Helpful resources for upgrading to Rails&nbsp;3.1</a> и особенно <a href="http://jasonrudolph.com/blog/2011/06/06/helpful-resources-for-upgrading-to-rails-3-1/">How to upgrade a Rails application to version 3.1.0</a> могут помочь при применении этого подхода. В этой главе мы будем придерживаться второго подхода, который состоит в создании нового  Rails&nbsp;3.1 приложения с нуля и последующем копировании одного за другим файлов существующего примера приложения пока не получим новое работающее приложение.</p>
+<p>Нашим первым шагом в приручении Rails&nbsp;3.1 является обновление примера приложения разрабатываемого с <a class="ref" href="static-pages?version=3.0#top">&nbsp;3</a> по <a class="ref" href="following-users?version=3.0#top">&nbsp;12</a> главы. Существуют две возможные стратегии для достижения этого. Во-первых, редактировать пример приложения непосредственно, меняя, <code>Gemfile</code> и конфигурационные файлы и обрабатывая возникающие поломки. Такие онлайн ресурсы, как <a href="http://jasonrudolph.com/blog/2011/06/06/helpful-resources-for-upgrading-to-rails-3-1/">Helpful resources for upgrading to Rails&nbsp;3.1</a> и <a href="http://davidjrice.co.uk/2011/05/25/how-to-upgrade-a-rails-application-to-version-3-1-0.html">How to upgrade a Rails application to version 3.1.0</a> могут помочь при применении этого подхода. В этой главе мы будем придерживаться второго подхода, который состоит в создании нового  Rails&nbsp;3.1 приложения с нуля и последующем копировании одного за другим файлов существующего примера приложения пока не получим новое работающее приложение.</p>
 
 <p>У второго подхода есть несколько преимуществ. Во-первых, так как мы будем генерировать начальное приложение, используя <code>rails new</code>, <code>Gemfile</code> и конфигурационные файлы будут автоматически настроены правильно для Rails&nbsp;3.1. Кроме того, за счет добавления одного файла в единицу времени (или, в крайнем случае, нескольких) мы можем более легко изолировать источник любой поломки. Недостатком является то, что мы можем забыть файл или два, что приведет к поломке приложения, хотя это маловероятно из-за нашего объемного набора тестов. В конечном счете, правильная стратегия, вероятно, зависит от характера конкретного приложения; по моему мнению, лучшим способом обновления примера приложения является использование второй стратегии, но вы также можете попробовать первую.</p>
 
@@ -41,27 +41,22 @@
 
 <p>Независимо от того, используете вы RVM или нет, вам необходимо установить Rails&nbsp;3.1:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="o">[</span>sudo<span class="o">]</span> gem install rails --pre
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> gem install rails --version 3.1.0
 </pre></div>
 </div>
 
-
-<p>(См. <a class="ref" href="beginning?version=3.0#sec:conventions">Раздел&nbsp;1.1.3</a> чтобы вспомнить о значении <code>[sudo]</code> в этом контексте.) Флаг <tt class="verb">--pre</tt> здесь говорит RubyGems установить последнюю, пред-релизную (или релиз-кандидат) версию Rails. Вполне возможно, что на момент прочтения вами этого материала выйдет официальный релиз, в этом случае вместо предыдущей вам следует выполнить следующую команду:</p>
-
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="o">[</span>sudo<span class="o">]</span> gem install rails --version 3.1.0
-</pre></div>
-</div>
+<p>(Если вы получили здесь ошибку связанную с правами доступа (permissions error), вспомните из <a class="ref" href="beginning?version=3.0#sec:conventions">Раздела&nbsp;1.1.3</a> что вам, возможно, следует использовать <code>sudo</code>.)</p>
 
 
-<p>После установки Rails, вы можете проверить что у вас установлена правильная версия следующим образом:</p>
+<p>После установки Rails вы можете проверить что у вас установлена правильная версия следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails -v
-<span class="go">Rails 3.1.0.rc4</span>
+<span class="go">Rails 3.1.0</span>
 </pre></div>
 </div>
 
 
-<p>(Если финальная версия вышла, этот вывод, конечно же, будет чем-то вроде <code>Rails 3.1.0</code>.) Затем создаем непосредственно скелет Rails&nbsp;3.1 примера приложения:</p>
+<p>Затем создаем непосредственно скелет Rails&nbsp;3.1 примера приложения:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> <span class="nb">cd</span> ~/rails_projects
 <span class="gp">$</span> rails new sample_app_3_1
@@ -69,7 +64,7 @@
 </div>
 
 
-<p>Наконец, добавляем специфичные для приложения гемы из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:final_gemfile">Листинга&nbsp;10.42</a> в дефолтный Rails&nbsp;3.1 <code>Gemfile</code>, что приводит к <a class="ref" href="rails-3-1?version=3.0#code:gemfile_rails_3_1">Листингу&nbsp;13.1</a>.</p>
+<p>Наконец, добавляем специфичные для приложения гемы из <a class="ref" href="updating-showing-and-deleting-users?version=3.0#code:final_gemfile">Листинга&nbsp;10.42</a> в дефолтный Rails&nbsp;3.1 <code>Gemfile</code>, что приводит к <a class="ref" href="rails-3-1?version=3.0#code:gemfile_rails_3_1">Листингу&nbsp;13.1</a>. (Обратите внимание: вы должны использовать версию <tt>1.3.4</tt> гема <tt>sqlite3</tt>; <tt>1.3.3</tt> работать не будет.)</p>
 
 <div class="label" id="code:gemfile_rails_3_1"></div>
 
@@ -79,11 +74,11 @@
 </div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;http://rubygems.org&#39;</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.1.0.rc4&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.1.0&#39;</span>
+
 <span class="n">gem</span> <span class="s1">&#39;gravatar_image_tag&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0.0.pre2&#39;</span>
 <span class="n">gem</span> <span class="s1">&#39;will_paginate&#39;</span><span class="p">,</span> <span class="s1">&#39;3.0.pre2&#39;</span>
-
-<span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.3&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;sqlite3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.3.4&#39;</span>
 
 <span class="c1"># Asset template engines</span>
 <span class="n">gem</span> <span class="s1">&#39;sass-rails&#39;</span><span class="p">,</span> <span class="s2">&quot;~&gt; 3.1.0.rc&quot;</span>
@@ -165,7 +160,8 @@
 
 <p>Пытаясь перейти от Красного к Зеленому, вы обнаружите, что гем <tt>will_paginate</tt> несовместим с Rails&nbsp;3.1, что приводит к ошибке вроде этой:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">uninitialized</span> <span class="n">constant</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Associations</span><span class="o">::</span><span class="no">AssociationCollection</span> <span class="p">(</span><span class="no">NameError</span><span class="p">)</span>
+<div class="code"><div class="highlight"><pre><span class="n">uninitialized</span> <span class="n">constant</span>
+<span class="ss">ActiveRecord::Associations</span><span class="o">::</span><span class="no">AssociationCollection</span> <span class="p">(</span><span class="no">NameError</span><span class="p">)</span>
 </pre></div>
 </div>
 
@@ -179,7 +175,7 @@
 
 
 <p>Исправить ошибку просто: нам необходимо заменить <code>AssociationCollection</code> на <code>CollectionAssociation</code>, как показано в <a href="http://ru.wikipedia.org/wiki/Diff">diff</a>  <a class="ref" href="rails-3-1?version=3.0#code:will_paginate_fix">Листинга&nbsp;13.2</a>. (Я опустил ссылку на  <code>::ActiveRecord::Relation</code> чтобы сэкономить место, но вы должны ее сохранить.)
-Это изменение - ужасный <a href="http://www.catb.org/jargon/html/K/kludge.html">ляп</a>&mdash;помимо всего прочего, оно перестанет работать если мы когда-нибудь переустановим гем <tt>will_paginate</tt> и оно не работает в  production&mdash;но оно работает сейчас и, предположительно, эта проблема будет исправлена в будущих релизах  <tt>will_paginate</tt>.<sup class="footnote" id="fnref:13.1"><a href="#fn:13.1">1</a></sup></p>
+Это изменение - ужасный <a href="http://www.catb.org/jargon/html/K/kludge.html">ляп</a>&mdash;помимо всего прочего, оно перестанет работать если мы когда-нибудь переустановим гем <tt>will_paginate</tt> и оно не работает в  production&mdash;но оно работает сейчас и, предположительно, эта проблема будет исправлена в будущих релизах  <tt>will_paginate</tt>.<sup class="footnote" id="fnref:13.1"><a href="?version=3.0#fn:13.1">1</a></sup></p>
 
 <div class="label" id="code:will_paginate_fix"></div>
 
@@ -238,7 +234,7 @@ end
 <h3><a id="sec:13.1.4" href="rails-3-1?version=3.0#sec:major_differences" class="heading"><span class="number">13.1.4</span> Значительные отличия</a></h3>
 
 
-<p><em>Значительные</em> отличия между Rails&nbsp;3.0 и Rails&nbsp;3.1 примерами приложений не так уж и велики, просто они касаются практически всех Rails приложений. В этом разделе мы увидим, как инкорпорировать эти различия для завершения нашего нового Rails&nbsp;3.1 примера приложения.</p>
+<p>&ldquo;Значительные&rdquo; отличия между Rails&nbsp;3.0 и Rails&nbsp;3.1 примерами приложений не так уж и велики, просто они касаются практически всех Rails приложений. В этом разделе мы увидим, как инкорпорировать эти различия для завершения нашего нового Rails&nbsp;3.1 примера приложения.</p>
 
 <div class="label" id="sec:asset_directories"></div>
 
@@ -313,7 +309,7 @@ end
 
 <p>Заметим, что и таблицы стилей и JavaScript включаются используя форму</p>
 
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="o">&lt;</span><span class="nb">type</span><span class="o">&gt;</span><span class="n">_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="o">&lt;</span><span class="n">type</span><span class="o">&gt;</span><span class="n">_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span><span class="x"></span>
 </pre></div>
 </div>
 
@@ -378,7 +374,7 @@ end
 <div class="label" id="code:create_js_jquery"></div>
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 13.8.</span> <span class="description"> jQuery-код, необходимый для создания following relationship. <br />  <code>app/views/create.js.erb</code></span>
+<div class="listing"><span class="header">Листинг 13.8.</span> <span class="description"> jQuery-код, необходимый для создания взаимосвязи с читаемым пользователем. <br />  <code>app/views/relationships/create.js.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#follow_form&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&lt;%= escape_javascript(render(&#39;users/unfollow&#39;)) %&gt;&quot;</span><span class="p">)</span>
 <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#followers&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&lt;%= &quot;#{@user.followers.count} followers&quot; %&gt;&#39;</span><span class="p">)</span>
@@ -391,7 +387,7 @@ end
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 13.9.</span> <span class="description"> jQuery-код, необходимый для  уничтожения following relationship. <br />  <code>app/views/destroy.js.erb</code></span>
+<div class="listing"><span class="header">Листинг 13.9.</span> <span class="description"> jQuery-код, необходимый для  уничтожения взаимосвязи с читаемым пользователем. <br />  <code>app/views/relationships/destroy.js.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#follow_form&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&lt;%= escape_javascript(render(&#39;users/follow&#39;)) %&gt;&quot;</span><span class="p">)</span>
 <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#followers&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&lt;%= &quot;#{@user.followers.count} followers&quot; %&gt;&#39;</span><span class="p">)</span>
@@ -432,7 +428,7 @@ end
 <div class="listing"><span class="header">Листинг 13.10.</span> <span class="description">Миграция для модели User  (для создания <code>users</code> таблицы). <br /> <code>db/migrate/&lt;timestamp&gt;_create_users.rb</code></span>
 </div>
 
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">up</span>
     <span class="n">create_table</span> <span class="ss">:users</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
       <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span>
@@ -459,7 +455,7 @@ end
 <div class="listing"><span class="header">Листинг 13.11.</span> <span class="description">Самообратимая (в стиле Rails&nbsp;3.1) миграция для модели User.</span>
 </div>
 
-<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nf">change</span>
     <span class="n">create_table</span> <span class="ss">:users</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
       <span class="n">t</span><span class="o">.</span><span class="n">string</span> <span class="ss">:name</span>
@@ -510,7 +506,7 @@ end
   </a>
 </div><div class="footnotes">
 <ol>
-<li id="fn:13.1">Чтобы использовать измененный гем в production на Heroku, мы должны были бы построить наш собственный гем опираясь на форк <tt>will_paginate</tt>. Так как исправление настолько легко, я предполагаю, что это проблема будет решена к тому времени, когда Heroku станет полностью поддерживать Rails&nbsp;3.1.&nbsp;<a class="arrow" href="#fnref:13.1">&uarr;</a></li>
+<li id="fn:13.1">Чтобы использовать измененный гем в production на Heroku, мы должны были бы построить наш собственный гем опираясь на форк <tt>will_paginate</tt>. Так как исправление настолько легко, я предполагаю, что это проблема будет решена к тому времени, когда Heroku станет полностью поддерживать Rails&nbsp;3.1.&nbsp;<a class="arrow" href="?version=3.0#fnref:13.1">&uarr;</a></li>
 </ol>
 </div>
 
