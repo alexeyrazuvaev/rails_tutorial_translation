@@ -35,7 +35,7 @@
 <h3><a id="sec-5_1_1" href="filling-in-the-layout#sec-adding_to_the_layout" class="heading"><span class="number">5.1.1</span> Навигация по сайту</a></h3>
 
 
-<p>В качестве первого шага к добавдению ссылок и стилей к примеру приложения, иы добавим в файл шаблона сайта <code>application.html.erb</code> (последни раз мы его видели в <a class="ref" href="rails-flavored-ruby#code-application_layout_full_title">Листинге&nbsp;4.3</a>) дополнительные HTML структуры. Это подразумевает добавление нескольких дополнительных разделителей, немного CSS классов и запуск навигации по сайту. Полный файл представлен в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a>; объяснения различных частей последуют сразу за ним. Если вы не хотите откладывать удовольствие, вы можете посмотреть на результаты представленные на <a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>. (<em>Примечание:</em> это (пока) не очень приятно.)</p>
+<p>В качестве первого шага к добавлению ссылок и стилей к примеру приложения, мы добавим в файл шаблона сайта <code>application.html.erb</code> (последни раз мы его видели в <a class="ref" href="rails-flavored-ruby#code-application_layout_full_title">Листинге&nbsp;4.3</a>) дополнительные HTML структуры. Это подразумевает добавление нескольких дополнительных разделителей, немного CSS классов и запуск навигации по сайту. Полный файл представлен в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a>; объяснения различных частей последуют сразу за ним. Если вы не хотите откладывать удовольствие, вы можете посмотреть на результаты представленные на <a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>. (<em>Примечание:</em> это (пока) не очень приятно.)</p>
 
 <div class="label" id="code-layout_new_structure"></div>
 
@@ -310,7 +310,7 @@
 </div>
 
 
-<p>это часть файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>) и любые таблицы стилей в этой директории будут автоматически включены как часть файла <code>application.css</code> включенного в шаблон сайта. Кроме того, название файла <code>custom.css.scss</code> включает расширение <code>.css</code>, которое обозначает файл CSS, и расширение <code>.scss</code> которое указывает на то что это &ldquo;Sassy CSS&rdquo; файл и говорит файлопроводу что этот файл необходима обрабатывать с помошью Sass. (Мы не будем использовать Sass до <a class="ref" href="filling-in-the-layout#sec-sass">Раздела&nbsp;5.2.2</a>, но сейчас он необходим <tt>bootstrap-sass</tt> гему.)</p>
+<p>это часть файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>) и любые таблицы стилей в этой директории будут автоматически включены как часть файла <code>application.css</code> включенного в шаблон сайта. Кроме того, название файла <code>custom.css.scss</code> включает расширение <code>.css</code>, которое обозначает файл CSS, и расширение <code>.scss</code> которое указывает на то что это &ldquo;Sassy CSS&rdquo; файл и говорит файлопроводу что этот файл необходимо обрабатывать с помошью Sass. (Мы не будем использовать Sass до <a class="ref" href="filling-in-the-layout#sec-sass">Раздела&nbsp;5.2.2</a>, но сейчас он необходим <tt>bootstrap-sass</tt> гему.)</p>
 
 <p>После создания файла для кастомных CSS мы можем использовать функцию <code>@import</code> для включения Bootstrap, как это показано в <a class="ref" href="filling-in-the-layout#code-bootstrap_css">Листинге&nbsp;5.4</a>.</p>
 
@@ -1278,7 +1278,7 @@
 <h3><a id="sec-5_3_1" href="filling-in-the-layout#sec-route_tests" class="heading"><span class="number">5.3.1</span> Тестирование маршрутов</a></h3>
 
 
-<p>С работой которую мы проделали при написании интеграционных тестов для статических страниц, написание тестов для маршрутов довольно простая задача: мы просто заменяем каждое упоминание жестко прописанных адресов на соответствующие именаванные маршруты из <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблицы&nbsp;5.1</a>. Другими словами, мы меняем</p>
+<p>С работой которую мы проделали при написании интеграционных тестов для статических страниц, написание тестов для маршрутов довольно простая задача: мы просто заменяем каждое упоминание жестко прописанных адресов на соответствующие именованные маршруты из <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблицы&nbsp;5.1</a>. Другими словами, мы меняем</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">visit</span> <span class="s1">&#39;/static_pages/about&#39;</span>
 </pre></div>
@@ -1837,7 +1837,7 @@
 <h3><a id="sec-5_4_1" href="filling-in-the-layout#sec-users_controller" class="heading"><span class="number">5.4.1</span> Контроллер Users</a></h3>
 
 
-<p>Мы создали наш первый контроллер  - StaticPages -  еще в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Пришло время создать второй&nbsp;&mdash;&nbsp;контроллер Users.  Как и прежде, мы будем использовать <code>generate</code> для создания простейшего контроллер, который отвечает нашим текущим потребностям, а именно, с одной страницей-заглушкой для регистрации новых пользователей. Следуя конвенции <a  href="http://ru.wikipedia.org/wiki/REST">REST архитектуры</a> предпочитаемой Рельсами, мы назовем действие для новых пользователей, <code>new</code> и передадим его в качестве аргумента в <code>generate controller</code> для создания его (действия) автоматически (<a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинг&nbsp;5.28</a>).</p>
+<p>Мы создали наш первый контроллер  - StaticPages -  еще в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Пришло время создать второй&nbsp;&mdash;&nbsp;контроллер Users.  Как и прежде, мы будем использовать <code>generate</code> для создания простейшего контроллера, который отвечает нашим текущим потребностям, а именно, с одной страницей-заглушкой для регистрации новых пользователей. Следуя конвенции <a  href="http://ru.wikipedia.org/wiki/REST">REST архитектуры</a> предпочитаемой Рельсами, мы назовем действие для новых пользователей, <code>new</code> и передадим его в качестве аргумента в <code>generate controller</code> для создания его (действия) автоматически (<a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинг&nbsp;5.28</a>).</p>
 
 <div class="label" id="code-generate_users_controller"></div>
 

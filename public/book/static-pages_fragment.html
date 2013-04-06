@@ -398,7 +398,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>направляет запрос для URI <tt>/static_pages/home</tt> в <code>home</code> действие контроллера StaticPages. Более того, используя <code>get</code> мы приговариваем маршрут отвечать на <tt>GET</tt>
 запрос, который является одним из фундаментальных <em>HTTP глаголов</em> поддерживаемых протоколом передачи гипертекста (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.2</a>). В нашем случае это значит, что когда мы сгенерировали
-<code>home</code> действие внутри контроллера StaticPages мы автоматически получили страницу по адресу <tt>/pages/home</tt>. Чтобы увидеть результаты, убейте сервер, нажав Ctrl-C, запустите <code>rails server</code>, а затем перейдите на <a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a> (<a class="ref" href="static-pages#fig-raw_home_view">Рис. 3.5</a>).</p>
+<code>home</code> действие внутри контроллера StaticPages мы автоматически получили страницу по адресу <tt>/static_pages/home</tt>. Чтобы увидеть результаты, убейте сервер, нажав Ctrl-C, запустите <code>rails server</code>, а затем перейдите на <a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a> (<a class="ref" href="static-pages#fig-raw_home_view">Рис. 3.5</a>).</p>
 
 <div class="label" id="fig-raw_home_view"></div>
 
@@ -1085,7 +1085,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных Contact и About тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code-help_view_full_html">Листинга&nbsp;3.20</a> и <a class="ref" href="static-pages#code-about_view_full_html">Листинга&nbsp;3.21</a>.</p>
+<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных Contact и Help тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code-help_view_full_html">Листинга&nbsp;3.20</a> и <a class="ref" href="static-pages#code-about_view_full_html">Листинга&nbsp;3.21</a>.</p>
 
 <div class="label" id="code-help_view_full_html"></div>
 
@@ -1194,7 +1194,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>указывает с помощью <tt class="verb">&lt;% ... %&gt;</tt> что Rails должны вызвать функцию <code>provide</code> и связать строку <code>&rsquo;Home&rsquo;</code> с label <code>:title</code>.<sup class="footnote" id="fnref-3_14"><a href="#fn-3_14">14</a></sup> Затем, в заголовке, мы используем тестно связанную нотацию <tt class="verb">&lt;%= ... %&gt;</tt> для вставки заголовка в шаблон используя Ruby-функцию <code>yield</code>:<sup class="footnote" id="fnref-3_15"><a href="#fn-3_15">15</a></sup></p>
+<p>указывает с помощью <tt class="verb">&lt;% ... %&gt;</tt> что Rails должны вызвать функцию <code>provide</code> и связать строку <code>&rsquo;Home&rsquo;</code> с label <code>:title</code>.<sup class="footnote" id="fnref-3_14"><a href="#fn-3_14">14</a></sup> Затем, в заголовке, мы используем тесно связанную нотацию <tt class="verb">&lt;%= ... %&gt;</tt> для вставки заголовка в шаблон используя Ruby-функцию <code>yield</code>:<sup class="footnote" id="fnref-3_15"><a href="#fn-3_15">15</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
 </pre></div></div>
