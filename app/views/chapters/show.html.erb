@@ -4,7 +4,7 @@
     <div id="book">
       <% version = params[:version] ? '_3_0' : '' %>
       <%= render "layouts/contents#{version}" %>
-      <%= render "layouts/preamble#{version}" %>
+      <%= render "layouts/preamble#{version}" unless params[:id] == 'preface' %>
       <%= raw @content %>
     </div>
   <div id="book_bottom">

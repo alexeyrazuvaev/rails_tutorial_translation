@@ -19,3 +19,7 @@ body.book #sidebar #navtool .section .switcher.custom {
 body.book #sidebar #navtool .section .switcher .switcher_link.title a {
   color: white;
 }
+
+p.align-right {
+  text-align: right;
+}
