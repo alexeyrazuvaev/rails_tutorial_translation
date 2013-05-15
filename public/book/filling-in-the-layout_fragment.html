@@ -35,7 +35,7 @@
 <h3><a id="sec-5_1_1" href="filling-in-the-layout#sec-adding_to_the_layout" class="heading"><span class="number">5.1.1</span> Навигация по сайту</a></h3>
 
 
-<p>В качестве первого шага к добавлению ссылок и стилей к примеру приложения, мы добавим в файл шаблона сайта <code>application.html.erb</code> (последни раз мы его видели в <a class="ref" href="rails-flavored-ruby#code-application_layout_full_title">Листинге&nbsp;4.3</a>) дополнительные HTML структуры. Это подразумевает добавление нескольких дополнительных разделителей, немного CSS классов и запуск навигации по сайту. Полный файл представлен в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a>; объяснения различных частей последуют сразу за ним. Если вы не хотите откладывать удовольствие, вы можете посмотреть на результаты представленные на <a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>. (<em>Примечание:</em> это (пока) не очень приятно.)</p>
+<p>В качестве первого шага к добавлению ссылок и стилей к примеру приложения, мы добавим в файл шаблона сайта <code>application.html.erb</code> (последний раз мы его видели в <a class="ref" href="rails-flavored-ruby#code-application_layout_full_title">Листинге&nbsp;4.3</a>) дополнительные HTML структуры. Это подразумевает добавление нескольких дополнительных разделителей, немного CSS классов и запуск навигации по сайту. Полный файл представлен в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a>; объяснения различных частей последуют сразу за ним. Если вы не хотите откладывать удовольствие, вы можете посмотреть на результаты представленные на <a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>. (<em>Примечание:</em> это (пока) не очень приятно.)</p>
 
 <div class="label" id="code-layout_new_structure"></div>
 
@@ -78,7 +78,7 @@
 </div></div>
 
 
-<p>Перврвое что стоит отметить это переход от старого Ruby&nbsp;1.8&ndash;стиля хэшей к новому, Ruby&nbsp;1.9 - стилю (<a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Раздел&nbsp;4.3.3</a>). Здесь,</p>
+<p>Первое что стоит отметить это переход от старого Ruby&nbsp;1.8&ndash;стиля хэшей к новому, Ruby&nbsp;1.9 - стилю (<a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Раздел&nbsp;4.3.3</a>). Здесь,</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -637,13 +637,13 @@
 </div></div>
 
 
-<p>Конечно, подвал будет уродливым если его немного не отстилить (<a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.13</a>). Результаты представлены на <a class="ref" href="filling-in-the-layout#fig-site_with_footer">Рис.&nbsp;5.7</a>.</p>
+<p>Конечно, подвал будет уродливым, если его немного не отстилить (<a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.13</a>). Результаты представлены на <a class="ref" href="filling-in-the-layout#fig-site_with_footer">Рис.&nbsp;5.7</a>.</p>
 
 <div class="label" id="code-footer_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.13.</span> <span class="description">Добавлениеe CSS для подвала сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
+<div class="listing"><span class="header">Листинг 5.13.</span> <span class="description">Добавление CSS для подвала сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nc">.</span>
 <span class="nc">.</span>
@@ -740,12 +740,12 @@
 </div>
 
 
-<p>Теперь мы в состоянии понять причины по которым мы поместили файл <code>custom.css.scss</code> в директорию app/assets в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>: <code>custom.css.scss</code> специфичен для примера приложения поэтому он отравляется в <code>app/assets/stylesheets</code>.</p>
+<p>Теперь мы в состоянии понять причины по которым мы поместили файл <code>custom.css.scss</code> в директорию app/assets в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>: <code>custom.css.scss</code> специфичен для примера приложения, поэтому он отправляется в <code>app/assets/stylesheets</code>.</p>
 
 <h4><a id="sec-5_2_1_2" href="filling-in-the-layout#sec-5_2_1_2" class="heading">Файлы-манифесты</a></h4>
 
 
-<p>После того как вы поместили ваши ассеты в предназначенные им директории, вы можете использовать <em>файлы-манифесты</em> для того чтобы сказать Rails (с помошью гема <a href="https://github.com/sstephenson/sprockets#">Sprockets</a>) как скомбинировать их для того чтобы сформировать один единственный файл. (Это относится к CSS и JavaScript но не к изображениям.) В качестве примера, давайте взглянем на дефолтный манифест файл для таблиц стилей приложения (<a class="ref" href="filling-in-the-layout#code-app_css_manifest">Листинг&nbsp;5.14</a>).</p>
+<p>После того как вы поместили ваши ассеты в предназначенные им директории, вы можете использовать <em>файлы-манифесты</em> для того, чтобы сказать Rails (с помошью гема <a href="https://github.com/sstephenson/sprockets#">Sprockets</a>) как скомбинировать их для того чтобы сформировать один единственный файл. (Это относится к CSS и JavaScript но не к изображениям.) В качестве примера, давайте взглянем на дефолтный манифест файл для таблиц стилей приложения (<a class="ref" href="filling-in-the-layout#code-app_css_manifest">Листинг&nbsp;5.14</a>).</p>
 
 <div class="label" id="code-app_css_manifest"></div>
 
@@ -811,7 +811,7 @@
 
 <p><code>foobar.js.erb.coffee</code></p>
 
-<p>прогоняется и через CoffeeScript и через ERb (справа на лево, т.е. CoffeeScript первым).</p>
+<p>прогоняется и через CoffeeScript и через ERb (справа налево, т.е. CoffeeScript первым).</p>
 
 <h4><a id="sec-5_2_1_4" href="filling-in-the-layout#sec-5_2_1_4" class="heading">Производительность в продакшен</a></h4>
 
@@ -826,7 +826,7 @@
 
 <p><em>Sass</em> это язык для написания таблиц стилей который во многом улучшает CSS. В этом разделе мы узнаем о двух наиболее важных улучшениях: <em>вложенности</em> и <em>переменных</em>. (Третья техника, <em>примеси</em>, представлена в <a class="ref" href="sign-up#sec-rails_environments">Разделе&nbsp;7.1.1</a>.)</p>
 
-<p>Как было вкратце отмечено в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>, Sass поддерживает формат называемый SCSS (обозначается расширением файла <code>.scss</code>), который является расширерением самого CSS; то есть, SCSS только <em>добавлеят</em> возможности к CSS, вместо определения совершенного синтаксиса.<sup class="footnote" id="fnref-5_9"><a href="#fn-5_9">9</a></sup> Это означает, что любой валидный CSS файл будет валидным SCSS файлом, что удобно для проектов с уже написанным стилем. В нашем случае мы использовали SCSS с самого начала для совместимости с Bootstrap. Поскольку файлопровод в Rails автоматически использует Sass для обработки файлов с <code>.scss</code> расширением, файл <code>custom.css.scss</code> будет пропущен через препроцессор Sass прежде чем он будет упакован для доставки в браузер.</p>
+<p>Как было вкратце отмечено в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>, Sass поддерживает формат называемый SCSS (обозначается расширением файла <code>.scss</code>), который является расширерением самого CSS; то есть, SCSS только <em>добавляет</em> возможности к CSS, вместо определения совершенного синтаксиса.<sup class="footnote" id="fnref-5_9"><a href="#fn-5_9">9</a></sup> Это означает, что любой валидный CSS файл будет валидным SCSS файлом, что удобно для проектов с уже написанным стилем. В нашем случае мы использовали SCSS с самого начала для совместимости с Bootstrap. Поскольку файлопровод в Rails автоматически использует Sass для обработки файлов с <code>.scss</code> расширением, файл <code>custom.css.scss</code> будет пропущен через препроцессор Sass прежде чем он будет упакован для доставки в браузер.</p>
 
 <h4><a id="sec-5_2_2_1" href="filling-in-the-layout#sec-5_2_2_1" class="heading">Вложение</a></h4>
 
@@ -1402,7 +1402,7 @@
 
 <p>Это дает нам два варианта возможных варианта написания пути к странице help: <code>/help</code> и именованный маршрут <code>help_path</code> который возвращает путь к этой странице. (На самом деле использование <code>get</code> вместо <code>match</code> даст тот же именованнный маршрут, но использование <code>match</code> более принято.)</p>
 
-<p>Примеение этого паттерна к остальным статическим страницам приводит нас к <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листингу&nbsp;5.21</a>. Единственным исключением здесь является страница Home, о которой мы позаботимся в  <a class="ref" href="filling-in-the-layout#code-root_route">Листинге&nbsp;5.23</a>.</p>
+<p>Применение этого паттерна к остальным статическим страницам приводит нас к <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листингу&nbsp;5.21</a>. Единственным исключением здесь является страница Home, о которой мы позаботимся в  <a class="ref" href="filling-in-the-layout#code-root_route">Листинге&nbsp;5.23</a>.</p>
 
 <div class="label" id="code-static_page_routes"></div>
 
@@ -1647,7 +1647,7 @@
 </div>
 
 
-<p>Здесь стоит отметить одну вешь - все три примера включают посещение root_path. Мы можем устранить это дублирование с помощью блока <code>before</code>:</p>
+<p>Здесь стоит отметить одну вещь - все три примера включают посещение root_path. Мы можем устранить это дублирование с помощью блока <code>before</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
   <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">root_path</span> <span class="p">}</span>

@@ -22,7 +22,8 @@
 <h2><a id="sec-7_1" href="sign-up#sec-showing_users" class="heading"><span class="number">7.1</span> Демонстрация пользователей</a></h2>
 
 
-<p>В этом разделе мы сделаем первый шаг на пути к конечной странице пользователя, создав страницу для отображения имени и фотографии пользователя, на что указывает набросок страницы на <a class="ref" href="sign-up#fig-profile_mockup_profile_name">Рис.&nbsp;7.1</a>.<sup class="footnote" id="fnref-7_1"><a href="#fn-7_1">1</a></sup> Нашей конечной целью для страниц профиля пользователя является отображение фотографии пользователя, основных данныз пользователя и списка микросообщений, как показано на наброске в <a class="ref" href="sign-up#fig-profile_mockup">Рис.&nbsp;7.2</a>.<sup class="footnote" id="fnref-7_2"><a href="#fn-7_2">2</a></sup> (на <a class="ref" href="sign-up#fig-profile_mockup">Рис.&nbsp;7.2</a> показан наш первый пример <em>lorem ipsum</em> текста, который имеет <a href="http://www.straightdope.com/columns/read/2290/what-does-the-filler-text-lorem-ipsum-mean">захватывающую историю</a> которую вам решительто стоит прочитать на досуге.) Мы закончим эту задачу, а вместе с ней и пример приложения, в  <a class="ref" href="following-users#top">Главе&nbsp;11</a>.</p>
+<p>В этом разделе мы сделаем первый шаг на пути к конечной странице пользователя, создав страницу для отображения имени и фотографии пользователя, на что указывает набросок страницы на <a class="ref" href="sign-up#fig-profile_mockup_profile_name">Рис.&nbsp;7.1</a>.<sup class="footnote" id="fnref-7_1"><a href="#fn-7_1">1</a></sup> Нашей конечной целью для страниц профиля пользователя является отображение фотографии пользователя, основных данных
+большинстве пользователя и списка микросообщений, как показано на наброске в <a class="ref" href="sign-up#fig-profile_mockup">Рис.&nbsp;7.2</a>.<sup class="footnote" id="fnref-7_2"><a href="#fn-7_2">2</a></sup> (на <a class="ref" href="sign-up#fig-profile_mockup">Рис.&nbsp;7.2</a> показан наш первый пример <em>lorem ipsum</em> текста, который имеет <a href="http://www.straightdope.com/columns/read/2290/what-does-the-filler-text-lorem-ipsum-mean">захватывающую историю</a> которую вам решительно стоит прочитать на досуге.) Мы закончим эту задачу, а вместе с ней и пример приложения, в  <a class="ref" href="following-users#top">Главе&nbsp;11</a>.</p>
 
 <div class="label" id="fig-profile_mockup_profile_name"></div>
 
@@ -233,7 +234,7 @@
 
 <p>В конце <a class="ref" href="modeling-users#top">Главы&nbsp;6</a> мы создали нового пользователя в базе данных. Как показано в <a class="ref" href="modeling-users#sec-creating_a_user">Разделе&nbsp;6.3.5</a>, этот пользователь имеет id&nbsp;<code>1</code> и наша цель теперь заключается в создании страницы для отображения информации этого пользователя. Мы будем следовать соглашениям REST архитектуры предпочитаемой в Rails приложениях (<a class="ref" href="a-demo-app#sidebar-REST">Блок&nbsp;2.2</a>), что означает представление данных в качестве <em>ресурсов</em> которые могут быть созданы, показаны, обновлены, или уничтожены &mdash; четыре действия, соответствующие четырем фундаментальным операциям <tt>POST</tt>, <tt>GET</tt>, <tt>PUT</tt> и <tt>DELETE</tt> определенным <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">стандартом HTTP</a> (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.2</a>).</p>
 
-<p>Следуя принципам REST, на ресурсы обычно ссылаются, используя имя ресурса и уникальный идентификатор. Что это означает в контексте пользователей &mdash; о которых мы теперь думаем, как о <em>ресурсе</em> Users&mdash;то, что мы должны показать пользователя с id&nbsp;<code>1</code> выдав <tt>GET</tt> запрос к URL <tt>/users/1</tt>. Здесь <code>show</code> действие <em>неявно</em> в типе запроса &mdash;к огда Rails&rsquo; функции REST активированы, <tt>GET</tt> запросы автоматически обрабатываются <code>show</code> действием.</p>
+<p>Следуя принципам REST, на ресурсы обычно ссылаются, используя имя ресурса и уникальный идентификатор. Что это означает в контексте пользователей &mdash; о которых мы теперь думаем, как о <em>ресурсе</em> Users&mdash;то, что мы должны показать пользователя с id&nbsp;<code>1</code> выдав <tt>GET</tt> запрос к URL <tt>/users/1</tt>. Здесь <code>show</code> действие <em>неявно</em> в типе запроса &mdash;когда Rails&rsquo; функции REST активированы, <tt>GET</tt> запросы автоматически обрабатываются <code>show</code> действием.</p>
 
 <p>Мы видели в <a class="ref" href="a-demo-app#sec-a_user_tour">Разделе&nbsp;2.2.1</a> что страница для пользователя с id&nbsp;<code>1</code> имеет URI /users/1. К сожалению, сейчас посещение этой страницы лишь выдает ошибку (<a class="ref" href="sign-up#fig-profile_routing_error">Рис.&nbsp;7.4</a>).</p>
 
@@ -285,7 +286,8 @@
 
 
 <div class="table"><div class="center">
-<table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/users</td><td class="align_left"><code>index</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">страница показывающая список пользователей</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>show</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">страница показывающая пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/new</td><td class="align_left"><code>new</code></td><td class="align_left"><code>new_user_path</code></td><td class="align_left">страница для создания нового пользователя (signup)</td></tr><tr><td class="align_left"><tt>POST</tt></td><td class="align_left">/users</td><td class="align_left"><code>create</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">создание нового пользователя</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/edit</td><td class="align_left"><code>edit</code></td><td class="align_left"><code>edit_user_path(user)</code></td><td class="align_left">страница для редактирования пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>PUT</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>update</code></td><td class="align_left"><code>user_path(1)</code></td><td class="align_left">обновление пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>destroy</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">dудаление пользователя с id <code>1</code></td></tr></table></div><div class="caption"><span class="header">Таблица 7.1: </span><span class="description">RESTful маршруты, обеспеченные ресурсом Users в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>.</span></div></div>
+<table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/users</td><td class="align_left"><code>index</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">страница показывающая список пользователей</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>show</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">страница показывающая пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/new</td><td class="align_left"><code>new</code></td><td class="align_left"><code>new_user_path</code></td><td class="align_left">страница для создания нового пользователя (signup)</td></tr><tr><td class="align_left"><tt>POST</tt></td><td class="align_left">/users</td><td class="align_left"><code>create</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">создание нового пользователя</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/edit</td><td class="align_left"><code>edit</code></td><td class="align_left"><code>edit_user_path(user)</code></td><td class="align_left">страница для редактирования пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>PUT</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>update</code></td><td class="align_left"><code>user_path(1)</code></td><td class="align_left">обновление пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>destroy</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">удаление пользователя с
+большинстве id <code>1</code></td></tr></table></div><div class="caption"><span class="header">Таблица 7.1: </span><span class="description">RESTful маршруты, обеспеченные ресурсом Users в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>.</span></div></div>
 
 
 <p>С кодом в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>, маршруты работают, но страница по-прежнему не существует (<a class="ref" href="sign-up#fig-user_show_unknown_action_31">Рис.&nbsp;7.5</a>). Для того чтобы исправить это, мы начнем с минималистичной версии страницы профиля, которую мы откормим в <a class="ref" href="sign-up#sec-a_gravatar_image">Разделе&nbsp;7.1.4</a>.</p>
@@ -332,14 +334,16 @@
 </div></div>
 
 
-<p>Здесь мы использовали <code>params</code> для получения id&nbsp;пользователя. Когда мы сделаем соответствующий запрос в контроллер Users, <code>params[:id]</code> будет пользовательким id&nbsp;<tt>1</tt>, так что эфект тот же что и с методом <code>find</code></p>
+<p>Здесь мы использовали <code>params</code> для получения id&nbsp;пользователя. Когда мы сделаем соответствующий запрос в контроллер Users, <code>params[:id]</code> будет пользовательским
+большинстве id&nbsp;<tt>1</tt>, так что эффект тот же что и с методом <code>find</code></p>
 
 <div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>который мы видели в <a class="ref" href="modeling-users#sec-finding_user_objects">Разделе&nbsp;6.1.4</a>. (Технически, <code>params[:id]</code> являестя строкой&nbsp;<code>"1"</code>, но <code>find</code> достаточно умен, чтобы преобразовать это в целое число.)</p>
+<p>который мы видели в <a class="ref" href="modeling-users#sec-finding_user_objects">Разделе&nbsp;6.1.4</a>. (Технически, <code>params[:id]</code> является
+большинстве строкой&nbsp;<code>"1"</code>, но <code>find</code> достаточно умен, чтобы преобразовать это в целое число.)</p>
 
 <p>С представлением и определенным действием, URI <a href="http://localhost:3000/users/1">/users/1</a> работает замечательно (<a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a>). Обратите внимание что отладочная информация в <a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a> подтверждает значение <code>params[:id]</code>:</p>
 
@@ -416,7 +420,8 @@
 
 <p>где нам нужно заполнить коментарий соответствующим кодом. Здесь используется именованный маршрут <code>user_path</code> (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>) для генерации пути к странице показывающей данного пользователя. Затем мы тестируем что <code>h1</code> и <code>title</code> теги содержат имя пользователя.</p>
 
-<p>Для того чтобы создать необходимый объект модели User, мы можем использовать Active Record для создания пользователя посредством <code>User.create</code>, но практика показывает, что пользовательские <em>фабрики</em> являются более удобным способом определения и вставки в базу данных объектов user. Мы будем использовать фабрики генерируемые <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a> - Ruby гемом который сделан хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и RSpec, Factory Girl определяет предметно-ориентированный язык в Ruby, в данном случае предназначенный для определения объектов Active Record. Синтаксис прост, опирается на  Ruby блоки и кастомные методы для определения атрибутов описываемого объекта. Для случаев вроде тех что мы увидим в этой главе, преимущество над Active Record иожет быть неочевидным, но мы будем использовать более продвинутые техники фабрик в последующих главах. Например, в <a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Разделе&nbsp;9.3.3</a> нам понадобится создать набор пользователей с уникальными адресами электронной почты и фабрики позволят нам проделать это с легкостью.</p>
+<p>Для того чтобы создать необходимый объект модели User, мы можем использовать Active Record для создания пользователя посредством <code>User.create</code>, но практика показывает, что пользовательские <em>фабрики</em> являются более удобным способом определения и вставки в базу данных объектов user. Мы будем использовать фабрики генерируемые <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a> - Ruby гемом который сделан хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и RSpec, Factory Girl определяет предметно-ориентированный язык в Ruby, в данном случае предназначенный для определения объектов Active Record. Синтаксис прост, опирается на  Ruby блоки и кастомные методы для определения атрибутов описываемого объекта. Для случаев вроде тех что мы увидим в этой главе, преимущество над Active Record может
+большинстве быть неочевидным, но мы будем использовать более продвинутые техники фабрик в последующих главах. Например, в <a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Разделе&nbsp;9.3.3</a> нам понадобится создать набор пользователей с уникальными адресами электронной почты и фабрики позволят нам проделать это с легкостью.</p>
 
 <p>Как и с другими Ruby гемами, мы можем установить Factory Girl добавив строку в <code>Gemfile</code> используемый Bundler-ом (<a class="ref" href="sign-up#code-gemfile_factory_girl">Listing&nbsp;7.7</a>). (Поскольку Factory Girl нужна только в тестах, мы поместили ее в группу <code>:test</code>.)</p>
 
@@ -521,7 +526,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.10.</span> <span class="description">Добавление заголовка браузера и заголовка первого урованя для страницы профиля пользователя. <br /> <code>app/views/users/show.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 7.10.</span> <span class="description">Добавление заголовка браузера и заголовка первого уровня
+большинстве для страницы профиля пользователя. <br /> <code>app/views/users/show.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;h1&gt;</span><span class="cp">&lt;%=</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span> <span class="cp">%&gt;</span><span class="nt">&lt;/h1&gt;</span>
@@ -568,7 +574,8 @@
 
 <p>Определив базовую страницу пользователя в предыдущем разделе, теперь мы немного улучшим ее, добавив изображение пользователя и начальную реализацию боковой панели пользователя. При создании страницы мы сфокусируемся на ее внешнем виде, не особо заботясь о ее структуре, это означает, что (по крайней мере пока) мы не будем писать тесты. Когда мы подойдем к аспектам представления, более подверженным ошибкам, таким как пагинация (<a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Раздел&nbsp;9.3.3</a>), мы продолжим разработку через тестирование.</p>
 
-<p>Мы начнем с добавления &ldquo;всемирно признанного аватара&rdquo; (также известного как <a href="http://gravatar.com/">Граватар</a>) к профилю пользователя.<sup class="footnote" id="fnref-7_6"><a href="#fn-7_6">6</a></sup> Изначально Граватар был создан Tom Preston-Werner (сооснователем <a href="http://github.com/">GitHub</a>), впоследствии его приобрела компания <a href="http://automattic.com/">Automattic</a> (создатели <a href="http://wordpress.com/">WordPress</a>), это бесплатный сервис который позволяет польователям загружать изображения и связывать их с подконтрольными им адресами электронной почты. Gravatar это удобный способ добавить изображения пользователей не связываясь с проблемами загрузки изображений, их обрезкой и хранением; все что нам нужно, это создать правильный URI Gravatar изображения используя адрес электронной почты пользователя и соответствующее изображение Gravatar появится автоматически.<sup class="footnote" id="fnref-7_7"><a href="#fn-7_7">7</a></sup></p>
+<p>Мы начнем с добавления &ldquo;всемирно признанного аватара&rdquo; (также известного как <a href="http://gravatar.com/">Граватар</a>) к профилю пользователя.<sup class="footnote" id="fnref-7_6"><a href="#fn-7_6">6</a></sup> Изначально Граватар был создан Tom Preston-Werner (сооснователем <a href="http://github.com/">GitHub</a>), впоследствии его приобрела компания <a href="http://automattic.com/">Automattic</a> (создатели <a href="http://wordpress.com/">WordPress</a>), это бесплатный сервис который позволяет пользователям
+большинстве загружать изображения и связывать их с подконтрольными им адресами электронной почты. Gravatar это удобный способ добавить изображения пользователей не связываясь с проблемами загрузки изображений, их обрезкой и хранением; все что нам нужно, это создать правильный URI Gravatar изображения используя адрес электронной почты пользователя и соответствующее изображение Gravatar появится автоматически.<sup class="footnote" id="fnref-7_7"><a href="#fn-7_7">7</a></sup></p>
 
 <p>Мы планируем определить вспомогательную функцию <code>gravatar_for</code> которая будет возвращать изображение Граватар для данного пользователя, как это показано в <a class="ref" href="sign-up#code-user_show_view_with_gravatar">Листинге&nbsp;7.12</a>.</p>
 
@@ -594,7 +601,8 @@
 </div>
 
 
-<p>Из-за того что метод <code>gravatar_for</code> неопредлен, страница показывающая пользователя в настоящий момент не работает. (Отлов подобных ошибок это, возможно самый полезный аспект тестов представлений. Вот почему так важно наличие <em>хоть каких-то</em> тестов представлений, даже минималистичных.)</p>
+<p>Из-за того что метод <code>gravatar_for</code> неопределен
+большинстве, страница показывающая пользователя в настоящий момент не работает. (Отлов подобных ошибок это, возможно самый полезный аспект тестов представлений. Вот почему так важно наличие <em>хоть каких-то</em> тестов представлений, даже минималистичных.)</p>
 
 <p>По умолчанию, методы определеннные в любом файле хелпера является автоматически доступным в любом представлении, но для удобства мы поместим метод <code>gravatar_for</code> в файл для хелперов, связанных с контроллером Users. Как  <a href="http://en.gravatar.com/site/implement/hash/">отмечено на главной странице Граватар</a>, URI Граватара основывается на <a href="http://ru.wikipedia.org/wiki/MD5">MD5 хэше</a> адреса электронной почты пользователя. В Ruby, алгоритм MD5 хэширования реализутся с помощью метода <code>hexdigest</code>, который является частью библиотеки <code>Digest</code>:</p>
 
@@ -759,7 +767,8 @@
 <div class="label" id="fig-signup_mockup"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_mockup_bootstrap.png" alt="signup_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.11: </span><span class="description">Набросок стрыницы регистрации пользователей.&nbsp;<a href="http://railstutorial.org/images/figures/signup_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_mockup_bootstrap.png" alt="signup_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.11: </span><span class="description">Набросок страницы
+большинстве регистрации пользователей.&nbsp;<a href="http://railstutorial.org/images/figures/signup_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
 
 
 <p>Поскольку мы говорим о создании пользователей через веб-интерфейс, давайте удалим пользователя созданного через консоль в <a class="ref" href="modeling-users#sec-creating_a_user">Разделе&nbsp;6.3.5</a>. Простейшим способом сделать это является очистка базы данных с помощью Rake-задачи <code>db:reset</code>:</p>
@@ -877,9 +886,10 @@
 </div>
 
 
-<p>которая читается как естетсвенный язык и является намного более компактной.</p>
+<p>которая читается как естественный язык и является намного более компактной.</p>
 
-<p>Случай с валидными данными аналогичен, но вместо проверки того что количество пользователей не изменилось, мы проверяем что клик по кнопке изменяет их количество на 1:</p>
+<p>Случай с валидными данными аналогичен, но вместо проверки того, что количество
+большинстве пользователей не изменилось, мы проверяем что клик по кнопке изменяет их количество на 1:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">visit</span> <span class="n">signup_path</span>
 <span class="n">fill_in</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span>         <span class="ss">with:</span> <span class="s2">&quot;Example User&quot;</span>
@@ -958,7 +968,8 @@
 <h3><a id="sec-7_2_2" href="sign-up#sec-using_form_for" class="heading"><span class="number">7.2.2</span> Применение <tt>form_for</tt></a></h3>
 
 
-<p>Теперь, когда у нас есть хорошие провальные тесты для регистрации пользователя, мы начнем добиваться их прохождения, для начала создав <em>форму</em> для регистрации пользователей. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code>, который принимает объект Active Record и конструирует форму используя атрибуты объекта. Результат представлен в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>. (Читатели знакомые с  Rails&nbsp;2.x должны обратить вниманин что <code>form_for</code> использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; там где Rails&nbsp;2.x используют <tt class="verb">&lt;% form_for ... %&gt;</tt>, Rails&nbsp;3 вместо этого используют <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
+<p>Теперь, когда у нас есть хорошие провальные тесты для регистрации пользователя, мы начнем добиваться их прохождения, для начала создав <em>форму</em> для регистрации пользователей. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code>, который принимает объект Active Record и конструирует форму используя атрибуты объекта. Результат представлен в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>. (Читатели знакомые с  Rails&nbsp;2.x должны обратить внимание
+большинстве что <code>form_for</code> использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; там где Rails&nbsp;2.x используют <tt class="verb">&lt;% form_for ... %&gt;</tt>, Rails&nbsp;3 вместо этого используют <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
 
 <div class="label" id="code-signup_form"></div>
 
@@ -1431,7 +1442,8 @@
 </pre></div>
 </div>
 
-<p>Мы видим здесь что метод <code>empty?</code>, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby#sec-objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает на объекте ошибок Rails, возваращая <code>true</code> для пустого объекта и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, возваращающая <code>true</code> если существует какой-нибудь элемент и <code>false</code> в противном случае. (Кстати, все эти методы &mdash; <code>count</code>, <code>empty?</code> и <code>any?</code> &mdash; работают и на массивах Ruby. Мы найдем хорошее применение этому факту в <a class="ref" href="user-microposts#sec-showing_microposts">Разделе&nbsp;10.2</a>.)
+<p>Мы видим здесь что метод <code>empty?</code>, который мы впервые увидели в <a class="ref" href="rails-flavored-ruby#sec-objects_and_message_passing">Разделе&nbsp;4.2.3</a> в контексте строк, также работает на объекте ошибок Rails, возваращая <code>true</code> для пустого объекта и <code>false</code> в противном случае. Метод <code>any?</code> это просто противоположность <code>empty?</code>, возвращающая
+большинстве <code>true</code> если существует какой-нибудь элемент и <code>false</code> в противном случае. (Кстати, все эти методы &mdash; <code>count</code>, <code>empty?</code> и <code>any?</code> &mdash; работают и на массивах Ruby. Мы найдем хорошее применение этому факту в <a class="ref" href="user-microposts#sec-showing_microposts">Разделе&nbsp;10.2</a>.)
 
 <p>Другой новой идеей является текстовый хелпер <code>pluralize</code>. По умолчанию, он недоступен в консоли, но мы можем явно его включить через модуль <code>ActionView::Helpers::TextHelper</code>:<sup class="footnote" id="fnref-7_9"><a href="#fn-7_9">9</a></sup></p>
 

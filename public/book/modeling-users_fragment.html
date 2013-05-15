@@ -6,7 +6,8 @@
 
 <p><a class="ref" href="filling-in-the-layout#top">Главу&nbsp;5</a> мы закончили созданием страницы-заглушки для регистрации пользователей (<a class="ref" href="filling-in-the-layout#sec-user_signup">Раздел&nbsp;5.4</a>); в течение следующих четырех глав мы выполним обещание, неявное в этой начинающейся странице регистрации. Первый важный шаг это создание <em>модели данных</em> для пользователей нашего сайта, вместе со способом хранить эти данные. В <a class="ref" href="sign-up#top">Главе&nbsp;7</a> мы дадим пользователям возможность регистрироваться на нашем сайте и создадим страницу профиля пользователя. Как только пример приложения сможет создавать новых пользователей, мы также позволим им входить и выходить (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;8</a>) и в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a> (<a class="ref" href="updating-showing-and-deleting-users#sec-requiring_signed_in_users">Раздел&nbsp;9.2.1</a>) мы узнаем как защитить страницы от несанкцонированного доступа. Взятые вместе, материалы с <a class="ref" href="modeling-users#top">Главы&nbsp;6</a> по <a class="ref" href="updating-showing-and-deleting-users#top">Главу&nbsp;9</a> разрабатывают полную Rails систему входа и аутентификации. Как вы, возможно, знаете, для Rails существует множество готовых решений для аутентификации; <a class="ref" href="modeling-users#sidebar-roll_your_own">Блок&nbsp;6.1</a> поясняет почему разворачивание собственной системы является лучшей идеей.</p>
 
-<p>Это длинная и насыщенная действиями глава и вам она может показаться необычайно сложной, особенно если вы новичек в моделировании данных. Тем не менее, по ее окончании мы создадим весьма качественную систему для валидации, хранения и извлечения информации о пользователе.</p>
+<p>Это длинная и насыщенная действиями глава и вам она может показаться необычайно сложной, особенно если вы новичок
+большинстве в моделировании данных. Тем не менее, по ее окончании мы создадим весьма качественную систему для валидации, хранения и извлечения информации о пользователе.</p>
 
 <div class="label" id="sidebar-roll_your_own"></div>
 
@@ -166,7 +167,7 @@
 
 <p>Мы видели, как генерация модели User в <a class="ref" href="modeling-users#code:generate_user_model">Листинге&nbsp;6.1</a> сгенерировала файл миграции (<a class="ref" href="modeling-users#code:users_migration">Листинг&nbsp;6.2</a>) и мы видели на <a class="ref" href="modeling-users#fig-sqlite_database_browser">Рис.&nbsp;6.3</a> результаты выполнения этой миграции: это обновило файл <code>development.sqlite3</code>, создав таблицу <code>users</code> со столбцами <code>id</code>, <code>name</code>, <code>email</code>, <code>created_at</code> и <code>updated_at</code>. <a class="ref" href="modeling-users#code:generate_user_model">Листинг&nbsp;6.1</a> также создал саму модель; остальная часть этого раздела посвящена ее изучению.</p>
 
-<p>Мы начнем с рассмотрения кода для модели User, которая живет в файле <code>user.rb</code> в каталоге <code>app/models/</code> это, мягко выражаясь, очень компактно (<a class="ref" href="modeling-users#code:raw_user_model">Листинг&nbsp;6.3</a>). (<em>Примечание</em>: стороки <code>attr_accessible</code> не будет если вы используете Rails&nbsp;3.2.2 или более ранние версии. В этом случае, вам необходимо добавить ее в  <a class="ref" href="modeling-users#sec-accessible_attributes">Разделе&nbsp;6.1.2.2</a>.)</p>
+<p>Мы начнем с рассмотрения кода для модели User, которая живет в файле <code>user.rb</code> в каталоге <code>app/models/</code> это, мягко выражаясь, очень компактно (<a class="ref" href="modeling-users#code:raw_user_model">Листинг&nbsp;6.3</a>). (<em>Примечание</em>: строки <code>attr_accessible</code> не будет если вы используете Rails&nbsp;3.2.2 или более ранние версии. В этом случае, вам необходимо добавить ее в  <a class="ref" href="modeling-users#sec-accessible_attributes">Разделе&nbsp;6.1.2.2</a>.)</p>
 
 <div class="label" id="code:raw_user_model"></div>
 
@@ -562,9 +563,9 @@
 </div>
 
 
-<p>На болишинстве систем, ожидающие спеки отображаются желтыми, для указания на то что они находятся как бы между проходящими (зеленый) и провальными (красный) тестами.</p>
+<p>На большинстве систем, ожидающие спеки отображаются желтыми, для указания на то что они находятся как бы между проходящими (зеленый) и провальными (красный) тестами.</p>
 
-<p>Иы последуем совету дефолтного спека и заполним его неболишим количеством RSpec примеров, как это показано в <a class="ref" href="modeling-users#code:user_spec">Листинге&nbsp;6.8</a>.</p>
+<p>Мы последуем совету дефолтного спека и заполним его небольшим количеством RSpec примеров, как это показано в <a class="ref" href="modeling-users#code:user_spec">Листинге&nbsp;6.8</a>.</p>
 
 <div class="label" id="code:user_spec"></div>
 
@@ -1239,7 +1240,8 @@
 </pre></div>
 </div>
 
-<p>К сожалению, есть еще одно изменение которое мы должны сделать для того чтобы быть уверенными в уникальности email адресов - все email адреса должны быть в нижнем регистре, прежде чем они будут сохранены в базе данных. Причина заключается в том что не все адаптеры баз данных используют регистрозависимые индексы.<sup class="footnote" id="fnref-6_15"><a href="#fn-6_15">15</a></sup> Мы можем достигнуть этого с помощью <a href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>функции обратного вызова</em></a>, которая является методом который вызывается в конкретный момент жизни объекта Active Record (см. <a href="http://api.rubyonrails.org/v3.2.0/classes/ActiveRecord/Callbacks.html">Rails API</a>). В данном случае мы будем использовать функцию обратного вызова <code>before_save</code> для того чтобы принудить Rails переводить в нижний регистр email атрибут перед сохранением пользователя в базу данных, как это показано в <a class="ref" href="modeling-users#code-email_downcase">Листинге&nbsp;6.23</a>.</p>
+<p>К сожалению, есть еще одно изменение которое мы должны сделать для того чтобы быть уверенными в уникальности email адресов - все email адреса должны быть в нижнем регистре, прежде чем они будут сохранены в базе данных. Причина заключается в том что не все адаптеры баз данных используют регистрозависимые индексы.<sup class="footnote" id="fnref-6_15"><a href="#fn-6_15">15</a></sup> Мы можем достигнуть этого с помощью <a href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>функции обратного вызова</em></a>, которая является методом, который вызывается
+большинстве в конкретный момент жизни объекта Active Record (см. <a href="http://api.rubyonrails.org/v3.2.0/classes/ActiveRecord/Callbacks.html">Rails API</a>). В данном случае мы будем использовать функцию обратного вызова <code>before_save</code> для того чтобы принудить Rails переводить в нижний регистр email атрибут перед сохранением пользователя в базу данных, как это показано в <a class="ref" href="modeling-users#code-email_downcase">Листинге&nbsp;6.23</a>.</p>
 
 <div class="label" id="code-email_downcase"></div>
 
@@ -1291,7 +1293,7 @@
 <h3><a id="sec-6_3_1" href="modeling-users#sec-an_encrypted_password" class="heading"><span class="number">6.3.1</span> Зашифрованный пароль</a></h3>
 
 
-<p>Мы начнем с необходимого измениния модели данных для пользователей, что подразумевает добавление <code>password_digest</code> столбца в таблицу <code>users</code> (<a class="ref" href="modeling-users#fig-user_model_password_digest">Рис.&nbsp;6.5</a>). Название <em>digest</em> пришло из терминологии <a href="http://ru.wikipedia.org/wiki/Криптографическая_хэш-функция">криптографических хэш функций</a>, а само имя <code>password_digest</code> необходимо для работы реализации в <a class="ref" href="modeling-users#sec-has_secure_password">Разделе&nbsp;6.3.4</a>. Как следует зашифровав пароль, мы обеспечим невозможность получения доступа к сайту атакером, даже если он умудрится получить копию базы данных.</p>
+<p>Мы начнем с необходимого изменения модели данных для пользователей, что подразумевает добавление <code>password_digest</code> столбца в таблицу <code>users</code> (<a class="ref" href="modeling-users#fig-user_model_password_digest">Рис.&nbsp;6.5</a>). Название <em>digest</em> пришло из терминологии <a href="http://ru.wikipedia.org/wiki/Криптографическая_хэш-функция">криптографических хэш функций</a>, а само имя <code>password_digest</code> необходимо для работы реализации в <a class="ref" href="modeling-users#sec-has_secure_password">Разделе&nbsp;6.3.4</a>. Как следует зашифровав пароль, мы обеспечим невозможность получения доступа к сайту атакером, даже если он умудрится получить копию базы данных.</p>
 
 <div class="label" id="fig-user_model_password_digest"></div>
 
@@ -1590,7 +1592,8 @@
 
 <p>Если данный пароль совпадает с паролем пользователя, он должен вернуть пользователя; в противном случае он должен вернуть <code>false</code>.</p>
 
-<p>Как обычно, мы можем выразить требования для  <code>authenticate</code> используя RSpec. Получившиеся в результате тесты являются немного более продвинутыми чем те что мы видели до этого, так что давайте разобьем их на части; если вы новичек в RSpec, вам возможно понадобится прочитать этот раздел несколько раз. Мы начнем с того, что объект User должен отвечать на <code>authenticate</code>:</p>
+<p>Как обычно, мы можем выразить требования для  <code>authenticate</code> используя RSpec. Получившиеся в результате тесты являются немного более продвинутыми чем те что мы видели до этого, так что давайте разобьем их на части; если вы новичок
+большинстве в RSpec, вам возможно понадобится прочитать этот раздел несколько раз. Мы начнем с того, что объект User должен отвечать на <code>authenticate</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:authenticate</span><span class="p">)</span> <span class="p">}</span>
 </pre></div>
@@ -1645,7 +1648,8 @@
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 6.3.</span><span class="description">Применение <tt>let</tt></span></span>
-<p>RSpec метод <tt>let</tt> обеспечивает удобный способ для создания локальных переменных внутри тестов. Синтаксис может выглядеть немного странно, но его эфект аналогичен назначению переменной. Аргументом <tt>let</tt> является символ и он принмает блок, который возвращает значение назначаемое локальной переменной с именем символа. Другмими словами,</p>
+<p>RSpec метод <tt>let</tt> обеспечивает удобный способ для создания локальных переменных внутри тестов. Синтаксис может выглядеть немного странно, но его эффект аналогичен назначению переменной. Аргументом <tt>let</tt> является символ и он принимает блок, который возвращает значение назначаемое локальной переменной с именем символа. Другими
+большинстве словами,</p>
 
 <pre class="verbatim">let(:found_user) { User.find_by_email(@user.email) }</pre>
 
@@ -1832,7 +1836,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sqlite_user_row_with_password.png" alt="sqlite_user_row_with_password" /></span></div><div class="caption"><span class="header">Рис.&nbsp;6.6: </span><span class="description">Строка пользователя в базе данных SQLite <code>db/development.sqlite3</code>.&nbsp;<a href="http://railstutorial.org/images/figures/sqlite_user_row_with_password-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Вернувшись в консоль, мы пожем увидеть эфект  <code>has_secure_password</code> из <a class="ref" href="modeling-users#code:password_implementation">Листинга&nbsp;6.30</a> посмотрев на атрибут <code>password_digest</code>:</p>
+<p>Вернувшись в консоль, мы пожем увидеть эффект  <code>has_secure_password</code> из <a class="ref" href="modeling-users#code:password_implementation">Листинга&nbsp;6.30</a> посмотрев на атрибут <code>password_digest</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="s2">&quot;mhartl@example.com&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">.</span><span class="n">password_digest</span>

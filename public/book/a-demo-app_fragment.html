@@ -282,7 +282,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/demo_user_index_two_rails_3.png" alt="demo_user_index_two_rails_3" /></span></div><div class="caption"><span class="header">Рис. 2.9: </span><span class="description">Страница-список пользователей (<a href="http://localhost:3000/users">/users</a>) с вторым пользователем.&nbsp;<a href="/images/figures/demo_user_index_two_rails_3-full.png#">(полный размер)</a></span></div></div>
 
 
-<p>Показав как создавать, отображать и редактировать пользователей, мы переходим, наконец, к их уничтожению (<a class="ref" href="a-demo-app#fig-demo_destroy_user_rails_3">Рис.&nbsp;2.10</a>). Следует проверить, что клик по ссылке показанной на <a class="ref" href="a-demo-app#fig-demo_destroy_user_rails_3">Рис.&nbsp;2.10</a> уничтожает второго пользователя, приводя к index странице с одним пользователем. (Если это не работает, убедитесь, что JavaScript включен в вашем браузере; Rails использует JavaScript, чтобы выдать запрос, который должен уничтожить пользователя.) <a class="ref" href="updating-showing-and-deleting-users#sec-destroying_users">Раздел&nbsp;9.4</a> добавляет удаление пользователя к демонстрационному приложению, заботясь об ограничении его использования специальным классом административных пользователей.</p>
+<p>Показав как создавать, отображать и редактировать пользователей, мы переходим, наконец, к их удалению (<a class="ref" href="a-demo-app#fig-demo_destroy_user_rails_3">Рис.&nbsp;2.10</a>). Следует проверить, что клик по ссылке показанной на <a class="ref" href="a-demo-app#fig-demo_destroy_user_rails_3">Рис.&nbsp;2.10</a> уничтожает второго пользователя, приводя к index странице с одним пользователем. (Если это не работает, убедитесь, что JavaScript включен в вашем браузере; Rails использует JavaScript, чтобы выдать запрос, который должен уничтожить пользователя.) <a class="ref" href="updating-showing-and-deleting-users#sec-destroying_users">Раздел&nbsp;9.4</a> добавляет удаление пользователя к демонстрационному приложению, заботясь об ограничении его использования специальным классом административных пользователей.</p>
 
 <div class="label" id="fig-demo_destroy_user_rails_3"></div>
 
@@ -560,7 +560,7 @@
 </div>
 
 
-<p>чтобы обновить нашу базу данных с новой моделью данных, мы должны запустить миграцию как в <a class="ref" href="a-demo-app#sec-demo_users_resource">Разделе&nbsp;2.2</a>:</p>
+<p>Чтобы обновить нашу базу данных с новой моделью данных, мы должны запустить миграцию как в <a class="ref" href="a-demo-app#sec-demo_users_resource">Разделе&nbsp;2.2</a>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:migrate
 <span class="go">==  CreateMicroposts: migrating ===============================================</span>
