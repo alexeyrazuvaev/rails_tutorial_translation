@@ -1,0 +1,22 @@
+| <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+html lang='ru' xml:lang='ru' xmlns='http://www.w3.org/1999/xhtml'
+  head= render 'layouts/head'
+
+  - unless params[:controller] == 'pages'
+    body.book
+      #container
+        = render 'layouts/header'
+        #content
+          = render 'layouts/sidebar'
+          #main.withsidebar
+            #book_menu
+              = link_to 'пропустить содержание', "#main_content"
+            = yield
+          = render 'layouts/vendor_parts/reformal'
+          .orphus.center: script type="text/javascript" src="/javascripts/orphus.js"
+          = render 'layouts/vendor_parts/yandex_metrika'
+  - else
+    = yield
+
+
+

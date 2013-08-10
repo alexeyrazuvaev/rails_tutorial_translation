@@ -1,0 +1,25 @@
+#sidebar
+  .content
+    #navtool
+      table.layout
+        tr
+          td colspan='2' = link_to image_tag("/images/buttons/sb_button_up.png"), "#book_menu"
+        tr
+          td= prev_button(@content)
+          td= next_button(@content)
+      br
+      = link_to image_tag("/images/buttons/sb_button_buy_screencasts_red.png"), "http://ruby.railstutorial.org/#buy"
+      .section
+        .switcher.custom
+          span class="switcher_link #{params[:version] ? '' : 'title round'}"
+            = link_to 'Rails 3.2', "/chapters/beginning"
+          '•
+          span class="switcher_link #{params[:version] ? 'title round' : ''}"
+            = link_to 'Rails 3.0', "/chapters/beginning?version=3.0"
+
+      a rel="nofollow" href="http://orphus.ru" id="orphus" target="_blank"
+        img alt="Система Orphus" src="/images/orphus.gif" border="0" width="88" height="31"
+
+
+
+

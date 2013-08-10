@@ -1,0 +1,20 @@
+#header.clearfix
+  #title
+    #logo
+      =link_to image_tag("/images/layout/logo.png"), "http://ruby.railstutorial.org/"
+
+    h1#name= link_to 'Ruby on Rails Tutorial', "http://ruby.railstutorial.org/"
+    br
+    h2#authors= link_to 'by Michael Hartl', "http://ruby.railstutorial.org/#author"
+
+#menu
+  .links
+    .box
+      span= link_to 'Оригинал', "http://ruby.railstutorial.org/"
+      span.division |
+      span= link_to 'Содержание', "/chapters/beginning<%= params[:version] ? '?version=3.0' : '' %>"
+      span.division |
+      span= link_to 'Помощь', help_path
+
+
+
