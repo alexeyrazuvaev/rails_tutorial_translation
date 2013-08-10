@@ -206,7 +206,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/public_index_rails_3.png" alt="public_index_rails_3" /></span></div><div class="caption"><span class="header">Рис. 3.2: </span><span class="description">Файл <code>public/index.html</code>.&nbsp;<a href="http://railstutorial.org/images/figures/public_index_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы узнать, откуда берется эта страница, взгляните на файл <code>public/index.html</code> (<a class="ref" href="static-pages#fig-public_index_rails_3">Рис. 3.2</a>). Он немного грязноват, так как содержит свою собственную информацию о стилях, но он выполняет свою работу: по умолчанию, Rails обрабатывает любые файлы из <code>public</code> каталога, отправляя их непосредственно в браузер.<sup class="footnote" id="fnref-3_5"><a href="#fn-3_5">5</a></sup> В случае специального <code>index.html</code> файла, по умолчанию, вы можете даже не указывать файл в URI, как <code>index.html</code> Хотя вы можете включить его, если хотите; адреса <pre class="verbatim">http://localhost:3000/</pre> и <pre class="verbatim">http://localhost:3000/index.html</pre> эквивалентны.</p>
+<p>Чтобы узнать, откуда берется эта страница, взгляните на файл <code>public/index.html</code> (<a class="ref" href="static-pages#fig-public_index_rails_3">Рис. 3.2</a>). Он немного грязноват, так как содержит свою собственную информацию о стилях, но он выполняет свою работу: по умолчанию, Rails обрабатывает любые файлы из <code>public</code> каталога, отправляя их непосредственно в браузер.<sup class="footnote" id="fnref-3_5"><a href="#fn-3_5">5</a></sup> В случае специального <code>index.html</code> файла, по умолчанию, вы можете даже не указывать файл в URI, как <code>index.html</code> Хотя вы можете включить его, если хотите; адреса http://localhost:3000/ и http://localhost:3000/index.html эквивалентны.</p>
 
 <p>Как и следовало ожидать, если захотим, мы можем сделать наши собственные статические файлы HTML и положить их в тот же <code>public</code> каталог как и <code>index.html</code>. Например, давайте создадим файл с дружеским приветствием  (<a class="ref" href="static-pages#code-hello_world">Листинг&nbsp;3.3</a>):<sup class="footnote" id="fnref-3_6"><a href="#fn-3_6">6</a></sup></p>
 
@@ -440,7 +440,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div></div>
 
 
-<p>Здесь мы видим что <code>static_pages_controller.rb</code> определяет <em>class</em> называемый <code>StaticPagesController</code>.  Классы это всего лишь удобный способ организации  <em>функций</em> (также называемых <em>методами</em>) таких как <code>home</code> и <code>help</code> действия, определяемых с помощью ключевого слова <code>def</code>. Угловая скобка <code></code> указывает на то, что <code>StaticPagesController</code> <em>наследует</em> от  Rails класса <code>ApplicationController</code>; как мы увидим через мгновение, это означает, что наши страницы оснащены большим количеством Rails-специфичных функций. (Мы узнаем больше об этих двух классах и наследовании в <a class="ref" href="rails-flavored-ruby#sec-ruby_classes">Разделе&nbsp;4.4</a>.)</p>
+<p>Здесь мы видим что <code>static_pages_controller.rb</code> определяет <em>class</em> называемый <code>StaticPagesController</code>.  Классы это всего лишь удобный способ организации  <em>функций</em> (также называемых <em>методами</em>) таких как <code>home</code> и <code>help</code> действия, определяемых с помощью ключевого слова <code>def</code>. Угловая скобка <code> < </code> указывает на то, что <code>StaticPagesController</code> <em>наследует</em> от  Rails класса <code>ApplicationController</code>; как мы увидим через мгновение, это означает, что наши страницы оснащены большим количеством Rails-специфичных функций. (Мы узнаем больше об этих двух классах и наследовании в <a class="ref" href="rails-flavored-ruby#sec-ruby_classes">Разделе&nbsp;4.4</a>.)</p>
 
 <p>В случае со StaticPages контроллером, оба его метода изначально пусты:</p>
 
@@ -679,7 +679,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Один тест должен провалиться. (Поскольку системы будут развиваться, и в связи с тем, что при таком количестве тестов отслеживание этих изменений  на каждой итерации учебника это ночной кошмар техподдержки, я буду опускать вывод RSpec с этого момента.)</p>
 
-<p>Как видно из <a class="ref" href="static-pages#code-help_page_passing">Листинга 3.12</a>, код приложения (который пока является чистым HTML) аналогичен коду из <a class="ref" href="static-pages#code-home_page_passing">Листинга 3.10</a>.
+<p>Как видно из <a class="ref" href="static-pages#code-help_page_passing">Листинга 3.12</a>, код приложения (который пока является чистым HTML) аналогичен коду из <a class="ref" href="static-pages#code-home_page_passing">Листинга 3.10</a>.</p>
 
 <div class="label" id="code-help_page_passing"></div>
 
