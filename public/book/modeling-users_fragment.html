@@ -6,8 +6,7 @@
 
 <p><a class="ref" href="filling-in-the-layout#top">Главу&nbsp;5</a> мы закончили созданием страницы-заглушки для регистрации пользователей (<a class="ref" href="filling-in-the-layout#sec-user_signup">Раздел&nbsp;5.4</a>); в течение следующих четырех глав мы выполним обещание, неявное в этой начинающейся странице регистрации. Первый важный шаг это создание <em>модели данных</em> для пользователей нашего сайта, вместе со способом хранить эти данные. В <a class="ref" href="sign-up#top">Главе&nbsp;7</a> мы дадим пользователям возможность регистрироваться на нашем сайте и создадим страницу профиля пользователя. Как только пример приложения сможет создавать новых пользователей, мы также позволим им входить и выходить (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;8</a>) и в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a> (<a class="ref" href="updating-showing-and-deleting-users#sec-requiring_signed_in_users">Раздел&nbsp;9.2.1</a>) мы узнаем как защитить страницы от несанкцонированного доступа. Взятые вместе, материалы с <a class="ref" href="modeling-users#top">Главы&nbsp;6</a> по <a class="ref" href="updating-showing-and-deleting-users#top">Главу&nbsp;9</a> разрабатывают полную Rails систему входа и аутентификации. Как вы, возможно, знаете, для Rails существует множество готовых решений для аутентификации; <a class="ref" href="modeling-users#sidebar-roll_your_own">Блок&nbsp;6.1</a> поясняет почему разворачивание собственной системы является лучшей идеей.</p>
 
-<p>Это длинная и насыщенная действиями глава и вам она может показаться необычайно сложной, особенно если вы новичок
-большинстве в моделировании данных. Тем не менее, по ее окончании мы создадим весьма качественную систему для валидации, хранения и извлечения информации о пользователе.</p>
+<p>Это длинная и насыщенная действиями глава и вам она может показаться необычайно сложной, особенно если вы новичок в моделировании данных. Тем не менее, по ее окончании мы создадим весьма качественную систему для валидации, хранения и извлечения информации о пользователе.</p>
 
 <div class="label" id="sidebar-roll_your_own"></div>
 
@@ -51,7 +50,7 @@
 <h3><a id="sec-6_1_1" href="modeling-users#sec-database_migrations" class="heading"><span class="number">6.1.1</span> Миграции базы данных</a></h3>
 
 
-<p>Можно вспомнить из <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Раздела&nbsp;4.4.5</a> , что мы уже встречали, в сделанном нами классе <code>User</code> объекты user с атрибутами <code>name</code> и <code>email</code>. Тот класс служил полезным примером, но он испытывал недостаток в критическом свойстве <em>персистентности</em>: когда мы создали объект User в консоли Rails, он исчез, как только мы вышли. Наша цель в этом Разделе состоит в том, чтобы создать модель для пользователей, которые не будут исчезать так легко.</p>
+<p>Можно вспомнить из <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Раздела&nbsp;4.4.5</a> , что мы уже встречали, в созданном нами классе <code>User</code> объекты user с атрибутами <code>name</code> и <code>email</code>. Тот класс служил полезным примером, но он испытывал недостаток в критическом свойстве <em>персистентности</em>: когда мы создали объект User в консоли Rails, он исчез, как только мы вышли. Наша цель в этом Разделе состоит в том, чтобы создать модель для пользователей, которые не будут исчезать так легко.</p>
 
 <p>Как и с классом User в <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Разделе&nbsp;4.4.5</a>, мы начнем с моделирования пользователя с двумя атрибутами: <code>name</code> и <code>email</code>, последний мы будем использовать в качестве уникального имени пользователя.<sup class="footnote" id="fnref-6_3"><a href="#fn-6_3">3</a></sup> (Мы добавим атрибут пароля в <a class="ref" href="modeling-users#sec-adding_a_secure_password">Разделе&nbsp;6.3</a>.) В <a class="ref" href="rails-flavored-ruby#code:example_user">Листинге&nbsp;4.9</a> мы сделали это с помощью Ruby-метода <code>attr_accessor</code>:</p>
 
@@ -334,7 +333,7 @@
 </div>
 
 
-<p>Метод <code>save</code>возвращает <code>true</code> если сохранение успешно выполнилось и <code>false</code> если сохранение не выполнено. (Сейчас все сохранения должны успешно выполняться; но в <a class="ref" href="modeling-users#sec-user_validations">Разделе&nbsp;6.2</a> мы увидим случаи, когда некоторые из них не сработают.), После сохранения в development log должна появиться строка с командой SQL <code>INSERT INTO "users"</code>. Из-за множества методов, предоставляемых Active Record, в этой книге нам не потребуется необработанный SQL и я опущу обсуждение команд SQL с этого времени. Но вы можете многому научиться, наблюдая за логами</p>
+<p>Метод <code>save</code> возвращает <code>true</code> если сохранение успешно выполнилось и <code>false</code> если сохранение не выполнено. (Сейчас все сохранения должны успешно выполняться; но в <a class="ref" href="modeling-users#sec-user_validations">Разделе&nbsp;6.2</a> мы увидим случаи, когда некоторые из них не сработают.), После сохранения в development log должна появиться строка с командой SQL <code>INSERT INTO "users"</code>. Из-за множества методов, предоставляемых Active Record, в этой книге нам не потребуется необработанный SQL и я опущу обсуждение команд SQL с этого времени. Но вы можете многому научиться, наблюдая за логами</p>
 
 <p>Вы, возможно, заметили что у нового объекта  user  были <code>nil</code> значения для атрибутов <code>id</code> и волшебных столбцов <code>created_at</code> и <code>updated_at</code>. Давайте посмотрим, изменило ли наше <code>save</code> что-нибудь:</p>
 
@@ -662,7 +661,7 @@
 <h3><a id="sec-6_2_2" href="modeling-users#sec-presence_validation" class="heading"><span class="number">6.2.2</span> Валидация наличия</a></h3>
 
 
-<p>Возможно самой элементарной валидацией является валидация <em>наличия</em>, которая просто проверяет что данный атрибут имеется в наличии. Например, в даннам разделе мы убеждаемся что оба name и email поля заполнены прежде чем пользователь будет сохранен в базе данных. В <a class="ref" href="sign-up#sec-signup_error_messages">Разделе&nbsp;7.3.2</a> мы увидим как распространить это требование на форму регистрации новых пользователей.</p>
+<p>Возможно самой элементарной валидацией является валидация <em>наличия</em>, которая просто проверяет что данный атрибут имеется в наличии. Например, в данном разделе мы убеждаемся что оба name и email поля заполнены прежде чем пользователь будет сохранен в базе данных. В <a class="ref" href="sign-up#sec-signup_error_messages">Разделе&nbsp;7.3.2</a> мы увидим как распространить это требование на форму регистрации новых пользователей.</p>
 
 <p>Мы начнем с теста на наличие атрибута <code>name</code>. Хотя первым шагом в TDD является написание <em>провального</em> теста (<a class="ref" href="static-pages#sec-TDD">Раздел&nbsp;3.2.1</a>), в данном случае мы пока недостаточно знаем о валидации для того чтобы написать годный тест, так что мы вначале напишем валидацию и немного поиграем с ней в консоли, - чтобы побольше узнать о ней. Затем мы закомментируем валидацию, напишем провальный тест и проверим что раскомментирование валидации приводит к прохождению теста. Эта процедура может показаться излишне педантичной для такого простого теста, но я видел много &ldquo;простых&rdquo; тестов, которые на самом деле тестировали неправильные вещи; дотошность в TDD это просто <em>единственный</em> способ быть уверенными в том что мы тестируем правильные вещи. (Такая техника закомментирования также полезна при спасении приложения, код  которого уже написан, но&mdash;<a href="http://en.wiktionary.org/wiki/quelle_horreur"><em>quelle horreur!</em></a> &mdash; (# какой ужас - фр.) не имеет тестов.)</p>
 
@@ -1050,7 +1049,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/rubular.png" alt="rubular" /></span></div><div class="caption"><span class="header">Рис.&nbsp;6.4: </span><span class="description">Удивительный редактор регулярных выражений  <a href="http://www.rubular.com/">Rubular</a>.&nbsp;<a href="http://railstutorial.org/images/figures/rubular-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Теперь тесты должны пройти. (Фактически, тесты для валидных адресов электронной почты должны были проходить все время; так как регулярные выражения, как известно, подвержены ошибкам, действительные испытания электронной почты в основном заключаются в санитарной проверке на <code>VALID_EMAIL_REGEX</code>.) Это означает, что осталось только одно ограничение: обеспечение уникальности адресов электронной почты.</p>
+<p>Теперь тесты должны пройти. (Фактически, тесты для валидных адресов электронной почты должны были проходить все время; так как регулярные выражения, как известно, подвержены ошибкам, действительные испытания электронной почты в основном заключаются в санитарной проверке на <code>VALID_EMAIL_REGEX</code>.) Это означает, что осталось рассмотреть только одно ограничение: обеспечение уникальности адресов электронной почты.</p>
 
 <div class="label" id="sec-uniqueness_validation"></div>
 
@@ -1240,8 +1239,7 @@
 </pre></div>
 </div>
 
-<p>К сожалению, есть еще одно изменение которое мы должны сделать для того чтобы быть уверенными в уникальности email адресов - все email адреса должны быть в нижнем регистре, прежде чем они будут сохранены в базе данных. Причина заключается в том что не все адаптеры баз данных используют регистрозависимые индексы.<sup class="footnote" id="fnref-6_15"><a href="#fn-6_15">15</a></sup> Мы можем достигнуть этого с помощью <a href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>функции обратного вызова</em></a>, которая является методом, который вызывается
-большинстве в конкретный момент жизни объекта Active Record (см. <a href="http://api.rubyonrails.org/v3.2.0/classes/ActiveRecord/Callbacks.html">Rails API</a>). В данном случае мы будем использовать функцию обратного вызова <code>before_save</code> для того чтобы принудить Rails переводить в нижний регистр email атрибут перед сохранением пользователя в базу данных, как это показано в <a class="ref" href="modeling-users#code-email_downcase">Листинге&nbsp;6.23</a>.</p>
+<p>К сожалению, есть еще одно изменение которое мы должны сделать для того чтобы быть уверенными в уникальности email адресов - все email адреса должны быть в нижнем регистре, прежде чем они будут сохранены в базе данных. Причина заключается в том что не все адаптеры баз данных используют регистрозависимые индексы.<sup class="footnote" id="fnref-6_15"><a href="#fn-6_15">15</a></sup> Мы можем достигнуть этого с помощью <a href="http://ru.wikipedia.org/wiki/Callback_(программирование)"><em>функции обратного вызова</em></a>, которая является методом, который вызывается в конкретный момент жизни объекта Active Record (см. <a href="http://api.rubyonrails.org/v3.2.0/classes/ActiveRecord/Callbacks.html">Rails API</a>). В данном случае мы будем использовать функцию обратного вызова <code>before_save</code> для того чтобы принудить Rails переводить в нижний регистр email атрибут перед сохранением пользователя в базу данных, как это показано в <a class="ref" href="modeling-users#code-email_downcase">Листинге&nbsp;6.23</a>.</p>
 
 <div class="label" id="code-email_downcase"></div>
 
@@ -1592,8 +1590,7 @@
 
 <p>Если данный пароль совпадает с паролем пользователя, он должен вернуть пользователя; в противном случае он должен вернуть <code>false</code>.</p>
 
-<p>Как обычно, мы можем выразить требования для  <code>authenticate</code> используя RSpec. Получившиеся в результате тесты являются немного более продвинутыми чем те что мы видели до этого, так что давайте разобьем их на части; если вы новичок
-большинстве в RSpec, вам возможно понадобится прочитать этот раздел несколько раз. Мы начнем с того, что объект User должен отвечать на <code>authenticate</code>:</p>
+<p>Как обычно, мы можем выразить требования для  <code>authenticate</code> используя RSpec. Получившиеся в результате тесты являются немного более продвинутыми чем те что мы видели до этого, так что давайте разобьем их на части; если вы новичок в RSpec, вам возможно понадобится прочитать этот раздел несколько раз. Мы начнем с того, что объект User должен отвечать на <code>authenticate</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:authenticate</span><span class="p">)</span> <span class="p">}</span>
 </pre></div>
@@ -1648,8 +1645,7 @@
 
 
 <div class="sidebar"><span class="title"><span class="header">Блок 6.3.</span><span class="description">Применение <tt>let</tt></span></span>
-<p>RSpec метод <tt>let</tt> обеспечивает удобный способ для создания локальных переменных внутри тестов. Синтаксис может выглядеть немного странно, но его эффект аналогичен назначению переменной. Аргументом <tt>let</tt> является символ и он принимает блок, который возвращает значение назначаемое локальной переменной с именем символа. Другими
-большинстве словами,</p>
+<p>RSpec метод <tt>let</tt> обеспечивает удобный способ для создания локальных переменных внутри тестов. Синтаксис может выглядеть немного странно, но его эффект аналогичен назначению переменной. Аргументом <tt>let</tt> является символ и он принимает блок, который возвращает значение назначаемое локальной переменной с именем символа. Другими словами,</p>
 
 <pre class="verbatim">let(:found_user) { User.find_by_email(@user.email) }</pre>
 
@@ -1828,7 +1824,7 @@
 </div>
 
 
-<p>Для того чтобы проверить что это работает, давайте взглянем на строку в девелопмент базде данных (<code>db/development.sqlite3</code>) с помощью SQLite Database Browser (<a class="ref" href="modeling-users#fig-sqlite_user_row">Рис.&nbsp;6.6</a>). Обратите внимание, что столбцы соответствуют атрибутам модели данных, определенной на <a class="ref" href="modeling-users#fig-user_model_password_digest">Рис.&nbsp;6.5</a>.</p>
+<p>Для того чтобы проверить что это работает, давайте взглянем на строку в девелопмент базе данных (<code>db/development.sqlite3</code>) с помощью SQLite Database Browser (<a class="ref" href="modeling-users#fig-sqlite_user_row">Рис.&nbsp;6.6</a>). Обратите внимание, что столбцы соответствуют атрибутам модели данных, определенной на <a class="ref" href="modeling-users#fig-user_model_password_digest">Рис.&nbsp;6.5</a>.</p>
 
 <div class="label" id="fig-sqlite_user_row"></div>
 
@@ -1836,7 +1832,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sqlite_user_row_with_password.png" alt="sqlite_user_row_with_password" /></span></div><div class="caption"><span class="header">Рис.&nbsp;6.6: </span><span class="description">Строка пользователя в базе данных SQLite <code>db/development.sqlite3</code>.&nbsp;<a href="http://railstutorial.org/images/figures/sqlite_user_row_with_password-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Вернувшись в консоль, мы пожем увидеть эффект  <code>has_secure_password</code> из <a class="ref" href="modeling-users#code:password_implementation">Листинга&nbsp;6.30</a> посмотрев на атрибут <code>password_digest</code>:</p>
+<p>Вернувшись в консоль, мы можем увидеть эффект  <code>has_secure_password</code> из <a class="ref" href="modeling-users#code:password_implementation">Листинга&nbsp;6.30</a> посмотрев на атрибут <code>password_digest</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="s2">&quot;mhartl@example.com&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">.</span><span class="n">password_digest</span>
@@ -1889,7 +1885,7 @@
 
 <ol>
 
-<li>Добавьте тесты для кода отвечающего за перевод email в нижний регистр из <a class="ref" href="modeling-users#code-email_downcase">Листинга&nbsp;6.23</a>, как это показано в <a class="ref" href="modeling-users#code-email_downcase_test">Листинге&nbsp;6.31</a>. Закомменирова строку <code>before_save</code> убедитесь что тесты из <a class="ref" href="modeling-users#code-email_downcase_test">Листинга&nbsp;6.31</a> тестируют правильные вещи.</li>
+<li>Добавьте тесты для кода отвечающего за перевод email в нижний регистр из <a class="ref" href="modeling-users#code-email_downcase">Листинга&nbsp;6.23</a>, как это показано в <a class="ref" href="modeling-users#code-email_downcase_test">Листинге&nbsp;6.31</a>. Закомменировав строку <code>before_save</code> убедитесь что тесты из <a class="ref" href="modeling-users#code-email_downcase_test">Листинга&nbsp;6.31</a> тестируют правильные вещи.</li>
 
 <li>Запустив набор тестов убедитесь что коллбэк <code>before_save</code> может быть написан способом показанным в <a class="ref" href="modeling-users#code-downcase_bang">Листинге&nbsp;6.32</a>.</li>
 

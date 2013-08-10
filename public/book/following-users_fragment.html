@@ -15,7 +15,7 @@
 </div>
 
 
-<p>Так как материал этой главы особенно сложен, прежде чем писать код, мы улучим момент и сделаем небольшой обзор интерфейса. Как и в предыдущих главах, на этом раннем этапе мы будем представлять страницы используя наброски.<sup class="footnote" id="fnref-11_1"><a href="#fn-11_1">1</a></sup>  Полная последовательность страниц работает следующим образом: пользователь, (John Calvin) начинает на странице своего профиля (<a class="ref" href="following-users#fig-page_flow_profile_mockup">Рис.&nbsp;11.1</a>) и переходит на страницу со списком пользователей (<a class="ref" href="following-users#fig-page_flow_user_index_mockup">Рис.&nbsp;11.2</a>) для того, чтобы выбрать пользователя, сообщения которого он будет читать. Calvin переходит на страницу профиля выбранного пользователя, Thomas-а Hobbes-а (<a class="ref" href="following-users#fig-page_flow_other_profile_follow_button_mockup">Рис.&nbsp;11.3</a>), кликает по кнопке &ldquo;Follow&rdquo;, чтобы читать сообщения этого пользователя. Это изменяет кнопку &ldquo;Follow&rdquo; на &ldquo;Unfollow&rdquo;, и увеличивает количество &ldquo;followers&rdquo; товарища Hobbes-а на единицу (<a class="ref" href="following-users#fig-page_flow_other_profile_unfollow_button_mockup">Рис.&nbsp;11.4</a>). Вернувшись на свою главную страницу, Calvin теперь видит увеличившееся количество &ldquo;following&rdquo; и обнаруживает микросообщения Hobbes-а в своем потоке сообщений (<a class="ref" href="following-users#fig-page_flow_home_page_feed_mockup">Рис.&nbsp;11.5</a>). Остальная часть этой главы посвящена реализации этой последовательности.</p>
+<p>Так как материал этой главы особенно сложен, прежде чем писать код, мы <a href='http://ru.wiktionary.org/wiki/улучить'>улучим</a> момент и сделаем небольшой обзор интерфейса. Как и в предыдущих главах, на этом раннем этапе мы будем представлять страницы используя наброски.<sup class="footnote" id="fnref-11_1"><a href="#fn-11_1">1</a></sup>  Полная последовательность страниц работает следующим образом: пользователь, (John Calvin) начинает на странице своего профиля (<a class="ref" href="following-users#fig-page_flow_profile_mockup">Рис.&nbsp;11.1</a>) и переходит на страницу со списком пользователей (<a class="ref" href="following-users#fig-page_flow_user_index_mockup">Рис.&nbsp;11.2</a>) для того, чтобы выбрать пользователя, сообщения которого он будет читать. Calvin переходит на страницу профиля выбранного пользователя, Thomas-а Hobbes-а (<a class="ref" href="following-users#fig-page_flow_other_profile_follow_button_mockup">Рис.&nbsp;11.3</a>), кликает по кнопке &ldquo;Follow&rdquo;, чтобы читать сообщения этого пользователя. Это изменяет кнопку &ldquo;Follow&rdquo; на &ldquo;Unfollow&rdquo;, и увеличивает количество &ldquo;followers&rdquo; товарища Hobbes-а на единицу (<a class="ref" href="following-users#fig-page_flow_other_profile_unfollow_button_mockup">Рис.&nbsp;11.4</a>). Вернувшись на свою главную страницу, Calvin теперь видит увеличившееся количество &ldquo;following&rdquo; и обнаруживает микросообщения Hobbes-а в своем потоке сообщений (<a class="ref" href="following-users#fig-page_flow_home_page_feed_mockup">Рис.&nbsp;11.5</a>). Остальная часть этой главы посвящена реализации этой последовательности.</p>
 
 <div class="label" id="fig-page_flow_profile_mockup"></div>
 
@@ -150,7 +150,7 @@
 </div>
 
 
-<p>(Сравните с индексом уникальности email из <a class="ref" href="modeling-users#code-email_uniqueness_index">Листинга&nbsp;6.22</a>.) Как мы увидим в <a class="ref" href="following-users#sec-following">Разделе&nbsp;11.1.4</a>, , наш пользовательский интерфейс не позволит этому случиться, но добавление индекса уникальности позволит избежать ошибки в случае, если пользователь попытается дублировать взаимотношения любым другим способом (используя, например, инструмент командной строки, такой как <tt>curl</tt>). Мы могли бы также добавить валидацию уникальности к модели Relationship, но так как дублирование взаимоотношений  является ошибкой <em>всегда</em>, для наших целей  вполне достаточно индекса уникальности.</p>
+<p>(Сравните с индексом уникальности email из <a class="ref" href="modeling-users#code-email_uniqueness_index">Листинга&nbsp;6.22</a>.) Как мы увидим в <a class="ref" href="following-users#sec-following">Разделе&nbsp;11.1.4</a>, наш пользовательский интерфейс не позволит этому случиться, но добавление индекса уникальности позволит избежать ошибки в случае, если пользователь попытается дублировать взаимотношения любым другим способом (используя, например, инструмент командной строки, такой как <tt>curl</tt>). Мы могли бы также добавить валидацию уникальности к модели Relationship, но так как дублирование взаимоотношений  является ошибкой <em>всегда</em>, для наших целей  вполне достаточно индекса уникальности.</p>
 
 <p>Для создания таблицы <code>relationships</code>, мы мигрируем базу данных и подготавливаем тестовую бд, как обычно:</p>
 
@@ -616,7 +616,7 @@
 <h3><a id="sec-11_1_5" href="following-users#sec-followers" class="heading"><span class="number">11.1.5</span> Читатели пользователя</a></h3>
 
 
-<p>Последней частью пазла взаимоотношений является  метод <code>user.followers</code> сопутствующий <code>user.followed_users</code>. Вы могли заметить в <a class="ref" href="following-users#fig-user_has_many_following">Рис.&nbsp;11.7</a> что все сведения, необходимые для извлечения массива читателей уже присутствуют в таблице  <code>relationships</code>. Действительно, техника та же, что и для читаемых пользователей, но с реверсированием ролей <code>follower_id</code> и <code>followed_id</code>. Это говорит о том, что, если бы мы смогли как-то организовать таблицу <code>reverse_relationships</code>, поменяв местами эти два столбца (<a class="ref" href="following-users#fig-user_has_many_followers">Рис.&nbsp;11.9</a>), , то мы бы с легкостью реализовали <code>user.followers</code>.</p>
+<p>Последней частью пазла взаимоотношений является  метод <code>user.followers</code> сопутствующий <code>user.followed_users</code>. Вы могли заметить в <a class="ref" href="following-users#fig-user_has_many_following">Рис.&nbsp;11.7</a> что все сведения, необходимые для извлечения массива читателей уже присутствуют в таблице  <code>relationships</code>. Действительно, техника та же, что и для читаемых пользователей, но с реверсированием ролей <code>follower_id</code> и <code>followed_id</code>. Это говорит о том, что, если бы мы смогли как-то организовать таблицу <code>reverse_relationships</code>, поменяв местами эти два столбца (<a class="ref" href="following-users#fig-user_has_many_followers">Рис.&nbsp;11.9</a>), то мы бы с легкостью реализовали <code>user.followers</code>.</p>
 
 <div class="label" id="fig-user_has_many_followers"></div>
 
@@ -746,7 +746,7 @@
 <h2><a id="sec-11_2" href="following-users#sec-a_web_interface_for_following_and_followers" class="heading"><span class="number">11.2</span> Веб-интерфейс для читаемых пользователей</a></h2>
 
 
-<p>Во введении к этой главе, мы сделали предварительный обзор страниц, необходимых для слежения за сообщениями пользователей. В этом разделе мы реализуем базовый интерфейс и читать/не читать функциональность, показанные в тех макетах. Мы также сделаем отдельные страницы для демонстрациии массивов читателей и читаемых. В <a class="ref" href="following-users#sec-the_status_feed">Разделе&nbsp;11.3</a>, мы завершим наш пример приложения, добавив поток сообщений пользователя.</p>
+<p>Во введении к этой главе, мы сделали предварительный обзор страниц, необходимых для слежения за сообщениями пользователей. В этом разделе мы реализуем базовый интерфейс и читать/не читать функциональность, показанные в тех макетах. Мы также сделаем отдельные страницы для демонстрации массивов читателей и читаемых. В <a class="ref" href="following-users#sec-the_status_feed">Разделе&nbsp;11.3</a>, мы завершим наш пример приложения, добавив поток сообщений пользователя.</p>
 
 <div class="label" id="sec-sample_following_data"></div>
 
@@ -895,7 +895,7 @@
 <table class="tabular"><tr><th class="align_left"><strong>HTTP request</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Action</strong></th><th class="align_left"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/following</td><td class="align_left"><code>following</code></td><td class="align_left"><code>following_user_path(1)</code></td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/followers</td><td class="align_left"><code>followers</code></td><td class="align_left"><code>followers_user_path(1)</code></td></tr></table></div><div class="caption"><span class="header">Table 11.1: </span><span class="description">RESTful routes provided by the custom rules in resource in <a class="ref" href="following-users#code-following_followers_actions_routes">Listing&nbsp;11.18</a>.</span></div></div>
 
 
-<p>Определив маршруты мы готовы сделать тесты партиала статистики. (Мы могли бы начать с тестов, но именованные маршруты было бы трудно to motivate(??) без обновленного файла маршрутов.) Партиал появится на странице профиля и на странице Home;</p>
+<p>Определив маршруты мы готовы сделать тесты партиала статистики. (Мы могли бы начать с тестов, но именованные маршруты было бы трудно объяснить без обновленного файла маршрутов.) Партиал появится на странице профиля и на странице Home;</p>
 
 <div class="label" id="code-stats_view_test"></div>
 
@@ -2177,7 +2177,7 @@
 </div>
 
 
-<p>Синтаксис со знаком вопроса хорош, но когда мы хотим <em>туже</em> переменную вставить более чем в одном месте, второй вариант синтаксиса является более удобным.</p>
+<p>Синтаксис со знаком вопроса хорош, но когда мы хотим <em>ту же</em> переменную вставить более чем в одном месте, второй вариант синтаксиса является более удобным.</p>
 
 <p>Обсуждение выше привело нас к тому что мы добавим <em>второе</em> вхождение <code>user_id</code> в SQL запросе. В частности, мы можем заменить Ruby код</p>
 
@@ -2282,7 +2282,7 @@
 <h2><a id="sec-11_4" href="following-users#sec-following_conclusion" class="heading"><span class="number">11.4</span> Заключение</a></h2>
 
 
-<p>Добавив ленту сообщений, мы закончили ключевой пример приложения <em>Учебника Ruby on Rails</em>. Это приложение включает в себя примеры всех основных возможностей Rails, включая модели, представления, контроллеры, шаблоны, партиалы, фильтры, валидации, обратные вызовы, <code>has_many</code>/<code>belongs_to</code> и <code>has_many through</code> ассоциации, безопасность, тестирование и развертывание. Несмотря на это внушительный список, вам предстоит еще очень многое узнать о Rails. В качестве первого шага на этом пути, этот раздел содержит некоторые рекомендуемые расширения основного приложения, а также рекомендации для дальнейшего обучения.</p>
+<p>Добавив ленту сообщений, мы закончили ключевой пример приложения <em>Учебника Ruby on Rails</em>. Это приложение включает в себя примеры всех основных возможностей Rails, включая модели, представления, контроллеры, шаблоны, партиалы, фильтры, валидации, обратные вызовы, <code>has_many</code>/<code>belongs_to</code> и <code>has_many through</code> ассоциации, безопасность, тестирование и развертывание. Несмотря на этот внушительный список, вам предстоит еще очень многое узнать о Rails. В качестве первого шага на этом пути, этот раздел содержит некоторые рекомендуемые расширения основного приложения, а также рекомендации для дальнейшего обучения.</p>
 
 <p>Прежде чем перейти к решению любого из предложенных расширений приложения, хорошо бы объединить ваши изменения:</p>
 

@@ -82,7 +82,7 @@
 
   <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
   <span class="n">before</span> <span class="k">do</span>
-    <span class="c1"># This code is wrong!</span>
+    <span class="c1"># Этот код кривой!</span>
     <span class="vi">@micropost</span> <span class="o">=</span> <span class="no">Micropost</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">content:</span> <span class="s2">&quot;Lorem ipsum&quot;</span><span class="p">,</span> <span class="ss">user_id:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
   <span class="k">end</span>
 
@@ -149,7 +149,7 @@
 
   <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
   <span class="n">before</span> <span class="k">do</span>
-    <span class="c1"># This code is wrong!</span>
+    <span class="c1"># Этот код кривой!</span>
     <span class="vi">@micropost</span> <span class="o">=</span> <span class="no">Micropost</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">content:</span> <span class="s2">&quot;Lorem ipsum&quot;</span><span class="p">,</span> <span class="ss">user_id:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
   <span class="k">end</span>
 
@@ -192,7 +192,7 @@
 </div>
 
 
-<p>является ошибочным. Проблема в том, что по умолчанию (для Rails&nbsp;3.2.3) <em>все</em> атрибуты нашей  модели Micropost являются доступными. Как обсуждалось в <a class="ref" href="modeling-users#sec-accessible_attributes">Разделе&nbsp;6.1.2.2</a> и <a class="ref" href="updating-showing-and-deleting-users#sec-revisiting_attr_accessible">Разделе&nbsp;9.4.1.1</a>, это означает что кто-нибудь может легко изменить любой аспект объекта микросоообщений используя клиент командной строки для выдачи вредоносного запроса. Например, злоумышленник может изменить <code>user_id</code> атрибуты на микросообщениях, тем самым связав микросообщения с неправильным пользователем. Это означае что мы должны удалить <code>:user_id</code> из списка <code>attr_accessible</code>, а после того как мы это сделаем, код приведенный выше перестанет работать. Мы исправим это недоразумение в <a class="ref" href="user-microposts#sec-user_micropost_associations">Разделе&nbsp;10.1.3</a>.</p>
+<p>является ошибочным. Проблема в том, что по умолчанию (для Rails&nbsp;3.2.3) <em>все</em> атрибуты нашей  модели Micropost являются доступными. Как обсуждалось в <a class="ref" href="modeling-users#sec-accessible_attributes">Разделе&nbsp;6.1.2.2</a> и <a class="ref" href="updating-showing-and-deleting-users#sec-revisiting_attr_accessible">Разделе&nbsp;9.4.1.1</a>, это означает что кто-нибудь может легко изменить любой аспект объекта микросообщений используя клиент командной строки для выдачи вредоносного запроса. Например, злоумышленник может изменить <code>user_id</code> атрибуты на микросообщениях, тем самым связав микросообщения с неправильным пользователем. Это означае что мы должны удалить <code>:user_id</code> из списка <code>attr_accessible</code>, а после того как мы это сделаем, код приведенный выше перестанет работать. Мы исправим это недоразумение в <a class="ref" href="user-microposts#sec-user_micropost_associations">Разделе&nbsp;10.1.3</a>.</p>
 
 <div class="label" id="sec-user_micropost_associations"></div>
 
@@ -200,7 +200,7 @@
 <h3><a id="sec-10_1_3" href="user-microposts#sec-user_micropost_associations" class="heading"><span class="number">10.1.3</span> Ассоциации Пользователь/Микросообщения</a></h3>
 
 
-<p>При построении модели данных для веб-приложений, важно иметь возможность создавать <em>связи</em> между отдельными моделями. В данном случае, каждое микросообщение связано с одним пользователем, а каждый пользователь связан с (потенциально) множеством микросообщений &mdash; взаимоотношение вкратце рассматренное в <a class="ref" href="a-demo-app#sec-demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a> и схематически показанное на <a class="ref" href="user-microposts#fig-micropost_belongs_to_user">Рис.&nbsp;10.2</a> и <a class="ref" href="user-microposts#fig-user_has_many_microposts">Рис.&nbsp;10.3</a>. В рамках реализации этих связей, мы напишем тест для модели Micropost, который, в отличие от <a class="ref" href="user-microposts#code-initial_micropost_spec">Листинга&nbsp;10.2</a>, будет совместим с использованием <code>attr_accessible</code> из <a class="ref" href="user-microposts#code-micropost_accessible_attribute">Листинга&nbsp;10.7</a>.</p>
+<p>При построении модели данных для веб-приложений, важно иметь возможность создавать <em>связи</em> между отдельными моделями. В данном случае, каждое микросообщение связано с одним пользователем, а каждый пользователь связан с (потенциально) множеством микросообщений &mdash; взаимоотношение вкратце рассмотренное в <a class="ref" href="a-demo-app#sec-demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a> и схематически показанное на <a class="ref" href="user-microposts#fig-micropost_belongs_to_user">Рис.&nbsp;10.2</a> и <a class="ref" href="user-microposts#fig-user_has_many_microposts">Рис.&nbsp;10.3</a>. В рамках реализации этих связей, мы напишем тест для модели Micropost, который, в отличие от <a class="ref" href="user-microposts#code-initial_micropost_spec">Листинга&nbsp;10.2</a>, будет совместим с использованием <code>attr_accessible</code> из <a class="ref" href="user-microposts#code-micropost_accessible_attribute">Листинга&nbsp;10.7</a>.</p>
 
 <div class="label" id="fig-micropost_belongs_to_user"></div>
 
@@ -247,7 +247,7 @@
 
 <div class="code"><div class="highlight"><pre><span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">before</span> <span class="k">do</span>
-  <span class="c1"># This code is wrong!</span>
+  <span class="c1"># Этот код кривой!</span>
   <span class="vi">@micropost</span> <span class="o">=</span> <span class="no">Micropost</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">content:</span> <span class="s2">&quot;Lorem ipsum&quot;</span><span class="p">,</span> <span class="ss">user_id:</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 <span class="k">end</span>
 </pre></div>
@@ -262,7 +262,7 @@
 </div>
 
 
-<p>После того как мы определили правильные ассоциации, получающаяся в результате переменная <code>@micropost</code> будет автоматически иметь <code>user_id</code> еквивалентный связанному с ним пользователю.</p>
+<p>После того как мы определили правильные ассоциации, получающаяся в результате переменная <code>@micropost</code> будет автоматически иметь <code>user_id</code> эквивалентный связанному с ним пользователю.</p>
 
 <p>Само по себе построение микросообщения через ассоциацию с пользователем не решает проблему безопасности связанную с наличием доступного <code>user_id</code>, и, поскольку это довольно важная вещь, мы добавим провальный тест для ее отлова, как это показано в <a class="ref" href="user-microposts#code-attr_accessible_user_id_test">Листинге&nbsp;10.5</a>.</p>
 
@@ -935,7 +935,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 10.20.</span> <span class="description">Добавление микросообщений с странице показывающей пользователя. <br /> <code>app/views/users/show.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 10.20.</span> <span class="description">Добавление микросообщений к странице показывающей пользователя. <br /> <code>app/views/users/show.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
@@ -961,7 +961,7 @@
 </div></div>
 
 
-<p>Мы займемся списком микросообщений через мгновение, но есть несколько других вещей, которые необходимо отметить в первую очередь. В <a class="ref" href="user-microposts#code-user_show_microposts">Листинге&nbsp;10.20</a> мы применили <code>if @user.microposts.any?</code> (кончструкцию, которую мы видели ранее в <a class="ref" href="sign-up#code-errors_partial">Листинге&nbsp;7.23</a>) которая дает нам уверенность в том, что пустой список не будет отображен если у пользователя нет микросообщений.</p>
+<p>Мы займемся списком микросообщений через мгновение, но есть несколько других вещей, которые необходимо отметить в первую очередь. В <a class="ref" href="user-microposts#code-user_show_microposts">Листинге&nbsp;10.20</a> мы применили <code>if @user.microposts.any?</code> (конструкцию, которую мы видели ранее в <a class="ref" href="sign-up#code-errors_partial">Листинге&nbsp;7.23</a>) которая дает нам уверенность в том, что пустой список не будет отображен если у пользователя нет микросообщений.</p>
 
 <p>В <a class="ref" href="user-microposts#code-user_show_microposts">Листинге&nbsp;10.20</a> также обратите внимание на то, что мы превентивно добавили пагинацию для микросообщений</p>
 
@@ -1031,7 +1031,7 @@
 
 <p>При этом используется удивительный вспомогательный метод <code>time_ago_in_words</code>, чей эффект мы увидим в <a class="ref" href="user-microposts#sec-sample_microposts">Разделе&nbsp;10.2.2</a>.</p>
 
-<p>До сих пор, несмотря на определение всех соответствующих ERb шаблонов, тесты в <a class="ref" href="user-microposts#code-user_show_microposts_test">Listing&nbsp;10.19</a> были провальными за неимением переменной <code>@microposts</code>. Мы можем заставить их пройти с кодом из <a class="ref" href="user-microposts#code-user_show_microposts_instance">Листинга&nbsp;10.22</a>.</p>
+<p>До сих пор, несмотря на определение всех соответствующих ERb шаблонов, тесты в <a class="ref" href="user-microposts#code-user_show_microposts_test">Листинге&nbsp;10.19</a> были провальными за неимением переменной <code>@microposts</code>. Мы можем заставить их пройти с кодом из <a class="ref" href="user-microposts#code-user_show_microposts_instance">Листинга&nbsp;10.22</a>.</p>
 
 <div class="label" id="code-user_show_microposts_instance"></div>
 
@@ -1276,7 +1276,7 @@
 </div></div>
 
 
-<p>Прежде чем использовать (пока-не-построенный) веб-интерфейс для микросообщений, код в <a class="ref" href="user-microposts#code-micropost_access_control">Листинге&nbsp;10.26</a> действует на уровне отдельных действий микросообщений - стратегия которую мы впервые видели в <a class="ref" href="updating-showing-and-deleting-users#code-edit_update_wrong_user_tests">Листинге&nbsp;9.14</a>. В данном случае, невошедшие пользователи не могут отправить <tt>POST</tt> запрос на /microposts (<code>post microposts_path</code>, который вызывает <code>create</code> действие) или отправить <tt>DELETE</tt> запрос на /microposts/1 (<code>delete micropost_path(micropost)</code>, который вызывает действие <code>destroy</code>).</p>
+<p>Прежде чем использовать (пока-не-построенный) веб-интерфейс для микросообщений, код в <a class="ref" href="user-microposts#code-micropost_access_control">Листинге&nbsp;10.26</a> действует на уровне отдельных действий микросообщений - стратегия которую мы впервые видели в <a class="ref" href="updating-showing-and-deleting-users#code-edit_update_wrong_user_tests">Листинге&nbsp;9.14</a>. В данном случае, не вошедшие пользователи не могут отправить <tt>POST</tt> запрос на /microposts (<code>post microposts_path</code>, который вызывает <code>create</code> действие) или отправить <tt>DELETE</tt> запрос на /microposts/1 (<code>delete micropost_path(micropost)</code>, который вызывает действие <code>destroy</code>).</p>
 
 <p>Прежде чем начать писать код приложения, необходимый для прохождения тестов из <a class="ref" href="user-microposts#code-micropost_access_control">Листинга&nbsp;10.26</a> требуется произвести небольшой рефакторинг. Вспомним из <a class="ref" href="updating-showing-and-deleting-users#sec-requiring_signed_in_users">Раздела&nbsp;9.2.1</a> что мы внедрили требование входа используя предфильтр который назывался <code>signed_in_user</code> (<a class="ref" href="updating-showing-and-deleting-users#code-authorize_before_filter">Листинг&nbsp;9.12</a>). Тогда этот метод нужен был нам только в контроллере Users, но теперь мы обнаружили, что он также необходим нам и в контроллере Microposts, так что мы переместим его в Sessions хелпер, как это показано в <a class="ref" href="user-microposts#code-sessions_helper_authenticate">Листинге&nbsp;10.27</a>.<sup class="footnote" id="fnref-10_9"><a href="#fn-10_9">9</a></sup></p>
 
@@ -1767,7 +1767,7 @@
 </div></div>
 
 
-<p>Эти тесты вводят (через булеву конвенцию RSpec) the метод массива <code>include?</code>, который просто проверяет что массив включает данный элемент:<sup class="footnote" id="fnref-10_10"><a href="#fn-10_10">10</a></sup></p>
+<p>Эти тесты вводят (через булеву конвенцию RSpec) метод массива <code>include?</code>, который просто проверяет что массив включает данный элемент:<sup class="footnote" id="fnref-10_10"><a href="#fn-10_10">10</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="ss">:bar</span><span class="o">]</span>

@@ -302,7 +302,7 @@
 </div></div>
 
 
-<p>Вы можете видеть результат работы этого CSS в <a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_with_colors">Рис.&nbsp;5.4</a>. Здесь очень много CSS, но он имеет последовательную форму. Каждое правило относится либо к классу, ID, тегу HTML, или какой-либо их комбинации и сопровождается списком "стильных" команд. Например,</p>
+<p>Вы можете видеть результат работы этого CSS на <a class="ref" href="filling-in-the-layout?version=3.0#fig:layout_with_colors">Рис.&nbsp;5.4</a>. Здесь очень много CSS, но он имеет последовательную форму. Каждое правило относится либо к классу, ID, тегу HTML, или какой-либо их комбинации и сопровождается списком "стильных" команд. Например,</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">body</span> <span class="p">{</span>
   <span class="k">background</span><span class="o">:</span> <span class="m">#cff</span><span class="p">;</span>
@@ -677,7 +677,7 @@
 </div>
 
 
-<p>но это не Rails Way.  Было бы хорошо, если бы URL для about страницы был <tt>/about</tt> а не <tt>/pages/about</tt>; причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
+<p>но это не Rails Way.  Было бы хорошо, если бы URL для about страницы был <tt>/about</tt>, а не <tt>/pages/about</tt>; причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span> <span class="n">about_path</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -948,7 +948,7 @@
 </div>
 
 
-<p>Мы должны также прислушаться к коментарию в  <a class="ref" href="filling-in-the-layout?version=3.0#code:root_route_hint">Листинге&nbsp;5.19</a>  и удалить <code>public/index.html</code> чтобы предотвратить отображение дефолтной страницы  (<a class="ref" href="beginning?version=3.0#fig:riding_rails_3">Рис.&nbsp;1.3</a>) при посещении&nbsp;<tt>/</tt>. Конечно, вы можете просто удалить файл выполненив <em>Move to trash</em> в текстовом редакторе, но если вы используете Git для контроля версий, есть способ удалить файл и в тоже время сообщить Git об удалени&nbsp;&mdash;&nbsp;с помощью <code>git rm</code>:</p>
+<p>Мы должны также прислушаться к коментарию в  <a class="ref" href="filling-in-the-layout?version=3.0#code:root_route_hint">Листинге&nbsp;5.19</a>  и удалить <code>public/index.html</code> чтобы предотвратить отображение дефолтной страницы  (<a class="ref" href="beginning?version=3.0#fig:riding_rails_3">Рис.&nbsp;1.3</a>) при посещении&nbsp;<tt>/</tt>. Конечно, вы можете просто удалить файл выполненив <em>Move to trash</em> в текстовом редакторе, но если вы используете Git для контроля версий, есть способ удалить файл и в тоже время сообщить Git об удалении&nbsp;&mdash;&nbsp;с помощью <code>git rm</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git rm public/index.html
 <span class="gp">$</span> git commit -am <span class="s2">&quot;Removed default Rails page&quot;</span>
@@ -1246,7 +1246,7 @@
 </div></div>
 
 
-<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерированно автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout?version=3.0#code:generate_users_controller">Листинге&nbsp;5.23</a>. В настоящее время это правило необходимо для работы роутинга <tt>/users/new</tt> правильному, но не соответствующему REST конвенции  (<a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_users">Таблица&nbsp;2.2</a>), и мы ликвидируем его в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:a_users_resource">Разделе&nbsp;6.3.3</a>.</p>
+<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерировано автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout?version=3.0#code:generate_users_controller">Листинге&nbsp;5.23</a>. В настоящее время это правило необходимо для работы роутинга <tt>/users/new</tt> правильному, но не соответствующему REST конвенции  (<a class="ref" href="a-demo-app?version=3.0#table:demo_RESTful_users">Таблица&nbsp;2.2</a>), и мы ликвидируем его в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#sec:a_users_resource">Разделе&nbsp;6.3.3</a>.</p>
 
 <p>В этой точке тест для регистрации из <a class="ref" href="filling-in-the-layout?version=3.0#code:user_signup_spec">Листинга&nbsp;5.28</a> должен пройти. Все, что осталось, это добавить правильную ссылку к кнопке на главной странице.  Как и с другими маршрутами, <code>match &rsquo;/signup&rsquo;</code> дает нам именованный маршрут <code>signup_path</code>, который мы поместим для использования в <a class="ref" href="filling-in-the-layout?version=3.0#code:home_page_signup_link">Листинге&nbsp;5.30</a>.</p>
 

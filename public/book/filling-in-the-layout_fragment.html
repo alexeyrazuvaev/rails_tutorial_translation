@@ -204,7 +204,7 @@
 
 <p>Как и прежде, класс <code>container</code> имеет специальное значение для Bootstrap. Как мы узнали в <a class="ref" href="static-pages#sec-layouts">Разделе&nbsp;3.3.4</a>, метод <code>yield</code> вставляет содержимое каждой страницы в шаблон сайта.</p>
 
-<p>Если не брать в рассчет подвал сайта, который мы добавим в <a class="ref" href="filling-in-the-layout#sec-partials">Разделе&nbsp;5.1.3</a>, наш шаблон теперь завершен, и мы можем посмотреть на результаты, посетив, например, Home страницу. Для того чтобы извлечь пользу из ожидающих своего часа элементов стиля, мы добавим несколько дополнительных элементов к <code>home.html.erb</code> представлению (<a class="ref" href="filling-in-the-layout#code-signup_button">Листинг&nbsp;5.2</a>).</p>
+<p>Если не брать в расчет подвал сайта, который мы добавим в <a class="ref" href="filling-in-the-layout#sec-partials">Разделе&nbsp;5.1.3</a>, наш шаблон теперь завершен, и мы можем посмотреть на результаты, посетив, например, Home страницу. Для того чтобы извлечь пользу из ожидающих своего часа элементов стиля, мы добавим несколько дополнительных элементов к <code>home.html.erb</code> представлению (<a class="ref" href="filling-in-the-layout#code-signup_button">Листинг&nbsp;5.2</a>).</p>
 
 <div class="label" id="code-signup_button"></div>
 
@@ -325,7 +325,7 @@
 </div></div>
 
 
-<p>Эта единственная строка включает весь Bootstrap CSS фреймворк, результат показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_only_bootstrap">Рис.&nbsp;5.3</a>. (Вам, возможно, придется рестартовать веб сервер. Стоит также отметить что скриншоты используют Bootstrap&nbsp;2.0, в то время как учебник использует Bootstrap&nbsp;2.1, так что могут быть небольшие отличия во внешнем виде, но это не повод для беспокойства.)  Текст расположен плохо и логотип оказался неотстиленым но цвета и кнопка регистрации выглядят многообещающе.</p>
+<p>Эта единственная строка включает весь Bootstrap CSS фреймворк, результат показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_only_bootstrap">Рис.&nbsp;5.3</a>. (Вам, возможно, придется рестартовать веб сервер. Стоит также отметить что скриншоты используют Bootstrap&nbsp;2.0, в то время как учебник использует Bootstrap&nbsp;2.1, так что могут быть небольшие отличия во внешнем виде, но это не повод для беспокойства.)  Текст расположен плохо и логотип оказался неотстиленым, но цвета и кнопка регистрации выглядят многообещающе.</p>
 
 <div class="label" id="fig-sample_app_only_bootstrap"></div>
 
@@ -1148,7 +1148,7 @@
 </div>
 
 
-<p>но это не Rails Way.  Было бы хорошо, если бы URI для about страницы был <tt>/about</tt> а не <tt>/pages/about</tt>; причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
+<p>но это не Rails Way.  Было бы хорошо, если бы URI для about страницы был <tt>/about</tt>, а не <tt>/pages/about</tt>; причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span> <span class="n">about_path</span> <span class="cp">%&gt;</span>
 </pre></div>
@@ -1514,7 +1514,7 @@
 </div>
 
 
-<p>Мы должны также прислушаться к коментарию в <a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинге&nbsp;5.22</a> и удалить <code>public/index.html</code> чтобы предотвратить отображение дефолтной страницы (<a class="ref" href="beginning#fig-riding_rails_31">Рис.&nbsp;1.3</a>) при посещении&nbsp;<tt>/</tt>. Вы можете, конечно, просто удалить файл поместив его в корзину, но если вы используете Git для контроля версий, есть способ удалить файл и в тоже время сообщить Git об удалени&nbsp;&mdash;&nbsp;с помощью <code>git rm</code>:</p>
+<p>Мы должны также прислушаться к коментарию в <a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинге&nbsp;5.22</a> и удалить <code>public/index.html</code> чтобы предотвратить отображение дефолтной страницы (<a class="ref" href="beginning#fig-riding_rails_31">Рис.&nbsp;1.3</a>) при посещении&nbsp;<tt>/</tt>. Вы можете, конечно, просто удалить файл поместив его в корзину, но если вы используете Git для контроля версий, есть способ удалить файл и в тоже время сообщить Git об удалении&nbsp;&mdash;&nbsp;с помощью <code>git rm</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> git rm public/index.html
 </pre></div>
@@ -1960,7 +1960,7 @@
 </div>
 
 
-<p>(Фактически, вы можете просто набрать <code>rake</code>; дефольное поведение <code>rake</code> это запуск набора тестов.)</p>
+<p>(Фактически, вы можете просто набрать <code>rake</code>; дефолтное поведение <code>rake</code> это запуск набора тестов.)</p>
 
 <p>По конструкции, контроллер Users уже имеет <code>new</code> действие, так что все что нам необходимо для прохождения тестов это правильные маршрут и контент представления. Мы будем следовать примерам из  <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинга&nbsp;5.21</a> и добавим <code>match &rsquo;/signup&rsquo;</code> правило для URI регистрации (<a class="ref" href="filling-in-the-layout#code-signup_route">Листинг&nbsp;5.32</a>).</p>
 
@@ -1988,7 +1988,7 @@
 </div></div>
 
 
-<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерированно автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.28</a>. В настоящее время это правило необходимо для работы адреса <code>&rsquo;users/new&rsquo;</code>, но оно не соответствует REST конвенции (<a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблица&nbsp;2.2</a>) и мы избавимся от него в <a class="ref" href="sign-up#sec-a_users_resource">Разделе&nbsp;7.1.2</a>.</p>
+<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерировано автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.28</a>. В настоящее время это правило необходимо для работы адреса <code>&rsquo;users/new&rsquo;</code>, но оно не соответствует REST конвенции (<a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблица&nbsp;2.2</a>) и мы избавимся от него в <a class="ref" href="sign-up#sec-a_users_resource">Разделе&nbsp;7.1.2</a>.</p>
 
 <p>Теперь все что нам теперь необходимо для прохождения тестов это представление с заголовком браузера и заголовком первого уровня &ldquo;Sign up&rdquo; (<a class="ref" href="filling-in-the-layout#code-initial_signup_page">Листинг&nbsp;5.33</a>).</p>
 
@@ -2120,7 +2120,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.35.</span> <span class="description">Поименение RSpec <em>shared example</em> для устранения дублирования в тестах. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
+<div class="listing"><span class="header">Листинг 5.35.</span> <span class="description">Применение RSpec <em>shared example</em> для устранения дублирования в тестах. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 

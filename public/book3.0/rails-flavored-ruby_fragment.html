@@ -6,7 +6,7 @@
 
 <p>Основанная на примерах из <a class="ref" href="static-pages?version=3.0#top">Главы&nbsp;3</a>, эта глава рассматривает некоторые элементы Ruby важные для Rails. Ruby многогранен, но, к счастью, нам нужна относительно малая его часть, чтобы быть продуктивным Rails-разработчиком. Более того, эта малая часть <em>отличается</em> от той, которая вам понадобится в Ruby для обычных задач, поэтому, если вашей целью является создание динамических веб-приложений, я рекомендую изучать Rails первым, собирая биты Ruby на этом пути. Чтобы стать <em>экспертом</em> Rails, вы должны понимать Ruby более глубоко, и эта книга дает вам хорошую основу для развития.  Как отмечалось в <a class="ref" href="beginning?version=3.0#sec:comments_for_various_readers">Разделе&nbsp;1.1.1</a>, после окончания <em>Rails Tutorial</em> я советую почитать книги о чисто Ruby, такие как <a href="http://www.amazon.com/gp/product/1430223634"><em>Beginning Ruby</em></a>, <a href="http://www.amazon.com/gp/product/1933988657"><em>The Well-Grounded Rubyist</em></a>, или <a href="http://www.amazon.com/gp/product/0672328844"><em>The Ruby Way</em></a>.</p>
 
-<p>В этой главе рассматриваются много материала, и это нормально&nbsp;&mdash;&nbsp;не понять его весь с первого раза. Я буду часто возвращаться к нему в последующих главах.</p>
+<p>В этой главе рассматривается много материала, и это нормально&nbsp;&mdash;&nbsp;не понять его весь с первого раза. Я буду часто возвращаться к нему в последующих главах.</p>
 
 <div class="label" id="sec:motivation"></div>
 
@@ -236,7 +236,7 @@
 <h3><a id="sec:4.2.1" href="rails-flavored-ruby?version=3.0#sec:comments" class="heading"><span class="number">4.2.1</span> Комментарии</a></h3>
 
 
-<p>Ruby <em>комментарии</em> начинаются со знака <a href="http://ru.wikipedia.org/wiki/%D0%9E%D0%BA%D1%82%D0%BE%D1%82%D0%BE%D1%80%D0%BF">фунт&nbsp;<code>#</code></a> и распространяются до конца строки. Ruby (и, следовательно, Rails) игнорирует коментарии, но они полезны для читателей (в том числе, часто, для самого автора!). В коде</p>
+<p>Ruby <em>комментарии</em> начинаются со знака <a href="http://ru.wikipedia.org/wiki/%D0%9E%D0%BA%D1%82%D0%BE%D1%82%D0%BE%D1%80%D0%BF">фунт&nbsp;<code>#</code></a> и распространяются до конца строки. Ruby (и, следовательно, Rails) игнорирует комментарии, но они полезны для читателей (в том числе, часто, для самого автора!). В коде</p>
 
 <div class="code"><div class="highlight"><pre>  <span class="c1"># Return a title on a per-page basis.</span>
   <span class="k">def</span> <span class="nf">title</span>
@@ -249,7 +249,7 @@
 
 <p>первая строка является комментарием с указанием цели последующего определения функции.</p>
 
-<p>Обычно, вам не нужно включать комментарии в консольные сессии, но в учебных целях, я в дальнейшем буду включать некоторые коментарии, например:</p>
+<p>Обычно, вам не нужно включать комментарии в консольные сессии, но в учебных целях, я в дальнейшем буду включать некоторые комментарии, например:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="mi">17</span> <span class="o">+</span> <span class="mi">42</span>   <span class="c1"># Integer addition</span>
@@ -535,7 +535,7 @@
 </div>
 
 
-<p>В частности, все другие объекты Ruby являются <em>true</em>, даже 0:</p>
+<p>В частности, все другие объекты Ruby являются <em>true</em>, даже <code>0</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">if</span> <span class="mi">0</span>
 <span class="gp">&gt;&gt; </span>  <span class="kp">true</span>        <span class="c1"># 0 (and everything other than nil and false itself) is true</span>
@@ -582,8 +582,7 @@
 </div>
 
 
-<p>Внимательный читатель может заметить в этой точке, что второе <code>return</code> здесь фактически ненужно&nbsp;&mdash;&nbsp;состояние последнего выражения в функции, т.е. строки <code>"The string is nonempty."</code> будет возвращено независимо от ключевого слова <code>return</code>, но использование
-большинстве <code>return</code> в обоих местах придает ему приятную симметрию.</p>
+<p>Внимательный читатель может заметить в этой точке, что второе <code>return</code> здесь фактически ненужно&nbsp;&mdash;&nbsp;состояние последнего выражения в функции, т.е. строки <code>"The string is nonempty."</code> будет возвращено независимо от ключевого слова <code>return</code>, но использование <code>return</code> в обоих местах придает ему приятную симметрию.</p>
 
 <div class="label" id="sec:back_to_the_title_helper"></div>
 
@@ -1028,7 +1027,7 @@
 </div>
 
 
-<p>Во-вторых, <code>:media</code> аргумент уверенно выглядит как хэш, но где фигурные скобки?  Когда хэш&nbsp;&mdash;&nbsp;<em>последний</em> аргумент в вызове функции, фигурные скобки не являются обязательными; эти две строки эквивалентны:</p>
+<p>Во-вторых, <code>:media</code> аргумент определенно выглядит как хэш, но где фигурные скобки?  Когда хэш&nbsp;&mdash;&nbsp;<em>последний</em> аргумент в вызове функции, фигурные скобки не являются обязательными; эти две строки эквивалентны:</p>
 
 <div class="code"><div class="highlight"><pre><span class="c1"># Curly braces on final hash arguments are optional.</span>
 <span class="n">stylesheet_link_tag</span> <span class="s1">&#39;blueprint/screen&#39;</span><span class="p">,</span> <span class="p">{</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s1">&#39;screen&#39;</span> <span class="p">}</span>
@@ -1045,8 +1044,7 @@
 </div>
 
 
-<p>вызывает <code>stylesheet_link_tag</code> функцию с двумя аргументами: строкой, указывающей путь к таблице стилей, и хэшем, с указанием типа носителя ( <code>&rsquo;screen&rsquo;</code> для экрана компьютера и <code>&rsquo;print&rsquo;</code> для печатной версии). Из-за <tt class="verb">&lt;%= %&gt;</tt> скобок, результаты вставляются в шаблон ERb-ом
-большинстве, и если вы посмотрите исходный код страницы в браузере, вы должны увидеть HTML, необходимый для включении таблиц стилей  (<a class="ref" href="rails-flavored-ruby?version=3.0#code:css_source">Листинг&nbsp;4.6</a>).<sup class="footnote" id="fnref:4.14"><a href="?version=3.0#fn:4.14">14</a></sup></p>
+<p>вызывает <code>stylesheet_link_tag</code> функцию с двумя аргументами: строкой, указывающей путь к таблице стилей, и хэшем, с указанием типа носителя ( <code>&rsquo;screen&rsquo;</code> для экрана компьютера и <code>&rsquo;print&rsquo;</code> для печатной версии). Из-за <tt class="verb">&lt;%= %&gt;</tt> скобок, результаты вставляются в шаблон ERb-ом, и если вы посмотрите исходный код страницы в браузере, вы должны увидеть HTML, необходимый для включении таблиц стилей  (<a class="ref" href="rails-flavored-ruby?version=3.0#code:css_source">Листинг&nbsp;4.6</a>).<sup class="footnote" id="fnref:4.14"><a href="?version=3.0#fn:4.14">14</a></sup></p>
 
 <div class="label" id="code:css_source"></div>
 
@@ -1249,8 +1247,7 @@
 <h3><a id="sec:4.4.3" href="rails-flavored-ruby?version=3.0#sec:modifying_built_in_classes" class="heading"><span class="number">4.4.3</span> Изменение встроенных классов</a></h3>
 
 
-<p>Хотя наследование это мощная идея, в случае палиндромов может быть даже более естественно добавить <code>palindrome?</code> метод самому классу <code>String</code>, так чтобы (среди прочего)
-большинстве мы могли вызвать <code>palindrome?</code> на буквальную строку, что мы в настоящее время не можем сделать:</p>
+<p>Хотя наследование это мощная идея, в случае палиндромов может быть даже более естественно добавить <code>palindrome?</code> метод самому классу <code>String</code>, так чтобы (среди прочего) мы могли вызвать <code>palindrome?</code> на буквальную строку, что мы в настоящее время не можем сделать:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;level&quot;</span><span class="o">.</span><span class="n">palindrome?</span>
 <span class="go">NoMethodError: undefined method `palindrome?&#39; for &quot;level&quot;:String</span>
@@ -1258,8 +1255,7 @@
 </div>
 
 
-<p>Несколько удивительно, что Ruby позволяет сделать это; Ruby классы могут быть <em>открыты</em> и изменены простыми смертными
-большинстве, такими как мы, самостоятельно добавляющими методы к ним:<sup class="footnote" id="fnref:4.17"><a href="?version=3.0#fn:4.17">17</a></sup></p>
+<p>Несколько удивительно, что Ruby позволяет сделать это; Ruby классы могут быть <em>открыты</em> и изменены простыми смертными, такими как мы, самостоятельно добавляющими методы к ним:<sup class="footnote" id="fnref:4.17"><a href="?version=3.0#fn:4.17">17</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">String</span>
 <span class="gp">&gt;&gt; </span>  <span class="c1"># Return true if the string is its own reverse.</span>
@@ -1276,8 +1272,7 @@
 
 <p>(Я и не знаю что круче: то, что Ruby позволяет добавлять методы во встроенные классы или то, что слово <code>"deified"</code> является палиндромом.)</p>
 
-<p>Изменение встроенных классов является мощной техникой, но с большой властью приходит большая ответственность и считается дурным тоном
-большинстве добавлять методы к встроенным классам, не имея <em>действительно</em> хорошей причины для этого. Rails имеет несколько хороших причин (чтобы не делать этого); например, в веб-приложениях вы часто не хотите, чтобы переменные были <em>пустыми</em>; например, имя пользователя не должно быть пустым или состоять из одних <a href="http://ru.wikipedia.org/wiki/Пробел">пробелов</a>&mdash;и Rails добавляет <code>blank?</code> метод к Ruby.  Rails консоль автоматически включает Rails расширения, и мы можем увидеть это, например, здесь (это не будет работать в простом <code>irb</code> (Интерактивном Руби)):</p>
+<p>Изменение встроенных классов является мощной техникой, но с большой властью приходит большая ответственность и считается дурным тоном добавлять методы к встроенным классам, не имея <em>действительно</em> хорошей причины для этого. Rails имеет несколько хороших причин (чтобы не делать этого); например, в веб-приложениях вы часто не хотите, чтобы переменные были <em>пустыми</em>; например, имя пользователя не должно быть пустым или состоять из одних <a href="http://ru.wikipedia.org/wiki/Пробел">пробелов</a>&mdash;и Rails добавляет <code>blank?</code> метод к Ruby.  Rails консоль автоматически включает Rails расширения, и мы можем увидеть это, например, здесь (это не будет работать в простом <code>irb</code> (Интерактивном Руби)):</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">blank?</span>
 <span class="go">=&gt; true</span>
@@ -1367,7 +1362,7 @@
 <h3><a id="sec:4.4.5" href="rails-flavored-ruby?version=3.0#sec:a_user_class" class="heading"><span class="number">4.4.5</span> Класс user</a></h3>
 
 
-<p>Мы закончим наше путешествие по Ruby комплектацией  собственного класса, <code>User</code> класса, который ожидает User модель которая появится в <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>.</p>
+<p>Мы закончим наше путешествие по Ruby комплектацией  собственного класса, <code>User</code> класса, который ожидает User модель, которая появится в  <a class="ref" href="modeling-and-viewing-users-one?version=3.0#top">Главе&nbsp;6</a>.</p>
 
 <p>До сих пор мы вводили определения классов на консоли, но это быстро  стало  утомительным, вместо этого создайте файл <code>example_user.rb</code> в корне приложения и заполните его содержимым  <a class="ref" href="rails-flavored-ruby?version=3.0#code:example_user">Листинга&nbsp;4.8</a>. (Напомним, из <a class="ref" href="beginning?version=3.0#sec:conventions">Раздела&nbsp;1.1.3</a> что корень приложения это корень каталога вашего приложения; например, корень приложения для моего Примера Приложения это  <tt>/Users/mhartl/rails_projects/sample_app</tt>.)</p>
 

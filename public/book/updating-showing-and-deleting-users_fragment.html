@@ -35,7 +35,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/edit_user_mockup_bootstrap.png" alt="edit_user_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рисунок 9.1: </span><span class="description">Набросок страницы для редактирования пользователя.&nbsp;<a href="http://railstutorial.org/images/figures/edit_user_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Тысты для формы редактирования пользователя аналогичны тестам для формы создания нового пользователя в <a class="ref" href="sign-up#code-error_messages_test">Листинга&nbsp;7.31</a> из упражнений <a class="ref" href="sign-up#top">Главы&nbsp;7</a>, которые добавляют тест для сообщения об ошибке при отправке неверных данных. Результат представлен в <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_specs">Листинге&nbsp;9.1</a>.</p>
+<p>Тесты для формы редактирования пользователя аналогичны тестам для формы создания нового пользователя в <a class="ref" href="sign-up#code-error_messages_test">Листинге&nbsp;7.31</a> из упражнений <a class="ref" href="sign-up#top">Главы&nbsp;7</a>, которые добавляют тест для сообщения об ошибке при отправке неверных данных. Результат представлен в <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_specs">Листинге&nbsp;9.1</a>.</p>
 
 <div class="label" id="code-user_edit_specs"></div>
 
@@ -171,7 +171,7 @@
 </div>
 
 
-<p>Поскольку веб-броузеры сами по себе не могут отправлять <tt>PUT</tt> запросы (как это требует от них  REST конвенция из <a class="ref" href="sign-up#table-RESTful_users">Таблицы&nbsp;7.1</a>), Rails подделывает из с помощью <tt>POST</tt> запроса и скрытого поля <code>input</code>.<sup class="footnote" id="fnref-9_3"><a href="#fn-9_3">3</a></sup></p>
+<p>Поскольку веб-браузеры сами по себе не могут отправлять <tt>PUT</tt> запросы (как это требует от них  REST конвенция из <a class="ref" href="sign-up#table-RESTful_users">Таблицы&nbsp;7.1</a>), Rails подделывает иx с помощью <tt>POST</tt> запроса и скрытого поля <code>input</code>.<sup class="footnote" id="fnref-9_3"><a href="#fn-9_3">3</a></sup></p>
 
 <p>Стоит также упомянуть здесь еще одну тонкость: код <code>form_for(@user)</code> в <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_view">Листинге&nbsp;9.3</a> <em>абсолютно</em> совпадает с кодом в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a> &mdash; так как же Rails узнает, что нужно использовать <tt>POST</tt> запрос для новых пользователей и  <tt>PUT</tt> для редактирования уже существующих? Ответ кроется в возможности определения того, что мы имеем дело с новым или уже существующим в базе данных пользователем, посредством булевого метода <code>new_record?</code> библиотеки Active Record:</p>
 
@@ -219,7 +219,7 @@
 </div></div>
 
 
-<p>Для удобства, код в <a class="ref" href="updating-showing-and-deleting-users#code-settings_link_test">Листинге&nbsp;9.5</a> использует хелпер дя входа пользователя внутри тестов. Методика заключается в посещении страницы и отправке валидной информации, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-sign_in_helper">Листинге&nbsp;9.6</a>.</p>
+<p>Для удобства, код в <a class="ref" href="updating-showing-and-deleting-users#code-settings_link_test">Листинге&nbsp;9.5</a> использует хелпер для входа пользователя внутри тестов. Методика заключается в посещении страницы и отправке валидной информации, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-sign_in_helper">Листинге&nbsp;9.6</a>.</p>
 
 <div class="label" id="code-sign_in_helper"></div>
 
@@ -419,7 +419,7 @@
 </div>
 
 
-<p>Этот код перезагружает <code>user</code> переменную из (тестовой) базы данных используя <code>user.reload</code>, , а затем проверяет, что новые имя пользователя и email совпадают с новыми значениями.</p>
+<p>Этот код перезагружает <code>user</code> переменную из (тестовой) базы данных используя <code>user.reload</code>, а затем проверяет, что новые имя пользователя и email совпадают с новыми значениями.</p>
 
 <p>Действие <code>update</code>, необходимое для прохождения тестов в <a class="ref" href="updating-showing-and-deleting-users#code-user_update_specs">Листинге&nbsp;9.9</a> аналогично финальной форме <code>create</code> действия (<a class="ref" href="sign-in-sign-out#code-signin_upon_signup">Листинг&nbsp;8.27</a>), как видно в <a class="ref" href="updating-showing-and-deleting-users#code-user_update_action">Листинге&nbsp;9.10</a>. Единственное что он делает, это добавляет</p>
 
@@ -492,7 +492,7 @@
 <h3><a id="sec-9_2_1" href="updating-showing-and-deleting-users#sec-requiring_signed_in_users" class="heading"><span class="number">9.2.1</span> Требование входа пользователей</a></h3>
 
 
-<p>Поскольку ограничения безопасности для <code>edit</code> и <code>update</code> действий идентичны, мы будем обрабатывать их в одном  RSpec <code>describe</code> блоке. Начав с требования входа, наши первоначальные тесты затем проверяют, что невошедшие пользователи, пытающиеся получить доступ к какому либо из действий, просто перенаправляеются на страницу входа, как показано в <a class="ref" href="updating-showing-and-deleting-users#code-protected_edit_update_tests">Листинге&nbsp;9.11</a>.</p>
+<p>Поскольку ограничения безопасности для <code>edit</code> и <code>update</code> действий идентичны, мы будем обрабатывать их в одном  RSpec <code>describe</code> блоке. Начав с требования входа, наши первоначальные тесты затем проверяют, что не вошедшие пользователи, пытающиеся получить доступ к какому либо из действий, просто перенаправляеются на страницу входа, как показано в <a class="ref" href="updating-showing-and-deleting-users#code-protected_edit_update_tests">Листинге&nbsp;9.11</a>.</p>
 
 <div class="label" id="code-protected_edit_update_tests"></div>
 
@@ -542,7 +542,7 @@
 
 <p>Это выдает запрос <tt>PUT</tt> непосредственно к <code>/users/1</code>, который направляет к <code>update</code> действию контроллера Users (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>). Это необходимо из-за того, что браузер не может посетить непосредственно само действие <code>update</code>  &mdash; он может лишь попасть туда через отправку формы редактирования &mdash; так что Capybara тоже не может этого сделать. Но посещение страницы редактирования тестирует только авторизацию для действия <code>edit</code>, но не для <code>update</code>. В результате, единственный способ как следует протестировать авторизацию для самого действия <code>update</code> это выдать непосредственный запрос. (Как вы можете догадаться, в дополнение к <code>put</code> Rails тесты поддерживают также <code>get</code>, <code>post</code>, и <code>delete</code>.)</p>
 
-<p>При использовании одного из способов непосредственной выдачи HTTP запросов, мы получаем доступ к низкоуровневому объекту <code>response</code>. В отличие от объекта Capybara <code>page</code>, <code>response</code> позволяет нам тестировать сам ответ сервера, в данном случае, проверяя что действие <code>update</code> отвечает переадресацией не страницу входа:</p>
+<p>При использовании одного из способов непосредственной выдачи HTTP запросов, мы получаем доступ к низкоуровневому объекту <code>response</code>. В отличие от объекта Capybara <code>page</code>, <code>response</code> позволяет нам тестировать сам ответ сервера, в данном случае, проверяя что действие <code>update</code> отвечает переадресацией на страницу входа:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">specify</span> <span class="p">{</span> <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
 </pre></div>
@@ -584,7 +584,7 @@
 
 <p>(Аналогичная конструкция работает для ключа <code>:error</code>, но не для <code>:success</code>.)</p>
 
-<p>Совместно с <code>:success</code> и <code>:error</code>, ключ <code>:notice</code> завершает наш триумвират отстиленных <code>flash</code>, поддерживаемых Bootstrap CSS фреймворком. Выйдя из сайта и попытавшись получить доступ к странице редактирования пользователя <a href="http://localhost:3000/users/1/edit">/users/1/edit</a>, мы можем увидить результирующий желтый блок &ldquo;notice&rdquo;, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig-protected_sign_in">Рис.&nbsp;9.6</a>.</p>
+<p>Совместно с <code>:success</code> и <code>:error</code>, ключ <code>:notice</code> завершает наш триумвират отстиленных <code>flash</code>, поддерживаемых Bootstrap CSS фреймворком. Выйдя из сайта и попытавшись получить доступ к странице редактирования пользователя <a href="http://localhost:3000/users/1/edit">/users/1/edit</a>, мы можем увидеть результирующий желтый блок &ldquo;notice&rdquo;, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig-protected_sign_in">Рис.&nbsp;9.6</a>.</p>
 
 <div class="label" id="fig-protected_sign_in"></div>
 
@@ -592,7 +592,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/protected_sign_in_bootstrap.png" alt="protected_sign_in_bootstrap" /></span></div><div class="caption"><span class="header">Рисунок 9.6: </span><span class="description">Форма входа после попытки получить доступ к защищенной странице.&nbsp;<a href="http://railstutorial.org/images/figures/protected_sign_in_bootstrap-full.png">(полный размер)</a></span></div></div>
 
 
-<p>К сожалению, в процессе написания кода приложения необходимого для прохожения тестов авторизации из <a class="ref" href="updating-showing-and-deleting-users#code-protected_edit_update_tests">Листинга&nbsp;9.11</a>, мы сломали тесты из <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_specs">Листинга&nbsp;9.1</a>. Код вроде</p>
+<p>К сожалению, в процессе написания кода приложения необходимого для прохождения тестов авторизации из <a class="ref" href="updating-showing-and-deleting-users#code-protected_edit_update_tests">Листинга&nbsp;9.11</a>, мы сломали тесты из <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_specs">Листинга&nbsp;9.1</a>. Код вроде</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;edit&quot;</span> <span class="k">do</span>
   <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
@@ -604,7 +604,7 @@
 </div>
 
 
-<p>более не работает, поскольку для посещение пути редактирования пользователя пользователь должен быть вошедшим. Решение заключается во "входе" пользователя с помощью служебного метода <code>sign_in</code> из <a class="ref" href="updating-showing-and-deleting-users#code-sign_in_helper">Листинга&nbsp;9.6</a>, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-edit_update_tests_with_signin">Листинге&nbsp;9.13</a>.</p>
+<p>более не работает, поскольку для посещения пути редактирования пользователя пользователь должен быть вошедшим. Решение заключается во "входе" пользователя с помощью служебного метода <code>sign_in</code> из <a class="ref" href="updating-showing-and-deleting-users#code-sign_in_helper">Листинга&nbsp;9.6</a>, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-edit_update_tests_with_signin">Листинге&nbsp;9.13</a>.</p>
 
 <div class="label" id="code-edit_update_tests_with_signin"></div>
 
@@ -633,7 +633,7 @@
 </div></div>
 
 
-<p>В этой точке наш набор тестов должене решительно позеленеть:</p>
+<p>В этой точке наш набор тестов должен решительно позеленеть:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
 </pre></div>
@@ -975,7 +975,7 @@
 <h3><a id="sec-9_3_1" href="updating-showing-and-deleting-users#sec-user_index" class="heading"><span class="number">9.3.1</span> Список пользователей</a></h3>
 
 
-<p>Хотя мы сохраним страницы <code>show</code> отдельных пользователей видимыми для всех посетителей сайта, для страницы user <code>index</code> будет реализовано ограничение, отображающее ее только для зарегистрированных пользователей, также будет реализовано ограничение того, сколько зарегистрированных пользователей будет отображаться на каждой странице списка. Мы начнем с тестирования того, что действие <code>index</code> защищено, посетив <code>users_path</code> (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>) и проверив что мы перенаправлены на страницу входа. Как и с отсальными тестами авторизации, мы поместим этот пример в интеграционные тест авторизации, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-protected_index_test">Листинге&nbsp;9.21</a>.</p>
+<p>Хотя мы сохраним страницы <code>show</code> отдельных пользователей видимыми для всех посетителей сайта, для страницы user <code>index</code> будет реализовано ограничение, отображающее ее только для зарегистрированных пользователей, также будет реализовано ограничение того, сколько зарегистрированных пользователей будет отображаться на каждой странице списка. Мы начнем с тестирования того, что действие <code>index</code> защищено, посетив <code>users_path</code> (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>) и проверив что мы перенаправлены на страницу входа. Как и с остальными тестами авторизации, мы поместим этот пример в интеграционные тест авторизации, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-protected_index_test">Листинге&nbsp;9.21</a>.</p>
 
 <div class="label" id="code-protected_index_test"></div>
 
@@ -1076,7 +1076,7 @@
 </div></div>
 
 
-<p>Как вы можете вспомнитьь из соответствующего действия demo app (<a class="ref" href="a-demo-app#code-demo_index_action">Листинг&nbsp;2.4</a>), код приложения использует <code>User.all</code> для вытягивания всех пользователей из базы данных, присваивая их переменной экземпляра <code>@users</code>  для использования в представлении, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-user_index">Листинге&nbsp;9.24</a>. (Если отображение всех пользователей за раз кажется вам плохой идеей, вы правы и мы избавимся от этого недостатка в <a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Разделе&nbsp;9.3.3</a>.)</p>
+<p>Как вы можете вспомнить из соответствующего действия demo app (<a class="ref" href="a-demo-app#code-demo_index_action">Листинг&nbsp;2.4</a>), код приложения использует <code>User.all</code> для вытягивания всех пользователей из базы данных, присваивая их переменной экземпляра <code>@users</code>  для использования в представлении, как это показано в <a class="ref" href="updating-showing-and-deleting-users#code-user_index">Листинге&nbsp;9.24</a>. (Если отображение всех пользователей за раз кажется вам плохой идеей, вы правы и мы избавимся от этого недостатка в <a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Разделе&nbsp;9.3.3</a>.)</p>
 
 <div class="label" id="code-user_index"></div>
 
@@ -1591,7 +1591,7 @@
 <h3><a id="sec-9_3_4" href="updating-showing-and-deleting-users#sec-partial_refactoring" class="heading"><span class="number">9.3.4</span> Частичный рефакторинг</a></h3>
 
 
-<p>Разбитый на страницы список пользователей теперь закончен, но есть одно улучшение, от которого я не могу удержаться: Rails имеет несколько невероятно ловких инструментов для создания компактных представлений, и в этом разделе мы займемся рефакторингом страницы со списком пользователей, используя эти инструменты. Так как наш код хорошо протестирован, мы можем с уверенностью приступить к рефакторингу, будучи уверенными в том, что мы врядли нарушим функциональность сайта.</p>
+<p>Разбитый на страницы список пользователей теперь закончен, но есть одно улучшение, от которого я не могу удержаться: Rails имеет несколько невероятно ловких инструментов для создания компактных представлений, и в этом разделе мы займемся рефакторингом страницы со списком пользователей, используя эти инструменты. Так как наш код хорошо протестирован, мы можем с уверенностью приступить к рефакторингу, будучи уверенными в том, что мы вряд ли нарушим функциональность сайта.</p>
 
 <p>Первым шагом нашего рефакторинга будет замена пользовательского&nbsp;<code>li</code> из <a class="ref" href="updating-showing-and-deleting-users#code-will_paginate_index_view">Листинга&nbsp;9.34</a> на вызов <code>render</code> (<a class="ref" href="updating-showing-and-deleting-users#code-index_view_first_refactoring">Листинг&nbsp;9.36</a>).</p>
 
@@ -1670,7 +1670,7 @@
 <h2><a id="sec-9_4" href="updating-showing-and-deleting-users#sec-destroying_users" class="heading"><span class="number">9.4</span> Уничтожение пользователей</a></h2>
 
 
-<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig-user_index_delete_links_mockup">Рис.&nbsp;9.12</a>, и определм <code>destroy</code> действие необходимое для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
+<p>Теперь, когда список пользователей завершен, осталось лишь одно каноничное REST действие: <code>destroy</code>. В этом разделе мы добавим ссылки для удаления пользователей, как это показано на <a class="ref" href="updating-showing-and-deleting-users#fig-user_index_delete_links_mockup">Рис.&nbsp;9.12</a>, и определим <code>destroy</code> действие необходимое для выполнения удаления. Но мы начнем с создания класса уполномоченных на это административных пользователей.</p>
 
 <div class="label" id="fig-user_index_delete_links_mockup"></div>
 
@@ -2207,7 +2207,7 @@
 
 <ol>
 
-<li>Следуя модели в <a class="ref" href="user-microposts#code-micropost_belongs_to_user_spec">Листинге&nbsp;10.8</a>, добавьте тест для проверки того что  User <code>admin</code> атрибут не является доступным. Для увереннсти вначале получите Красный тест и лишь затем Зеленый. (<em>Подсказка</em>: Вашим первым шагом должно быть <em>добавление</em> <code>admin</code> в список доступных атрибутов.)</li>
+<li>Следуя модели в <a class="ref" href="user-microposts#code-micropost_belongs_to_user_spec">Листинге&nbsp;10.8</a>, добавьте тест для проверки того что  User <code>admin</code> атрибут не является доступным. Для уверенности вначале получите Красный тест и лишь затем Зеленый. (<em>Подсказка</em>: Вашим первым шагом должно быть <em>добавление</em> <code>admin</code> в список доступных атрибутов.)</li>
 
 <li>Организуйте открытие Gravatar ссылки &ldquo;change&rdquo; из <a class="ref" href="updating-showing-and-deleting-users#code-user_edit_view">Листинга&nbsp;9.3</a> в новом окне (или вкладке). <em>Подсказка:</em> Ищите в сети; вы должны найти один простой и надежный метод с участием так называмого <code>_blank</code>. </li>
 

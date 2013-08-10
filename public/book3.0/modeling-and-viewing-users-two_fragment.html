@@ -996,7 +996,7 @@
 </div>
 
 
-<p>Как отмечалось в коментарии, в первой строке  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_factory">Листинга&nbsp;7.16</a>, используя символ <code>:user</code> мы даем Factory Girl возможность угадать, что мы хотим использовать модель User, так что в данном случае <code>@user</code> будет симулировать экземпляр <code>User</code>.</p>
+<p>Как отмечалось в комментарии, в первой строке  <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:user_factory">Листинга&nbsp;7.16</a>, используя символ <code>:user</code> мы даем Factory Girl возможность угадать, что мы хотим использовать модель User, так что в данном случае <code>@user</code> будет симулировать экземпляр <code>User</code>.</p>
 
 <p>Для нашей новой фабрики User в Users контроллере spec, мы создадим переменную <code>@user</code> в блоке <code>before(:each)</code> а затем <code>get</code> show страницу и проверим успешность (как мы делали с <code>new</code> страницей в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_new_user_spec_review">Листинге&nbsp;7.13</a>), а также проверим, что действие <code>show</code> вытягивает нужного пользователя из базы данных. Результат представлен в <a class="ref" href="modeling-and-viewing-users-two?version=3.0#code:get_show_test">Листинге&nbsp;7.17</a>. (Если вы используете Spork, вам может потребоваться его рестарт, для прохождения этого теста.)</p>
 
@@ -1287,7 +1287,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_show_default_gravatar_rails_3.png" alt="user_show_default_gravatar_rails_3" /></span></div><div class="caption"><span class="header">Рисунок  7.4: </span><span class="description">Начальная страница показывающая пользователя  <a   href="http://localhost:3000/users/1"><tt>/users/1</tt></a> с дефолтным Gravatar.&nbsp;<a href="http://railstutorial.org/images/figures/user_show_default_gravatar_rails_3-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Этот Gravatar бизнес может выглядеть как волшебство, так что давайте запустим консоль, чтобы получить немного больше понимания о том, что происходит:</p>
+<p>Такое поведение Gravatar может выглядеть как волшебство, так что давайте запустим консоль, чтобы получить немного больше понимания о том, что происходит:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">first</span>
