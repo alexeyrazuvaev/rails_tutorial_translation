@@ -1,0 +1,1576 @@
+<div id="top"></div>
+
+
+<h1 class="chapter"><a id="sec-4" href="rails-flavored-ruby#top" class="heading"><span class="number">Глава 4</span> Rails&nbsp;&mdash;&nbsp;приправленный Ruby</a></h1>
+
+
+<p>Основанная на примерах из <a class="ref" href="static-pages#top">Главы&nbsp;3</a>, эта глава рассматривает некоторые элементы Ruby важные для Rails. Ruby многогранен, но, к счастью, нам нужна относительно малая его часть, чтобы быть продуктивным Rails-разработчиком. Более того, эта малая часть <em>отличается</em> от той, которая вам понадобится в Ruby для обычных задач, поэтому, если вашей целью является создание динамических веб-приложений, я рекомендую изучать Rails первым, собирая биты Ruby на этом пути. Чтобы стать <em>экспертом</em> Rails, вы должны понимать Ruby более глубоко, и эта книга дает вам хорошую основу для развития.  Как отмечалось в <a class="ref" href="beginning#sec-comments_for_various_readers">Разделе&nbsp;1.1.1</a>, после окончания <em>Rails Tutorial</em> я советую почитать книги о чистом Ruby, такие как <a href="http://www.amazon.com/gp/product/1430223634"><em>Beginning Ruby</em></a>, <a href="http://www.amazon.com/gp/product/1933988657"><em>The Well-Grounded Rubyist</em></a>, or <a href="http://www.amazon.com/gp/product/0672328844"><em>The Ruby Way</em></a>.</p>
+
+<p>В этой главе рассматривается много материала, и это нормально&nbsp;&mdash;&nbsp;не понять его весь с первого раза. Я буду часто возвращаться к нему в последующих главах.</p>
+
+<div class="label" id="sec-motivation"></div>
+
+
+<h2><a id="sec-4_1" href="rails-flavored-ruby#sec-motivation" class="heading"><span class="number">4.1</span> Причины</a></h2>
+
+
+<p>Как мы видели в предыдущей главе, можно развить скелет приложения Rails, и даже начать тестирование, практически без знания основ языка Ruby.  Мы сделали это, опираясь на код тестов предоставленный учебником, разбирая каждое сообщение об ошибке до тех пор пока не получили прохождение набора тестов. Тем не менее, такая ситуация не может длиться вечно, и мы откроем эту главу парой дополнений к сайту, которые поставят нас лицом к лицу с нашим ограниченным знанием Ruby.</p>
+
+<p>Когда мы в последний раз видели наше новое приложение, мы только что обновили наши, в  основном статические, страницы использовав Rails шаблон для устранения дублирования в наших представлениях (<a class="ref" href="rails-flavored-ruby#code-application_layout_redux">Листинг&nbsp;4.1</a>).</p>
+
+<div class="label" id="code-application_layout_redux"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.1.</span> <span class="description">Шаблон сайта Пример приложения. <br /> <code>app/views/layouts/application.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="k">yield</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Давайте сфокусируемся на одной строке в <a class="ref" href="rails-flavored-ruby#code-application_layout_redux">Листинге&nbsp;4.1</a>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Этот код использует встроенную Rails функцию <code>stylesheet_link_tag</code> (о которой вы можете узнать более подробно из <a href="http://api.rubyonrails.org/v3.2.0/classes/ActionView/Helpers/AssetTagHelper/StylesheetTagHelpers.html#method-i-stylesheet_link_tag">Rails API</a>) для включения <code>application.css</code> для всех <a href="http://www.w3.org/TR/CSS2/media.html">медиа типов</a> (включая мониторы компьютеров и принтеры). Для опытного Rails разработчика эта строка выглядит просто, но в ней есть по крайней мере четыре Руби идеи которые могут сбить с толку: встроенные Rails-методы, вызов метода без скобок, символы и хэши. Мы раскроем все эти идеи в этой главе.</p>
+
+<p>Помимо того, что Rails поставляются с огромным количеством встроенных функций для использования в представлениях, они также позволяют создавать новые. Такие функции называются <em>хелперы</em>; для того, чтобы посмотреть как создается собственный хелпер, давайте для начала рассмотрим строку с тайтлом из <a class="ref" href="rails-flavored-ruby#code-application_layout_redux">Листинг&nbsp;4.1</a>:</p>
+
+<div class="code"><div class="highlight"><pre>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Этот код опирается на определение заголовка страницы (используя <code>provide</code>) в каждом представлении:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s1">&#39;Home&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Sample App<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+  This is the home page for the
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://railstutorial.org/&quot;</span><span class="nt">&gt;</span>Ruby on Rails Tutorial<span class="nt">&lt;/a&gt;</span>
+  sample application.
+<span class="nt">&lt;/p&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Но что если мы не предоставим заголовок? Это хорошее соглашение - иметь <em>базовый заголовок</em>, который мы используем на каждой странице, с дополнительным переменным заголовком (тайтлом), если мы хотим быть более конкретными. Мы уже <em>почти</em> достигли этого с нашей текущей схемой, с одним маленьким недостатком: как вы можете видеть, если вы удалите вызов <code>provide</code> в одном из представлений, без специфичного для страницы заголовка полный заголовок будет выглядеть так:</p>
+
+<div class="code"><div class="highlight"><pre>Ruby on Rails Tutorial Sample App |
+</pre></div>
+</div>
+
+
+<p>Другими словами, есть подходящий базовый заголовок, но есть также  прицепленная вертикальная черта <code>|</code> в конце заголовка.</p>
+
+<p>Для решения проблемы отсутствующего заголовка страницы, мы определим кастомный хелпер с названием <code>full_title</code>. Хелпер <code>full_title</code> будет возвращать базовый заголовок, &ldquo;Ruby on Rails Tutorial Sample App&rdquo;, в случае если заголовок страницы не определен и добавлять вертикальную черту перед заголовком страницы в противном случае (<a class="ref" href="rails-flavored-ruby#code-title_helper">Листинг&nbsp;4.2</a>).<sup class="footnote" id="fnref-4_1"><a href="#fn-4_1">1</a></sup></p>
+
+<div class="label" id="code-title_helper"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.2.</span> <span class="description">Определение хелпера <code>full_title</code>. <br /> <code>app/helpers/application_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">ApplicationHelper</span>
+
+  <span class="c1"># Returns the full title on a per-page basis.</span>
+  <span class="k">def</span> <span class="nf">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">)</span>
+    <span class="n">base_title</span> <span class="o">=</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span>
+    <span class="k">if</span> <span class="n">page_title</span><span class="o">.</span><span class="n">empty?</span>
+      <span class="n">base_title</span>
+    <span class="k">else</span>
+      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">base_title</span><span class="si">}</span><span class="s2"> | </span><span class="si">#{</span><span class="n">page_title</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+<p>Теперь, когда у нас есть хелпер, мы можем упростить наш шаблон заменив</p>
+
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span>Ruby on Rails Tutorial Sample App | <span class="cp">&lt;%=</span> <span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">)</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
+</pre></div>
+</div>
+
+
+<p>на</p>
+
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;title&gt;</span><span class="cp">&lt;%=</span> <span class="n">full_title</span><span class="p">(</span><span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">))</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
+</pre></div>
+</div>
+
+
+<p>как видно в <a class="ref" href="rails-flavored-ruby#code-application_layout_full_title">Листинге&nbsp;4.3</a>.</p>
+
+<div class="label" id="code-application_layout_full_title"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.3.</span> <span class="description">Шаблон сайта Пример приложения. <br /> <code>app/views/layouts/application.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+  <span class="nt">&lt;head&gt;</span>
+    <span class="nt">&lt;title&gt;</span><span class="cp">&lt;%=</span> <span class="n">full_title</span><span class="p">(</span><span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">))</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/head&gt;</span>
+  <span class="nt">&lt;body&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="k">yield</span> <span class="cp">%&gt;</span>
+  <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Для того чтобы заставить наш хелпер работать, мы можем удалить ненужное слово &ldquo;Home&rdquo; из Home страницы, позволив ей вернуться к базовому заголовку. Мы сделаем это вначале обновив наш тест с кодом из <a class="ref" href="rails-flavored-ruby#code-home_base_title_spec">Листинга&nbsp;4.4</a>, который обновляет предыдущий тест тайтла и добавляет один тест на отсутствие кастомной строки <code>&rsquo;Home&rsquo;</code> в заголовке.</p>
+
+<div class="label" id="code-home_base_title_spec"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.4.</span> <span class="description">Обновленные тесты для заголовка Home страницы. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
+
+  <span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
+
+    <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
+      <span class="n">visit</span> <span class="s1">&#39;/static_pages/home&#39;</span>
+      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">:text</span> <span class="o">=&gt;</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">it</span> <span class="s2">&quot;should have the base title&quot;</span> <span class="k">do</span>
+      <span class="n">visit</span> <span class="s1">&#39;/static_pages/home&#39;</span>
+      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
+                        <span class="ss">:text</span> <span class="o">=&gt;</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="n">it</span> <span class="s2">&quot;should not have a custom page title&quot;</span> <span class="k">do</span>
+      <span class="n">visit</span> <span class="s1">&#39;/static_pages/home&#39;</span>
+      <span class="n">page</span><span class="o">.</span><span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">:text</span> <span class="o">=&gt;</span> <span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+
+<p>Посмотрим, сможете ли вы понять почему мы добавили новый тест вместо того чтобы просто преобразовать существующий. (<em>Подсказка</em>: ответ кроется в <a class="ref" href="static-pages#sec-testing_a_title_change">Разделе&nbsp;3.3.1</a>.)</p>
+
+<p>Давайте запустим набор тестов чтобы проверить что один тест провальный:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
+</pre></div>
+</div>
+
+
+<p>Чтобы получить прохождение набора тестов мы удаляем строку <code>provide</code> из представления страницы как это показано в <a class="ref" href="rails-flavored-ruby#code-home_page_base_title">Листинге&nbsp;4.5</a>.</p>
+
+<div class="label" id="code-home_page_base_title"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.5.</span> <span class="description">Home страница без кастомного заголовка страницы. <br /> <code>app/views/static_pages/home.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Sample App<span class="nt">&lt;/h1&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+  This is the home page for the
+  <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://railstutorial.org/&quot;</span><span class="nt">&gt;</span>Ruby on Rails Tutorial<span class="nt">&lt;/a&gt;</span>
+  sample application.
+<span class="nt">&lt;/p&gt;</span>
+</pre></div>
+</div></div>
+
+
+
+<p>В этой точке тесты должны пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
+</pre></div>
+</div>
+
+
+<p>Как и со строкой для включения стилей приложения, код в <a class="ref" href="rails-flavored-ruby#code-title_helper">Листинге&nbsp;4.2</a> может выглядеть просто для глаз опытного Rails разработчика, но он полон новых Руби идей которые могут сбить с толку: модули, комментарии, назначение локальных переменных, булевые, контроль потока, интерполяция строк и возвращение значений. Все эти идеи тоже будут раскрыты в этой главе.</p>
+
+<div class="label" id="sec-strings_and_methods"></div>
+
+
+<h2><a id="sec-4_2" href="rails-flavored-ruby#sec-strings_and_methods" class="heading"><span class="number">4.2</span> Строки и методы</a></h2>
+
+
+<p>Нашим основным инструментом для изучения Ruby будет <em>Rails консоль</em>, которая является утилитой командной строки для работы с Rails приложениями, мы впервые видели ее в <a class="ref" href="a-demo-app#sec-demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a>. Сама консоль построена на интерактивном Ruby (<code>irb</code>), и таким образом, имеет доступ ко всей мощности языка Ruby. (Как мы увидим в <a class="ref" href="rails-flavored-ruby#sec-a_controller_class">Разделе&nbsp;4.4.4</a>, консоль также имеет доступ и к Rails окружению.) Запустите консоль в командной строке следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
+<span class="go">Loading development environment</span>
+<span class="gp">&gt;&gt; </span>
+</pre></div>
+</div>
+
+
+<p>По умолчанию консоль запускается в <em>окружении разработки (development environment)</em>, которое является одним из трех отдельных окружений определенных в Rails (другие&nbsp;&mdash;&nbsp;<em>тестирование</em> и <em>производство</em> (<em>test</em> и <em>production</em>)). Это различие не будет иметь важного значения в этой главе, мы узнаем больше об окружениях в <a class="ref" href="sign-up#sec-rails_environments">Разделе&nbsp;7.1.1</a>.</p>
+
+<p>Консоль это замечательный инструмент обучения, и вы  можете чувствовать себя свободно при ее использовании&nbsp;&mdash;&nbsp;не волнуйтесь, вы (вероятно) ничего не сломаете. При использовании консоли, нажмите Ctrl-C, если вы застряли, или Ctrl-D для выхода из консоли в целом. На протяжении оставшейся части этой главы, вы, возможно, найдете полезным консультироваться с Ruby API. <a href="http://ruby-doc.org/core-1.9.3/">Ruby API</a>. Она упакована (возможно, даже <em>слишком</em> упакована) информацией, например, чтобы узнать больше о строках Ruby вы можете посмотреть в Ruby API вступление для <code>String</code> класса.</p>
+
+<div class="label" id="sec-comments"></div>
+
+
+<h3><a id="sec-4_2_1" href="rails-flavored-ruby#sec-comments" class="heading"><span class="number">4.2.1</span> Комментарии</a></h3>
+
+
+<p>Ruby <em>комментарии</em> начинаются со знака фунт&nbsp;<code>#</code> (также называемого&ldquo;знаком хэша&rdquo; или, более поэтично, <a href="http://www.paratype.ru/help/term/terms.asp?code=243">&ldquo;октоторпом&rdquo;</a>) и распространяются до конца строки. Ruby (и, следовательно, Rails) игнорирует комментарии, но они полезны для читателей (а зачастую и для самого автора!). В коде</p>
+
+<div class="code"><div class="highlight"><pre>  <span class="c1"># Returns the full title on a per-page basis.</span>
+  <span class="k">def</span> <span class="nf">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">)</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+  <span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>первая строка является комментарием с указанием цели последующего определения функции.</p>
+
+<p>Обычно, вам не нужно включать комментарии в консольные сессии, но в учебных целях, я в дальнейшем буду включать некоторые комментарии, например:</p>
+
+<div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
+<span class="gp">&gt;&gt; </span><span class="mi">17</span> <span class="o">+</span> <span class="mi">42</span>   <span class="c1"># Сложение целых чисел</span>
+<span class="go">=&gt; 59</span>
+</pre></div>
+</div>
+
+
+<p>Если вы,  двигаясь по этому разделу, будете набирать или копипастить команды в вашу консоль, вы можете, конечно, опустить комментарии, если хотите; консоль будет игнорировать их в любом случае.</p>
+
+<div class="label" id="sec-strings"></div>
+
+
+<h3><a id="sec-4_2_2" href="rails-flavored-ruby#sec-strings" class="heading"><span class="number">4.2.2</span> Строки</a></h3>
+
+
+<p><em>Строки</em> это, вероятно, наиболее важная структура данных для веб-приложений, так как веб-страницы, в конечном счете, состоят из строк символов отправленных с сервера на браузер. Давайте начнем изучение строк с консолью, в этот раз запустив ее командой <code>rails&nbsp;c</code>, что является сокращением для <code>rails console</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="go">$ rails c</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;&quot;</span>         <span class="c1"># Пустая строка</span>
+<span class="go">=&gt; &quot;&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;foo&quot;</span>      <span class="c1"># Не пустая строка</span>
+<span class="go">=&gt; &quot;foo&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Это <em>string literals (буквальная (литеральная) строка)</em> (также, забавно называемая <em>текстовая строка</em>), созданная с использованием двойной кавычки&nbsp;<code>"</code>. Консоль печатает результат вычисления каждой строки, который, в случае буквальной (литеральной) строки, и есть сама строка.</p>
+
+<p>Мы можем также объединить строки <code>+</code> оператором:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;foo&quot;</span> <span class="o">+</span> <span class="s2">&quot;bar&quot;</span>    <span class="c1"># Конкатенация строк</span>
+<span class="go">=&gt; &quot;foobar&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Здесь результатом оценки выражения <code>"foo"</code> plus <code>"bar"</code> является строка <code>"foobar"</code>.<sup class="footnote" id="fnref-4_2"><a href="#fn-4_2">2</a></sup></p>
+
+<p>Другой  способ создания строк&nbsp;&mdash;&nbsp;через <em>интерполяцию</em> с помощью специального синтаксиса <code>#{}</code>:<sup class="footnote" id="fnref-4_3"><a href="#fn-4_3">3</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;Michael&quot;</span>    <span class="c1"># Присвоение переменной</span>
+<span class="go">=&gt; &quot;Michael&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> Hartl&quot;</span>     <span class="c1"># Интерполяция строки</span>
+<span class="go">=&gt; &quot;Michael Hartl&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Здесь мы <em>присвоили</em> значение <code>"Michael"</code> переменной <code>first_name</code> а затем интерполировали ее в строку <code>"#{first_name} Hartl"</code>. Мы также можем присвоить имя обеим строкам:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">first_name</span> <span class="o">=</span> <span class="s2">&quot;Michael&quot;</span>
+<span class="go">=&gt; &quot;Michael&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">last_name</span> <span class="o">=</span> <span class="s2">&quot;Hartl&quot;</span>
+<span class="go">=&gt; &quot;Hartl&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">first_name</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">last_name</span>    <span class="c1"># Конкатенация с пробелом</span>
+<span class="go">=&gt; &quot;Michael Hartl&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;</span><span class="si">#{</span><span class="n">first_name</span><span class="si">}</span><span class="s2"> </span><span class="si">#{</span><span class="n">last_name</span><span class="si">}</span><span class="s2">&quot;</span>    <span class="c1"># Эквивалентная интерполяция</span>
+<span class="go">=&gt; &quot;Michael Hartl&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Отметим, что последние два выражения являются эквивалентными, но я предпочитаю интерполированную версию; добавление одного пробела <code>"&nbsp;"</code> кажется мне немного неуклюжим.</p>
+
+<div class="label" id="sec-printing"></div>
+
+
+<h4><a id="sec-4_2_2_1" href="rails-flavored-ruby#sec-printing" class="heading">Вывод на экран</a></h4>
+
+
+<p>Для того чтобы вывести на экран (<em>print, напечатать</em>) строку обычно используют Ruby функцию <code>puts</code> (произносится &ldquo;put ess&rdquo;, от &ldquo;put string&rdquo;):</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;foo&quot;</span>     <span class="c1"># вывести на экран строку</span>
+<span class="go">foo</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Метод <code>puts</code> работает с <em>побочным эффектом</em>: выражение <code>puts "foo"</code> выводит строку на экран, а затем возвращает <a href="http://www.answers.com/nil">буквально ничего</a>: <code>nil</code> это особое обозначение Ruby для &ldquo;вообще ничего&rdquo;. (В дальнейшем, я буду иногда опускать <code>=&gt; nil</code> часть для простоты.)</p>
+
+<p>Использование <code>puts</code> автоматически добавляет символ новой строки&nbsp;<tt class="verb">\n</tt> к выводу; связанный <code>print</code> метод&nbsp;&mdash;&nbsp;нет:</p>
+
+<div class="code"><div class="highlight"><pre>
+<span class="c1"># выводит на экран строку (тоже что и puts, но без символа новой строки):</span>
+<span class="gp">&gt;&gt; </span><span class="nb">print</span> <span class="s2">&quot;foo&quot;</span>
+<span class="go">foo=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="nb">print</span> <span class="s2">&quot;foo</span><span class="se">\n</span><span class="s2">&quot;</span>  <span class="c1"># То же что и puts &quot;foo&quot;</span>
+<span class="go">foo</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-single_quoted_strings"></div>
+
+
+<h4><a id="sec-4_2_2_2" href="rails-flavored-ruby#sec-single_quoted_strings" class="heading">Строки в одиночных кавычках</a></h4>
+
+
+<p>Все примеры до сих пор использовали <em>строки в двойных кавычках</em>, но Ruby также поддерживает <em>строки в одиночных кавычках</em>. Для многих целей оба типа строк практически идентичны:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s1">&#39;foo&#39;</span>          <span class="c1"># Строка в одиночных кавычках</span>
+<span class="go">=&gt; &quot;foo&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="s1">&#39;foo&#39;</span> <span class="o">+</span> <span class="s1">&#39;bar&#39;</span>
+<span class="go">=&gt; &quot;foobar&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Хотя есть важное отличие; Ruby не будет интерполировать строки в одиночных кавычках:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s1">&#39;#{foo} bar&#39;</span>     <span class="c1"># Строки в одиночных кавычках не позволяют делать интерполяцию</span>
+<span class="go">=&gt; &quot;\#{foo} bar&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Обратите внимание, как консоль возвращает значения с использованием строк в двойных кавычках, которые  требуют обратной косой черты, чтобы <em>маскировать</em> специальные символы, такие как&nbsp;<code>#</code>.</p>
+
+<p>Если строки в двойных кавычках могут делать все то же, что и одиночно закавыченные, и могут интерполировать, какой смысл в  одиночных кавычках? Они часто бывают полезны, потому что они действительно буквальные, и хранят в точности такие символы, как вы вводите. Например, &ldquo;обратный слэш&rdquo; (бэкслэш)&nbsp;&mdash;&nbsp;символ специальный в большинстве систем, например,  буквальной новой строке&nbsp;<tt class="verb">\n</tt>. Если вы хотите чтобы  переменная содержала буквально обратный слэш, в одиночных кавычках это сделать проще:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s1">&#39;\n&#39;</span>       <span class="c1"># Буквальная комбинация &#39;бэкслэш n&#39;</span>
+<span class="go">=&gt; &quot;\\n&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Как и с символом&nbsp;<code>#</code> в нашем предыдущем примере, Ruby необходимо маскировать обратный слэш; посредством дополнительного бэкслэша, внутри строки в двойных кавычках, буквальный бэкслэш представлен <em>двумя</em> бэкслэшами. Для небольшого примера, как этот, это небольшое спасение, но если есть много элементов, которые нужно маскировать, это может реально помочь:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s1">&#39;Newlines (\n) and tabs (\t) both use the backslash character \.&#39;</span>
+<span class="go">=&gt; &quot;Newlines (\\n) and tabs (\\t) both use the backslash character \\.&quot;</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-objects_and_message_passing"></div>
+
+
+<h3><a id="sec-4_2_3" href="rails-flavored-ruby#sec-objects_and_message_passing" class="heading"><span class="number">4.2.3</span> Объекты и передача сообщений</a></h3>
+
+
+<p>Все в Ruby, включая строки и даже <code>nil</code>, является <em>объектом</em>. Мы увидим технический смысл этого выражения в <a class="ref" href="rails-flavored-ruby#sec-a_class_of_our_own">Разделе&nbsp;4.4.2</a>, но я не думаю, что кто-нибудь когда-нибудь понял объекты, прочитав определение в книге, вы должны создать свое интуитивное понимание объектов, видя множество примеров.</p>
+
+<p>Проще описать, что объекты <em>делают</em>, на какие сообщения реагируют.  Объект, типа строки, например, может реагировать на сообщение <code>length</code>, которое возвращает количество символов в строке:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;foobar&quot;</span><span class="o">.</span><span class="n">length</span>        <span class="c1"># Передача сообщения &quot;length&quot; строке</span>
+<span class="go">=&gt; 6</span>
+</pre></div>
+</div>
+
+
+<p>Как правило, сообщения, которые передаются объектам, это <em>методы</em>, которые являются функциями, определенными для этих объектов.<sup class="footnote" id="fnref-4_4"><a href="#fn-4_4">4</a></sup> Строки также реагируют на <code>empty?</code> метод:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;foobar&quot;</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Обратите внимание на знак вопроса в конце <code>empty?</code> метода. Это конвенция Ruby обозначающая, что возвращаемое значение&nbsp;&mdash;&nbsp;<em>boolean (булево, логика)</em>: <code>true (истина)</code> или <code>false (ложь)</code>. Булевые  особенно полезны для <em>управления потоком</em>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">empty?</span>
+<span class="gp">&gt;&gt; </span>  <span class="s2">&quot;The string is empty&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="k">else</span>
+<span class="gp">&gt;&gt; </span>  <span class="s2">&quot;The string is nonempty&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; &quot;The string is nonempty&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Булевы также могут быть объединены с помощью <code>&amp;&amp;</code> (&ldquo;И&rdquo;), <code>||</code> (&ldquo;ИЛИ&rdquo;), и <code>!</code> (&ldquo;НЕ&rdquo;) операторов:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span>
+<span class="go">=&gt; &quot;foo&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+<span class="go">=&gt; &quot;&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;Both strings are empty&quot;</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">empty?</span> <span class="o">&amp;&amp;</span> <span class="n">y</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;One of the strings is empty&quot;</span> <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">empty?</span> <span class="o">||</span> <span class="n">y</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">&quot;One of the strings is empty&quot;</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;x is not empty&quot;</span> <span class="k">if</span> <span class="o">!</span><span class="n">x</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">&quot;x is not empty&quot;</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Поскольку все в Ruby является объектом, следовательно, <code>nil</code> тоже является объектом, поэтому он тоже может отвечать на методы. Одним из примеров является <code>to_s</code> метод, который может конвертировать практически любой объект в строку:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">nil</span><span class="o">.</span><span class="n">to_s</span>
+<span class="go">=&gt; &quot;&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Это, конечно, кажется, пустой строкой, что мы можем проверить, <em>цепочкой</em> сообщений, передаваемых к <code>nil</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">nil</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">NoMethodError: You have a nil object when you didn&#39;t expect it!</span>
+<span class="go">You might have expected an instance of Array.</span>
+<span class="go">The error occurred while evaluating nil.empty?</span>
+<span class="gp">&gt;&gt; </span><span class="kp">nil</span><span class="o">.</span><span class="n">to_s</span><span class="o">.</span><span class="n">empty?</span>      <span class="c1"># Сцепление сообщений</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+
+<p>Здесь мы видим, что <code>nil</code> объект сам по себе не реагирует на <code>empty?</code> метод, но <code>nil.to_s</code> реагирует.</p>
+
+<p>Вот специальный метод для проверки на <code>nil</code>-ность, о котором вы могли догадаться:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;foo&quot;</span><span class="o">.</span><span class="n">nil?</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">nil?</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="kp">nil</span><span class="o">.</span><span class="n">nil?</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Код</p>
+
+<div class="code"><div class="highlight"><pre><span class="nb">puts</span> <span class="s2">&quot;x is not empty&quot;</span> <span class="k">if</span> <span class="o">!</span><span class="n">x</span><span class="o">.</span><span class="n">empty?</span>
+</pre></div>
+</div>
+
+
+<p>также показывает альтернативное использование ключевого слова <code>if</code> Ruby позволяет писать утверждение, которое вычисляется только тогда, когда оператор, следующий за <code>if</code> это истина. Есть дополнительное ключевое слово <code>unless</code> которое работает по той же схеме:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">string</span> <span class="o">=</span> <span class="s2">&quot;foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;The string &#39;</span><span class="si">#{</span><span class="n">string</span><span class="si">}</span><span class="s2">&#39; is nonempty.&quot;</span> <span class="k">unless</span> <span class="n">string</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">The string &#39;foobar&#39; is nonempty.</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Стоит отметить, что <code>nil</code> объект уникален, тем, что это <em>единственный</em> объект Ruby, который является ложью в булевом контексте, кроме, непосредственно, <code>false</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">if</span> <span class="kp">nil</span>
+<span class="gp">&gt;&gt; </span>  <span class="kp">true</span>
+<span class="gp">&gt;&gt; </span><span class="k">else</span>
+<span class="gp">&gt;&gt; </span>  <span class="kp">false</span>        <span class="c1"># nil является false</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; false</span>
+</pre></div>
+</div>
+
+
+<p>В частности, все другие объекты Ruby являются <em>true</em>, даже <code>0</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">if</span> <span class="mi">0</span>
+<span class="gp">&gt;&gt; </span>  <span class="kp">true</span>        <span class="c1"># 0 (и все остальные кроме nil и самой false) является true</span>
+<span class="gp">&gt;&gt; </span><span class="k">else</span>
+<span class="gp">&gt;&gt; </span>  <span class="kp">false</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-method_definitions"></div>
+
+
+<h3><a id="sec-4_2_4" href="rails-flavored-ruby#sec-method_definitions" class="heading"><span class="number">4.2.4</span> Определение метода</a></h3>
+
+
+<p>Консоль позволяет определять методы точно так же, как мы это делали с <code>home</code> действием из <a class="ref" href="static-pages#code-static_pages_controller">Листинга&nbsp;3.6</a> или <code>full_title</code> хелпером из <a class="ref" href="rails-flavored-ruby#code-title_helper">Листинга&nbsp;4.2</a>. (Определение методов в консоли - немного громоздкое мероприятие, и обычно вы будете использовать файл, но это удобно для демонстрационных целей.) Например, давайте определим функцию <code>string_message</code> которая принимает один <em>аргумент</em> и возвращает сообщение в зависимости от того, пустой аргумент или нет:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">def</span> <span class="nf">string_message</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">empty?</span>
+<span class="gp">&gt;&gt; </span>    <span class="s2">&quot;It&#39;s an empty string!&quot;</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">else</span>
+<span class="gp">&gt;&gt; </span>    <span class="s2">&quot;The string is nonempty.&quot;</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">end</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="n">string_message</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="go">It&#39;s an empty string!</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="n">string_message</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+<span class="go">The string is nonempty.</span>
+</pre></div>
+</div>
+
+
+<p>Обратите внимание, что Ruby функции имеют <em>неявное возвращение</em> (скрытый return) то есть, они возвращают последнее оцененное утверждение&nbsp;&mdash;&nbsp;в данном случае, одну из двух строк сообщения, в зависимости от того, пуст или нет аргумент <code>string</code>.  Ruby также имеет явный вариант возвращения (явный return); следующие функции эквивалентны приведенным выше:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">def</span> <span class="nf">string_message</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">return</span> <span class="s2">&quot;It&#39;s an empty string!&quot;</span> <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">empty?</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">return</span> <span class="s2">&quot;The string is nonempty.&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+</pre></div>
+</div>
+
+<p>Внимательный читатель может заметить в этой точке, что второе <code>return</code> здесь фактически ненужно&nbsp;&mdash;&nbsp;состояние последнего выражения в функции, т.е. строки <code>"The string is nonempty."</code> будет возвращено независимо от ключевого слова <code>return</code>, но использование <code>return</code> в обоих местах придает ему приятную симметрию.</p>
+
+<div class="label" id="sec-back_to_the_title_helper"></div>
+
+
+<h3><a id="sec-4_2_5" href="rails-flavored-ruby#sec-back_to_the_title_helper" class="heading"><span class="number">4.2.5</span> Возвращение к title хелперу</a></h3>
+
+
+<p>Теперь мы в состоянии понять <code>full_title</code> хелпер из <a class="ref" href="rails-flavored-ruby#code-title_helper">Листинга&nbsp;4.2</a>:<sup class="footnote" id="fnref-4_5"><a href="#fn-4_5">5</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">ApplicationHelper</span>
+
+  <span class="c1"># Возвращает полный заголовок зависящий от страницы # Документирующий коментарий</span>
+  <span class="k">def</span> <span class="nf">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">)</span>                          <span class="c1"># Определение метода</span>
+    <span class="n">base_title</span> <span class="o">=</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span>  <span class="c1"># Назначение переменной</span>
+    <span class="k">if</span> <span class="n">page_title</span><span class="o">.</span><span class="n">empty?</span>                              <span class="c1"># Булевый тест</span>
+      <span class="n">base_title</span>                                      <span class="c1"># Явное возвращение</span>
+    <span class="k">else</span>
+      <span class="s2">&quot;</span><span class="si">#{</span><span class="n">base_title</span><span class="si">}</span><span class="s2"> | </span><span class="si">#{</span><span class="n">page_title</span><span class="si">}</span><span class="s2">&quot;</span>                 <span class="c1"># Интерполяция строки</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Все эти элементы&nbsp;&mdash;&nbsp;определение функции, присваивание переменной, логические тесты, управление потоком, и интерполяция строки&nbsp;&mdash;&nbsp;собраны вместе, чтобы сделать компактный вспомогательный метод для использования в шаблоне нашего сайта. Последний элемент это <code>module ApplicationHelper</code>: модули позволяют нам складывать вместе связанные методы, затем они (модули) могут быть <em>подмешаны</em> в Ruby-классы с помощью <code>include</code>. Если вы пишете на обычном Ruby, вы обычно пишете модули и сами их явно включаете, но в случае с хелпер-модулем Rails делает включение за нас. Результатом является то, что <code>full_title</code> метод <a href="http://catb.org/jargon/html/A/automagically.html">автомагически</a> доступен во всех наших представлениях.</p>
+
+<div class="label" id="sec-other_data_structures"></div>
+
+
+<h2><a id="sec-4_3" href="rails-flavored-ruby#sec-other_data_structures" class="heading"><span class="number">4.3</span> Другие структуры данных</a></h2>
+
+
+<p>Хотя веб-приложения, в конечном счете это строки, фактически, для <em>изготовления</em> этих строк требуется также использование других структур данных. В этом разделе мы узнаем о некоторых структурах данных Ruby, важных для написания Rails приложений.</p>
+
+<div class="label" id="sec-arrays_and_ranges"></div>
+
+
+<h3><a id="sec-4_3_1" href="rails-flavored-ruby#sec-arrays_and_ranges" class="heading"><span class="number">4.3.1</span> Массивы и диапазоны</a></h3>
+
+
+<p>Массив это всего лишь список элементов в определенном порядке.  Мы еще не обсуждали массивы  в <em>Rails Tutorial</em>, но их понимание дает хорошую основу для понимания хэшей (<a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Раздел&nbsp;4.3.3</a>) и для аспектов Rails моделирования данных (таких как <code>has_many</code> ассоциации, которые мы  видели в <a class="ref" href="a-demo-app#sec-demo_user_has_many_microposts">Разделе&nbsp;2.3.3</a> и больше раскроем в <a class="ref" href="user-microposts#sec-user_micropost_associations">Разделе&nbsp;10.1.3</a>).</p>
+
+<p>Мы потратили много времени на понимание строк, и есть естественный способ перейти от строк к массивам, используя <code>split</code> метод:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span> <span class="s2">&quot;foo bar     baz&quot;</span><span class="o">.</span><span class="n">split</span>     <span class="c1"># Разбивает строку в трех-элементный массив</span>
+<span class="go">=&gt; [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]</span>
+</pre></div>
+</div>
+
+
+<p>Результатом этой операции является массив из трех строк. По умолчанию, <code>split</code> делит строку на массив путем разделения по пробелу, но вы можете разделить практически по чему угодно:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;fooxbarxbazx&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="go">=&gt; [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]</span>
+</pre></div>
+</div>
+
+
+<p>Как это принято в большинстве языков программирования, Ruby массивы&nbsp;&mdash;&nbsp;<em>нулевого сдвига</em>, что означает, что первый элемент массива имеет индекс&nbsp;0, второй имеет индекс&nbsp;1, и так далее:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="o">[</span><span class="mi">42</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">17</span><span class="o">]</span>
+<span class="go">=&gt; [42, 8, 17]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span>               <span class="c1"># Ruby использует квадратные скобки для доступа к массиву.</span>
+<span class="go">=&gt; 42</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+<span class="go">=&gt; 8</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span>
+<span class="go">=&gt; 17</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">[-</span><span class="mi">1</span><span class="o">]</span>              <span class="c1"># Индексы могут быть даже отрицательными!</span>
+<span class="go">=&gt; 17</span>
+</pre></div>
+</div>
+
+
+<p>Мы видим здесь что Ruby использует квадратные скобки для доступа к элементам массива. В дополнение к этой скобковой записи, Ruby предлагает синонимы для некоторых часто используемых элементов:<sup class="footnote" id="fnref-4_6"><a href="#fn-4_6">6</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span>                  <span class="c1"># Просто напоминание о том что такое &#39;a&#39;</span>
+<span class="go">=&gt; [42, 8, 17]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">first</span>
+<span class="go">=&gt; 42</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">second</span>
+<span class="go">=&gt; 8</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">last</span>
+<span class="go">=&gt; 17</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">last</span> <span class="o">==</span> <span class="n">a</span><span class="o">[-</span><span class="mi">1</span><span class="o">]</span>    <span class="c1"># Сравнение с помощью ==</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Последняя строка вводит <a  href="http://ru.wikipedia.org/wiki/Сравнение_(программирование)">оператор проверки на равенство</a>  <code>==</code>, который Ruby разделяет со многими другими языками, наряду со связанным <code>!=</code> (&ldquo;не равно&rdquo;), и т.д.:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">length</span>       <span class="c1"># Как и строки, массивы отвечают на метод &#39;length&#39;.</span>
+<span class="go">=&gt; 3</span>
+<span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">==</span> <span class="mi">3</span>
+<span class="go">=&gt; true</span>
+<span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span>
+<span class="go">=&gt; true</span>
+<span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">1</span>
+<span class="go">=&gt; true</span>
+<span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span>
+<span class="go">=&gt; false</span>
+</pre></div>
+</div>
+
+
+<p>В дополнение к <code>length</code> (первая строка в приведенном выше примере), массивы отвечают на множество других методов:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span>
+<span class="go">=&gt; [42, 8, 17]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">sort</span>
+<span class="go">=&gt; [8, 17, 42]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">reverse</span>
+<span class="go">=&gt; [17, 8, 42]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">shuffle</span>
+<span class="go">=&gt; [17, 42, 8]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span>
+<span class="go">=&gt; [42, 8, 17]</span>
+</pre></div>
+</div>
+
+
+<p>обратите внимание на то что ни один из вышеприведенных методов не меняет саму <code>a</code>. Для того, чтобы <em>изменить</em> массив, используется соответствующие &ldquo;бэнг&rdquo; методы (названные так потому что восклицательный знак обычно произносится как &ldquo;бэнг&rdquo; в этом контексте):</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span>
+<span class="go">=&gt; [42, 8, 17]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">sort!</span>
+<span class="go">=&gt; [8, 17, 42]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span>
+<span class="go">=&gt; [8, 17, 42]</span>
+</pre></div>
+</div>
+
+
+<p>Вы также можете добавлять данные в массивы с помощью <code>push</code> (# отправить, толкнуть) метода или эквивалентного ему оператора, <tt class="verb">&lt;&lt;</tt>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>                  <span class="c1"># Отправка 6 в массив</span>
+<span class="go">=&gt; [42, 8, 17, 6]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="mi">7</span>                     <span class="c1"># Отправка 7 в массив</span>
+<span class="go">=&gt; [42, 8, 17, 6, 7]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;foo&quot;</span> <span class="o">&lt;&lt;</span> <span class="s2">&quot;bar&quot;</span>        <span class="c1"># Сцепление отправляемых в массив данных</span>
+<span class="go">=&gt; [42, 8, 17, 6, 7, &quot;foo&quot;, &quot;bar&quot;]</span>
+</pre></div>
+</div>
+
+
+<p>Последний пример показывает что вы можете сцеплять добавления вместе, а также, что, в отличие от массивов во многих других языках, Ruby массивы могут содержать смесь различных типов (в данном случае, целые числа и строки).</p>
+
+<p>Прежде мы видели что <code>split</code> преобразовывает строку в массив. Мы также можем пойти другим путем с <code>join</code> методом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span>
+<span class="go">=&gt; [42, 8, 17, 7, &quot;foo&quot;, &quot;bar&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">join</span>                       <span class="c1"># Объединение без ничего</span>
+<span class="go">=&gt; &quot;428177foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">&#39;, &#39;</span><span class="p">)</span>                 <span class="c1"># Объединение через запятую</span>
+<span class="go">=&gt; &quot;42, 8, 17, 7, foo, bar&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Тесно связаны с массивами <em>диапазоны</em>, которые проще всего понять посредством преобразования их в массивы, с помощью <code>to_a</code> метода:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span>
+<span class="go">=&gt; 0..9</span>
+<span class="gp">&gt;&gt; </span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="o">.</span><span class="n">to_a</span>          <span class="c1"># Упс, вызвали to_a на 9</span>
+<span class="go">NoMethodError: undefined method `to_a&#39; for 9:Fixnum</span>
+<span class="gp">&gt;&gt; </span><span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>        <span class="c1"># Использование круглых скобок для вызова to_a на диапазоне</span>
+<span class="go">=&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</span>
+</pre></div>
+</div>
+
+
+<p>Хотя <code>0..9</code> и является допустимым диапазоном, второе выражение показывает, что нам нужно добавить скобки для вызова метода на нем.</p>
+
+<p>Диапазоны полезны для вытаскивания элементов массива:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="sx">%w[foo bar baz quux]</span>         <span class="c1"># Применение %w для создания массива строк.</span>
+<span class="go">=&gt; [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;, &quot;quux&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="n">a</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">2</span><span class="o">]</span>
+<span class="go">=&gt; [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]</span>
+</pre></div>
+</div>
+
+
+<p>Диапазоны также работают с буквами:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;e&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+<span class="go">=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;]</span>
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-blocks"></div>
+
+
+<h3><a id="sec-4_3_2" href="rails-flavored-ruby#sec-blocks" class="heading"><span class="number">4.3.2</span> Блоки</a></h3>
+
+
+<p>И массивы и диапазоны отвечают на множество методов, которые принимают <em>блоки</em>, которые одновременно являются и самыми мощными и одними из самых непонятных  элементов Руби:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="nb">puts</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span> <span class="p">}</span>
+<span class="go">2</span>
+<span class="go">4</span>
+<span class="go">6</span>
+<span class="go">8</span>
+<span class="go">10</span>
+<span class="go">=&gt; 1..5</span>
+</pre></div>
+</div>
+
+
+<p>Этот код вызывает <code>each</code> метод на диапазоне <code>(1..5)</code> и передает ему блок <code>{ |i| puts 2 * i }</code>. Вертикальные линии вокруг имени переменной в&nbsp;<code>|i|</code> являются Ruby синтаксисом для блоковых переменных и это позволяет методу узнать, что делать с блоком; в данном случае диапазонный <code>each</code> метод может обрабатывать блок с одной локальной переменной, которую мы называли&nbsp;<code>i</code> и он просто выполняет блок для каждого значения в диапазоне.</p>
+
+<p>Фигурные скобки это один из способов обозначить блок, но есть также второй способ:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<span class="gp">?&gt; </span>  <span class="nb">puts</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">i</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">2</span>
+<span class="go">4</span>
+<span class="go">6</span>
+<span class="go">8</span>
+<span class="go">10</span>
+<span class="go">=&gt; 1..5</span>
+</pre></div>
+</div>
+
+
+<p>Блоки часто могут быть более чем из одной строки. В <em>Rails Tutorial</em> мы будем следовать общей конвенции использования фигурных скобок только для коротких однострочных блоков и использовать <code>do..end</code> синтаксис для длинных однострочных и многострочных блоков:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+<span class="gp">?&gt; </span>  <span class="nb">puts</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">number</span>
+<span class="gp">&gt;&gt; </span>  <span class="nb">puts</span> <span class="s1">&#39;--&#39;</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">2</span>
+<span class="go">--</span>
+<span class="go">4</span>
+<span class="go">--</span>
+<span class="go">6</span>
+<span class="go">--</span>
+<span class="go">8</span>
+<span class="go">--</span>
+<span class="go">10</span>
+<span class="go">--</span>
+<span class="go">=&gt; 1..5</span>
+</pre></div>
+</div>
+
+
+<p>Здесь я использовал <code>number</code> вместо&nbsp;<code>i</code> просто чтобы подчеркнуть, что имя переменной может быть любым.</p>
+
+<p>Если не владеете основами программирования в должной степени, нет короткой дороги к пониманию блоков; просто их нужно много увидеть и, в конечном итоге, вы привыкнете к ним.<sup class="footnote" id="fnref-4_7"><a href="#fn-4_7">7</a></sup> К счастью, люди довольно хороши на обобщения на основе конкретных примеров; вот еще несколько блоков, в том числе пара с  использованием <code>map</code> метода:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="mi">3</span><span class="o">.</span><span class="n">times</span> <span class="p">{</span> <span class="nb">puts</span> <span class="s2">&quot;Betelgeuse!&quot;</span> <span class="p">}</span>   <span class="c1"># 3.times принимает блок без переменных.</span>
+<span class="go">&quot;Betelgeuse!&quot;</span>
+<span class="go">&quot;Betelgeuse!&quot;</span>
+<span class="go">&quot;Betelgeuse!&quot;</span>
+<span class="go">=&gt; 3</span>
+<span class="gp">&gt;&gt; </span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>          <span class="c1"># Нотация ** обозначает &#39;степень&#39;.</span>
+<span class="go">=&gt; [1, 4, 9, 16, 25]</span>
+<span class="gp">&gt;&gt; </span><span class="sx">%w[a b c]</span>                        <span class="c1"># Вспомните что %w создает массив строк.</span>
+<span class="go">=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="sx">%w[a b c]</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">char</span><span class="o">|</span> <span class="n">char</span><span class="o">.</span><span class="n">upcase</span> <span class="p">}</span>
+<span class="go">=&gt; [&quot;A&quot;, &quot;B&quot;, &quot;C&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="sx">%w[A B C]</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">char</span><span class="o">|</span> <span class="n">char</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span>
+<span class="go">=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</span>
+</pre></div>
+</div>
+
+
+
+
+<p>Как вы можете видеть, <code>map</code> метод возвращает результат применения данного блока для каждого элемента в массиве или диапазоне.</p>
+
+<p>Кстати, теперь мы в состоянии понять строку Ruby, которую  я вбросил в <a class="ref" href="beginning#sec-heroku_commands">Разделе&nbsp;1.4.4</a> для генерации случайных субдоменов:</p>
+
+<div class="code"><div class="highlight"><pre><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">shuffle</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">7</span><span class="o">].</span><span class="n">join</span>
+</pre></div>
+</div>
+
+<p>Давайте построим ее шаг за шагом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>                     <span class="c1"># Массив букв в алфавитном порядке</span>
+<span class="go">=&gt; [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;, &quot;e&quot;, &quot;f&quot;, &quot;g&quot;, &quot;h&quot;, &quot;i&quot;, &quot;j&quot;, &quot;k&quot;, &quot;l&quot;, &quot;m&quot;, &quot;n&quot;, &quot;o&quot;,</span>
+<span class="go">&quot;p&quot;, &quot;q&quot;, &quot;r&quot;, &quot;s&quot;, &quot;t&quot;, &quot;u&quot;, &quot;v&quot;, &quot;w&quot;, &quot;x&quot;, &quot;y&quot;, &quot;z&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">shuffle</span>             <span class="c1"># Перемешиваем его.</span>
+<span class="go">=&gt; [&quot;c&quot;, &quot;g&quot;, &quot;l&quot;, &quot;k&quot;, &quot;h&quot;, &quot;z&quot;, &quot;s&quot;, &quot;i&quot;, &quot;n&quot;, &quot;d&quot;, &quot;y&quot;, &quot;u&quot;, &quot;t&quot;, &quot;j&quot;, &quot;q&quot;,</span>
+<span class="go">&quot;b&quot;, &quot;r&quot;, &quot;o&quot;, &quot;f&quot;, &quot;e&quot;, &quot;w&quot;, &quot;v&quot;, &quot;m&quot;, &quot;a&quot;, &quot;x&quot;, &quot;p&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">shuffle</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">7</span><span class="o">]</span>       <span class="c1"># Вытаскиваем первые восемь элементов.</span>
+<span class="go">=&gt; [&quot;f&quot;, &quot;w&quot;, &quot;i&quot;, &quot;a&quot;, &quot;h&quot;, &quot;p&quot;, &quot;c&quot;, &quot;x&quot;]</span>
+<span class="c1"># Объединяем их вместе чтобы сделать одну строку.</span>
+<span class="gp">&gt;&gt; </span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="o">.</span><span class="n">.</span><span class="s1">&#39;z&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">shuffle</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="mi">7</span><span class="o">].</span><span class="n">join</span>
+<span class="go">=&gt; &quot;mznpybuj&quot;</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-hashes_and_symbols"></div>
+
+
+<h3><a id="sec-4_3_3" href="rails-flavored-ruby#sec-hashes_and_symbols" class="heading"><span class="number">4.3.3</span> Хэши и символы</a></h3>
+
+
+<p>Хэши, по существу, это объединение массивов: вы можете думать о хэшах в основном, как о массивах, но не ограничиваясь целочисленными индексами.  (В самом деле, некоторые языки, особенно Perl, иногда называют хэши <em>associative arrays (ассоциативными массивами)</em> по этой причине.) Вместо этого, хэш-индексами, <em>ключами</em>, могут быть практически любые объекты. Например, мы можем использовать строки в качестве ключей:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="p">{}</span>                          <span class="c1"># {} это пустой хэш.</span>
+<span class="go">=&gt; {}</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">[</span><span class="s2">&quot;first_name&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Michael&quot;</span>     <span class="c1"># Ключ &quot;first_name&quot;, значение &quot;Michael&quot;</span>
+<span class="go">=&gt; &quot;Michael&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">[</span><span class="s2">&quot;last_name&quot;</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Hartl&quot;</span>        <span class="c1"># Ключ &quot;last_name&quot;, значение &quot;Hartl&quot;</span>
+<span class="go">=&gt; &quot;Hartl&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">[</span><span class="s2">&quot;first_name&quot;</span><span class="o">]</span>                 <span class="c1"># Доступ к элементам как в массивах.</span>
+<span class="go">=&gt; &quot;Michael&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span>                               <span class="c1"># Буквальное представление хэша</span>
+<span class="go">=&gt; {&quot;last_name&quot;=&gt;&quot;Hartl&quot;, &quot;first_name&quot;=&gt;&quot;Michael&quot;}</span>
+</pre></div>
+</div>
+
+
+
+<p>Хэши обозначаются фигурными скобками, содержащими пары ключ-значение; фигурные скобки без пары ключ-значение, т. е. <code>{}</code>&nbsp;&mdash;&nbsp;это пустой хэш.  Важно отметить, что фигурные скобки для хэшей не имеют ничего общего с фигурными скобками для блоков.  (Да, это может привести к путанице.) Хотя хэши и напоминают массивы, одним важным отличием является то, что хэши не гарантируют сохранность их элементов в определенном порядке.<sup class="footnote" id="fnref-4_8"><a href="#fn-4_8">8</a></sup> Если порядок важен, используйте массив.</p>
+
+<p>Вместо того, чтобы определять хэши поэлементно, используя квадратные скобки, проще использовать их буквальное представление с ключами и значениями разделенными &nbsp;<code>=&gt;</code>, который называют &ldquo;hashrocket&rdquo;:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;first_name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Michael&quot;</span><span class="p">,</span> <span class="s2">&quot;last_name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Hartl&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {&quot;last_name&quot;=&gt;&quot;Hartl&quot;, &quot;first_name&quot;=&gt;&quot;Michael&quot;}</span>
+</pre></div>
+</div>
+
+
+<p>Здесь я использовал обычную конвенцию Ruby, поместив дополнительные пробелы на двух концах хэша&nbsp;&mdash;&nbsp;конвенцию, игнорируемую при выводе на консоль.  (Не спрашивайте меня, почему пробелы попали в конвенцию; вероятно, раньше какому-то влиятельному Программисту Ruby понравился внешний вид лишних пробелов, и они застряли в конвенции)</p>
+
+<p>До сих пор мы использовали строки в качестве хэш-ключей, но в Rails гораздо чаще вместо них используются <em>символы</em>. Символы выглядят как строки, но с префиксом двоеточие, а не в кавычках. Например, <code>:name</code> это символ. Вы можете думать о символах, в основном,  как о строках без дополнительного багажа:<sup class="footnote" id="fnref-4_9"><a href="#fn-4_9">9</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;name&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">=&gt; [&quot;n&quot;, &quot;a&quot;, &quot;m&quot;, &quot;e&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="ss">:name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+<span class="go">NoMethodError: undefined method `split&#39; for :name:Symbol</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;foobar&quot;</span><span class="o">.</span><span class="n">reverse</span>
+<span class="go">=&gt; &quot;raboof&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="ss">:foobar</span><span class="o">.</span><span class="n">reverse</span>
+<span class="go">NoMethodError: undefined method `reverse&#39; for :foobar:Symbol</span>
+</pre></div>
+</div>
+
+
+<p>Символы это специальный тип данных Ruby, очень мало используемый в других языках, так что они могут показаться странными на первый взгляд, но Rails довольно часто их использует, так что вы быстро к ним привыкнете.</p>
+
+<p>В терминах символов как хэш-ключей, мы можем определить <code>user</code> хэш следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;michael@example.com&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {:name=&gt;&quot;Michael Hartl&quot;, :email=&gt;&quot;michael@example.com&quot;}</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>              <span class="c1"># Доступ к значению соответствующему :name.</span>
+<span class="go">=&gt; &quot;Michael Hartl&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">[</span><span class="ss">:password</span><span class="o">]</span>          <span class="c1"># Доступ к значению неопределенного ключа.</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Здесь мы видим из последнего примера, что хэш-значение для неопределенного ключа просто <code>nil</code>.</p>
+
+<p>Поскольку использование в хэшах символов в качестве ключей является общепринятой практикой, Ruby&nbsp;1.9 поддерживает новый синтаксис специально для этого случая:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">h1</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">:name</span> <span class="o">=&gt;</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">:email</span> <span class="o">=&gt;</span> <span class="s2">&quot;michael@example.com&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {:name=&gt;&quot;Michael Hartl&quot;, :email=&gt;&quot;michael@example.com&quot;}</span>
+<span class="gp">&gt;&gt; </span><span class="n">h2</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;michael@example.com&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {:name=&gt;&quot;Michael Hartl&quot;, :email=&gt;&quot;michael@example.com&quot;} </span>
+<span class="gp">&gt;&gt; </span><span class="n">h1</span> <span class="o">==</span> <span class="n">h2</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Второй синтаксис заменяет комбинацию символ/hashrocket на имя за которым следует двоеточие и ключ:</p>
+
+<div class="code"><div class="highlight"><pre><span class="p">{</span> <span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;michael@example.com&quot;</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>Эта конструкция более близка к нотации хэшей используемой в других языках (таких как JavaScript) и наслаждается возрастающей популярностью в Rails сообществе. Оба варианта синтаксиса часто используются, так что совершенно необходимо уметь распознавать их. Большинство хэшей в остальной части учебника используют новую нотацию, которая не будет работать с Ruby&nbsp;1.8.7 и более старыми версиями; если вы используете старую версию Ruby, вам придется или обновиться до Ruby&nbsp;1.9 (рекомендуемое решение) или использовать старую нотацию хэшей.</p>
+
+<p>Хеш значениями может быть практически все, даже другие хэши, как видно в <a class="ref" href="rails-flavored-ruby#code-nested_hashes">Листинге&nbsp;4.6</a>.</p>
+
+<div class="label" id="code-nested_hashes"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.6.</span> <span class="description">Вложенные хэши.</span> </div>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">params</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Определение хэша с именем &#39;params&#39; (сокращение для &#39;parameters&#39;).</span>
+<span class="go">=&gt; {}</span>
+<span class="gp">&gt;&gt; </span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span> <span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;mhartl@example.com&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {:name=&gt;&quot;Michael Hartl&quot;, :email=&gt;&quot;mhartl@example.com&quot;}</span>
+<span class="gp">&gt;&gt; </span><span class="n">params</span>
+<span class="go">=&gt; {:user=&gt;{:name=&gt;&quot;Michael Hartl&quot;, :email=&gt;&quot;mhartl@example.com&quot;}}</span>
+<span class="gp">&gt;&gt; </span> <span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span>
+<span class="go">=&gt; &quot;mhartl@example.com&quot;</span>
+</pre></div>
+</div></div>
+
+
+<p>Этот вид хэшей-в-хэшах, или <em>вложенных хэшей</em>, интенсивно используется Рельсами, как мы увидим в <a class="ref" href="sign-up#sec-signup_failure">Разделе&nbsp;7.3</a>.</p>
+
+<p>Также как массивы и диапазоны, хэши реагируют на <code>each</code> метод. Рассмотрим, например, хэш с именем <code>flash</code> с ключами для двух условий <code>:success</code> и <code>:error</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">flash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">success:</span> <span class="s2">&quot;It worked!&quot;</span><span class="p">,</span> <span class="ss">error:</span> <span class="s2">&quot;It failed.&quot;</span> <span class="p">}</span>
+<span class="go">=&gt; {:success=&gt;&quot;It worked!&quot;, :error=&gt;&quot;It failed.&quot;}</span>
+<span class="gp">&gt;&gt; </span><span class="n">flash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span>
+<span class="gp">?&gt; </span>  <span class="nb">puts</span> <span class="s2">&quot;Key </span><span class="si">#{</span><span class="n">key</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2"> has value </span><span class="si">#{</span><span class="n">value</span><span class="o">.</span><span class="n">inspect</span><span class="si">}</span><span class="s2">&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">Key :success has value &quot;It worked!&quot;</span>
+<span class="go">Key :error has value &quot;It failed.&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Отметим, что в то время как <code>each</code> метод для массивов принимает блок только с одной переменной, <code>each</code> для хэшей принимает два&nbsp;&mdash;&nbsp;<em>ключ</em> и <em>значение</em>. Таким образом, <code>each</code> метод для хэшей итерирует по одной хэш <em>паре</em> ключ-значение за раз.</p>
+
+<p>Последний пример использует полезный <code>inspect</code> метод, который возвращает строку с буквальным представлением объекта на котором он был вызван:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>            <span class="c1"># Вывести массив как строку.</span>
+<span class="go">1</span>
+<span class="go">2</span>
+<span class="go">3</span>
+<span class="go">4</span>
+<span class="go">5</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="o">.</span><span class="n">inspect</span>    <span class="c1"># Вывести буквальный массив.</span>
+<span class="go">[1, 2, 3, 4, 5]</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:name</span><span class="o">.</span><span class="n">inspect</span>
+<span class="go">name</span>
+<span class="go">:name</span>
+<span class="gp">&gt;&gt; </span><span class="nb">puts</span> <span class="s2">&quot;It worked!&quot;</span><span class="p">,</span> <span class="s2">&quot;It worked!&quot;</span><span class="o">.</span><span class="n">inspect</span>
+<span class="go">It worked!</span>
+<span class="go">&quot;It worked!&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Кстати, использование <code>inspect</code> для печати объекта достаточно обычное явление, для этого даже есть специальное сокращение -  <code>p</code> функция:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="nb">p</span> <span class="ss">:name</span>             <span class="c1"># Тоже что и &#39;puts :name.inspect&#39;</span>
+<span class="go">:name</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-css_revisited"></div>
+
+
+<h3><a id="sec-4_3_4" href="rails-flavored-ruby#sec-css_revisited" class="heading"><span class="number">4.3.4</span> Вновь CSS</a></h3>
+
+
+<p>Пришло время еще раз навестить строку из <a class="ref" href="rails-flavored-ruby#code-application_layout_redux">Листинга&nbsp;4.1</a>, используемую в шаблоне для включения каскадных таблиц стилей:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Теперь мы почти в состоянии это понять.  Как уже упоминалось вкратце в <a class="ref" href="rails-flavored-ruby#sec-motivation">Разделе&nbsp;4.1</a>, Rails определяет специальную функцию для включения таблиц стилей и</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span>
+</pre></div>
+</div>
+
+
+<p>это вызов этой функции. Но есть две тайны. Во-первых, где скобки? В Ruby, они не являются обязательными; эти две строки эквивалентны:</p>
+
+<div class="code"><div class="highlight"><pre><span class="c1"># Круглые скобки необязательны при вызове функции.</span>
+<span class="n">stylesheet_link_tag</span><span class="p">(</span><span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span><span class="p">)</span>
+<span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Во-вторых, <code>:media</code> аргумент определенно выглядит как хэш, но где фигурные скобки?  Когда хэш&nbsp;&mdash;&nbsp;<em>последний</em> аргумент в вызове функции, фигурные скобки не являются обязательными; эти две строки эквивалентны:</p>
+
+<div class="code"><div class="highlight"><pre><span class="c1"># Фигурные скобки необязательны для хэша являющегося последним аргументом.</span>
+<span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="p">}</span>
+<span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Таким образом, мы видим теперь, что строка</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span>
+</pre></div>
+</div>
+
+
+<p>вызывает <code>stylesheet_link_tag</code> функцию с двумя аргументами: строкой, указывающей путь к таблице стилей, и хэшем, с указанием типа носителя. Из-за <tt class="verb">&lt;%= %&gt;</tt> скобок, результаты вставляются в шаблон ERb-ом и если вы посмотрите исходный код страницы в браузере, вы должны увидеть HTML, необходимый для включении таблиц стилей (<a class="ref" href="rails-flavored-ruby#code-scss_source">Листинг&nbsp;4.7</a>). (Вы можете увидеть некоторые дополнительные вещи вроде <code>?body=1</code>, после названий файлов CSS. Они вставляются Rails для того чтобы браузеры перегружали CSS после их изменения на сервере.)</p>
+
+<div class="label" id="code-scss_source"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.7.</span> <span class="description">Исходный код HTML произведенный включением CSS.</span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;link</span> <span class="na">href=</span><span class="s">&quot;/assets/application.css&quot;</span> <span class="na">media=</span><span class="s">&quot;all&quot;</span> <span class="na">rel=</span><span class="s">&quot;stylesheet&quot;</span>
+<span class="na">type=</span><span class="s">&quot;text/css&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Если вы посмотрите на сам CSS файл перейдя на <a href="http://localhost:3000/assets/application.css">http://localhost:3000/assets/application.css</a>, вы увидите что он (за исключением нескольких коментариев) пуст. Мы это изменим в <a class="ref" href="filling-in-the-layout#top">Главе&nbsp;5</a>.</p>
+
+<div class="label" id="sec-ruby_classes"></div>
+
+
+<h2><a id="sec-4_4" href="rails-flavored-ruby#sec-ruby_classes" class="heading"><span class="number">4.4</span> Ruby классы</a></h2>
+
+
+<p>Мы говорили, что все в Ruby является объектами, и в этом разделе мы, наконец, определим несколько собственных классов. Ruby, как и многие другие объектно-ориентированные языки, использует <em>классы</em> чтобы организовать методы; эти классы, затем  <em>экземплируются</em> для создания объектов.  Если вы новичок в объектно-ориентированном программировании, это может звучать как бред, так что давайте рассмотрим несколько конкретных примеров.</p>
+
+<div class="label" id="sec-constructors"></div>
+
+
+<h3><a id="sec-4_4_1" href="rails-flavored-ruby#sec-constructors" class="heading"><span class="number">4.4.1</span> Конструкторы</a></h3>
+
+
+<p>Мы видели много примеров использования классов для создания экземпляра объекта, но нам еще предстоит сделать это в явном виде. Например, мы экземплировали строку с помощью двойных кавычек, которые являются <em>буквальным конструктором</em> для строк:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;foobar&quot;</span>   <span class="c1"># Буквальный конструктор для строк использующий двойные кавычки</span>
+<span class="go">=&gt; &quot;foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span>
+<span class="go">=&gt; String</span>
+</pre></div>
+</div>
+
+
+<p>Мы видим здесь, что строки реагируют на метод <code>class</code>, и просто возвращают класс к которому они принадлежат.</p>
+
+<p>Вместо использования буквального конструктора, можно использовать аналогичный <em>именованный конструктор</em>, что подразумевает вызов <code>new</code> метода на имени класса:<sup class="footnote" id="fnref-4_10"><a href="#fn-4_10">10</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">)</span>   <span class="c1"># Именованный конструктор для строки</span>
+<span class="go">=&gt; &quot;foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span>
+<span class="go">=&gt; String</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">==</span> <span class="s2">&quot;foobar&quot;</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Это эквивалентно буквальному конструктору, но это более четко говорит о том, что мы делаем.</p>
+
+<p>Массивы в этом контексте работают так же как строки:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="o">]</span><span class="p">)</span>
+<span class="go">=&gt; [1, 3, 2]</span>
+</pre></div>
+</div>
+
+
+<p>Хэши работают по другому. Если конструктор массива <code>Array.new</code> принимает начальное значение для массива, <code>Hash.new</code> принимает <em>дефолтное</em> значение для хэша, которое является значением хэша с несуществующим ключом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span>
+<span class="go">=&gt; {}</span>
+<span class="gp">&gt;&gt; </span><span class="n">h</span><span class="o">[</span><span class="ss">:foo</span><span class="o">]</span>          <span class="c1"># Попытка обратиться к значению несуществующего ключа :foo.</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="n">h</span> <span class="o">=</span> <span class="no">Hash</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Теперь несуществующие ключи будут возвращать 0 вместо nil.</span>
+<span class="go">=&gt; {}</span>
+<span class="gp">&gt;&gt; </span><span class="n">h</span><span class="o">[</span><span class="ss">:foo</span><span class="o">]</span>
+<span class="go">=&gt; 0</span>
+</pre></div>
+</div>
+
+
+<p>Когда метод вызывается на самом классе, как это происходит в случае с <code>new</code>, он называется <em>методом класса</em>. Результатом вызова <code>new</code> на классе является объект этого класса, также называемый <em>экземпляром</em> класса. Метод вызываемый на экземпляре, такой как <code>length</code>, называется <em>методом экземпляра</em>.</p>
+
+<div class="label" id="sec-a_class_of_our_own"></div>
+
+
+<h3><a id="sec-4_4_2" href="rails-flavored-ruby#sec-a_class_of_our_own" class="heading"><span class="number">4.4.2</span> Наследование классов</a></h3>
+
+
+<p>При изучении классов, полезно выяснять <em>иерархию классов</em>, используя <code>superclass</code> метод:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="nb">String</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+<span class="go">=&gt; &quot;foobar&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span>                        <span class="c1"># Поиск класса к которому принадлежит s.</span>
+<span class="go">=&gt; String</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span>             <span class="c1"># Поиск суперкласса String.</span>
+<span class="go">=&gt; Object</span>
+<span class="c1"># Ruby 1.9 использует новый базовый класс BasicObject:</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; BasicObject </span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Диаграмма этой иерархии наследования представлена на <a class="ref" href="rails-flavored-ruby#fig-string_inheritance_ruby_1_9">Рис.&nbsp;4.1</a>. Мы видим здесь, что суперклассом <code>String</code> является <code>Object</code> , а суперкласс <code>Object</code> это <code>BasicObject</code>, но <code>BasicObject</code> не имеет  суперкласса. Эта модель относится к каждому объекту Ruby: можно проследить иерархию классов достаточно далеко, и каждый класс в Ruby в конечном счете наследуется от <code>BasicObject</code>, который не имеет своего суперкласса. Это техническое значение выражения &ldquo;все в Ruby является объектом&rdquo;.</p>
+
+<div class="label" id="fig-string_inheritance_ruby_1_9"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/string_inheritance_ruby_1_9.png" alt="string_inheritance_ruby_1_9" /></span></div><div class="caption"><span class="header">Рис. 4.1: </span><span class="description">Иерархия наследования <code>String</code> класса.</span></div></div>
+
+
+<p>Создание собственного класса незаменимо для более глубокого понимания классов. Давайте сделаем <code>Word</code> класс с <code>palindrome?</code> методом, который возвращает <code>true</code>, если слово можно читать и справа налево и слева направо, сохраняя смысл:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">Word</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">def</span> <span class="nf">palindrome?</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span>    <span class="n">string</span> <span class="o">==</span> <span class="n">string</span><span class="o">.</span><span class="n">reverse</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">end</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Мы можем использовать его следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">w</span> <span class="o">=</span> <span class="no">Word</span><span class="o">.</span><span class="n">new</span>              <span class="c1"># Создание нового Word объекта.</span>
+<span class="go">=&gt; #&lt;Word:0x22d0b20&gt;</span>
+<span class="gp">&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">palindrome?</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="n">w</span><span class="o">.</span><span class="n">palindrome?</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">)</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Если этот пример поражает вас, как немного надуманный, хорошо; это такой дизайн. Довольно странно создавать новый класс только для того чтобы создать метод принимающий строку в качестве аргумента. Поскольку слово это строка, более естественным решением будет <em>унаследовать</em> наш <code>Word</code> класс от <code>String</code>, как это показано в <a class="ref" href="rails-flavored-ruby#code-word_class">Листинге&nbsp;4.8</a>. (Вы должны выйти из консоли и ввести его заново, чтобы убрать старое определение <code>Word</code>.)</p>
+
+<div class="label" id="code-word_class"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.8.</span> <span class="description">Определение <code>Word</code> класса в консоли.</span> </div>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">Word</span> <span class="o">&lt;</span> <span class="nb">String</span>             <span class="c1"># Word наследует от String.</span>
+<span class="gp">&gt;&gt; </span>  <span class="c1"># Возвращает true если строка соответствует своему перевертышу.</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">def</span> <span class="nf">palindrome?</span>
+<span class="gp">&gt;&gt; </span>    <span class="nb">self</span> <span class="o">==</span> <span class="nb">self</span><span class="o">.</span><span class="n">reverse</span>        <span class="c1"># self это сама строка.</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">end</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div></div>
+
+
+<p>Здесь <code>Word &lt; String</code> это Ruby-синтаксис  для наследования (кратко обсуждается в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>), который гарантирует, что, в дополнение к новому <code>palindrome?</code> методу, words (слова) также имеют все те же методы, что и строки:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="no">Word</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s2">&quot;level&quot;</span><span class="p">)</span> <span class="c1"># Создать новый объект Word, инициализирует его с &quot;level&quot;.</span>
+<span class="go">=&gt; &quot;level&quot;                  </span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">palindrome?</span>         <span class="c1"># Слова имеют palindrome? метод.</span>
+<span class="go">=&gt; true                     </span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">length</span>              <span class="c1"># Слова также наследуют все нормальные методы строк.</span>
+<span class="go">=&gt; 5</span>
+</pre></div>
+</div>
+
+
+<p>Так как <code>Word</code> класс наследует от <code>String</code> , мы можем использовать консоль, чтобы увидеть иерархию классов в явном виде:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span>
+<span class="go">=&gt; Word</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; String</span>
+<span class="gp">&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; Object</span>
+</pre></div>
+</div>
+
+
+<p>Эта иерархия показана на <a class="ref" href="rails-flavored-ruby#fig-word_inheritance_ruby_1_9">Рис.&nbsp;4.2</a>.</p>
+
+<div class="label" id="fig-word_inheritance_ruby_1_9"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/word_inheritance_ruby_1_9.png" alt="word_inheritance_ruby_1_9" /></span></div><div class="caption"><span class="header">Рис. 4.2: </span><span class="description">Иерархия наследования (не встроенного) <code>Word</code> класса из <a class="ref" href="rails-flavored-ruby#code-word_class">Листинга&nbsp;4.8</a>.</span></div></div>
+
+
+<p>В <a class="ref" href="rails-flavored-ruby#code-word_class">Листинге&nbsp;4.8</a>, обратите внимание, что проверка того, что слово является палиндромом включает в себя вызов слова внутри <code>Word</code> класса. Ruby позволяет нам сделать это, используя ключевое слово <code>self</code>: в <code>Word</code> классе, <code>self</code> является самим объектом, что означает, что мы можем использовать</p>
+
+<div class="code"><div class="highlight"><pre><span class="nb">self</span> <span class="o">==</span> <span class="nb">self</span><span class="o">.</span><span class="n">reverse</span>
+</pre></div>
+</div>
+
+
+<p>чтобы проверить, является ли  слово палиндромом.<sup class="footnote" id="fnref-4_11"><a href="#fn-4_11">11</a></sup></p>
+
+<div class="label" id="sec-modifying_built_in_classes"></div>
+
+
+<h3><a id="sec-4_4_3" href="rails-flavored-ruby#sec-modifying_built_in_classes" class="heading"><span class="number">4.4.3</span> Изменение встроенных классов</a></h3>
+
+
+<p>Хотя наследование это мощная идея, в случае палиндромов может быть даже более естественно добавить <code>palindrome?</code> метод самому классу <code>String</code>, так чтобы (среди прочего) мы могли вызвать <code>palindrome?</code> на буквальную строку, что мы в настоящее время не можем сделать:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;level&quot;</span><span class="o">.</span><span class="n">palindrome?</span>
+<span class="go">NoMethodError: undefined method `palindrome?&#39; for &quot;level&quot;:String</span>
+</pre></div>
+</div>
+
+
+<p>Несколько удивительно, что Ruby позволяет сделать это; Ruby классы могут быть <em>открыты</em> и изменены простыми смертными, такими как мы, самостоятельно добавляющими методы к ним:<sup class="footnote" id="fnref-4_12"><a href="#fn-4_12">12</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">String</span>
+<span class="gp">&gt;&gt; </span>  <span class="c1"># Возвращает true если строка соответствует своему перевертышу.</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">def</span> <span class="nf">palindrome?</span>
+<span class="gp">&gt;&gt; </span>    <span class="nb">self</span> <span class="o">==</span> <span class="nb">self</span><span class="o">.</span><span class="n">reverse</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">end</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;deified&quot;</span><span class="o">.</span><span class="n">palindrome?</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>(Я и не знаю что круче: то, что Ruby позволяет добавлять методы во встроенные классы или то, что слово <code>"deified"</code> является палиндромом.)</p>
+
+<p>Изменение встроенных классов является мощной техникой, но с большой властью приходит большая ответственность и считается дурным тоном добавлять методы к встроенным классам, не имея <em>действительно</em> хорошей причины для этого. Rails имеет несколько хороших причин (чтобы не делать этого); например, в веб-приложениях вы часто не хотите, чтобы переменные были <em>пустыми</em>; например, имя пользователя не должно быть пустым или состоять из одних <a href="http://ru.wikipedia.org/wiki/Пробел">пробелов</a>&mdash;и Rails добавляет <code>blank?</code> метод к Ruby.  Rails консоль автоматически включает Rails расширения, и мы можем увидеть это, например, здесь (это не будет работать в простом <code>irb</code> (Интерактивном Руби)):</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">blank?</span>
+<span class="go">=&gt; true</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;      &quot;</span><span class="o">.</span><span class="n">empty?</span>
+<span class="go">=&gt; false</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;      &quot;</span><span class="o">.</span><span class="n">blank?</span>
+<span class="go">=&gt; true</span>
+<span class="gp">&gt;&gt; </span><span class="kp">nil</span><span class="o">.</span><span class="n">blank?</span>
+<span class="go">=&gt; true</span>
+</pre></div>
+</div>
+
+
+<p>Мы видим, что строка пробелов не является <em>пустой</em>, но она <em>чистая</em> (blank).  Отметим также, что <code>nil</code> является чистым, так как <code>nil</code> не является строкой, это намек, на то, что Rails фактически добавляет <code>blank?</code> к базовому классу <code>String</code>, которым (как мы видели в начале этого раздела) является сам Object. Мы увидим некоторые другие примеры Rails дополнений в Ruby классы в <a class="ref" href="sign-in-sign-out#sec-remember_me">Разделе&nbsp;8.2.1</a>.</p>
+
+<div class="label" id="sec-a_controller_class"></div>
+
+
+<h3><a id="sec-4_4_4" href="rails-flavored-ruby#sec-a_controller_class" class="heading"><span class="number">4.4.4</span> Класс контроллер</a></h3>
+
+
+<p>Все эти разговоры о классах и наследованиях, возможно, вызвали вспышку узнавания, потому что мы видели их и раньше, в контроллере StaticPages (<a class="ref" href="static-pages#code-adding_the_about_page">Листинг&nbsp;3.15</a>):</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">StaticPagesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">home</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">help</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">about</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Теперь вы в состоянии оценить, по крайней мере смутно, что этот код означает: <code>StaticPagesController</code> это класс, который наследует от <code>ApplicationController</code> и он оснащен <code>home</code>, <code>help</code> и <code>about</code> методами. Так как каждый сеанс Rails консоли загружает локальную среду Rails, мы можем даже создать контроллер в явном виде и изучить иерархию его классов:<sup class="footnote" id="fnref-4_13"><a href="#fn-4_13">13</a></sup></p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">controller</span> <span class="o">=</span> <span class="no">StaticPagesController</span><span class="o">.</span><span class="n">new</span>
+<span class="go">=&gt; #&lt;StaticPagesController:0x22855d0&gt;</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span>
+<span class="go">=&gt; StaticPagesController</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; ApplicationController</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; ActionController::Base</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; ActionController::Metal</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; AbstractController::Base</span>
+<span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">class</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span><span class="o">.</span><span class="n">superclass</span>
+<span class="go">=&gt; Object</span>
+</pre></div>
+</div>
+
+
+<p>Диаграмма этой иерархии представлена на <a class="ref" href="rails-flavored-ruby#fig-static_pages_controller_inheritance">Рис.&nbsp;4.3</a>.</p>
+
+<div class="label" id="fig-static_pages_controller_inheritance"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/static_pages_controller_inheritance.png" alt="static_pages_controller_inheritance" /></span></div><div class="caption"><span class="header">Рис. 4.3: </span><span class="description">Иерархия наследования для контроллера StaticPages.</span></div></div>
+
+
+<p>Мы можем даже вызвать действия контроллера в консоли, которые являются просто методами:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">controller</span><span class="o">.</span><span class="n">home</span>
+<span class="go">=&gt; nil</span>
+</pre></div>
+</div>
+
+
+<p>Здесь возвращаемое значение это <code>nil</code> поскольку <code>home</code> действие пустое.</p>
+
+<p>Но постойте: действия не имеют возвращаемых значений, по крайней мере не действия со знаком вопроса (#булевые). Целью <code>home</code> действия, как мы видели в <a class="ref" href="static-pages#top">Главе&nbsp;3</a>, является визуализация веб-страницы. И я бы точно не забыл, если бы когда-либо вызывал <code>StaticPagesController.new</code> где-нибудь. Что происходит?</p>
+
+<p>Происходит вот что: Rails <em>написан</em> на Ruby, но Rails это не Ruby. Некоторые Rails классы используются как обычные объекты Ruby, но некоторые из них просто льют воду на Рельсовую "волшебную мельницу". Rails это <a href="http://ru.wikipedia.org/wiki/Sui_generis"><em>sui generis</em></a> и должен быть изучен и понят отдельно от Ruby. Именно поэтому, если ваш основной интерес программирования заключается в написании веб-приложений, я рекомендую изучать вначале Rails, затем изучать Ruby, затем вернуться обратно на рельсы.</p>
+
+<div class="label" id="sec-a_user_class"></div>
+
+
+<h3><a id="sec-4_4_5" href="rails-flavored-ruby#sec-a_user_class" class="heading"><span class="number">4.4.5</span> Класс User</a></h3>
+
+
+<p>Мы закончим наше путешествие по Ruby комплектацией  собственного класса, <code>User</code> класса, который ожидает User модель, которая появится в  <a class="ref" href="modeling-users#top">Главе&nbsp;6</a>.</p>
+
+<p>До сих пор мы вводили определения классов на консоли, но это быстро  стало  утомительным, вместо этого создайте файл <code>example_user.rb</code> в корневом каталоге приложения и заполните его содержимым <a class="ref" href="rails-flavored-ruby#code-example_user">Листинга&nbsp;4.9</a>.</p>
+
+<div class="label" id="code-example_user"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.9.</span> <span class="description">Код для примера пользователя. <br /> <code>example_user.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span>
+  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="vi">@name</span>  <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+    <span class="vi">@email</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="ss">:email</span><span class="o">]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">formatted_email</span>
+    <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">#{</span><span class="vi">@email</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Здесь довольно много чего происходит, так что давайте разбираться шаг за шагом.  Первая строка,</p>
+
+<div class="code"><div class="highlight"><pre>  <span class="kp">attr_accessor</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span>
+</pre></div>
+</div>
+
+
+<p>создает <em>атрибуты доступа</em> соответствующие имени пользователя и адресу электронной почты. Это создает &ldquo;получатель&rdquo; (&ldquo;getter&rdquo;) и &ldquo;назначатель&rdquo; (&ldquo;setter&rdquo;) методы, которые позволяют нам получать (get) и назначать (set) <code>@name</code> и <code>@email</code> <em>переменные экземпляра</em>, которые мы вкратце упоминали в <a class="ref" href="a-demo-app#sec-mvc_in_action">Разделе&nbsp;2.2.2</a>. В Rails, принципиальная важность переменных экземпляра заключается в том что они автоматически доступны в представлениях, но в общем случае они используются для переменных которые должны быть доступны в Ruby классе повсеместно. (Мы вскоре расскажем об этом более подробно.) Переменные экземпляра всегда начинаются со знака&nbsp;<code>@</code>, и являются <code>nil</code> если они не определены.</p>
+
+<p>Первый метод, <code>initialize</code>, специальный в Ruby: этот метод вызывается, когда мы выполняем <code>User.new</code>. Конкретно этот <code>initialize</code> принимает один аргумент, <code>attributes</code>:</p>
+
+<div class="code"><div class="highlight"><pre>  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">attributes</span> <span class="o">=</span> <span class="p">{})</span>
+    <span class="vi">@name</span>  <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="ss">:name</span><span class="o">]</span>
+    <span class="vi">@email</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">[</span><span class="ss">:email</span><span class="o">]</span>
+  <span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Здесь <code>attributes</code> переменная имеет <em>значение по умолчанию</em> равное пустому хэшу, так что мы можем определить пользователя без имени или адреса электронной почты (напомним, из <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Раздела&nbsp;4.3.3</a> , что хэши возвращают <code>nil</code> на несуществующие ключи, поэтому <code>attributes[:name]</code> будет <code>nil</code>, если нет <code>:name</code> ключа, и так же для <code>attributes[:email]</code>).</p>
+
+<p>Наконец, наш класс определяет метод, называемый <code>formatted_email</code> который использует значения присваиваемые <code>@name</code> и <code>@email</code> переменным для создания отформатированной версии адреса электронной почты пользователя, с помощью интерполяции строки (<a class="ref" href="rails-flavored-ruby#sec-strings">Раздел&nbsp;4.2.2</a>):</p>
+
+<div class="code"><div class="highlight"><pre>  <span class="k">def</span> <span class="nf">formatted_email</span>
+    <span class="s2">&quot;</span><span class="si">#{</span><span class="vi">@name</span><span class="si">}</span><span class="s2"> &lt;</span><span class="si">#{</span><span class="vi">@email</span><span class="si">}</span><span class="s2">&gt;&quot;</span>
+  <span class="k">end</span>
+</pre></div>
+</div>
+
+<p>Переменные <code>@name</code> и <code>@email</code> автоматически доступны в методе <code>formatted_email</code> из-за того что они являются переменными экземпляра (на что указывает знак&nbsp;<code>@</code>).</p>
+
+<p>Давайте запустим консоль, и <em>запросим</em> (require) код примера пользователя, и покрутим наш User класс.</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="nb">require</span> <span class="s1">&#39;./example_user&#39;</span>           <span class="c1"># Так вы загружаете код example_user.</span>
+<span class="go">=&gt; [&quot;User&quot;]</span>
+<span class="gp">&gt;&gt; </span><span class="n">example</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span>
+<span class="go">=&gt; #&lt;User:0x224ceec @email=nil, @name=nil&gt;</span>
+<span class="gp">&gt;&gt; </span><span class="n">example</span><span class="o">.</span><span class="n">name</span>                   <span class="c1"># nil поскольку attributes[:name] является nil</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="n">example</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Example User&quot;</span>      <span class="c1"># Назначение не-nil имени</span>
+<span class="go">=&gt; &quot;Example User&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">example</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;user@example.com&quot;</span> <span class="c1"># и не-nil email адреса</span>
+<span class="go">=&gt; &quot;user@example.com&quot;</span>
+<span class="gp">&gt;&gt; </span><span class="n">example</span><span class="o">.</span><span class="n">formatted_email</span>
+<span class="go">=&gt; &quot;Example User &lt;user@example.com&gt;&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Здесь <code>&rsquo;.&rsquo;</code>&nbsp;&mdash;&nbsp;Unix обозначение для &ldquo;текущего каталога&rdquo; и <code>&rsquo;./example_user&rsquo;</code> говорит Ruby искать файл примера пользователя относительно этого расположения. Последующий код создает пустого пользователя в качестве примера и затем заполняет имя и адрес электронной почты, присвоением непосредственно к соответствующим атрибутам (присвоение стало возможными благодаря <code>attr_accessor</code> строке в <a class="ref" href="rails-flavored-ruby#code-example_user">Листинге&nbsp;4.9</a>). Когда мы пишем</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">example</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Example User&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Ruby создает <code>@name</code> переменную для <code>"Example User"</code> (и аналогично для <code>email</code> атрибута), которую мы затем используем в <code>formatted_email</code> методе.</p>
+
+<p>Ссылаясь на <a class="ref" href="rails-flavored-ruby#sec-css_revisited">Раздел&nbsp;4.3.4</a> мы можем опустить фигурные скобки для последнего хеш аргумента, мы можем создать другого пользователя, передавая хэш <code>initialize</code> методу для создания пользователя с заранее определенными атрибутами:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Michael Hartl&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;mhartl@example.com&quot;</span><span class="p">)</span>
+<span class="go">=&gt; #&lt;User:0x225167c @email=&quot;mhartl@example.com&quot;, @name=&quot;Michael Hartl&quot;&gt;</span>
+<span class="gp">&gt;&gt; </span><span class="n">user</span><span class="o">.</span><span class="n">formatted_email</span>
+<span class="go">=&gt; &quot;Michael Hartl &lt;mhartl@example.com&gt;&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Мы увидим, начиная с <a class="ref" href="sign-up#top">Главы&nbsp;7</a> что инициализация объектов с использованием хэш аргумента является общепринятой в Rails приложениях.</p>
+
+<div class="label" id="sec-conclusion"></div>
+
+
+<h2><a id="sec-4_5" href="rails-flavored-ruby#sec-conclusion" class="heading"><span class="number">4.5</span> Заключение</a></h2>
+
+
+<p>На этом мы завершаем обзор языка Ruby. В <a class="ref" href="filling-in-the-layout#top">Главе&nbsp;5</a> мы начнем применять полученные знания при разработке примера приложения.</p>
+
+<p>Файл <code>example_user.rb</code> из <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Раздела&nbsp;4.4.5</a> нам больше не пригодится, поэтому я рекомендую удалить его:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rm example_user.rb
+</pre></div>
+</div>
+
+
+<p>Затем зафиксируйте остальные изменения в основном репозитории проекта:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
+<span class="gp">$</span> git commit -m <span class="s2">&quot;Add a full_title helper&quot;</span>
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-exercises"></div>
+
+
+<h2><a id="sec-4_5" href="rails-flavored-ruby#sec-exercises" class="heading"><span class="number">4.5</span> Упражнения</a></h2>
+
+
+
+<ol>
+
+<li>Заменяя знаки вопроса в <a class="ref" href="rails-flavored-ruby#code-string_shuffle">Листинге&nbsp;4.10</a> на соответствующие методы, скомбинируйте <code>split</code>, <code>shuffle</code> и <code>join</code> для того чтобы написать функцию которая тасует буквы в данной строке.</li>
+
+<li>Используя <a class="ref" href="rails-flavored-ruby#code-string_shuffle_two">Листинг&nbsp;4.11</a> как руководство, добавить <code>shuffle</code> метод к <code>String</code> классу.</li>
+
+<li>Создайте три хэша, назовите их <code>person1</code>, <code>person2</code>, и <code>person3</code>, С именем (first name) и фамилией (last name) под ключами <code>:first</code> и <code>:last</code>. Затем создайте <code>params</code> хэш с тем, чтобы <code>params[:father]</code> являлся <code>person1</code>, <code>params[:mother]</code> являлся <code>person2</code>, и <code>params[:child]</code> являлся <code>person3</code> (father, mother, child это отец, мать, и ребенок соответственно). Убедитесь, что, например, <code>params[:father][:first]</code> имеет правильное значение.</li>
+
+<li>Найдите онлайн версию Ruby API и почитайте о <code>Hash</code> методе <code>merge</code>.</li>
+
+<li>Пройдите <a href="http://rubykoans.com/">Ruby Koans</a><sup class="footnote" id="fnref-4_14"><a href="#fn-4_14">14</a></sup> для того чтобы достичь просветления в Ruby.</li>
+</ol>
+
+
+
+
+<div class="label" id="code-string_shuffle"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.10.</span> <span class="description">Скелет для функции тасующей строку.</span> </div>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">def</span> <span class="nf">string_shuffle</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span>  <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="sc">?.</span><span class="p">?</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="n">string_shuffle</span><span class="p">(</span><span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+</pre></div>
+</div></div>
+
+
+
+
+<div class="label" id="code-string_shuffle_two"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 4.11.</span> <span class="description">Скелет для <code>shuffle</code> метода, принадлежащего <code>String</code> классу.</span> </div>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="k">class</span> <span class="nc">String</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">def</span> <span class="nf">shuffle</span>
+<span class="gp">&gt;&gt; </span>    <span class="nb">self</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="sc">?.</span><span class="p">?</span>
+<span class="gp">&gt;&gt; </span>  <span class="k">end</span>
+<span class="gp">&gt;&gt; </span><span class="k">end</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="s2">&quot;foobar&quot;</span><span class="o">.</span><span class="n">shuffle</span>
+</pre></div>
+</div></div>
+
+
+
+
+<div class="navigation">  <a class="prev_page" href="static-pages#top">
+    &laquo;&nbsp;<span class="number">Глава 3</span> В основном статические страницы
+  </a>
+  <a class="next_page" href="filling-in-the-layout#top">
+    <span class="number">Глава 5</span> Заполнение шаблона&nbsp;&raquo;
+  </a>
+</div><div class="footnotes">
+<ol>
+<li id="fn-4_1">Если хелпер специфичен для конкретного контроллера, вам следует помещать его в соответствующий файл; например, хелперы для контроллера StaticPages обычно хранятся в <code>app/helpers/static_pages_helper.rb</code>. В нашем случае, мы ожидаем что хелпер <code>full_title</code> будет использоваться на всех страницах сайта и у Rails есть специальный файл хелпера для таких случаев: <code>app/helpers/application_helper.rb</code>.&nbsp;<a class="arrow" href="#fnref-4_1">&uarr;</a></li>
+<li id="fn-4_2">Для того чтобы узнать больше о происхождении &ldquo;foo&rdquo; и &ldquo;bar&rdquo;&mdash;и, в частности, возможной <em>не</em>-связанности &ldquo;foobar&rdquo; с &ldquo;FUBAR&rdquo;&mdash;см. <a href="http://www.catb.org/jargon/html/F/foo.html">Jargon File entry on &ldquo;foo&rdquo;</a>.&nbsp;<a class="arrow" href="#fnref-4_2">&uarr;</a></li>
+<li id="fn-4_3">Программисты, знакомые с Perl или PHP могут сравнить это с автоматической интерполяцией переменных со знаком доллара в выражениях вроде <code>"foo $bar"</code>.&nbsp;<a class="arrow" href="#fnref-4_3">&uarr;</a></li>
+<li id="fn-4_4">Заранее извиняюсь за случайные переключения между <em>функцией</em> и <em>методом</em> на протяжении этой главы; в Ruby они представляют одно и то же: все методы это функции, а все функции это методы, поскольку все является объектом.&nbsp;<a class="arrow" href="#fnref-4_4">&uarr;</a></li>
+<li id="fn-4_5">Ну, все же осталась <em>одна</em> вещь, которую  мы не понимаем&nbsp;&mdash;&nbsp;как Rails связывает все это вместе: направляет URL к действиям, делает <code>full_title</code> хелпер доступным в представлениях и т.д.. Это интересная тема, и я поощряю вас исследовать ее далее, но точное знание того, <em>как</em> Rails работает, не является необходимым для <em>использования</em> Rails. (Для более глубокого понимания я рекомендую <a href="http://www.amazon.com/gp/product/0321601661"><em>The Rails&nbsp;3 Way</em></a> Оби Фернандеса.)&nbsp;<a class="arrow" href="#fnref-4_5">&uarr;</a></li>
+<li id="fn-4_6"><code>Second</code> метод, используемый здесь, не является в настоящий момент частью Ruby непосредственно, а скорее добавляется Rails. Это работает в данном случае, потому что консоль Rails автоматически включает Rails расширения в Ruby.&nbsp;<a class="arrow" href="#fnref-4_6">&uarr;</a></li>
+<li id="fn-4_7">С другой стороны, искушенные программисты могут извлечь пользу из понимания, что блоки - это <em>замыкания</em>, объединяющие анонимные функции с внешними, по отношению к этим функциям, данными.&nbsp;<a class="arrow" href="#fnref-4_7">&uarr;</a></li>
+<li id="fn-4_8">Ruby 1.9 фактически гарантирует, что хеши сохраняют свои элементы в том же самом порядке в каком они вводились, но было бы неблагоразумно когда-либо рассчитывать на определенный порядок.&nbsp;<a class="arrow" href="#fnref-4_8">&uarr;</a></li>
+<li id="fn-4_9">В результате наличия меньшего количества багажа символы легче сравнить друг с другом; строки должны быть сравнены посимвольно, в то время как символы могут быть сравнены все одним разом. Это делает их идеальными для использования в качестве хеш ключей.&nbsp;<a class="arrow" href="#fnref-4_9">&uarr;</a></li>
+<li id="fn-4_10">Эти результаты могут изменятся, в зависимости от версии Ruby, которую вы используете. Этот пример предполагает, что вы используете Ruby&nbsp;1.9.3.&nbsp;<a class="arrow" href="#fnref-4_10">&uarr;</a></li>
+<li id="fn-4_11">Для того чтобы узнать больше о классах Ruby и ключевом слове <code>self</code>, см. <a href="http://railstips.org/">RailsTips</a> пост &ldquo;<a href="http://railstips.org/blog/archives/2006/11/18/class-and-instance-variables-in-ruby/">Class and Instance Variables in Ruby</a>&rdquo;.&nbsp;<a class="arrow" href="#fnref-4_11">&uarr;</a></li>
+<li id="fn-4_12">Для знакомых с JavaScript, эта функциональность сопоставима с использованием встроенного class prototype object для расширения класса. (Спасибо читателю <a href="http://getsatisfaction.com/railstutorial/topics/adding_methods_to_built_in_classes_comparable_to_using_javascripts_prototype_object">Erik Eldridge</a> за указание на это.)&nbsp;<a class="arrow" href="#fnref-4_12">&uarr;</a></li>
+<li id="fn-4_13">Вы не должны знать, что делает каждый класс в этой иерархии. <em>Я</em> не знаю, что они все делают и я программирую в Ruby on Rails с 2005. Это означает или что (a) я чрезвычайно некомпетентен или (b) можно быть квалифицированным  Rails разработчиком, не зная всех его внутренностей. Для нашей с вами пользы я уповаю на последнее.&nbsp;<a class="arrow" href="#fnref-4_13">&uarr;</a></li>
+<li id="fn-4_14">http://rubykoans.com/&nbsp;<a class="arrow" href="#fnref-4_14">&uarr;</a></li>
+</ol>
+</div>

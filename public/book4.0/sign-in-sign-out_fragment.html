@@ -1,0 +1,2053 @@
+<div id="top"></div>
+
+
+<h1 class="chapter"><a id="sec-8" href="sign-in-sign-out#top" class="heading"><span class="number">Глава 8</span> Войти, выйти</a></h1>
+
+
+<p>Теперь, когда новые пользователи могут регистрироваться на нашем сайте (<a class="ref" href="sign-up#top">Глава&nbsp;7</a>), пришло время дать зарегистрированным пользователям возможность входить на сайт и выходить из него. Это позволит нам добавить настройки, зависящие от регистрационного статуса и личности текущего пользователя. Например, в этой главе мы добавим в header сайта ссылки войти/выйти и ссылку на профиль пользователя. В <a class="ref" href="user-microposts#top">Главе&nbsp;10</a> мы будем использовать идентификацию вошедшего в систему пользователя для создания микросообщений, связанных с этим пользователем и в <a class="ref" href="following-users#top">Главе&nbsp;11</a> мы позволим текущему пользователю следовать за другими пользователями приложения (тем самым получать поток (feed) их микросообщений).</p>
+
+<p>Наличие функции входа пользователей в систему также позволит нам реализовать модель безопасности, ограничивающую доступ к определенным страницам, основываясь на идентификации вошедшего в систему пользователя. Например, как мы увидим в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a>, только вошедшие пользователи смогут получить доступ к странице, используемой для редактирования информации о пользователе. Система входа/выхода также позволит реализовать особые привилегии для пользователей с правами администратора, такие как возможность (также в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a>) удалять пользователей из базы данных.</p>
+
+<p>После реализации ядра аутентификационного механизма мы немного отвлечемся от основной темы для того чтобы познакомиться с <em>Cucumber</em> - популярной системой предназначенной для разработки через поведение (<a class="ref" href="sign-in-sign-out#sec-cucumber">Раздел&nbsp;8.3</a>). В частности, мы перепишем пару интеграционных  RSpec тестов на Cucumber для сравнения этих двух методик.</p>
+
+<p>Как и в предыдущих главах, мы будем делать нашу работу в новой ветке и объединим изменения в конце:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> git checkout -b sign-in-out
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-signin_failure"></div>
+
+
+<h2><a id="sec-8_1" href="sign-in-sign-out#sec-signin_failure" class="heading"><span class="number">8.1</span> Сессии и провальный вход</a></h2>
+
+
+<p><a  href="http://en.wikipedia.org/wiki/Session_(computer_science)"><em>Сессия</em></a> это полупостоянное соединение между двумя компьютерами, такими как клиентский компьютер с запущенным веб-браузером и сервер с запущенными на нем Rails. Есть несколько моделей поведения сессий, принятых в сети: &ldquo;забывание&rdquo; сессии при закрытии браузера, опциональное использование &ldquo;запомнить меня&rdquo; флажка для постоянных сессий, и запоминание сессий до явных признаков выхода пользователя из системы.<sup class="footnote" id="fnref-8_1"><a href="#fn-8_1">1</a></sup> Мы выберем последнюю из этих опций: когда пользователь войдет, мы запомним его статус вошедшего &ldquo;навсегда&rdquo; и очистим сесию только после явного выхода пользователя из системы. (Мы увидим в <a class="ref" href="sign-in-sign-out#sec-remember_me">Разделе&nbsp;8.2.1</a> насколько продолжительно это самое &ldquo;навсегда&rdquo;.)</p>
+
+<p>Удобно моделировать сессии как RESTful ресурс: у нас будет страница входа для <em>новых</em> сессий, вход будет <em>создавать</em> сессию и выход будет <em>уничтожать</em> ее. В отличие от ресурса Users который использует базу данных (через модель User) для сохранения данных, ресурс Sessions будет использовать <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/HTTP-Cookie"><em>куки</em></a>, которые представляют собой небольшой фрагмент текста, помещаемого в браузер пользователя. Большая часть сложностей в разработке системы входа связана с построением этого, опирающегося на куки, аутентификационного механизма. В этом и последующих разделах мы будем заниматься подготовительной работой - создадим контроллер  Sessions , форму входа и соответствующие действия контроллера. Затем мы завершим вход пользователей написав необходимый для манипуляций с куки код в <a class="ref" href="sign-in-sign-out#sec-signin_success">Разделе&nbsp;8.2</a>.</p>
+
+<div class="label" id="sec-sessions_controller"></div>
+
+
+<h3><a id="sec-8_1_1" href="sign-in-sign-out#sec-sessions_controller" class="heading"><span class="number">8.1.1</span> Sessions контроллер</a></h3>
+
+
+<p>Элементы системы входа и выхода соответствуют определенным REST действиям Sessions контроллера: форма входа обрабатывается <code>new</code> действием (рассматривается в этом разделе), сам вход обрабатывается отправкой запроса <tt>POST</tt> к действию <code>create</code> (<a class="ref" href="sign-in-sign-out#sec-signin_failure">Раздел&nbsp;8.1</a> и <a class="ref" href="sign-in-sign-out#sec-signin_success">Раздел&nbsp;8.2</a>) и выход обрабатывается отправкой запроса <tt>DELETE</tt> к действию <code>destroy</code> (<a class="ref" href="sign-in-sign-out#sec-signing_out">Раздел&nbsp;8.2.6</a>). (Вспомним о соответствии между глаголами HTTP и REST действиями из <a class="ref" href="sign-up#table-RESTful_users">Таблицы&nbsp;7.1</a>.) Для начала мы сгенерируем контроллер Sessions и интеграционный тест для механизма аутентификации:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate controller Sessions --no-test-framework
+<span class="gp">$</span> rails generate integration_test authentication_pages
+</pre></div>
+</div>
+
+
+<p>Следуя модели из <a class="ref" href="sign-up#sec-signup_form">Раздела&nbsp;7.2</a> для страницы регистрации, мы создадим форму входа для создания новых сессий (<a class="ref" href="sign-in-sign-out#fig-signin_mockup">Рис.&nbsp;8.1</a>).</p>
+
+<div class="label" id="fig-signin_mockup"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_mockup_bootstrap.png" alt="signin_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.1: </span><span class="description">Набросок формы входа.&nbsp;<a href="http://railstutorial.org/images/figures/signin_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Страница входа живет по URI предоставленному <code>signin_path</code> (уже определенному) и, как обычно, мы начнем с минималистичного теста как это показано в <a class="ref" href="sign-in-sign-out#code:new_session_tests">Листинге&nbsp;8.1</a>. (Сравните его с аналогичным кодом для страницы регистрации из <a class="ref" href="sign-up#code:initial_signup_test">Листинга&nbsp;7.6</a>.)</p>
+
+<div class="label" id="code:new_session_tests"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.1.</span> <span class="description">Тесты для <code>new</code> session действия и представления. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+
+  <span class="n">subject</span> <span class="p">{</span> <span class="n">page</span> <span class="p">}</span>
+
+  <span class="n">describe</span> <span class="s2">&quot;signin page&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signin_path</span> <span class="p">}</span>
+
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Изначально тест провальный, как и требуется:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
+</pre></div>
+</div>
+
+
+<p>Для того чтобы получить прохождение тестов из  <a class="ref" href="sign-in-sign-out#code:new_session_tests">Листинга&nbsp;8.1</a>, в первую очередь нам необходимо определить маршруты для ресурса Sessions, совместно с кастомным именованным маршрутом для страницы входа (который мы направим к действию <code>new</code> контроллера Session). Как и с ресурсом Users, мы можем использовать метод <code>resources</code> для определения стандартных RESTful маршрутов:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">resources</span> <span class="ss">:sessions</span><span class="p">,</span> <span class="ss">only:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+</pre></div>
+</div>
+
+
+<p>Поскольку нам нет надобности показывать или редактировать сессии, мы ограничимся действиями <code>new</code>, <code>create</code> и <code>destroy</code> с помощью опции <code>:only</code> принимаемой <code>resources</code>. Конечный результат, включающий именованные маршруты для входа и выхода, представлен в <a class="ref" href="sign-in-sign-out#code:sessions_resource">Листинге&nbsp;8.2</a>.</p>
+
+<div class="label" id="code:sessions_resource"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.2.</span> <span class="description">Добавление ресурса для получения стандартных RESTful действий для сессий. <br /> <code>config/routes.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
+  <span class="n">resources</span> <span class="ss">:users</span>
+  <span class="n">resources</span> <span class="ss">:sessions</span><span class="p">,</span> <span class="ss">only:</span> <span class="o">[</span><span class="ss">:new</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">:destroy</span><span class="o">]</span>
+
+  <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;users#new&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/signin&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;sessions#new&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/signout&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;sessions#destroy&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="ss">:delete</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Обратите внимание на использование <code>via: :delete</code> для маршрута выхода, указывающее на то, что он должен быть вызван с помощью HTTP запроса <tt>DELETE</tt>.</p>
+
+<p>Ресурсы, определенные в <a class="ref" href="sign-in-sign-out#code:sessions_resource">Листинге&nbsp;8.2</a> обеспечивают URI-адреса и действия, аналогичные ресурсу Users (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>), как видно в <a class="ref" href="sign-in-sign-out#table-RESTful_sessions">Таблице&nbsp;8.1</a>. Обратите внимание на то что маршруты для входа и выхода являются кастомными, но маршрут для создания сессии остался дефолтным (т.е., <code>[resource name]_path</code>).</p>
+
+<div class="label" id="table-RESTful_sessions"></div>
+
+
+<div class="table"><div class="center">
+<table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Цель (назначение)</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/signin</td><td class="align_left"><code>signin_path</code></td><td class="align_left"><code>new</code></td><td class="align_left">страница для новой сессии (вход)</td></tr><tr><td class="align_left"><tt>POST</tt></td><td class="align_left">/sessions</td><td class="align_left"><code>sessions_path</code></td><td class="align_left"><code>create</code></td><td class="align_left">создание новой сессии</td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left">/signout</td><td class="align_left"><code>signout_path</code></td><td class="align_left"><code>destroy</code></td><td class="align_left">удаление сессии (выход)</td></tr></table></div><div class="caption"><span class="header">Таблица 8.1: </span><span class="description">RESTful маршруты, обеспеченные правилами в <a class="ref" href="sign-in-sign-out#code:sessions_resource">Листинге&nbsp;8.2</a>.</span></div></div>
+
+
+<p>Следующим шагом необходимым для прохождения тестов из  <a class="ref" href="sign-in-sign-out#code:new_session_tests">Листинга&nbsp;8.1</a> является добавление <code>new</code> действия к контроллеру Sessions, как это показано в <a class="ref" href="sign-in-sign-out#code:new_session_title">Листинге&nbsp;8.3</a> (который также определяет <code>create</code> и <code>destroy</code> действия для использования в будущем).</p>
+
+<div class="label" id="code:new_session_title"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.3.</span> <span class="description">Начальный контроллер Sessions. <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">destroy</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Последний шаг это определение начальной версии страницы входа. Обратите внимание, что, поскольку это страница для новой сесии, она живет в файле <code>app/views/sessions/new.html.erb</code>, который мы должны создать. Содержимое, которое в настоящий момент определяет только заголовок страницы и заголовок первого уровня, представлено в  <a class="ref" href="sign-in-sign-out#code:initial_signin_page">Листинге&nbsp;8.4</a>.</p>
+
+<div class="label" id="code:initial_signin_page"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.4.</span> <span class="description">Начальное представление входа. <br /> <code>app/views/sessions/new.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s2">&quot;Sign in&quot;</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Sign in<span class="nt">&lt;/h1&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Теперь тесты из <a class="ref" href="sign-in-sign-out#code:new_session_tests">Листинга&nbsp;8.1</a> должны пройти и мы готовы к созданию самой формы входа.</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-signin_tests"></div>
+
+
+<h3><a id="sec-8_1_2" href="sign-in-sign-out#sec-signin_tests" class="heading"><span class="number">8.1.2</span> Тестирование входа</a></h3>
+
+
+<p>Сравнивая <a class="ref" href="sign-in-sign-out#fig-signin_mockup">Рис.&nbsp;8.1</a> с <a class="ref" href="sign-up#fig-signup_mockup">Рис.&nbsp;7.11</a>, мы видим, что форма входа (или, что эквивалентно, форма новой сессии) выглядит аналогично форме регистрации, за исключением того что в ней два поля (email и пароль) вместо четырех. Как и с формой регистрации, мы можем протестировать форму входа используя Capybara для заполнения формы данными и последующего клика по кнопке.</p>
+
+<p>В процессе написания тестов мы вынуждены обращать внимание на аспекты дизайна нашего приложения, что является одним из приятных побочных эффектов разработки через тестирование. Мы начнем с провального входа, как это показано на наброске в <a class="ref" href="sign-in-sign-out#fig-signin_failure_mockup">Рис.&nbsp;8.2</a>.</p>
+
+<div class="label" id="fig-signin_failure_mockup"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_failure_mockup_bootstrap.png" alt="signin_failure_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.2: </span><span class="description">Набросок провального входа.&nbsp;<a href="http://railstutorial.org/images/figures/signin_failure_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Как видно на <a class="ref" href="sign-in-sign-out#fig-signin_failure_mockup">Рис.&nbsp;8.2</a>, при предоставлении невалидной информации мы хотим вновь отрендерить страницу входа и вывести на экран сообщение  об ошибке. Мы будем рендерить ошибку как флэш сообщение, что мы можем протестировать следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>(Мы видели аналогичный код в <a class="ref" href="sign-up#code:after_save_tests">Листинге&nbsp;7.32</a> из упражнения <a class="ref" href="sign-up#top">Главы&nbsp;7</a>.) Здесь элементом (т.e. тегом) который мы ищем является</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">div</span><span class="o">.</span><span class="n">alert</span><span class="o">.</span><span class="n">alert</span><span class="o">-</span><span class="n">error</span>
+</pre></div>
+</div>
+
+
+<p>Вспомним что точка обозначает &ldquo;класс&rdquo; в CSS (<a class="ref" href="filling-in-the-layout#sec-custom_css">Раздел&nbsp;5.1.2</a>), вы возможно догадались, что это тесты для <code>div</code> тега с классами <code>"alert"</code> и <code>"alert-error"</code>. Мы также тестируем что сообщение об ошибке содержит текст <code>"Invalid"</code>. Собрав все это вместе мы получаем тест ищущий элемент следующего вида:</p>
+
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;alert alert-error&quot;</span><span class="nt">&gt;</span>Invalid...<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Комбинация тестов заголовка и флэша приводит нас к коду в <a class="ref" href="sign-in-sign-out#code:initial_failing_signin_test">Листинге&nbsp;8.5</a>. Как мы увидим, эти тесты упускают одну важную деталь, которой мы займемся в <a class="ref" href="sign-in-sign-out#sec-rendering_with_a_flash_message">Разделе&nbsp;8.1.5</a>.</p>
+
+<div class="label" id="code:initial_failing_signin_test"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.5.</span> <span class="description">Тесты для провального входа. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;signin&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signin_path</span> <span class="p">}</span>
+
+    <span class="n">describe</span> <span class="s2">&quot;with invalid information&quot;</span> <span class="k">do</span>
+      <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span> <span class="p">}</span>
+
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Теперь, написав тесты для провального входа, мы возвращаемся к успешному входу. Изменениями которые мы хотим протестировать являются рендеринг страницы профиля пользователя (что предопределено заголовком страницы, который должен быть именем пользователя), совместно с тремя запланированными изменениями в навигации сайта:</p>
+
+<ol>
+<li>Появление ссылки на страницу профиля пользователя</li>
+<li>Появление ссылки &ldquo;Sign out&rdquo;</li>
+<li>Исчезновение ссылки &ldquo;Sign in&rdquo;</li>
+</ol>
+
+
+<p>(Мы отложим тесты для ссылки &ldquo;Settings&rdquo; до <a class="ref" href="updating-showing-and-deleting-users#sec-updating_users">Раздела&nbsp;9.1</a> и для ссылки &ldquo;Users&rdquo; до <a class="ref" href="updating-showing-and-deleting-users#sec-showing_all_users">Раздела&nbsp;9.3</a>.) Набросок этих изменений представлен на <a class="ref" href="sign-in-sign-out#fig-signin_success_mockup">Рис.&nbsp;8.3</a>.<sup class="footnote" id="fnref-8_2"><a href="#fn-8_2">2</a></sup> Обратите внимание на то, что ссылки на выход и на профиль пользователя появляются в выпадающем меню &ldquo;Account&rdquo;; в <a class="ref" href="sign-in-sign-out#sec-changing_the_layout_links">Разделе&nbsp;8.2.4</a>, мы увидим как сделать такое меню с помощью Bootstrap.</p>
+
+<div class="label" id="fig-signin_success_mockup"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_success_mockup_bootstrap.png" alt="signin_success_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.3: </span><span class="description">Набросок профиля пользователя после успешного входа.&nbsp;<a href="http://railstutorial.org/images/figures/signin_success_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Код тестов для успешного входа представлен в <a class="ref" href="sign-in-sign-out#code:signin_success_tests">Листинге&nbsp;8.6</a>.</p>
+
+<div class="label" id="code:signin_success_tests"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.6.</span> <span class="description">Тесты успешного входа. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;signin&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signin_path</span> <span class="p">}</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="n">describe</span> <span class="s2">&quot;with valid information&quot;</span> <span class="k">do</span>
+      <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">before</span> <span class="k">do</span>
+        <span class="n">fill_in</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span>    <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">upcase</span>
+        <span class="n">fill_in</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">password</span>
+        <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+      <span class="k">end</span>
+
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">user_path</span><span class="p">(</span><span class="n">user</span><span class="p">))</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Sign out&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">signout_path</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Sign in&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Здесь мы использовали метод <code>have_link</code>. Он принимает в качестве аргументов текст ссылки и необязательный параметр <code>:href</code>, таким образом</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Profile&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">user_path</span><span class="p">(</span><span class="n">user</span><span class="p">))</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>убеждается в том что якорный тег&nbsp;<code>a</code> имеет правильный атрибут <code>href</code> (URI) &mdash; в данном случае, ссылку на страницу профиля пользователя. Обратите также внимание на то что мы позаботились <code>upcase</code> email адрес пользователя для того чтобы быть уверенными в том что наша способность находить пользователя в базе данных не зависит от регистра.</p>
+
+<div class="label" id="sec-signin_form"></div>
+
+
+<h3><a id="sec-8_1_3" href="sign-in-sign-out#sec-signin_form" class="heading"><span class="number">8.1.3</span> Форма для входа</a></h3>
+
+
+<p>После написания тестов мы готовы приступить к разработке формы для входа. Вспомним из <a class="ref" href="sign-up#code:signup_form">Листинга&nbsp;7.17</a> что форма регистрации использует вспомогательный метод <code>form_for</code>, принимающий в качестве аргумента переменную экземпляра <code>@user</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
+  .
+  .
+  .
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Основное отличие между этим и формой для входа заключается в том что у нас нет модели Session, и, следовательно, нет аналога для переменной <code>@user</code>. Это означает, что при конструировании формы для новой сессии нам необходимо предоставить методу <code>form_for</code> чуть больше информации; в частности, тогда как</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">form_for</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>позволяет Rails сделать вывод о том, что <code>действием</code> формы должно быть <tt>POST</tt> к URI /users, в случае с сессиями мы должны явно указать <em>имя</em> ресурса и соответствующий URI:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">form_for</span><span class="p">(</span><span class="ss">:session</span><span class="p">,</span> <span class="ss">url:</span> <span class="n">sessions_path</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>(Вторым возможным способом является использование <code>form_tag</code> вместо <code>form_for</code>; это было бы даже более идеоматически корректным решением с точки зрения Rails, но оно бы имело мало общего с формой регистрации, а на этом этапе я хочу подчеркнуть параллельность структуры. Создание рабочей формы с помощью <code>form_tag</code> оставлено в качестве упражнения (<a class="ref" href="sign-in-sign-out#sec-sign_in_out_exercises">Раздел&nbsp;8.5</a>).)</p>
+
+<p>Имея на руках правильный <code>form_for</code> легко сделать форму для входа соответствующую наброску на <a class="ref" href="sign-in-sign-out#fig-signin_mockup">Рис.&nbsp;8.1</a> используя форму регистрации (<a class="ref" href="sign-up#code:signup_form">Листинг&nbsp;7.17</a>) в качестве модели, как это показано в <a class="ref" href="sign-in-sign-out#code:signin_form">Листинге&nbsp;8.7</a>.</p>
+
+<div class="label" id="code:signin_form"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.7.</span> <span class="description">Код для формы входа. <br /> <code>app/views/sessions/new.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s2">&quot;Sign in&quot;</span><span class="p">)</span> <span class="cp">%&gt;</span>
+<span class="nt">&lt;h1&gt;</span>Sign in<span class="nt">&lt;/h1&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;span6 offset3&quot;</span><span class="nt">&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="ss">:session</span><span class="p">,</span> <span class="ss">url:</span> <span class="n">sessions_path</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
+
+      <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:email</span> <span class="cp">%&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:email</span> <span class="cp">%&gt;</span>
+
+      <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:password</span> <span class="cp">%&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">password_field</span> <span class="ss">:password</span> <span class="cp">%&gt;</span>
+
+      <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">submit</span> <span class="s2">&quot;Sign in&quot;</span><span class="p">,</span> <span class="ss">class:</span> <span class="s2">&quot;btn btn-large btn-primary&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+
+    <span class="nt">&lt;p&gt;</span>New user? <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Sign up now!&quot;</span><span class="p">,</span> <span class="n">signup_path</span> <span class="cp">%&gt;</span><span class="nt">&lt;/p&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Обратите внимание на то, что мы для удобства добавили ссылку на страницу входа. С кодом в <a class="ref" href="sign-in-sign-out#code:signin_form">Листинге&nbsp;8.7</a>, форма для входа выглядит как на <a class="ref" href="sign-in-sign-out#fig-signin_form">Рис.&nbsp;8.4</a>.</p>
+
+<div class="label" id="fig-signin_form"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signin_form_bootstrap.png" alt="signin_form_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.4: </span><span class="description">Форма для входа  (<a href="http://localhost:3000/signin">/signin</a>).&nbsp;<a href="http://railstutorial.org/images/figures/signin_form_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Несмотря на то, что вы вскоре избавитесь от привычки смотреть на HTML генерируемый Rails (вместо этого доверив хелперам, делать свою работу), пока все же давайте взглянем на него (<a class="ref" href="sign-in-sign-out#code:signin_form_html">Листинг&nbsp;8.8</a>).</p>
+
+<div class="label" id="code:signin_form_html"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.8.</span> <span class="description">HTML для формы входа произведеный <a class="ref" href="sign-in-sign-out#code:signin_form">Листингом&nbsp;8.7</a>.</span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">accept-charset=</span><span class="s">&quot;UTF-8&quot;</span> <span class="na">action=</span><span class="s">&quot;/sessions&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;session_email&quot;</span><span class="nt">&gt;</span>Email<span class="nt">&lt;/label&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;session_email&quot;</span> <span class="na">name=</span><span class="s">&quot;session[email]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;session_password&quot;</span><span class="nt">&gt;</span>Password<span class="nt">&lt;/label&gt;</span>
+    <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;session_password&quot;</span> <span class="na">name=</span><span class="s">&quot;session[password]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span>
+           <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">&quot;btn btn-large btn-primary&quot;</span> <span class="na">name=</span><span class="s">&quot;commit&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span>
+       <span class="na">value=</span><span class="s">&quot;Sign in&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/form&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Сравнивая <a class="ref" href="sign-in-sign-out#code:signin_form_html">Листинг&nbsp;8.8</a> с <a class="ref" href="sign-up#code:signup_form_html">Листингом&nbsp;7.20</a>, вы, возможно, догадались, что отправка этой формы приведет к хэшу <code>params</code>, где <code>params[:session][:email]</code> и <code>params[:session][:password]</code> соответствуют email и password полям.</p>
+
+<div class="label" id="sec-reviewing_form_submission"></div>
+
+
+<h3><a id="sec-8_1_4" href="sign-in-sign-out#sec-reviewing_form_submission" class="heading"><span class="number">8.1.4</span> Обзор отправки формы</a></h3>
+
+
+<p>Как и в случае создания пользователей (регистрации), первый шаг в создании сессий (вход) состоит в обработке <em>неверного</em> ввода. У нас уже есть тесты для провальной регистрации (<a class="ref" href="sign-in-sign-out#code:initial_failing_signin_test">Листинг&nbsp;8.5</a>) и код приложения довольно прост за исключением пары тонкостей. Мы начнем с разбора того что происходит при отправке формы, а затем прикрутим полезное сообщение об ошибке появляющееся в случае провального входа (как это показано на наброске из <a class="ref" href="sign-in-sign-out#fig-signin_failure_mockup">Рис.&nbsp;8.2</a>.) Затем мы заложим основу для успешного входа (<a class="ref" href="sign-in-sign-out#sec-signin_success">Раздел&nbsp;8.2</a>) научив наше приложение оценивать каждую попытку входа, опираясь на валидность предоставленной комбинации email/password.</p>
+
+<p>Давайте начнем с определения минималистичного действия <code>create</code> для контроллера Sessions (<a class="ref" href="sign-in-sign-out#code:initial_create_session">Листинг&nbsp;8.9</a>), которое пока не будет делать ничего кроме рендеринга представления <code>new</code>. После чего, отправка формы <a href="http://localhost:3000/sessions/new">/sessions/new</a> с пустыми полями, будет приводить к результату показанному на <a class="ref" href="sign-in-sign-out#fig-initial_failed_signin_rails_3">Рис.&nbsp;8.5</a>.</p>
+
+<div class="label" id="code:initial_create_session"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.9.</span> <span class="description">Предварительная версия Sessions <code>create</code> действия. <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+  <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+
+
+<div class="label" id="fig-initial_failed_signin_rails_3"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/initial_failed_signin_rails_3_bootstrap.png" alt="initial_failed_signin_rails_3_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.5: </span><span class="description">Начальный провальный вход с <code>create</code> из <a class="ref" href="sign-in-sign-out#code:initial_create_session">Листинга&nbsp;8.9</a>.&nbsp;<a href="http://railstutorial.org/images/figures/initial_failed_signin_rails_3_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Тщательное изучение отладочной информации на <a class="ref" href="sign-in-sign-out#fig-initial_failed_signin_rails_3">Рис.&nbsp;8.5</a> показывает, что, как намекалось в конце <a class="ref" href="sign-in-sign-out#sec-signin_form">Раздела&nbsp;8.1.3</a>, отправка формы приводит к хэшу <code>params</code> содержащему email и password под ключом <code>:session</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="nn">---</span>
+<span class="l-Scalar-Plain">session</span><span class="p-Indicator">:</span>
+  <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="s">&#39;&#39;</span>
+  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="s">&#39;&#39;</span>
+<span class="l-Scalar-Plain">commit</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Sign in</span>
+<span class="l-Scalar-Plain">action</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">create</span>
+<span class="l-Scalar-Plain">controller</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">sessions</span>
+</pre></div>
+</div>
+
+
+<p>Как и в случае регистрации пользователя (<a class="ref" href="sign-up#fig-signup_failure_rails_3">Рис.&nbsp;7.15</a>) эти параметры образуют <em>вложенный</em> хэш, как тот, что мы видели в <a class="ref" href="rails-flavored-ruby#code:nested_hashes">Листинге&nbsp;4.6</a>. В частности, <code>params</code> содержит вложенный хэш формы</p>
+
+<div class="code"><div class="highlight"><pre><span class="p">{</span> <span class="ss">session:</span> <span class="p">{</span> <span class="ss">password:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;&quot;</span> <span class="p">}</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>
+Это означает, что</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">]</span>
+</pre></div>
+</div>
+
+
+<p>само является хэшем:</p>
+
+<div class="code"><div class="highlight"><pre><span class="p">{</span> <span class="ss">password:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;&quot;</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>Как результат,</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:email</span><span class="o">]</span>
+</pre></div>
+</div>
+
+
+<p>является предоставленным адресом электронной почты и</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span>
+</pre></div>
+</div>
+
+
+<p>является предоставленным паролем.</p>
+
+<p>Иными словами, внутри <code>create</code> действия хэш <code>params</code>  имеет всю информацию, необходимую для аутентификации пользователей по электронной почте и паролю. Совершенно не случайно у нас уже как раз есть необходимый нам метод: <code>User.find_by_email</code> предоставленный  Active Record (<a class="ref" href="modeling-users#sec-finding_user_objects">Раздел&nbsp;6.1.4</a>) и метод  <code>authenticate</code> предоставляемый <code>has_secure_password</code> (<a class="ref" href="modeling-users#sec-user_authentication">Раздел&nbsp;6.3.3</a>). Вспомните что <code>authenticate</code> возвращает <code>false</code> для невалидной аутентификации, наша стратегия для входа пользователя может быть резюмирована следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">create</span>
+  <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:email</span><span class="o">].</span><span class="n">downcase</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+    <span class="c1"># Sign the user in and redirect to the user&#39;s show page.</span>
+  <span class="k">else</span>
+    <span class="c1"># Create an error message and re-render the signin form.</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Здесь первая строка вытягивает пользователя из базы данных с помощью предоставленного адреса электронной почты. (Вспомните из <a class="ref" href="modeling-users#sec-uniqueness_validation">Раздела&nbsp;6.2.5</a> что email адреса сохраняются в нижнем регистре, поэтому здесь мы используем метод <code>downcase</code> для обеспечения соответствия когда предоставленный адрес валиден.) Следующая строка может немного смутить, но она довольна распространена в идеоматическом Rails программировании:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>Здесь используется <code>&amp;&amp;</code> (логическое <em>и</em>) для определения валидности полученного пользователя. Принимая в расчет что любой объект кроме <code>nil</code> и самой <code>false</code> является <code>true</code> в булевом контексте (<a class="ref" href="rails-flavored-ruby#sec-objects_and_message_passing">Раздел&nbsp;4.2.3</a>), возможные результаты выглядят как <a class="ref" href="sign-in-sign-out#table-user_and_and">Таблица&nbsp;8.2</a>. Мы видим в <a class="ref" href="sign-in-sign-out#table-user_and_and">Таблице&nbsp;8.2</a> что выражение <code>if</code> является <code>true</code> только если пользователь с данным адресом электронной почты и существует в базе данных и имеет данный пароль, что нам и было необходимо.</p>
+
+<div class="label" id="table-user_and_and"></div>
+
+
+<div class="table"><div class="center">
+<table class="tabular"><tr><th class="align_left"><strong>Пользователь</strong></th><th class="align_left"><strong>Пароль</strong></th><th class="align_left"><strong>a &amp;&amp; b</strong></th></tr><tr class="top_bar"><td class="align_left">не существует</td><td class="align_left"><em>что-нибудь</em></td><td class="align_left"><code>nil &amp;&amp; [anything] == false</code></td></tr><tr><td class="align_left">валидный пользователь</td><td class="align_left">неправильный пароль</td><td class="align_left"><code>true &amp;&amp; false == false</code></td></tr><tr><td class="align_left">валидный пользователь</td><td class="align_left">правильный пароль</td><td class="align_left"><code>true &amp;&amp; true == true</code></td></tr></table></div><div class="caption"><span class="header">Таблица 8.2: </span><span class="description">Возможные результаты <code>user &amp;&amp; user.authenticate(&hellip;)</code>.</span></div></div>
+
+
+
+
+<div class="label" id="sec-rendering_with_a_flash_message"></div>
+
+
+<h3><a id="sec-8_1_5" href="sign-in-sign-out#sec-rendering_with_a_flash_message" class="heading"><span class="number">8.1.5</span> Рендеринг с флэш сообщением</a></h3>
+
+
+<p>Напомним из <a class="ref" href="sign-up#sec-signup_error_messages">Раздела&nbsp;7.3.2</a>, что мы отображали ошибки регистрации, используя сообщения об ошибках модели User. Эти ошибки связаны с конкретным объектом Active Record, но эта стратегия здесь не сработает, поскольку сессии не являются моделью Active Record. Вместо этого, мы поместим сообщение во флеш так чтобы оно отображалось при провальном входе. Первая, немного некорректная попытка представлена в <a class="ref" href="sign-in-sign-out#code:failed_signin_attempt">Листинге&nbsp;8.10</a>.</p>
+
+<div class="label" id="code:failed_signin_attempt"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.10.</span> <span class="description">(Неудачная) попытка обработки провального входа. <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:email</span><span class="o">].</span><span class="n">downcase</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+      <span class="c1"># Sign the user in and redirect to the user&#39;s show page.</span>
+    <span class="k">else</span>
+      <span class="n">flash</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;Invalid email/password combination&#39;</span> <span class="c1"># Not quite right!</span>
+      <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">destroy</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Поскольку сообщение об ошибке отображается в шаблоне сайта (<a class="ref" href="sign-up#code:layout_flash">Листинг&nbsp;7.26</a>), сообщение <code>flash[:error]</code> будет автоматически отображено; благодаря Bootstrap CSS, оно, к тому же, будет иметь приятный стиль (<a class="ref" href="sign-in-sign-out#fig-failed_signin_flash">Рис.&nbsp;8.6</a>).</p>
+
+<div class="label" id="fig-failed_signin_flash"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/failed_signin_flash_bootstrap.png" alt="failed_signin_flash_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.6: </span><span class="description">Флэш сообщение для провального входа.&nbsp;<a href="http://railstutorial.org/images/figures/failed_signin_flash_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>К сожалению, как было отмечено в тексте и в комментарии к <a class="ref" href="sign-in-sign-out#code:failed_signin_attempt">Листингу&nbsp;8.10</a>, этот код не совсем верный. Однако страница выглядит нормально, так в чем же подвох? Проблема заключается в том, что содержимое флэша существует в течение одного <em>запроса</em>, но, в отличие от редиректа (перенаправления) который мы использовали в <a class="ref" href="sign-up#code:signup_flash">Листинге&nbsp;7.27</a> &mdash; повторный рендеринг шаблона с <code>render</code> не считается запросом. В результате флэш сообщение существует на один запрос дольше чем мы хотим. Например, если мы отправим невалидную информацию, флэш сообщение будет установлено и отображено на странице входа (<a class="ref" href="sign-in-sign-out#fig-failed_signin_flash">Рис.&nbsp;8.6</a>); если мы кликнем на другую страницу, такую как Home, что будет первым запросом после отправки формы, то флэш сообщение будет вновь отображено (<a class="ref" href="sign-in-sign-out#fig-flash_persistence">Рис.&nbsp;8.7</a>).</p>
+
+<div class="label" id="fig-flash_persistence"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/flash_persistence_bootstrap.png" alt="flash_persistence_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.7: </span><span class="description">Пример ненужного постоянства флэш сообщения.&nbsp;<a href="http://railstutorial.org/images/figures/flash_persistence_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Это постоянство флэша является багом нашего приложения и прежде чем приступить к его исправлению, было бы неплохо написать тест отлавливающий эту ошибку. В частности, тест провального входа в данный момент проходит:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/authentication_pages_spec.rb <span class="se">\</span>
+<span class="gp">&gt;</span> -e <span class="s2">&quot;signin with invalid information&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Но тесты ни в коем случае не должны проходить при наличии известной ошибки приложения, так что мы должны добавить провальный тест для ее отлова. К счастью, работа с проблемами вроде неисчезающего флэша, это одна из тех областей, где интеграционные тесты блестяще справляются с поставленной задачей; они позволяют нам сказать именно то, что мы имеем в виду:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;after visiting another page&quot;</span> <span class="k">do</span>
+  <span class="n">before</span> <span class="p">{</span> <span class="n">click_link</span> <span class="s2">&quot;Home&quot;</span> <span class="p">}</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">)</span> <span class="p">}</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>После отправки невалидных данных, этот тест переходит по Home ссылке, а затем требует отсутствия флэш сообщения об ошибке. Обновленный код с модифицированным тестом флэша показан в <a class="ref" href="sign-in-sign-out#code:correct_signin_failure_test">Листинге&nbsp;8.11</a>.</p>
+
+<div class="label" id="code:correct_signin_failure_test"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.11.</span> <span class="description">Правильный тест на провальный вход. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;signin&quot;</span> <span class="k">do</span>
+
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signin_path</span> <span class="p">}</span>
+
+    <span class="n">describe</span> <span class="s2">&quot;with invalid information&quot;</span> <span class="k">do</span>
+      <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span> <span class="p">}</span>
+
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span> <span class="p">}</span>
+
+      <span class="n">describe</span> <span class="s2">&quot;after visiting another page&quot;</span> <span class="k">do</span>
+        <span class="n">before</span> <span class="p">{</span> <span class="n">click_link</span> <span class="s2">&quot;Home&quot;</span> <span class="p">}</span>
+        <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Новый тест не проходит, как и требуется:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/authentication_pages_spec.rb <span class="se">\</span>
+<span class="gp">&gt;</span> -e <span class="s2">&quot;signin with invalid information&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Для того чтобы получить прохождение этого провального теста, мы заменим <code>flash</code> на <code>flash.now</code>, который специально создан для отображения флэш сообщения на отрендеренных страницах; в отличие от содержимого <code>flash</code>, его содержимое исчезает сразу после дополнительного запроса. Исправленный код приложения представлен в <a class="ref" href="sign-in-sign-out#code:correct_signin_failure">Листинге&nbsp;8.12</a>.</p>
+
+<div class="label" id="code:correct_signin_failure"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.12.</span> <span class="description">Исправленный код для провального входа. <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+
+  <span class="k">def</span> <span class="nf">new</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:email</span><span class="o">].</span><span class="n">downcase</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+      <span class="c1"># Sign the user in and redirect to the user&#39;s show page.</span>
+    <span class="k">else</span>
+      <span class="n">flash</span><span class="o">.</span><span class="n">now</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;Invalid email/password combination&#39;</span>
+      <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">destroy</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Теперь набор тестов для пользователей предоставивших невалидные данные для входа должен быть зеленым:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/authentication_pages_spec.rb <span class="se">\</span>
+<span class="gp">&gt;</span> -e <span class="s2">&quot;with invalid information&quot;</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-signin_success"></div>
+
+
+<h2><a id="sec-8_2" href="sign-in-sign-out#sec-signin_success" class="heading"><span class="number">8.2</span> Успешный вход</a></h2>
+
+
+<p>Получив обработку неудачного входа, теперь нам нужно на самом деле впустить пользователя. Получение этого результата потребует самого сложного Ruby программирования, которое мы когда либо встречали в этом учебнике, так что держитесь до конца и будьте готовы к небольшому количеству тяжелой работы. К счастью, первый шаг прост&nbsp;&mdash;&nbsp;завершение <code>create</code> действия контроллера Sessions&nbsp;&mdash;&nbsp;простая задача. К сожалению, эта легкость обманчива.</p>
+
+<p>Заполнить область, занятую в настоящее время комментарием (<a class="ref" href="sign-in-sign-out#code:correct_signin_failure">Листинг&nbsp;8.12</a>) легко: после успешного входа, мы впускаем пользователя, используя функцию <code>sign_in</code>, а затем перенаправляем его на страницу профиля (<a class="ref" href="sign-in-sign-out#code:sign_in_success_not_yet_working">Листинг&nbsp;8.13</a>). Мы видим теперь, почему это обманчивая легкость: увы, <code>sign_in</code> в настоящее время не существует. Написание этой функции займет оставшуюся часть этого раздела.</p>
+
+<div class="label" id="code:sign_in_success_not_yet_working"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.13.</span> <span class="description">Завершенное действие <code>create</code> контроллера Sessions (пока не рабочее). <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:email</span><span class="o">].</span><span class="n">downcase</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="o">&amp;&amp;</span> <span class="n">user</span><span class="o">.</span><span class="n">authenticate</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:session</span><span class="o">][</span><span class="ss">:password</span><span class="o">]</span><span class="p">)</span>
+      <span class="n">sign_in</span> <span class="n">user</span>
+      <span class="n">redirect_to</span> <span class="n">user</span>
+    <span class="k">else</span>
+      <span class="n">flash</span><span class="o">.</span><span class="n">now</span><span class="o">[</span><span class="ss">:error</span><span class="o">]</span> <span class="o">=</span> <span class="s1">&#39;Invalid email/password combination&#39;</span>
+      <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+
+
+<div class="label" id="sec-remember_me"></div>
+
+
+<h3><a id="sec-8_2_1" href="sign-in-sign-out#sec-remember_me" class="heading"><span class="number">8.2.1</span> Запомнить меня</a></h3>
+
+
+<p>Мы теперь в состоянии приступить к реализации нашей модели входа, а именно, запоминанию статуса вошедшего пользователя &ldquo;навсегда&rdquo; и очистке сессии только тогда, когда пользователь явно покинет наш сайт. Сами функции входа, в конечном итоге, пересекают традиционное Модель-Представление-Контроллер; в частности, несколько функций входа должны быть доступны и в контроллерах и в представлениях. Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec-back_to_the_title_helper">Раздела&nbsp;4.2.5</a>, что Ruby предоставляет <em>модули</em> для упаковки функций вместе и включения их в нескольких местах и это наш план для функций аутентификации. Мы могли бы сделать совершенно новый модуль для аутентификации, но контроллер Sessions уже оснащен модулем, а именно, <code>SessionsHelper</code>. Кроме того, помощники автоматически включаются в Rails представления, так что все что мы должны сделать для того чтобы использовать функции Sessions хелпера  в контроллерах, это включить соответствующий модуль в Application контроллер (<a class="ref" href="sign-in-sign-out#code-sessions_helper_include">Листинг&nbsp;8.14</a>). (<a class="ref" href="sign-in-sign-out#code-sessions_helper_include">Листинг&nbsp;8.14</a> также имеет возможность добавить дополнительную защиту от подделки межсайтовых запросов. Это начнет работать после того как мы определим метод <code>sign_out</code> в <a class="ref" href="sign-in-sign-out#sec-signing_out">Разделе&nbsp;8.2.6</a>.)</p>
+
+<div class="label" id="code:sessions_helper_include"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.14.</span> <span class="description">Включение модуля SessionsHelper в контроллер Application. <br /> <code>app/controllers/application_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">ApplicationController</span> <span class="o">&lt;</span> <span class="ss">ActionController::Base</span>
+  <span class="n">protect_from_forgery</span>
+  <span class="kp">include</span> <span class="no">SessionsHelper</span>
+
+  <span class="c1"># Force signout to prevent CSRF attacks</span>
+  <span class="k">def</span> <span class="nf">handle_unverified_request</span>
+    <span class="n">sign_out</span>
+    <span class="k">super</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>По умолчанию, все помощники доступны во <code>views</code>, но не в контроллерах.  Нам нужны методы Sessions хелпера в обоих местах, поэтому мы должны явно включить его.</p>
+
+<p>Поскольку HTTP является <a  rel="nofollow" href="http://ru.wikipedia.org/wiki/Hypertext_Transfer_Protocol#HTTP_session_state"><em>протоколом, не сохраняющим своего состояния</em></a>, веб-приложения, требующие входа пользователей, должны реализовывать способ, позволяющий отслеживать прогресс каждого пользователя от страницы к странице. Один из методов для поддержания статуса вошедшего пользователя, является использование традиционных Rails сессий (с помощью специальной <code>session</code> функции) для хранения <em>remember token</em>, равного пользовательскому id:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">session</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+</pre></div>
+</div>
+
+
+<p>Этот <code>session</code> объект делает идентификатор пользователя доступным от страницы к странице, сохраняя его в cookie, которые истекают при закрытии браузера. На каждой странице приложения можно просто вызвать</p>
+
+<div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">session</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>для получения пользователя. Из-за способа, которым Rails обрабатывает сессии, этот процесс является безопасным, если злоумышленник попытается подменить идентификатор пользователя, Rails обнаружит несоответствие, основываясь на специальном <em>session id</em>, генерируемом для каждой сессии.</p>
+
+<p>Для выбранного нами способа, который подразумевает <em>постоянные</em> сессии&nbsp;&mdash;&nbsp;то есть статус вошедшего пользователя, сохраняющийся даже после того, как браузер закрыт&nbsp;&mdash;&nbsp;нам необходимо использовать <em>постоянный</em> идентификатор для вошедшего пользователя. Для того чтобы достигнуть этого, мы будем генерировать уникальный, безопасный remember token для каждого пользователя и мы будем хранить его в качестве <em>постоянной</em> куки отличающейся от обычной тем, что она не истекает при закрытии браузера.</p>
+
+<p>Remember token должен быть связан с пользователем и должен сохраняться для последующего использования, поэтому мы добавим его в качестве атрибута модели User, как это показано на <a class="ref" href="sign-in-sign-out#fig-user_model_remember_token">Рис.&nbsp;8.8</a>.</p>
+
+<div class="label" id="fig-user_model_remember_token"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_model_remember_token_31.png" alt="user_model_remember_token_31" /></span></div><div class="caption"><span class="header">Рисунок 8.8: </span><span class="description">Модель User с добавленным атрибутом <code>remember_token</code>.</span></div></div>
+
+<p>Мы начнем с небольшого дополнения к спекам модели User (<a class="ref" href="sign-in-sign-out#code:user_responds_to_remember_token">Листинг&nbsp;8.15</a>).</p>
+
+<div class="label" id="code:user_responds_to_remember_token"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.15.</span> <span class="description">Первый тест для remember token. <br /> <code>spec/models/user_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:password_confirmation</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:remember_token</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:authenticate</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Мы можем получить прохождение этого теста сгенерировав remember token в командной строке:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate migration add_remember_token_to_users
+</pre></div>
+</div>
+
+
+<p>Затем мы заполняем получившуюся миграциюю кодом из <a class="ref" href="sign-in-sign-out#code-add_remember_token_to_users">Листинга&nbsp;8.16</a>. Это дает нам код показанный в <a class="ref" href="sign-in-sign-out#code:add_remember_token_to_users">Листинге&nbsp;8.16</a>. Обратите внимание, что, посколку мы планируем искать пользователей в базе данных по remember token, мы должны добавить индекс (<a class="ref" href="modeling-users#sidebar-database_indices">Блок&nbsp;6.2</a>) к столбцу <code>remember_token</code>.</p>
+
+<div class="label" id="code:add_remember_token_to_users"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.16.</span> <span class="description">Миграция для добавления <code>remember_token</code> к таблице <code>users</code>. <br /> <code>db/migrate/[timestamp]_add_remember_token_to_users.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">AddRememberTokenToUsers</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
+  <span class="k">def</span> <span class="nf">change</span>
+    <span class="n">add_column</span> <span class="ss">:users</span><span class="p">,</span> <span class="ss">:remember_token</span><span class="p">,</span> <span class="ss">:string</span>
+    <span class="n">add_index</span>  <span class="ss">:users</span><span class="p">,</span> <span class="ss">:remember_token</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Затем мы, как обычно, обновляем тестовую и рабочую базы данных:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:migrate
+<span class="gp">$</span> bundle <span class="nb">exec </span>rake db:test:prepare
+</pre></div>
+</div>
+
+
+<p>В этой точке спеки модели User должны проходить:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/models/user_spec.rb
+</pre></div>
+</div>
+
+
+<p>Теперь мы должны выбрать, что именно использовать в качестве remember token. Существует множество, в основном эквивалентных способов, по сути, подойдет любая длинная случайная строка. В принципе, поскольку пароли пользователей надежно зашифрованы, мы могли бы использовать пользовательский аттрибут <code>password_hash</code>, но, судя по всему, это ужасная идея - без особой надобности выставлять напоказ (пусть даже зашифрованные) пароли наших пользователей. Мы предпочтем ошибиться в сторону осторожности и сделаем кастомный remember token с помощью метода <code>urlsafe_base64</code> из модуля <code>SecureRandom</code> стандартной библиотеки Ruby, который создает <a href="http://ru.wikipedia.org/wiki/Base64">Base64</a> безопасную строку используемую в URIs (и следовательно, безопасную и для применения в куках).<sup class="footnote" id="fnref-8_3"><a href="#fn-8_3">3</a></sup> На момент написания, <code>SecureRandom.urlsafe_base64</code> возвращает случайную строку длиной в 16 символов составленную из знаков A&ndash;Z, a&ndash;z, 0&ndash;9, &ldquo;-&rdquo; и &ldquo;_&rdquo; (для полной поддержки 64 возможностей). Это означает, что вероятность того, что два remember токена совпадут, составляет $1/64^{16} = 2^{-96} \approx 10^{-29}$, что весьма незначительно для наших целей.</p>
+
+<p>Мы будем создавать remember token с помощью <em>функции обратного вызова</em> - техники представленной в <a class="ref" href="modeling-users#sec-uniqueness_validation">Разделе&nbsp;6.2.5</a> в контексте уникальности адресов электронной почты. Как и в том разделе, мы будем использовать коллбэк <code>before_save</code>, в этот раз для создания <code>remember_token</code> непосредственно перед сохранением пользователя. Второй опцией будет использование коллбэка <code>before_create</code><sup class="footnote" id="fnref-8_4"><a href="#fn-8_4">4</a></sup> для того чтобы устанавливать remember token <em>единожды</em> - при создании нашего пользователя. Это будет замечательно работать, но это решение имеет и обратную сторону - любая <a href="http://en.wikipedia.org/wiki/Session_hijacking">похищенная сессия</a> (что подразумевает копирование remember token и использование его для входа от лица соответствующего пользователя) никогда не истечет. Коллбэк <code>before_save</code> наоборот, обеспечивает замену токена при каждом изменении пользователем его информации (<a class="ref" href="updating-showing-and-deleting-users#sec-successful_edits">Раздел&nbsp;9.1.3</a>), так что это немного более безопасно. (Похищение сессий получило широкую огласку с помощью приложения <a href="http://codebutler.com/firesheep">Firesheep</a>, которое показывало что токены на множестве знаменитых сайтов были видимы при подключении к публичным  Wi-Fi сетям. Решение заключается в использовании SSL повсеместно на сайте, как это было описано в <a class="ref" href="sign-up#sec-deploying_to_production_with_ssl">Разделе&nbsp;7.4.4</a>. Нерегулярная смена remember token однако является важной частью безопасности, поскольку ваш токен может быть получен при наличии у аттакера физического доступа к компьютеру на котором вы являетесь вошедшим пользователем.)</p>
+
+
+<p> Для того чтобы протестировать remember token, мы вначале сохраним тестового пользователя, а затем проверим, что атрибут пользовательского <code>remember_token</code> не является пустым. Что позволит нам при необходимости изменять случайную строку, если это нам когда-либо потребуется. Результат представлен в <a class="ref" href="sign-in-sign-out#code:remember_token_should_not_be_blank">Листинге&nbsp;8.17</a>.</p>
+
+<div class="label" id="code:remember_token_should_not_be_blank"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.17.</span> <span class="description">Тест на валидный (не пустой) remember token. <br /> <code>spec/models/user_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
+
+  <span class="n">before</span> <span class="k">do</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+                     <span class="ss">password:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="ss">password_confirmation:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="n">subject</span> <span class="p">{</span> <span class="vi">@user</span> <span class="p">}</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;remember token&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span> <span class="p">}</span>
+    <span class="n">its</span><span class="p">(</span><span class="ss">:remember_token</span><span class="p">)</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_blank</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p><a class="ref" href="sign-in-sign-out#code:remember_token_should_not_be_blank">Листинг&nbsp;8.17</a> вводит метод <code>its</code>, который похож на <code>it</code> но относит следующий за ним тест к данному атрибуту, а не к субъекту теста. Другими словами,</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">its</span><span class="p">(</span><span class="ss">:remember_token</span><span class="p">)</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">be_blank</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>является эквивалентом</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="vi">@user</span><span class="o">.</span><span class="n">remember_token</span><span class="o">.</span><span class="n">should_not</span> <span class="n">be_blank</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>Код приложения вводит несколько новых элементов. Во-первых, мы добавили метод обратного вызова для создания remember token:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">before_save</span> <span class="ss">:create_remember_token</span>
+</pre></div>
+</div>
+
+
+<p>Это понужает Rails искать метод с названием <code>create_remember_token</code> и выполнять его перед сохранением пользователя. Во-вторых, сам метод используется тольку внутри модели User, так что нам нет необходимости выставлять его на показ сторонним пользователям. Ruby предлагает использовать для этих целей ключевое слово <code>private</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">create_remember_token</span>
+    <span class="c1"># Create the token.</span>
+  <span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Все методы, определенные в классе после <code>private</code> автоматически становятся скрытыми, таким образом</p>
+
+<div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
+<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">create_remember_token</span>
+</pre></div>
+</div>
+
+
+<p>вызовет исключение <code>NoMethodError</code>.</p>
+
+<p>Наконец, метод <code>create_remember_token</code> необходимо <em>присвоить</em> одному из атрибутов пользователей и в этом контексте необходимо использовать ключевое слово <code>self</code> перед <code>remember_token</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">create_remember_token</span>
+  <span class="nb">self</span><span class="o">.</span><span class="n">remember_token</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">urlsafe_base64</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>(<em>Примечание</em>: Если вы используете Ruby 1.8.7, здесь вам следует использовать <code>SecureRandom.hex</code>.) Из-за способа, которым Active Record синтезирует атрибуты, опираясь на столбцы базы данных, без <code>self</code> назначение создаст <em>локальную</em> переменную с именем <code>remember_token</code>, а это совсем не то что нам нужно. Использование <code>self</code> обеспечивает установку назначением пользовательского <code>remember_token</code> таким образом, что он будет записан в базу данных вместе с другими атрибутами при сохранении пользователя.</p>
+
+<p>Собрав все это воедино мы приходим модели User показанной в <a class="ref" href="sign-in-sign-out#code:before_save_create_remember_token">Листинге&nbsp;8.18</a>.</p>
+
+<div class="label" id="code:before_save_create_remember_token"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.18.</span> <span class="description">Обратный вызов <code>before_save</code> для создания <code>remember_token</code>. <br /> <code>app/models/user.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
+  <span class="n">attr_accessible</span> <span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span>
+  <span class="n">has_secure_password</span>
+
+  <span class="n">before_save</span> <span class="p">{</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">email</span><span class="o">.</span><span class="n">downcase</span> <span class="p">}</span>
+  <span class="n">before_save</span> <span class="ss">:create_remember_token</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">create_remember_token</span>
+      <span class="nb">self</span><span class="o">.</span><span class="n">remember_token</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">urlsafe_base64</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Кстати, дополнительный уровень отступа на <code>create_remember_token</code> сделан для того, чтобы визуально отделить методы определенные после <code>private</code>.</p>
+
+<p>Поскольку строка <code>SecureRandom.urlsafe_base64</code> определенно <em>не</em> пустая, тесты для модели User теперь должны пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/models/user_spec.rb
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-a_working_sign_in_method"></div>
+
+
+<h3><a id="sec-8_2_2" href="sign-in-sign-out#sec-a_working_sign_in_method" class="heading"><span class="number">8.2.2</span> Рабочий метод <tt>sign_in</tt></a></h3>
+
+
+<p>Теперь мы готовы к написанию первого элемента входа - самой <code>sign_in</code> функции. Как было отмечено выше, выбранный нами метод аутентификации заключается в помещении <em>remember token</em> в качестве куки в браузер пользователя и последующем использовании токена для поиска записи пользователя в базе данных при перемещении пользователя от страницы к странице (реализовано в <a class="ref" href="sign-in-sign-out#sec-current_user">Разделе&nbsp;8.2.3</a>). Результирующий <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;8.19</a> вводит две новые идеи: хэш <code>cookies</code> и <code>current_user</code>.</p>
+
+<div class="label" id="code:sign_in_function"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.19.</span> <span class="description">Завершенная (но пока-еще-не-работающая) функция <code>sign_in</code>. <br /> <code>app/helpers/sessions_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">cookies</span><span class="o">.</span><span class="n">permanent</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p><a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинг&nbsp;8.19</a> вводит утилиту <code>cookies</code>, поставляемую Rails. Мы можем использовать <code>cookies</code> как если бы она была хэшем; каждый элемент в куки представляет из себя хэш из двух элементов, <code>value</code> и дополнительную <code>expires</code> дату (# дату истечения). Например, мы могли бы осуществить вход пользователя путем размещения куки со значением, равным пользовательскому id, которое истекает через 20 лет:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">value:</span>   <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span><span class="p">,</span>
+                             <span class="ss">expires:</span> <span class="mi">20</span><span class="o">.</span><span class="n">years</span><span class="o">.</span><span class="n">from_now</span><span class="o">.</span><span class="n">utc</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>(Этот код использует один из удобных Rails помощников, о чем говорится в <a class="ref" href="sign-in-sign-out#sidebar-time_helpers">Блоке&nbsp;8.1</a>.)</p>
+
+<div class="label" id="sidebar-time_helpers"></div>
+
+
+<div class="sidebar"><span class="title"><span class="header">Блок 8.1.</span><span class="description">Куки истекают через <tt>20.years.from_now</tt></span></span>
+<p>Вы можете вспомнить из <a class="ref" href="rails-flavored-ruby#sec-a_class_of_our_own">Раздела&nbsp;4.4.2</a>, что Ruby позволяет добавлять методы к <em>любому</em>, даже встроенному классу. В том разделе мы добавляли <code>palindrome?</code> метод к <code>String</code> классу (и в результате обнаружили, что <code>"deified"</code> является палиндромом), и мы также видели, как Rails добавляет <code>blank?</code> метод к классу <code>Object</code> (таким образом, <code>"".blank?</code>, <code>"&nbsp;".blank?</code>, и <code>nil.blank?</code> все являются <code>true</code>). Код куки в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;8.19</a> (который внутренне устанавливает срок действия cookie в <code>20.years.from_now</code>) дает еще один пример из этой практики, посредством одного из Rails&rsquo; <em>временных хелперов</em>, которые являются методами добавленными к <code>Fixnum</code> (базовый класс для чисел):</p>
+
+<pre class="verbatim">  $ rails console
+  &gt;&gt; 1.year.from_now
+  =&gt; Sun, 13 Mar 2011 03:38:55 UTC +00:00
+  &gt;&gt; 10.weeks.ago
+  =&gt; Sat, 02 Jan 2010 03:39:14 UTC +00:00</pre>
+
+
+<p>Rails добавляет и другие помощники:</p>
+
+<pre class="verbatim">  &gt;&gt; 1.kilobyte
+  =&gt; 1024
+  &gt;&gt; 5.megabytes
+  =&gt; 5242880</pre>
+
+
+<p>Они полезны для валидации загрузки, что позволяет легко ограничить, например, загрузку изображений размером в <tt>5.megabytes</tt>.</p>
+
+<p>Хотя она должна использоваться с осторожностью, возможность добавлять методы к встроенным классам позволяет создавать черезвычайно естественные добавления к обычному Ruby.  Действительно, большая часть элегантности Rails в конечном счете, является производной от податливости лежащего в его основе языка Ruby.</p>
+</div>
+
+
+<p>Паттерн установки куки истекающей через 20 лет стал настолько общепринятым, что Rails добавил специальный метод <code>permanent</code> для его реализации, так что мы можем просто написать</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">cookies</span><span class="o">.</span><span class="n">permanent</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span>
+</pre></div>
+</div>
+
+
+<p>Под капотом, применение <code>permanent</code> приводит к автоматической установке даты истечения куки через 20 лет (<code>20.years.from_now</code>).</p>
+
+<p>После того как куки установлены, на последующих представлениях страниц мы можем извлекать пользователя с кодом вроде</p>
+
+<div class="code"><div class="highlight"><pre><span class="no">User</span><span class="o">.</span><span class="n">find_by_remember_token</span><span class="p">(</span><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>Конечно, <code>cookies</code> это <em>на самом деле</em> не хэш, поскольку назначение <code>cookies</code> действительно <em>сохраняет</em> кусочек текста в браузере, но частью красоты Rails является то, что он позволяет вам забыть о деталях и сконцентрироваться на написании приложения.</p>
+
+
+<div class="label" id="sec-current_user"></div>
+
+
+<h3><a id="sec-8_2_3" href="sign-in-sign-out#sec-current_user" class="heading"><span class="number">8.2.3</span> Текущий пользователь</a></h3>
+
+
+<p>Обсудив способ хранения пользовательского remember token в куки для последующего использования, теперь нам необходимо узнать как извлекать пользователя при последующем просмотре страниц. Давайте еще раз взглянем на функцию <code>sign_in</code> для того чтобы понять где мы находимся:</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">cookies</span><span class="o">.</span><span class="n">permanent</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Сейчас в центре нашего внимания вторая строка:</p>
+
+<div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+</pre></div>
+</div>
+
+
+<p>Цель этой строки заключается в создании <code>current_user</code>, доступного и в контроллерах и в представлениях, что позволит создавать конструкции, подобные этой:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">current_user</span><span class="o">.</span><span class="n">name</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>и</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">redirect_to</span> <span class="n">current_user</span>
+</pre></div>
+</div>
+
+<p>Использование <code>self</code> является необходимым в этом контексте по тем же причинам что были отмечены в обсуждении приведшем к <a class="ref" href="sign-in-sign-out#code-before_save_create_remember_token">Листингу&nbsp;8.18</a>: без <code>self</code>, Ruby будет просто создавать локальную переменную с названием <code>current_user</code>.</p>
+
+<p>Для того, чтобы начать писать код для <code>current_user</code>, обратите внимание, что строка</p>
+
+<div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+</pre></div>
+</div>
+
+
+<p>это <em>назначение</em>, которое мы должны определить. В Ruby есть специальный синтаксис для определения таких назначаемых функций, показанный в <a class="ref" href="sign-in-sign-out#code:current_user_equals">Листинге&nbsp;8.20</a>.</p>
+
+<div class="label" id="code:current_user_equals"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.20.</span> <span class="description">Определение назначения <code>current_user</code>. <br /> <code>app/helpers/sessions_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">current_user</span><span class="o">=</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="vi">@current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Это может выглядеть сбивающим с толку &mdash; большинство языков не позволит вам использовать знак равенства в определении метода, но это просто определение метода <code>current_user=</code> специально разработанного для обработки назначения <code>current_user</code>. Другими словами, код</p>
+
+<div class="code"><div class="highlight"><pre><span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="o">.</span><span class="n">.</span><span class="o">.</span>
+</pre></div>
+</div>
+
+
+<p>автоматически конвертируется в</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">current_user</span><span class="o">=</span><span class="p">(</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>тем самым вызывая метод <code>current_user=</code>.  Его единственный аргумент это то, что находится справа от назначения, в данном случае - пользователь который войдет. Однострочный метод в теле просто устанавливает переменную экземпляра <code>@current_user</code>, эффективно хранящую пользователя для дальнейшего использования.</p>
+
+<p>В обычном Ruby, мы могли бы определить второй метод, <code>current_user</code>, предназначенный для возвращения значения <code>@current_user</code>, как это показано в <a class="ref" href="sign-in-sign-out#code:current_user_wrong">Листинге&nbsp;8.21</a>.</p>
+
+<div class="label" id="code:current_user_wrong"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.21.</span> <span class="description">Заманчивое, но бесполезное определение <code>current_user</code>.</span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">current_user</span><span class="o">=</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="vi">@current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">current_user</span>
+    <span class="vi">@current_user</span>     <span class="c1"># Useless! Don&#39;t use this line.</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Если бы мы сделали это, мы бы фактически повторили функциональность <code>attr_accessor</code>, который мы видели в <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Разделе&nbsp;4.4.5</a>.<sup class="footnote" id="fnref-8_5"><a href="#fn-8_5">5</a></sup> Проблема в том, что он совершенно не в состоянии решить наши проблемы: с кодом в <a class="ref" href="sign-in-sign-out#code:current_user_wrong">Листинге&nbsp;8.21</a>, статус вошедшего пользователя будет забыт: как только пользователь перейдет на другую страницу&nbsp;&mdash;&nbsp;<a class="ref" href="http://lingvo.yandex.ru/poof/%D1%81%20%D0%B0%D0%BD%D0%B3%D0%BB%D0%B8%D0%B9%D1%81%D0%BA%D0%BE%D0%B3%D0%BE/">poof!</a>&nbsp;&mdash;&nbsp;сессия закончится и пользователь автоматически выйдет.
+Для того чтобы избежать этой проблемы, мы можем найти пользователя соответствующего remember token созданному кодом в <a class="ref" href="sign-in-sign-out#code:sign_in_function">Листинге&nbsp;8.19</a>, как показано в <a class="ref" href="sign-in-sign-out#code:current_user_working">Листинге&nbsp;8.22</a>.</p>
+
+<div class="label" id="code:current_user_working"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.22.</span> <span class="description">Поиск текущего пользователя с помощью <code>remember_token</code>. <br /> <code>app/helpers/sessions_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">current_user</span><span class="o">=</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="vi">@current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">current_user</span>
+    <span class="vi">@current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_remember_token</span><span class="p">(</span><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p><a class="ref" href="sign-in-sign-out#code:current_user_working">Листинг&nbsp;8.22</a> использует общепринятый, но изначально обескураживающий <code>||=</code> (&ldquo;или равно&rdquo;) оператор присваиваивания (<a class="ref" href="sign-in-sign-out#sidebar-or_equals">Блок&nbsp;8.2</a>). Его эффект заключается в установке переменной экземпляра <code>@current_user</code> пользователю, соответствующему remember token, но только если <code>@current_user</code> не определен.<sup class="footnote" id="fnref-8_6"><a href="#fn-8_6">6</a></sup> Иными словами, конструкция</p>
+
+<div class="code"><div class="highlight"><pre><span class="vi">@current_user</span> <span class="o">||=</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_remember_token</span><span class="p">(</span><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>вызывает метод <code>find_by_remember_token</code> при первом вызове которого вызывается <code>current_user</code>, но при последующих вызовах возвращается <code>@current_user</code> без обращения к базе данных.<sup class="footnote" id="fnref-8_7"><a href="#fn-8_7">7</a></sup> Это полезно лишь в случае если <code>current_user</code> используется чаще чем один раз для запроса отдельно взятого пользователя; в любом случае, <code>find_by_remember_token</code> будет вызван по крайней мере один раз при каждом посещении страницы на этом сайте.</p>
+
+<div class="label" id="sidebar-or_equals"></div>
+
+
+<div class="sidebar"><span class="title"><span class="header">Блок 8.2.</span><span class="description">Что за *$@! этот ваш <tt>||=</tt> ? </span></span>
+<p>Конструкция <tt>||=</tt> - очень Рубишная&nbsp;&mdash;&nbsp;то есть, она очень характерна для языка Ruby&nbsp;&mdash;&nbsp;и, следовательно, важно ее знать, если вы планируете много программировать на Ruby. Хотя на первый взгляд она может показаться таинственной, <em>или равно</em> легко понять по аналогии.</p>
+
+<p>Начнем с общепринятой идиомы для изменения определенной в настоящее время переменной. Многие компьютерные программы включают приращение переменной, как в</p>
+
+<pre class="verbatim">  x = x + 1</pre>
+
+
+<p>Большинство языков обеспечивают синтаксическое сокращение для этой операции; в Ruby (и в C, C++, Perl, Python, Java, и т.д.), это выглядит следующим образом:</p>
+
+<pre class="verbatim">  x += 1</pre>
+
+
+<p>Аналогичные конструкции существуют и для других операторов:</p>
+
+<pre class="verbatim">  $ rails console
+  &gt;&gt; x = 1
+  =&gt; 1
+  &gt;&gt; x += 1
+  =&gt; 2
+  &gt;&gt; x *= 3
+  =&gt; 6
+  &gt;&gt; x -= 7
+  =&gt; -1</pre>
+
+
+<p>В каждом случае, паттерном является то, что <tt>x = x O y</tt> и <tt>x O= y</tt> эквивалентны для любого оператора <tt>O</tt>.</p>
+
+<p>Другим распространенным Ruby паттерном является назначение переменной, если она <code>nil</code> но в противном случае оставляя ее в покое. Вспоминая <em>or</em>&nbsp;оператор <code>||</code> из <a class="ref" href="rails-flavored-ruby#sec-objects_and_message_passing">Раздела&nbsp;4.2.3</a>, мы можем записать это следующим образом:</p>
+
+<pre class="verbatim">  &gt;&gt; @user
+  =&gt; nil
+  &gt;&gt; @user = @user || &quot;the user&quot;
+  =&gt; &quot;the user&quot;
+  &gt;&gt; @user = @user || &quot;another user&quot;
+  =&gt; &quot;the user&quot;</pre>
+
+
+<p>Поскольку <code>nil</code> ложно в булевом контексте, первое присвоение это <code>nil || "the user"</code>, что оценивается как <code>"the user"</code>; аналогично, второе присвоение является <code>"the user" || "another user"</code>, которое также оценивается как <code>"the user"</code>&nbsp;&mdash;&nbsp;так как строки <code>true</code> в булевом контексте, серия <code>||</code> выражений прекращается после оценки первого выражения. (Эта практика оценки выражений <code>||</code> слева направо и остановки на первом истинном значении, известна как <em>оценка короткого замыкания (short-circuit evaluation)</em>.)</p>
+
+<p>Сравнивая в консольной сессии различные операторы, мы видим, что <code>@user = @user || value</code> следует <code>x = x O y</code> паттерну с <code>||</code> вместо <code>O</code>,  что позволяет предположить следующую эквивалентную конструкцию:</p>
+
+<pre class="verbatim">  &gt;&gt; @user ||= &quot;the user&quot;
+  =&gt; &quot;the user&quot;</pre>
+
+
+<p>Вуаля!</p>
+</div>
+
+
+
+
+<div class="label" id="sec-changing_the_layout_links"></div>
+
+
+<h3><a id="sec-8_2_4" href="sign-in-sign-out#sec-changing_the_layout_links" class="heading"><span class="number">8.2.4</span> Изменение ссылок шаблона</a></h3>
+
+
+<p>Мы подходим, наконец, к практическому применению всей нашей войти/выйти работы: мы сделаем ссылки в шаблоне меняющимися в зависимости от статуса пользователя. В частности, как показано на <a class="ref" href="sign-in-sign-out#fig-signin_success_mockup">Рис.&nbsp;8.3</a>, мы организуем изменение ссылок при входе и выходе пользователей из системы, а также мы добавим ссылки на список всех пользователей, на страницу настроек пользователя (будет закончена в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a>) и одну для профиля текущего пользователя. При этом, мы получим прохождение тестов из <a class="ref" href="sign-in-sign-out#code:signin_success_tests">Листинга&nbsp;8.6</a>, а это означает, что наш набор тестов станет польностью зеленым впервые с начала этой главы.</p>
+
+<p>Смена ссылок в шаблоне сайта подразумевает использование если-иначе ветвящихся структур внутри Embedded Ruby:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">signed_in?</span> <span class="cp">%&gt;</span>
+  # Ссылки для вошедших пользователей
+<span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span>
+  # Ссылки для не вошедших пользователей
+<span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Такой код требует наличия булевого метода <code>signed_in?</code>, который мы сейчас и реализуем.</p>
+
+<p>Пользователь является вошедшим если в сессии существует текущий пользователь, т.e., если <code>current_user</code> не является <code>nil</code>. Это требует использования оператора &ldquo;not&rdquo;, написанного с помощью восклицательного знака&nbsp;<code>!</code> и обычно читаемого как &ldquo;bang&rdquo;. В данном контексте пользователь является вошедшим если <code>current_user</code> является <em>не</em> <code>nil</code>, как это показано в <a class="ref" href="sign-in-sign-out#code:signed_in_p">Листинге&nbsp;8.23</a>.</p>
+
+<div class="label" id="code:signed_in_p"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.23.</span> <span class="description">Вспомогательный метод <code>signed_in?</code>. <br /> <code>app/helpers/sessions_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">cookies</span><span class="o">.</span><span class="n">permanent</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">signed_in?</span>
+    <span class="o">!</span><span class="n">current_user</span><span class="o">.</span><span class="n">nil?</span>
+  <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Имея на руках метод <code>signed_in?</code>, мы готовы закончить ссылки шаблона. Это будут четыре новых ссылки, две из которых пока останутся заглушками (мы их доработаем в <a class="ref" href="updating-showing-and-deleting-users#top">Главе&nbsp;9</a>):</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Users&quot;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span>
+<span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Ссылка на выход, между прочим, использует путь выхода, определенный в <a class="ref" href="sign-in-sign-out#code:sessions_resource">Листинге&nbsp;8.2</a>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Sign out&quot;</span><span class="p">,</span> <span class="n">signout_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>(Обратите внимание на то, что ссылка на выход передает хэш аргументов указывающий на то, что она должна отправить HTTP запрос <tt>DELETE</tt>.<sup class="footnote" id="fnref-8_8"><a href="#fn-8_8">8</a></sup>) Наконец, мы добавим ссылку на профиль следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="n">current_user</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>Здесь мы могли бы написать</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="n">user_path</span><span class="p">(</span><span class="n">current_user</span><span class="p">)</span> <span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+
+<p>но Rails позволяет нам ссылаться непосредственно на пользователя и в этом контексте <code>current_user</code> будет автоматически конвертирован в <code>user_path(current_user)</code>.</p>
+
+<p>В процессе размещения новых ссылок в шаблон, мы воспользуемся случаем и создадим выпадающее меню с помощью Bootstrap, вы можете более подробно почитать об этом на <a href="http://twitter.github.com/bootstrap/components.html">странице компонентов Bootstrap</a>. Полный результат представлен в <a class="ref" href="sign-in-sign-out#code:layout_signin_signout_links">Листинге&nbsp;8.24</a>. В частности, обратите внимание на CSS&nbsp;id и классы связанные с выпадающим меню Bootstrap.</p>
+
+<div class="label" id="code:layout_signin_signout_links"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.24.</span> <span class="description">Изменение ссылок для вошедших пользователей. <br /> <code>app/views/layouts/_header.html.erb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">&quot;navbar navbar-fixed-top navbar-inverse&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;navbar-inner&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
+      <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;sample app&quot;</span><span class="p">,</span> <span class="n">root_path</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="s2">&quot;logo&quot;</span> <span class="cp">%&gt;</span>
+      <span class="nt">&lt;nav&gt;</span>
+        <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;nav pull-right&quot;</span><span class="nt">&gt;</span>
+          <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Home&quot;</span><span class="p">,</span> <span class="n">root_path</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+          <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Help&quot;</span><span class="p">,</span> <span class="n">help_path</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+          <span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">signed_in?</span> <span class="cp">%&gt;</span>
+            <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Users&quot;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+            <span class="nt">&lt;li</span> <span class="na">id=</span><span class="s">&quot;fat-menu&quot;</span> <span class="na">class=</span><span class="s">&quot;dropdown&quot;</span><span class="nt">&gt;</span>
+              <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;#&quot;</span> <span class="na">class=</span><span class="s">&quot;dropdown-toggle&quot;</span> <span class="na">data-toggle=</span><span class="s">&quot;dropdown&quot;</span><span class="nt">&gt;</span>
+                Account <span class="nt">&lt;b</span> <span class="na">class=</span><span class="s">&quot;caret&quot;</span><span class="nt">&gt;&lt;/b&gt;</span>
+              <span class="nt">&lt;/a&gt;</span>
+              <span class="nt">&lt;ul</span> <span class="na">class=</span><span class="s">&quot;dropdown-menu&quot;</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Profile&quot;</span><span class="p">,</span> <span class="n">current_user</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+                <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+                <span class="nt">&lt;li</span> <span class="na">class=</span><span class="s">&quot;divider&quot;</span><span class="nt">&gt;&lt;/li&gt;</span>
+                <span class="nt">&lt;li&gt;</span>
+                  <span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Sign out&quot;</span><span class="p">,</span> <span class="n">signout_path</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="s2">&quot;delete&quot;</span> <span class="cp">%&gt;</span>
+                <span class="nt">&lt;/li&gt;</span>
+              <span class="nt">&lt;/ul&gt;</span>
+            <span class="nt">&lt;/li&gt;</span>
+          <span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span>
+            <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Sign in&quot;</span><span class="p">,</span> <span class="n">signin_path</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+          <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
+        <span class="nt">&lt;/ul&gt;</span>
+      <span class="nt">&lt;/nav&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+  <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/header&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>Выпадающее меню требует применения JavaScript библиотеки Bootstrap, которую мы можем включить с помощью Рельсового файлопровода, отредактировав файл application.js, как это показано в <a class="ref" href="sign-in-sign-out#code:bootstrap_js">Листинге&nbsp;8.25</a>.</p>
+
+<div class="label" id="code:bootstrap_js"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.25.</span> <span class="description">Добавление Bootstrap JavaScript библиотеки в <code>application.js</code>. <br /> <code>app/assets/javascripts/application.js</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="c1">//= require jquery</span>
+<span class="c1">//= require jquery_ujs</span>
+<span class="c1">//= require bootstrap</span>
+<span class="c1">//= require_tree .</span>
+</pre></div>
+</div></div>
+
+
+<p>Здесь используется библиотека Sprockets для включения Bootstrap JavaScript, которая в свою очередь доступна благодаря гему <tt>bootstrap-sass</tt> из <a class="ref" href="filling-in-the-layout#sec-custom_css">Раздела&nbsp;5.1.2</a>.</p>
+
+<p>С кодом в <a class="ref" href="sign-in-sign-out#code:layout_signin_signout_links">Листинге&nbsp;8.24</a> все тесты должны пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
+</pre></div>
+</div>
+
+
+<p>К сожалению, если вы на самом деле проверите приложение в браузере, вы увидите, что оно пока не работает. Это связано с тем, что функциональность &ldquo;remember me&rdquo; требует наличия у пользователя remember token, но у текущего пользователя его нет: мы создали первого пользователя еще в <a class="ref" href="sign-up#sec-the_first_signup">Разделе&nbsp;7.4.3</a> - задолго до того как был реализован обратный вызов который устанавливает remember token. Для того чтобы исправить это, нам необходимо сохранить каждого пользователя чтобы вызвать коллбэк <code>before_save</code> определенный в <a class="ref" href="sign-in-sign-out#code:before_save_create_remember_token">Разделе&nbsp;8.18</a>, который заодно создаст remember token:</p>
+
+<div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
+<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">remember_token</span>
+<span class="go">=&gt; nil</span>
+<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">all</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span> <span class="n">user</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="ss">validate:</span> <span class="kp">false</span><span class="p">)</span> <span class="p">}</span>
+<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">first</span><span class="o">.</span><span class="n">remember_token</span>
+<span class="go">=&gt; &quot;Im9P0kWtZvD0RdyiK9UHtg&quot;</span>
+</pre></div>
+</div>
+
+
+<p>Здесь мы перебрали всех пользователей на случай если вы их насоздавали играя с формой регистрации. Обратите внимание на опцию, которую мы передали методу <code>save</code>; на момент написания, <code>save</code> сам по себе не смог бы отработать до тех пор, пока мы не прописали бы пароль и его подтверждение. Однако, на реальном сайте мы никогда не будем знать паролей, но мы по-прежнему хотели бы иметь возможность сохранять пользователей. Решение заключается в передаче <code>validate: false</code> для того чтобы сообщить Active Record о необходимости пропустить валидации (<a href="http://api.rubyonrails.org/v3.2.0/classes/ActiveRecord/Persistence.html#method-i-save">Rails API <tt>save</tt></a>).</p>
+
+<p>С этими изменениями, вошедший пользователь теперь видит новые ссылки и выпадающее меню определенное <a class="ref" href="sign-in-sign-out#code:layout_signin_signout_links">Листингом&nbsp;8.24</a>, as shown in <a class="ref" href="sign-in-sign-out#fig-profile_with_signout_link">Рис.&nbsp;8.9</a>.</p>
+
+<div class="label" id="fig-profile_with_signout_link"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_with_signout_link_bootstrap.png" alt="profile_with_signout_link_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 8.9: </span><span class="description">Вошедший пользователь с новыми ссылками и выпадающим меню.&nbsp;<a href="http://railstutorial.org/images/figures/profile_with_signout_link_bootstrap-full.png">(полный размер)</a></span></div></div>
+
+
+<p>В этой точке вам следует проверить, что вы можете войти, закрыть браузер и быть по-прежнему вошедшими при повторном посещении примера приложения. Если хотите, вы можете даже проверить куки браузера для того чтобы посмотреть на результат непосредственно (<a class="ref" href="sign-in-sign-out#fig-cookie_in_browser">Рис.&nbsp;8.10</a>).</p>
+
+<div class="label" id="fig-cookie_in_browser"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/cookie_in_browser.png" alt="cookie_in_browser" /></span></div><div class="caption"><span class="header">Рис. 8.10: </span><span class="description">Куки remember token в локальном браузере.&nbsp;<a href="http://railstutorial.org/images/figures/cookie_in_browser-full.png">(полный размер)</a></span></div></div>
+
+
+
+
+<div class="label" id="sec-signin_upon_signup"></div>
+
+
+<h3><a id="sec-8_2_5" href="sign-in-sign-out#sec-signin_upon_signup" class="heading"><span class="number">8.2.5</span> Вход после регистрации</a></h3>
+
+
+<p>В принципе, хотя мы закончили с аутентификацией, вновь зарегистрированные пользователи могут оказаться сбитыми с толку, так как они не вошли в систему по умолчанию. Реализация этого - последний штрих который мы добавим прежде чем позволим пользователям входить на наш сайт. Мы начнем с добавления строки к тестам аутентификации (<a class="ref" href="sign-in-sign-out#code:sign_up_sign_in">Листинг&nbsp;8.26</a>). Это включает &ldquo;after saving the user&rdquo; <code>describe</code> блок из <a class="ref" href="sign-up#code:after_save_tests">Листинга&nbsp;7.32</a> (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>), который вы должны добавить в тест, если вы не сделали этого в соответствующем упражнении.</p>
+
+<div class="label" id="code:sign_up_sign_in"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.26.</span> <span class="description">Тестирование того, что вновь зарегистрированные пользователи также являются вошедшими. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="n">describe</span> <span class="s2">&quot;with valid information&quot;</span> <span class="k">do</span>
+      <span class="o">.</span>
+      <span class="o">.</span>
+      <span class="o">.</span>
+      <span class="n">describe</span> <span class="s2">&quot;after saving the user&quot;</span> <span class="k">do</span>
+        <span class="o">.</span>
+        <span class="o">.</span>
+        <span class="o">.</span>
+        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Sign out&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Здесь мы протестировали появление ссылки на выход для того чтобы убедиться что пользователь успешно вошел после регистрации.</p>
+
+<p>С методом <code>sign_in</code> из <a class="ref" href="sign-in-sign-out#sec-signin_success">Раздела&nbsp;8.2</a>, получение прохождения этого теста фактически впустив пользователя в систему легко: просто добавим <code>sign_in @user</code> сразу после сохранения пользователя в базе данных (<a class="ref" href="sign-in-sign-out#code:signin_upon_signup">Листинг&nbsp;8.27</a>).</p>
+
+<div class="label" id="code:signin_upon_signup"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.27.</span> <span class="description">Вход пользователя сразу после регистрации. <br /> <code>app/controllers/users_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
+    <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
+      <span class="n">sign_in</span> <span class="vi">@user</span>
+      <span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the Sample App!&quot;</span>
+      <span class="n">redirect_to</span> <span class="vi">@user</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+
+
+<div class="label" id="sec-signing_out"></div>
+
+
+<h3><a id="sec-8_2_6" href="sign-in-sign-out#sec-signing_out" class="heading"><span class="number">8.2.6</span> Выход</a></h3>
+
+
+<p>Как обсуждалось в <a class="ref" href="sign-in-sign-out#sec-signin_failure">Разделе&nbsp;8.1</a>, наша аутентификационная модель предполагает сохранение пользователей вошедшими до тех пор, пока они явно не выйдут из системы. В этом разделе мы добавим эту, необходимую нам и пользователям, возможность выхода.</p>
+
+<p>До сих пор действия контроллера  Sessions следовали RESTful конвенции, используя <code>new</code> для страницы входа и <code>create</code> для его завершения. Мы продолжим эту тему используя действие <code>destroy</code> для удаления сессий, т.е., для выхода. Для того чтобы протестировать это, мы кликнем по ссылке &ldquo;Sign out&rdquo; а затем попробуем найти вновь появившуюся ссылку на вход (<a class="ref" href="sign-in-sign-out#code:signout_test">Листинг&nbsp;8.28</a>).</p>
+
+<div class="label" id="code:signout_test"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.28.</span> <span class="description">Тест выхода пользователя. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;signin&quot;</span> <span class="k">do</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="n">describe</span> <span class="s2">&quot;with valid information&quot;</span> <span class="k">do</span>
+      <span class="o">.</span>
+      <span class="o">.</span>
+      <span class="o">.</span>
+      <span class="n">describe</span> <span class="s2">&quot;followed by signout&quot;</span> <span class="k">do</span>
+        <span class="n">before</span> <span class="p">{</span> <span class="n">click_link</span> <span class="s2">&quot;Sign out&quot;</span> <span class="p">}</span>
+        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Как и со входом пользователя, основанном на функции <code>sign_in</code>, выход пользователя просто перекладывает работу на функцию <code>sign_out</code> (<a class="ref" href="sign-in-sign-out#code:destroy_session">Листинг&nbsp;8.29</a>).</p>
+
+<div class="label" id="code:destroy_session"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.29.</span> <span class="description">Уничтожение сессии (выход пользователя). <br /> <code>app/controllers/sessions_controller.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">SessionsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">destroy</span>
+    <span class="n">sign_out</span>
+    <span class="n">redirect_to</span> <span class="n">root_url</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Как и другие элементы аутентификации, мы поместим <code>sign_out</code> в модуль Sessions хелпера. Реализация проста: мы устанавливаем текущего пользователя равным <code>nil</code> и с помощью метода <code>delete</code> примененного на куки удаляем remember token из сессии (<a class="ref" href="sign-in-sign-out#code:sign_out_method">Листинг&nbsp;8.30</a>). (Установка текущего пользователя равным <code>nil</code> в настоящий момент не является строгой необходимостью из-за  незамедлительного редиректа в действии <code>destroy</code>, но все же это хорошая идея - на случай если мы когда-либо захотим использовать <code>sign_out</code> без редиректа.)</p>
+
+<div class="label" id="code:sign_out_method"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.30.</span> <span class="description">Метод <code>sign_out</code> в модуле Sessions хелпер. <br /> <code>app/helpers/sessions_helper.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">SessionsHelper</span>
+
+  <span class="k">def</span> <span class="nf">sign_in</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="n">cookies</span><span class="o">.</span><span class="n">permanent</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">remember_token</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="n">user</span>
+  <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">sign_out</span>
+    <span class="nb">self</span><span class="o">.</span><span class="n">current_user</span> <span class="o">=</span> <span class="kp">nil</span>
+    <span class="n">cookies</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="ss">:remember_token</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>Это завершает триумвират регистрация/вход/выход и набор тестов должен пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
+</pre></div>
+</div>
+
+
+<p>Стоит отметить, что наш набор тестов покрывает большую часть механизма аутентификации, но не все же не полностью. Например, мы не тестируем то как долго живет &ldquo;remember me&rdquo; куки и даже не тестируем устанавливается ли она вообще. Это возможно сделать, но практика показывает, что  непосредственное тестирование значения куки является хрупким и имеет тенденцию зависеть от деталей реализации которые иногда меняются от одного релиза Rails к другому. Результатом служат рухнувшие тесты вполне себе рабочего кода. Фокусируясь не функционале верхнего уровня - проверяя что пользователи могут войти, оставаться вошедшими при переходе от страницы к странице и могут выйти - мы тестируем ядро кода приложения не заморачиваясь менее важными деталями.</p>
+
+<div class="label" id="sec-cucumber"></div>
+
+
+<h2><a id="sec-8_3" href="sign-in-sign-out#sec-cucumber" class="heading"><span class="number">8.3</span> Введение в <a href="http://www.babla.ru/английский-русский/cucumber">Cucumber</a> (опционально)</a></h2>
+
+
+<p>Закончив основу системы аутентификации примера приложения, мы собираемся воспользоваться подвернувшейся возможностью для того чтобы показать как написать тесты входа с помощью <a href="http://cukes.info">Cucumber</a> - популярного инструмента для разработки через поведение, который пользуется значительной популярностью в сообществе Ruby. Этот раздел необязателен и может быть пропущен без потери целостности повествования.</p>
+
+<p>Cucumber позволяет определять текстовые <em>истории</em> описывающие поведение приложения. Множество Rails программистов находят Cucumber особенно полезным при работе над клиентскими проектами; поскольку они могут быть прочитаны даже технически не подкованными пользователями, тесты на Cucumber могут быть прочитаны (а иногда даже написаны) клиентом. Конечно же, применение тестового фреймворка, который не является чистым Ruby, имеет и оборотную сторону, и я считаю что текстовые истории зачастую могут быть излишне многословными. Тем не менее, Cucumber занял прочные позиции в Ruby-инструментарии тестирования и мне особенно нравится его акцент на поведении верхнего уровня, а не на деталях реализации.</p>
+
+<p>Поскольку акценты в этой книге смещены в сторону RSpec и Capybara, последующая презентация совершенно не претендует на полноту и исчерпывающее раскрытие темы. Ее цель - просто дать вам возможность ощутить вкус Cucumber-а (несомненно свежий и сочный) &mdash; если он поразит ваше воображение, существуют целые книги на эту тему готовые удовлетворить ваш аппетит. (Я особенно рекомендую <a href="http://www.amazon.com/gp/product/1934356379"><em>The RSpec Book</em></a> (David Chelimsky) и <a href="http://www.amazon.com/gp/product/1935182277"><em>Rails 3 in Action</em></a> (Ryan Bigg и Yehuda Katz), и <a href="http://www.amazon.com/gp/product/1934356808"><em>The Cucumber Book</em></a> (Matt Wynne и Aslak Helles&oslash;y).)</p>
+
+<div class="label" id="sec-installation_and_setup"></div>
+
+
+<h3><a id="sec-8_3_1" href="sign-in-sign-out#sec-installation_and_setup" class="heading"><span class="number">8.3.1</span> Установка и настройка</a></h3>
+
+
+<p>Для того чтобы установить Cucumber, во-первых, добавьте гем <tt>cucumber-rails</tt> и служебный гем <tt>database_cleaner</tt> в группу <code>:test</code> в <code>Gemfile</code> (<a class="ref" href="sign-in-sign-out#code:cucumber_rails">Листинг&nbsp;8.31</a>).</p>
+
+<div class="label" id="code:cucumber_rails"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.31.</span> <span class="description">Добавление гема <tt>cucumber-rails</tt> в <code>Gemfile.</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">gem</span> <span class="s1">&#39;cucumber-rails&#39;</span><span class="p">,</span> <span class="s1">&#39;1.2.1&#39;</span><span class="p">,</span> <span class="ss">:require</span> <span class="o">=&gt;</span> <span class="kp">false</span>
+  <span class="n">gem</span> <span class="s1">&#39;database_cleaner&#39;</span><span class="p">,</span> <span class="s1">&#39;0.7.0&#39;</span>
+<span class="k">end</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+</pre></div>
+</div></div>
+
+
+<p>Затем установите как обычно:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle install
+</pre></div>
+</div>
+
+
+<p>Для того чтобы настроить приложение для использования Cucumber, мы затем генерируем несколько необходимых, поддерживающих его работу файлов и директорий:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate cucumber:install
+</pre></div>
+</div>
+
+
+<p>Это создает директорию <code>features/</code> где будут жить файлы связанные с Cucumber.</p>
+
+<div class="label" id="sec-features_and_steps"></div>
+
+
+<h3><a id="sec-8_3_2" href="sign-in-sign-out#sec-features_and_steps" class="heading"><span class="number">8.3.2</span> Фичи и шаги</a></h3>
+
+
+<p>Огурцовые фичи это описания ожидаемого поведения с помощью plain-text языка называемого <a href="https://github.com/cucumber/gherkin">Gherkin</a>. Gherkin тесты читаются во многом как хорошо написанные примеры RSpec, но, поскольку они написаны простым текстом, они более доступны для тех, кому комфортнее читать английский, а не код Руби.</p>
+
+<p>Наши Огурцовые фичи будут реализовывать небольшое количество примеров входа в <a class="ref" href="sign-in-sign-out#code:initial_failing_signin_test">Листинге&nbsp;8.5</a> и <a class="ref" href="sign-in-sign-out#code:signin_success_tests">Листинге&nbsp;8.6</a>. Для того чтобы начать, мы создадим файл <code>signing_in.feature</code> в директории <code>features/</code>.</p>
+
+<p>Огурцовые фичи начинаются с короткого описания функционала:</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Signing in</span>
+</pre></div>
+</div>
+
+
+<p>Затем они добавляют индивидуальные <em>сценарии</em>. Например, для того, чтобы протестировать провальный вход, мы можем написать следующий сценарий:</p>
+
+<div class="code"><div class="highlight"><pre><span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Unsuccessful signin</span>
+<span class="k">    Given </span><span class="nf">a user visits the signin page</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">he submits invalid signin information</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">he should see an error message</span>
+</pre></div>
+</div>
+
+
+<p>Аналогично, для того, чтобы протестировать успешный вход, мы можем добавить следующее:</p>
+
+<div class="code"><div class="highlight"><pre><span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Successful signin</span>
+<span class="k">    Given </span><span class="nf">a user visits the signin page</span>
+<span class="nf">      </span><span class="k">And </span><span class="nf">the user has an account</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">the user submits valid signin information</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">he should see his profile page</span>
+<span class="nf">      </span><span class="k">And </span><span class="nf">he should see a signout link</span>
+</pre></div>
+</div>
+
+
+<p>Собрав все это вместе мы приходим к файлу Огурцовой фичи показанному в <a class="ref" href="sign-in-sign-out#code:signin_features">Листинге&nbsp;8.32</a>.</p>
+
+<div class="label" id="code:signin_features"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.32.</span> <span class="description">Огурцовые фичи для тестирования входа. <br /> <code>features/signing_in.feature</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="k">Feature:</span><span class="nf"> Signing in</span>
+<span class="nf">  </span>
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Unsuccessful signin</span>
+<span class="k">    Given </span><span class="nf">a user visits the signin page</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">he submits invalid signin information</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">he should see an error message</span>
+<span class="nf">  </span>
+<span class="nf">  </span><span class="k">Scenario:</span><span class="nf"> Successful signin</span>
+<span class="k">    Given </span><span class="nf">a user visits the signin page</span>
+<span class="nf">      </span><span class="k">And </span><span class="nf">the user has an account</span>
+<span class="nf">    </span><span class="k">When </span><span class="nf">the user submits valid signin information</span>
+<span class="nf">    </span><span class="k">Then </span><span class="nf">he should see his profile page</span>
+<span class="nf">      </span><span class="k">And </span><span class="nf">he should see a signout link</span>
+</pre></div>
+</div></div>
+
+
+<p>Для запуска фич мы используем исполняемую команду <code>cucumber</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>cucumber features/
+</pre></div>
+</div>
+
+
+<p>Сравните это с</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
+</pre></div>
+</div>
+
+
+<p>В данном контексте стоит отметить, что, как и RSpec, Cucumber может быть вызван с помощью Rake-задачи:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake cucumber
+</pre></div>
+</div>
+
+
+<p>(По непонятным для меня причинам, это иногда пишут как <code>rake cucumber:ok</code>.)</p>
+
+<p>Все что мы пока сделали, это лишь написали немного простого текста, так что не думаю что для вас стало сюрпризом что Огурцовые сценарии пока не проходят. Для того чтобы получить зеленый набор тестов, нам необходима добавить файл <em>step</em>, который свяжет строки простого текста с Руби-кодом. Файл отправляется в директорию <code>features/step_definitions</code>; мы назовем его <code>authentication_steps.rb</code>.</p>
+
+<p>Строки <code>Feature</code> и <code>Scenario</code> нужны в основном для документации, но каждой последующей строке нужен соответствующий Ruby. Например, строка</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">Given </span><span class="nf">a user visits the signin page</span>
+</pre></div>
+</div>
+
+
+<p>в файле фич будет обработана соответствующим определением шага</p>
+
+<div class="code"><div class="highlight"><pre><span class="no">Given</span> <span class="sr">/^a user visits the signin page$/</span> <span class="k">do</span>
+  <span class="n">visit</span> <span class="n">signin_path</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>В фиче, <code>Given</code> это просто строка, но в файле с шагами <code>Given</code> является <em>методом</em> который принимает регулярное выражение и блок. Регулярное выражение соответствует тексту строки в сценарии, а содержимое блока является чистым Руби кодом, необходимым для реализации шага. В данном случае, &ldquo;a user visits the signin page&rdquo; реализуется посредством</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">visit</span> <span class="n">signin_path</span>
+</pre></div>
+</div>
+
+
+<p>Если это выглядит знакомым, все правильно: это просто Capybara, которая включена по умолчанию в файлы с Огурцовыми шагами. Следующие две строки тоже должны выглядеть знакомо; шаги сценария</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">When </span><span class="nf">he submits invalid signin information</span>
+<span class="k">Then </span><span class="nf">he should see an error message</span>
+</pre></div>
+</div>
+
+
+<p>в файле фич обрабатываются следующими шагами:</p>
+
+<div class="code"><div class="highlight"><pre><span class="no">When</span> <span class="sr">/^he submits invalid signin information$/</span> <span class="k">do</span>
+  <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+<span class="k">end</span>
+
+<span class="no">Then</span> <span class="sr">/^he should see an error message$/</span> <span class="k">do</span>
+  <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Первый шаг также использует Capybara, при этом второй использует объект Capybara <code>page</code> вместе с RSpec. Очевидно, вся работа с тестами, которую мы проделали с RSpec и Capybara также полезна с Cucumber.</p>
+
+<p>Остальные шаги обрабатываются аналогично. Конечный файл определения шагов преставлен в <a class="ref" href="sign-in-sign-out#code:authentication_steps">Листинге&nbsp;8.33</a>. Попробуйте добавлять шаги по одному, запуская</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>cucumber features/
+</pre></div>
+</div>
+
+
+<p>каждый раз до тех пор пока все тесты не пройдут.</p>
+
+<div class="label" id="code:authentication_steps"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.33.</span> <span class="description">Завершенные шаги, необходимые для прохождения фич входа. <br /> <code>features/step_definitions/authentication_steps.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="no">Given</span> <span class="sr">/^a user visits the signin page$/</span> <span class="k">do</span>
+  <span class="n">visit</span> <span class="n">signin_path</span>
+<span class="k">end</span>
+
+<span class="no">When</span> <span class="sr">/^he submits invalid signin information$/</span> <span class="k">do</span>
+  <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+<span class="k">end</span>
+
+<span class="no">Then</span> <span class="sr">/^he should see an error message$/</span> <span class="k">do</span>
+  <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="no">Given</span> <span class="sr">/^the user has an account$/</span> <span class="k">do</span>
+  <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Example User&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;user@example.com&quot;</span><span class="p">,</span>
+                      <span class="ss">password:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span> <span class="ss">password_confirmation:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="no">When</span> <span class="sr">/^the user submits valid signin information$/</span> <span class="k">do</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span>    <span class="ss">with:</span> <span class="vi">@user</span><span class="o">.</span><span class="n">email</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="ss">with:</span> <span class="vi">@user</span><span class="o">.</span><span class="n">password</span>
+  <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+<span class="k">end</span>
+
+<span class="no">Then</span> <span class="sr">/^he should see his profile page$/</span> <span class="k">do</span>
+  <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+<span class="k">end</span>
+
+<span class="no">Then</span> <span class="sr">/^he should see a signout link$/</span> <span class="k">do</span>
+  <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="s1">&#39;Sign out&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">signout_path</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>С кодом в <a class="ref" href="sign-in-sign-out#code:authentication_steps">Листинге&nbsp;8.33</a>, Огурцовые тесты должны пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>cucumber features/
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-rspec_custom_matchers"></div>
+
+
+<h3><a id="sec-8_3_3" href="sign-in-sign-out#sec-rspec_custom_matchers" class="heading"><span class="number">8.3.3</span> Контрапункт: кастомные проверки RSpec</a></h3>
+
+
+<p>Написав несколько простых Огурцовых сценариев, стоит сравнить результат с эквивалентным примером на RSpec. Для начала, взглянем на Огурцовую фичу в <a class="ref" href="sign-in-sign-out#code:signin_features">Листинг&nbsp;8.32</a> и соответствующее определение шагов в <a class="ref" href="sign-in-sign-out#code:authentication_steps">Листинге&nbsp;8.33</a>. Затем взглянем на RSpec request specs (интеграционные тесты):</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
+
+  <span class="n">subject</span> <span class="p">{</span> <span class="n">page</span> <span class="p">}</span>
+
+  <span class="n">describe</span> <span class="s2">&quot;signin&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signin_path</span> <span class="p">}</span>
+
+    <span class="n">describe</span> <span class="s2">&quot;with invalid information&quot;</span> <span class="k">do</span>
+      <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span> <span class="p">}</span>
+
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+
+    <span class="n">describe</span> <span class="s2">&quot;with valid information&quot;</span> <span class="k">do</span>
+      <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">before</span> <span class="k">do</span>
+        <span class="n">fill_in</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span>    <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span><span class="o">.</span><span class="n">upcase</span>
+        <span class="n">fill_in</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">password</span>
+        <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+      <span class="k">end</span>
+
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="s1">&#39;Sign out&#39;</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">signout_path</span><span class="p">)</span> <span class="p">}</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Вы можете видеть, что дело может быть сделано как с помощью Огурца, так и с помощью интеграционных тестов. Огурцовые фичи легкочитаемы, но они полностью отделены от кода который их реализует, а это палка о двух концах. Я считаю что Огурец легок в чтении, но сложен в написании, в то время как интеграционные тесты (для программистов) немного более сложны в чтении и <em>намного</em> более просты в написании.</p>
+
+<p>Один из замечательных эффектов Огурцового разделения является то, что он работает на более высоком уровне абстракции. Например, мы пишем</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">Then </span><span class="nf">he should see an error message</span>
+</pre></div>
+</div>
+
+
+<p>для того, чтобы выразить ожидание увидеть сообщение об ошибке, и</p>
+
+<div class="code"><div class="highlight"><pre><span class="no">Then</span> <span class="sr">/^he should see an error message$/</span> <span class="k">do</span>
+  <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>для того чтобы реализовать тест. Что особенно удобно в этом, так это то, что только второй элемент (шаг) зависит от реализации, таким образом, если мы изменим, например, класс CSS используемый для сообщений об ошибках, файл фич останется неизменным.</p>
+
+<p>В этом случае можно запечалиться переписывая</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Invalid&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>в куче мест, в то время как вы на самом деле хотели лишь указать на то, что на странице должно присутствовать сообщение об ошибке. Эта практика тесно связывает тест с реализацией и мы должны были бы изменить это повсеместно при изменении реализации. В контексте чистого RSpec для этого есть решение, которое заключается в использовании <em>кастомных проверок</em>, позволяющих нам писать вместо этого следующее:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">should</span> <span class="n">have_error_message</span><span class="p">(</span><span class="s1">&#39;Invalid&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>Мы можем определить такие проверки в том же вспомогательном файле, в который мы поместили тестовый хелпер <code>full_title</code> в <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Разделе&nbsp;5.3.4</a>. Сам код выглядит примерно следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="ss">RSpec::Matchers</span><span class="o">.</span><span class="n">define</span> <span class="ss">:have_error_message</span> <span class="k">do</span> <span class="o">|</span><span class="n">message</span><span class="o">|</span>
+  <span class="n">match</span> <span class="k">do</span> <span class="o">|</span><span class="n">page</span><span class="o">|</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">message</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Мы можем также определить вспомогательные функции для общепринятых операций:</p>
+
+<div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">valid_signin</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span>    <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">password</span>
+  <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+<span class="k">end</span>
+</pre></div>
+</div>
+
+
+<p>Получившийся в результате вспомогательный код показан в <a class="ref" href="sign-in-sign-out#code:have_error_message">Листинге&nbsp;8.34</a> (который включает в себя результаты <a class="ref" href="filling-in-the-layout#code:full_title_helper_tests">Листинга&nbsp;5.37</a> и <a class="ref" href="filling-in-the-layout#code:rspec_utilities_simplified">Листинга&nbsp;5.38</a> из <a class="ref" href="filling-in-the-layout#sec-layout_exercises">Раздела&nbsp;5.6</a>). Я нахожу этот подход более гибким, нежели Огурцовые определения шагов, в особенности когда проверки или помощники долженствования натурально принимают аргумент, такой как <code>valid_signin(user)</code>. Определения шагов может повторить эту функциональность с помощью проверок регулярных выражений, но я считаю такой подход гораздо более громоздким (# в оригинале - (cu)cumbersome).</p>
+
+<div class="label" id="code:have_error_message"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 8.34.</span> <span class="description">Добавление вспомогательного метода и кастомной RSpec проверки. <br /> <code>spec/support/utilities.rb</code></span>
+</div>
+<div class="code"><div class="highlight"><pre><span class="kp">include</span> <span class="no">ApplicationHelper</span>
+
+<span class="k">def</span> <span class="nf">valid_signin</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Email&quot;</span><span class="p">,</span>    <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span>
+  <span class="n">fill_in</span> <span class="s2">&quot;Password&quot;</span><span class="p">,</span> <span class="ss">with:</span> <span class="n">user</span><span class="o">.</span><span class="n">password</span>
+  <span class="n">click_button</span> <span class="s2">&quot;Sign in&quot;</span>
+<span class="k">end</span>
+
+<span class="ss">RSpec::Matchers</span><span class="o">.</span><span class="n">define</span> <span class="ss">:have_error_message</span> <span class="k">do</span> <span class="o">|</span><span class="n">message</span><span class="o">|</span>
+  <span class="n">match</span> <span class="k">do</span> <span class="o">|</span><span class="n">page</span><span class="o">|</span>
+    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-error&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">message</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>С кодом из <a class="ref" href="sign-in-sign-out#code:have_error_message">Листинга&nbsp;8.34</a>, мы можем написать</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_error_message</span><span class="p">(</span><span class="s1">&#39;Invalid&#39;</span><span class="p">)</span> <span class="p">}</span>
+</pre></div>
+</div>
+
+
+<p>и</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;with valid information&quot;</span> <span class="k">do</span>
+  <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">before</span> <span class="p">{</span> <span class="n">valid_signin</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">}</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+</pre></div>
+</div>
+
+
+<p>В наших тестах есть множество примеров тесной связи между тестами и реализацией сайта. Прохождение по текущему набору тестов и разрыв связей между тестами и деталями реализации с помощью создания кастомных проверок и методов остается в качестве упражнения (<a class="ref" href="sign-in-sign-out#sec-sign_in_out_exercises">Раздел&nbsp;8.5</a>).</p>
+
+<h2><a id="sec-8_4" href="sign-in-sign-out#sec-8_4" class="heading"><span class="number">8.4</span> Заключение</a></h2>
+
+
+<p>Мы очень многое узнали в этой главе, трансформируя наше многообещающее, но не сформированное приложение в сайт, обладающий полным набором функций для регистрации и входа/выхода пользователей. Все что нам необходимо для завершения аутентификационной функциональности, это  ограничить доступ к страницам по статусу и идентификации пользователей. Мы выполним эту задачу, по пути дав пользователям возможность редактировать их информацию, а также дав администраторам возможность удалять пользователей из системы.</p>
+
+<p>Прежде чем двигаться далее, объедините изменения с мастер веткой:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> git add .
+<span class="gp">$</span> git commit -m <span class="s2">&quot;Finish sign in&quot;</span>
+<span class="gp">$</span> git checkout master
+<span class="gp">$</span> git merge sign-in-out
+</pre></div>
+</div>
+
+
+<p>Затем отправьте изменения на удаленный репозиторий GitHub и продакшен сервер Heroku:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> git push
+<span class="gp">$</span> git push heroku
+<span class="gp">$</span> heroku run rake db:migrate
+</pre></div>
+</div>
+
+
+<p>Если вы насоздавали пользователей не продакшн сервере, я рекомендую следовать шагам в <a class="ref" href="sign-in-sign-out#sec-changing_the_layout_links">Разделе&nbsp;8.2.4</a> для того чтобы дать кождому пользователю валидный remember token. С той лишь разницей, что действия следует выполнять с помощью консоли Heroku вместо локальной:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> heroku run console
+<span class="gp">&gt;</span>&gt; User.all.each <span class="o">{</span> |user| user.save<span class="o">(</span>validate: <span class="nb">false</span><span class="o">)</span> <span class="o">}</span>
+</pre></div>
+</div>
+
+
+<div class="label" id="sec-sign_in_out_exercises"></div>
+
+
+<h2><a id="sec-8_5" href="sign-in-sign-out#sec-sign_in_out_exercises" class="heading"><span class="number">8.5</span> Упражнения</a></h2>
+
+
+
+
+<ol>
+
+<li>Реорганизуйте форму входа для использования <code>form_tag</code> вместо <code>form_for</code>. Убедитесь что набор тестов по-прежнему проходит. <em>Подсказка</em>: см. <a href="http://railscasts.com/episodes/270-authentication-in-rails-3-1">RailsCast on authentication in Rails&nbsp;3.1</a>, особенно обратите внимание на изменения в структуре хэша <code>params</code>. </li>
+
+
+<li>Следуя примеру в <a class="ref" href="sign-in-sign-out#sec-rspec_custom_matchers">Разделе&nbsp;8.3.3</a>, пройдитесь по интеграционным тестам пользователя и аутентификации (т.e., по файлам в директории <code>spec/requests</code>) и определите служебные функции в <code>spec/support/utilities.rb</code> для отделения тестов от реализации. <em>Факультативно:</em> Организуйте служебный код в отдельные файлы и модули, и заставьте все работать, правильно включив модули в файле spec_helper.rb.</li>
+
+</ol>
+
+
+
+
+<div class="navigation">  <a class="prev_page" href="sign-up#top">
+    &laquo;&nbsp;<span class="number">Глава 7</span> Регистрация
+  </a>
+  <a class="next_page" href="updating-showing-and-deleting-users#top">
+    <span class="number">Глава 9</span> Обновление, просмотр и удаление пользователей&nbsp;&raquo;
+  </a>
+</div><div class="footnotes">
+<ol>
+<li id="fn-8_1">Другой распространенной моделью является завершение сессии после истечения определенного количества времени. Это особенно уместно на сайтах, содержащих конфиденциальную информацию, такую как банковские и финансово-торговые операции.&nbsp;<a class="arrow" href="#fnref-8_1">&uarr;</a></li>
+<li id="fn-8_2">Изображение взято с <a href="http://www.flickr.com/photos/hermanusbackpackers/3343254977/">http://www.flickr.com/photos/hermanusbackpackers/3343254977/</a>.&nbsp;<a class="arrow" href="#fnref-8_2">&uarr;</a></li>
+<li id="fn-8_3">Этот выбор опирается на <a href="http://railscasts.com/episodes/274-remember-me-reset-password">RailsCast on remember me</a>.&nbsp;<a class="arrow" href="#fnref-8_3">&uarr;</a></li>
+<li id="fn-8_4">Более подробно о видах коллбэков, поддерживаемых библиотекой Active Record см. в <a href="http://guides.rubyonrails.org/active_record_validations_callbacks.html#callbacks-overview">обсуждении коллбэков в Rails Guides</a> (# перевод см. на <a href="http://rusrails.ru/active-record-validations-and-callbacks/callbacks">rusrails.ru</a>).&nbsp;<a class="arrow" href="#fnref-8_4">&uarr;</a></li>
+<li id="fn-8_5">На самом деле, эти двое абсолютно эквивалентны; <code>attr_accessor</code> это просто удобный способ создавать такие getter/setter методы автоматически.&nbsp;<a class="arrow" href="#fnref-8_5">&uarr;</a></li>
+<li id="fn-8_6">Как правило, это означает присвоение переменных, которые изначально <code>nil</code>, но обратите внимание, что ложные (<code>false</code>) значения также будут переписаны оператором <code>||=</code>.&nbsp;<a class="arrow" href="#fnref-8_6">&uarr;</a></li>
+<li id="fn-8_7">Это является примером <em>мемоизации</em>, которая обсуждалась ранее в <a class="ref" href="modeling-users#sidebar-let">Блоке&nbsp;6.3</a>.&nbsp;<a class="arrow" href="#fnref-8_7">&uarr;</a></li>
+<li id="fn-8_8">Веб браузеры на самом деле не могут выдавать запрос <tt>DELETE</tt>; Rails подделывает его с помошью JavaScript.&nbsp;<a class="arrow" href="#fnref-8_8">&uarr;</a></li>
+</ol>
+</div>
