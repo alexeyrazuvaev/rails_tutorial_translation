@@ -23,3 +23,13 @@ body.book #sidebar #navtool .section .switcher .switcher_link.title a {
 p.align-right {
   text-align: right;
 }
+
+/*hack for this bug: http://support.mozilla.org/en-US/questions/882572*/
+@-moz-document url-prefix() {
+  body.book #content #book, body.book #content #book_bottom, body.book #content #book_top {
+    background: white;
+  }
+  body.book #content #book_bottom {
+    margin-bottom: 20px;
+  }
+}

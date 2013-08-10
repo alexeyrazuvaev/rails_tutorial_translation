@@ -3,8 +3,8 @@
   </div>
     <div id="book">
       <% version = params[:version] ? '_3_0' : '' %>
-      <%= render "layouts/contents#{version}" %>
-      <%= render "layouts/preamble#{version}" unless params[:id] == 'preface' %>
+      <%= render "shared_content/contents#{version}" %>
+      <%= render "shared_content/preamble#{version}" unless params[:id] == 'preface' %>
       <%= raw @content %>
     </div>
   <div id="book_bottom">
