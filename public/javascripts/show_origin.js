@@ -1,38 +1,54 @@
 $(document).ready(function(){
   if (document.location.pathname =='/help') { return false; }
 
-  $("a").click(function (event) {
+  $('a').click(function (event) {
     event.stopPropagation();
   });
 
-  $("p").toggle(
-    function() {
-      $("p").css("background-color","");
-      $('div.origin').remove();
+  $('p').click(function() {
 
-      var pathname = window.location.pathname,
-          is_4_0   = pathname.split('/')[2] === '4_0',
-          index    = $("p").index(this),
-          version, chapter, p_for_load;
+    if ($(this).hasClass('clicked')) {
+      clear_all_clicked();
+      return false;
+    };
 
-      if (is_4_0) {
-        chapter    = pathname.split('/')[3] || 'beginning';
-        p_for_load = '/origin/4_0/' + chapter + '_fragment.html p:eq(' + index + ')';
-      } else {
-        version    = window.location.search.split('=')[1] || '';
-        chapter    = pathname.split('/')[2] || 'beginning';
-        p_for_load = '/origin' + version + '/' + chapter + '_fragment.html p:eq(' + index + ')';
-      }
+    clear_all_clicked();
 
-      $(this).css("background-color","#fffacd");
-      $(this).after (function() { return ('<div class="origin"> </div>');});
-      $("div.origin").load(p_for_load);
+    var refresh  = '?cache_refresher_0',
+        pathname = window.location.pathname,
+        is_4_0   = pathname.split('/')[2] === '4_0',
+        index    = $('p').index(this),
+        version, chapter, paragraph;
 
-    },
-    function(){
-      $('div.origin').remove();
-      $(this).css("background-color","");
+    if (is_4_0) {
+      chapter   = pathname.split('/')[3] || 'beginning';
+      paragraph = p_for_load('/origin/4_0/', index);
+    } else {
+      version   = window.location.search.split('=')[1] || '';
+      chapter   = pathname.split('/')[2] || 'beginning';
+      paragraph = p_for_load('/origin' + version + '/', index);
     }
-  );
+
+    $(this).addClass('clicked');
+    $(this).after('<div class="origin"> </div>');
+    $('div.origin')
+      .hide()
+      .load(paragraph)
+      .show('fast');
+
+    // build loading path for paragraph from the given chapter with the given index
+    function p_for_load (path_to_fragment, index) {
+      var p_for_load = [
+        path_to_fragment, chapter, '_fragment.html', refresh, ' p:eq(', index, ')'
+      ].join('');
+
+      return p_for_load;
+    };
+
+    function clear_all_clicked () {
+      $('div.origin').remove();
+      $('p').removeClass('clicked');
+    };
+  });
 });
 

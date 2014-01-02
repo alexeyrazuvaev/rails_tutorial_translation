@@ -2,6 +2,10 @@ p {
   cursor: pointer;
 }
 
+p.clicked {
+  background-color: #fffacd;
+}
+
 .origin p {
   cursor: default;
 }
@@ -9,6 +13,7 @@ p {
 .origin {
   padding: 10px 10px 0 10px;
   border: 2px solid red;
+  margin-bottom: 20px;
 }
 
 body.book #sidebar #navtool .section .switcher .title {
