@@ -708,7 +708,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="label" id="sec-red"></div>
 
 
-<h4><a id="sec-3_2_2_1" href="static-pages#sec-red" class="heading">Красный</a></h4>
+<h4><a id="sec-3_2_2_1" href="static-pages#sec-red" class="heading" style="color: red;">Красный</a></h4>
 
 
 <p>Мы доберемся до Красной части цикла Красный-Зеленый написав провальный тест для страницы About. Следуя модели из <a class="ref" href="static-pages#code-help_content_spec">Листинга&nbsp;3.12</a>, вы, вероятно, можете предугадать правильный тест (<a class="ref" href="static-pages#code-about_page_content_spec">Листинг&nbsp;3.14</a>).</p>
@@ -755,7 +755,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="label" id="sec-green"></div>
 
 
-<h4><a id="sec-3_2_2_2" href="static-pages#sec-green" class="heading">Зеленый</a></h4>
+<h4><a id="sec-3_2_2_2" href="static-pages#sec-green" class="heading" style="color: green;">Зеленый</a></h4>
 
 
 <p>Вспомним из <a class="ref" href="static-pages#sec-static_pages">Раздела&nbsp;3.1</a> что в Rails мы можем генерировать статические страницы создавая действие и соответствующее ему представление с названием страницы. В нашем случае, странице About в первую очередь понадобится действие <code>about</code> в контроллере StaticPages. Имея написанный провальный тест, мы можем быть уверены в том, что получив его прохождение, мы действительно создали рабочую страницу About.</p>
@@ -908,7 +908,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 
 <p>Вы, возможно, заметили, что команда <code>rails new</code> уже создала layout файл. Мы вскоре узнаем о его назначении, но пока вам следует переименовать его прежде чем мы продолжим:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> mv app/views/layouts/application.html.erb foobar   <span class="c"># temporary change</span>
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> mv app/views/layouts/application.html.erb foobar   <span class="c"># временное изменение</span>
 </pre></div>
 </div>
 
@@ -1258,7 +1258,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="label" id="sec-layouts"></div>
 
 
-<h3><a id="sec-3_3_4" href="static-pages#sec-layouts" class="heading"><span class="number">3.3.4</span> Устранение дублирования макетами</a></h3>
+<h3><a id="sec-3_3_4" href="static-pages#sec-layouts" class="heading"><span class="number">3.3.4</span> Устранение дублирования шаблонами</a></h3>
 
 
 <p>Теперь, когда мы заменили переменную часть заголовков страниц на ERb, каждая из наших страниц выглядит примерно так:</p>
@@ -1595,7 +1595,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="label" id="sec-advanced_setup"></div>
 
 
-<h2><a id="sec-3_6" href="static-pages#sec-advanced_setup" class="heading"><span class="number">3.6</span> Продвинутая настройка</a></h2>
+<h2><a id="sec-3_6" href="static-pages#sec-advanced_setup" class="heading"><span class="number">3.6</span> Продвинутые настройки</a></h2>
 
 
 <p>Как упоминалось в <a class="ref" href="static-pages#sec-first_tests">Разделе&nbsp;3.2</a>, непосредственное  использование команды <code>rspec</code> не лишено недостатков. В этом разделе мы вначале обсудим способ устранения необходимости каждый раз набирать <code>bundle exec</code>, а затем настроим установку тестов для автоматизации запуска набора тестов с помошью Guard (<a class="ref" href="static-pages#sec-guard">Раздел&nbsp;3.6.2</a>) и, опционально,  Spork (<a class="ref" href="static-pages#sec-spork">Раздел&nbsp;3.6.3</a>). Наконец мы упомянем о способе запуска тестов непосредственно внутри Sublime Text - технике, особенно полезной в паре со  Spork.</p>
@@ -1605,7 +1605,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 <div class="label" id="sec-eliminating_bundle_exec"></div>
 
 
-<h3><a id="sec-3_6_1" href="static-pages#sec-eliminating_bundle_exec" class="heading"><span class="number">3.6.1</span> Устранение <tt>bundle exec</tt></a></h3>
+<h3><a id="sec-3_6_1" href="static-pages#sec-eliminating_bundle_exec" class="heading"><span class="number">3.6.1</span> Избавляемся от <tt>bundle exec</tt></a></h3>
 
 
 <p>Как было вкратце отмечено в <a class="ref" href="static-pages#sec-TDD">Разделе&nbsp;3.2.1</a>, зачастую необходимо предварять такие команды как  <code>rake</code> или <code>rspec</code> командой <code>bundle exec</code> для того чтобы программы запускались с набором гемов прописанных в вашем  <code>Gemfile</code>. (По техническим причинам единственным исключением является сама команда  <code>rails</code>.) Такая практика является довольно громоздкой и в этом разделе мы обсудим два способа устранения этой необходимости.</p>
@@ -1725,7 +1725,7 @@ bundler_stubs/
 <div class="label" id="sec-guard"></div>
 
 
-<h3><a id="sec-3_6_2" href="static-pages#sec-guard" class="heading"><span class="number">3.6.2</span> Автоматизированные тесты с Guard</a></h3>
+<h3><a id="sec-3_6_2" href="static-pages#sec-guard" class="heading"><span class="number">3.6.2</span> Автоматизируем тесты с Guard</a></h3>
 
 
 <p>Одно из неудобств связанных с использованием команды <code>rspec</code> это необходимость переключаться на командную строку и запускать тесты вручную. (Второе неудобство - медленный запуск набора тестов рассматривается в <a class="ref" href="static-pages#sec-spork">Разделе&nbsp;3.6.3</a>.) В этом разделе мы покажем как использовать <a href="https://github.com/guard/guard">Guard</a> для автоматизации запуска тестов. Guard отслеживает изменения в файловой системе так что, например, когда мы изменяем файл <code>static_pages_spec.rb</code> запустится только этот тест. Более того, мы можем настроить Guard таким образом, что при, скажем, изменении файла <code>home.html.erb</code> автоматически запустится  <code>static_pages_spec.rb</code>.</p>
@@ -1869,7 +1869,7 @@ bundler_stubs/
 <div class="label" id="sec-spork"></div>
 
 
-<h3><a id="sec-3_6_3" href="static-pages#sec-spork" class="heading"><span class="number">3.6.3</span> Ускорение тестов со Spork</a></h3>
+<h3><a id="sec-3_6_3" href="static-pages#sec-spork" class="heading"><span class="number">3.6.3</span> Ускоряем тесты с помощью Spork</a></h3>
 
 
 <p>При запуске <code>bundle exec rspec</code> вы могли заметить что перед началом запуска тестов проходит несколько секунд, тогда как выполнение самих тестов происходит довольно быстро. Это связано с тем, что при каждом запуске тестов RSpec должен перезагрузить все Рельсовое окружение. <a href="http://github.com/sporkrb/spork">Тестовый сервер Spork </a><sup class="footnote" id="fnref-3_13"><a href="#fn-3_13">13</a></sup> предназначен для решения этой проблемы. Spork загружает окружение <em>однократно</em>, а затем поддерживает пул процессов для запуска следующих тестов. Spork особенно полезен в комбинации с Guard (<a class="ref" href="static-pages#sec-guard">Раздел&nbsp;3.6.2</a>).</p>
@@ -2045,7 +2045,7 @@ bundler_stubs/
 <div class="label" id="sec-spork_and_guard"></div>
 
 
-<h4><a id="sec-3_6_3_1" href="static-pages#sec-spork_and_guard" class="heading">Guard with Spork</a></h4>
+<h4><a id="sec-3_6_3_1" href="static-pages#sec-spork_and_guard" class="heading">Guard и Spork</a></h4>
 
 
 <p>Спорк особенно полезен в комбинации с Guard, мы можем подружить их следующим образом:</p>
@@ -2103,7 +2103,7 @@ bundler_stubs/
 <div class="label" id="sec-tests_inside_sublime_text"></div>
 
 
-<h3><a id="sec-3_6_4" href="static-pages#sec-tests_inside_sublime_text" class="heading"><span class="number">3.6.4</span> Тесты в Sublime Text</a></h3>
+<h3><a id="sec-3_6_4" href="static-pages#sec-tests_inside_sublime_text" class="heading"><span class="number">3.6.4</span> Запускаем тесты внутри Sublime Text</a></h3>
 
 
 <p>Если вы используете Sublime Text, то у вас есть большое количество вспомогательных команд для запуска тестов непосредственно в редакторе. Для того чтобы научиться пользоваться ими, следуйте инструкциям для своей платформы на <a href="https://github.com/maltize/sublime-text-2-ruby-tests">Sublime Text 2 Ruby Tests</a>.<sup class="footnote" id="fnref-3_15"><a href="#fn-3_15">15</a></sup> На моей платформе (Macintosh OS&nbsp;X), я могу установить команды следующим образом:</p>
