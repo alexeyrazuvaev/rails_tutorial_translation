@@ -244,7 +244,7 @@ THE SOFTWARE.
 </div>
 
 
-<p>This uses the Rails helper <code>link_to</code> to create links (which we created directly with the anchor tag&nbsp;<code>a</code> in <a class="ref" href="static-pages#sec-passing_title_tests">Section&nbsp;3.3.2</a>); the first argument to <code>link_to</code> is the link text, while the second is the URI. We&rsquo;ll fill in the URIs with <em>named routes</em> in <a class="ref" href="filling-in-the-layout#sec-named_routes">Section&nbsp;5.3.3</a>, but for now we use the stub URI <code>&rsquo;#&rsquo;</code> commonly used in web design. The third argument is an options hash, in this case adding the CSS&nbsp;id <code>logo</code> to the sample app link. (The other three links have no options hash, which is fine since it&rsquo;s optional.) Rails helpers often take options hashes in this way, giving us the flexibility to add arbitrary HTML options without ever leaving Rails.</p>
+<p>This uses the Rails helper <code>link_to</code> to create links (which we created directly with the anchor tag&nbsp;<code>a</code> in <a class="ref" href="static-pages#sec-passing_title_tests">Section&nbsp;3.3.2</a>); the first argument to <code>link_to</code> is the link text, while the second is the URL. We&rsquo;ll fill in the URLs with <em>named routes</em> in <a class="ref" href="filling-in-the-layout#sec-named_routes">Section&nbsp;5.3.3</a>, but for now we use the stub URL <code>&rsquo;#&rsquo;</code> commonly used in web design. The third argument is an options hash, in this case adding the CSS&nbsp;id <code>logo</code> to the sample app link. (The other three links have no options hash, which is fine since it&rsquo;s optional.) Rails helpers often take options hashes in this way, giving us the flexibility to add arbitrary HTML options without ever leaving Rails.</p>
 
 <p>The second element inside the divs is a list of navigation links, made using the <em>unordered list</em> tag <code>ul</code>, together with the <em>list item</em> tag <code>li</code>:</p>
 
@@ -675,7 +675,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div></div>
 
 
-<p>As with the header, in the footer we&rsquo;ve used <code>link_to</code> for the internal links to the About and Contact pages and stubbed out the URIs with <code>&rsquo;#&rsquo;</code> for now. (As with <code>header</code>, the <code>footer</code> tag is new in HTML5.)</p>
+<p>As with the header, in the footer we&rsquo;ve used <code>link_to</code> for the internal links to the About and Contact pages and stubbed out the URLs with <code>&rsquo;#&rsquo;</code> for now. (As with <code>header</code>, the <code>footer</code> tag is new in HTML5.)</p>
 
 <p>We can render the footer partial in the layout by following the same pattern as the stylesheets and header partials (<a class="ref" href="filling-in-the-layout#code-layout_with_footer">Listing&nbsp;5.12</a>).</p>
 
@@ -1211,22 +1211,22 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div>
 
 
-<p>but that isn&rsquo;t the Rails Way. For one, it would be nice if the URI for the about page were /about rather than /static_pages/about; moreover, Rails conventionally uses <em>named routes</em>, which involves code like</p>
+<p>but that isn&rsquo;t the Rails Way. For one, it would be nice if the URL for the about page were /about rather than /static_pages/about; moreover, Rails conventionally uses <em>named routes</em>, which involves code like</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span> <span class="n">about_path</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>This way the code has a more transparent meaning, and it&rsquo;s also more flexible since we can change the definition of <code>about_path</code> and have the URI change everywhere <code>about_path</code> is used.</p>
+<p>This way the code has a more transparent meaning, and it&rsquo;s also more flexible since we can change the definition of <code>about_path</code> and have the URL change everywhere <code>about_path</code> is used.</p>
 
-<p>The full list of our planned links appears in <a class="ref" href="filling-in-the-layout#table-url_mapping">Table&nbsp;5.1</a>, along with their mapping to URIs and routes. We&rsquo;ll implement all but the last one by the end of this chapter. (We&rsquo;ll make the last one in <a class="ref" href="sign-in-sign-out#top">Chapter&nbsp;8</a>.)</p>
+<p>The full list of our planned links appears in <a class="ref" href="filling-in-the-layout#table-url_mapping">Table&nbsp;5.1</a>, along with their mapping to URLs and routes. We&rsquo;ll implement all but the last one by the end of this chapter. (We&rsquo;ll make the last one in <a class="ref" href="sign-in-sign-out#top">Chapter&nbsp;8</a>.)</p>
 
 <div class="label" id="table-url_mapping"></div>
 
 
 <div class="table"><div class="center">
-<table class="tabular"><tr><th class="align_left"><strong>Page</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_right"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Table 5.1: </span><span class="description">Route and URI mapping for site links.</span></div></div>
+<table class="tabular"><tr><th class="align_left"><strong>Page</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_right"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Table 5.1: </span><span class="description">Route and URL mapping for site links.</span></div></div>
 
 
 <p>Before moving on, let&rsquo;s add a Contact page (left as an exercise in <a class="ref" href="static-pages#top">Chapter&nbsp;3</a>). The test appears as in <a class="ref" href="filling-in-the-layout#code-contact_page_test">Listing&nbsp;5.16</a>, which simply follows the model last seen in <a class="ref" href="static-pages#code-pages_controller_spec_title">Listing&nbsp;3.18</a>. Note that, as in the application code, in <a class="ref" href="filling-in-the-layout#code-contact_page_test">Listing&nbsp;5.16</a> we&rsquo;ve switched to Ruby&nbsp;1.9&ndash;style hashes.</p>
@@ -1442,7 +1442,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 <h3><a id="sec-5_3_2" href="filling-in-the-layout#sec-rails_routes" class="heading"><span class="number">5.3.2</span> Rails routes</a></h3>
 
 
-<p>Now that we have tests for the URIs we want, it&rsquo;s time to get them to work. As noted in <a class="ref" href="static-pages#sec-static_pages_with_rails">Section&nbsp;3.1.2</a>, the file Rails uses for URI mappings is <code>config/routes.rb</code>. If you take a look at the default routes file, you&rsquo;ll see that it&rsquo;s quite a mess, but it&rsquo;s a useful mess&mdash;full of commented-out example route mappings. I suggest reading through it at some point, and I also suggest taking a look at the <a href="http://guides.rubyonrails.org/routing.html">Rails Guides article &ldquo;Rails Routing from the outside in&rdquo;</a> for a much more in-depth treatment of routes.</p>
+<p>Now that we have tests for the URLs we want, it&rsquo;s time to get them to work. As noted in <a class="ref" href="static-pages#sec-static_pages_with_rails">Section&nbsp;3.1.2</a>, the file Rails uses for URL mappings is <code>config/routes.rb</code>. If you take a look at the default routes file, you&rsquo;ll see that it&rsquo;s quite a mess, but it&rsquo;s a useful mess&mdash;full of commented-out example route mappings. I suggest reading through it at some point, and I also suggest taking a look at the <a href="http://guides.rubyonrails.org/routing.html">Rails Guides article &ldquo;Rails Routing from the outside in&rdquo;</a> for a much more in-depth treatment of routes.</p>
 
 <p>To define the named routes, we need to replace rules such as</p>
 
@@ -1501,7 +1501,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div>
 
 
-<p>Note that <code>about_url</code> is the <em>full</em> URI http://localhost:3000/about (with <code>localhost:3000</code> being replaced with the domain name, such as <code>example.com</code>, for a fully deployed site). As discussed in <a class="ref" href="filling-in-the-layout#sec-layout_links">Section&nbsp;5.3</a>, to get just /about, you use <code>about_path</code>. In the <em>Rails Tutorial</em>, we&rsquo;ll follow the common convention of using the <code>path</code> form except when doing redirects, where we&rsquo;ll use the <code>url</code> form. This is because after redirects the HTTP standard technically requires a full URI, although in most browsers it will work either way.</p>
+<p>Note that <code>about_url</code> is the <em>full</em> URL http://localhost:3000/about (with <code>localhost:3000</code> being replaced with the domain name, such as <code>example.com</code>, for a fully deployed site). As discussed in <a class="ref" href="filling-in-the-layout#sec-layout_links">Section&nbsp;5.3</a>, to get just /about, you use <code>about_path</code>. In the <em>Rails Tutorial</em>, we&rsquo;ll follow the common convention of using the <code>path</code> form except when doing redirects, where we&rsquo;ll use the <code>url</code> form. This is because after redirects the HTTP standard technically requires a full URL, although in most browsers it will work either way.</p>
 
 <p>With these routes now defined, the tests for the Help, About, and Contact pages should pass:</p>
 
@@ -1519,7 +1519,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div>
 
 
-<p>This is unnecessary, though; Rails has special instructions for the root URI&nbsp;/ (&ldquo;slash&rdquo;) located lower down in the file (<a class="ref" href="filling-in-the-layout#code-root_route_hint">Listing&nbsp;5.22</a>).</p>
+<p>This is unnecessary, though; Rails has special instructions for the root URL&nbsp;/ (&ldquo;slash&rdquo;) located lower down in the file (<a class="ref" href="filling-in-the-layout#code-root_route_hint">Listing&nbsp;5.22</a>).</p>
 
 <div class="label" id="code-root_route_hint"></div>
 
@@ -1541,7 +1541,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div></div>
 
 
-<p>Using <a class="ref" href="filling-in-the-layout#code-root_route_hint">Listing&nbsp;5.22</a> as a model, we arrive at <a class="ref" href="filling-in-the-layout#code-root_route">Listing&nbsp;5.23</a> to route the root URI&nbsp;/ to the Home page.</p>
+<p>Using <a class="ref" href="filling-in-the-layout#code-root_route_hint">Listing&nbsp;5.22</a> as a model, we arrive at <a class="ref" href="filling-in-the-layout#code-root_route">Listing&nbsp;5.23</a> to route the root URL&nbsp;/ to the Home page.</p>
 
 <div class="label" id="code-root_route"></div>
 
@@ -1562,7 +1562,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div></div>
 
 
-<p>This code maps the root URI&nbsp;/ to /static_pages/home, and also gives URI helpers as follows:</p>
+<p>This code maps the root URL&nbsp;/ to /static_pages/home, and also gives URL helpers as follows:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">root_path</span> <span class="o">=&gt;</span> <span class="s1">&#39;/&#39;</span>
 <span class="n">root_url</span>  <span class="o">=&gt;</span> <span class="s1">&#39;http://localhost:3000/&#39;</span>
@@ -1949,10 +1949,10 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 <div class="label" id="sec-signup_url"></div>
 
 
-<h3><a id="sec-5_4_2" href="filling-in-the-layout#sec-signup_url" class="heading"><span class="number">5.4.2</span> Signup URI</a></h3>
+<h3><a id="sec-5_4_2" href="filling-in-the-layout#sec-signup_url" class="heading"><span class="number">5.4.2</span> Signup URL</a></h3>
 
 
-<p>With the code from <a class="ref" href="filling-in-the-layout#sec-users_controller">Section&nbsp;5.4.1</a>, we already have a working page for new users at /users/new, but recall from <a class="ref" href="filling-in-the-layout#table-url_mapping">Table&nbsp;5.1</a> that we want the URI to be /signup instead. As in <a class="ref" href="filling-in-the-layout#sec-layout_links">Section&nbsp;5.3</a>, we&rsquo;ll first write some integration tests, which we&rsquo;ll now generate:</p>
+<p>With the code from <a class="ref" href="filling-in-the-layout#sec-users_controller">Section&nbsp;5.4.1</a>, we already have a working page for new users at /users/new, but recall from <a class="ref" href="filling-in-the-layout#table-url_mapping">Table&nbsp;5.1</a> that we want the URL to be /signup instead. As in <a class="ref" href="filling-in-the-layout#sec-layout_links">Section&nbsp;5.3</a>, we&rsquo;ll first write some integration tests, which we&rsquo;ll now generate:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate integration_test user_pages
 </pre></div>
@@ -2013,7 +2013,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 
 <p>(In fact, you can just type <code>rake</code> by itself; the default behavior of <code>rake</code> is to run the test suite.)</p>
 
-<p>By construction, the Users controller already has a <code>new</code> action, so to get the test to pass all we need is the right route and the right view content. We&rsquo;ll follow the examples from <a class="ref" href="filling-in-the-layout#code-static_page_routes">Listing&nbsp;5.21</a> and add a <code>match &rsquo;/signup&rsquo;</code> rule for the signup URI (<a class="ref" href="filling-in-the-layout#code-signup_route">Listing&nbsp;5.32</a>).</p>
+<p>By construction, the Users controller already has a <code>new</code> action, so to get the test to pass all we need is the right route and the right view content. We&rsquo;ll follow the examples from <a class="ref" href="filling-in-the-layout#code-static_page_routes">Listing&nbsp;5.21</a> and add a <code>match &rsquo;/signup&rsquo;</code> rule for the signup URL (<a class="ref" href="filling-in-the-layout#code-signup_route">Listing&nbsp;5.32</a>).</p>
 
 <div class="label" id="code-signup_route"></div>
 
@@ -2078,7 +2078,7 @@ The result of the CSS in <a class="ref" href="filling-in-the-layout#code-univers
 </div></div>
 
 
-<p>With that, we&rsquo;re done with the links and named routes, at least until we add a route for signing in (<a class="ref" href="sign-in-sign-out#top">Chapter&nbsp;8</a>). The resulting new user page (at the URI /signup) appears in <a class="ref" href="filling-in-the-layout#fig-new_signup_page">Figure&nbsp;5.9</a>.</p>
+<p>With that, we&rsquo;re done with the links and named routes, at least until we add a route for signing in (<a class="ref" href="sign-in-sign-out#top">Chapter&nbsp;8</a>). The resulting new user page (at the URL /signup) appears in <a class="ref" href="filling-in-the-layout#fig-new_signup_page">Figure&nbsp;5.9</a>.</p>
 
 <div class="label" id="fig-new_signup_page"></div>
 
