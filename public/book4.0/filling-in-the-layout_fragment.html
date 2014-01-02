@@ -1,3 +1,82 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <div id="top"></div>
 
 
@@ -12,7 +91,7 @@
 <h2><a id="sec-5_1" href="filling-in-the-layout#sec-structure" class="heading"><span class="number">5.1</span> Добавление некоторых структур</a></h2>
 
 
-<p><em>Rails Учебник</em> это книга по веб-разработке, а не по веб-дизайну, но  работа над приложением, которое выглядит как <em>полное</em> дерьмо - удручает, поэтому, в этом разделе мы добавим некоторые структуры в шаблон и придадим ему минимальный дизайн с CSS. В дополнение к нашим собственным CSS правилам, мы будем использовать <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> - CSS фреймворк с открытым исходным кодом от Twitter. Мы также придадим нашему <em>коду</em> немного стиля, так сказать, используя <em>частичные шаблоны</em> почистим шаблон, поскольку он немного загроможден.</p>
+<p><em>Rails Учебник</em> это книга по веб-разработке, а не по веб-дизайну, но работа над приложением, которое выглядит как <em>полное</em> дерьмо - удручает, поэтому в этом разделе мы добавим некоторые структуры в шаблон и придадим ему минимальный дизайн с CSS. В дополнение к нашим собственным CSS правилам, мы будем использовать <a href="http://getbootstrap.com/">Bootstrap</a> - CSS фреймворк с открытым исходным кодом от Twitter. Мы также придадим нашему <em>коду</em> немного стиля, так сказать, используя <em>частичные шаблоны</em> почистим шаблон, поскольку он немного загроможден.</p>
 
 <p>При создании веб-приложений, часто бывает полезным получить  общий вид пользовательского интерфейса как можно раньше. Таким образом, на протяжении остальной части книги, я буду часто использовать <em>макеты</em> (в контексте Веб часто называемыми <em>каркасами</em>), которые являются грубыми набросками того, как приложение, возможно, будет выглядеть.<sup class="footnote" id="fnref-5_2"><a href="#fn-5_2">2</a></sup> В этой главе мы будем главным образом разрабатывать статические страницы введеные в <a class="ref" href="static-pages#sec-static_pages">Разделе&nbsp;3.1</a>, включая логотип сайта, заголовок с навигацией по сайту, и подвал сайта. Каркас для наиболее важной из страниц&nbsp;&mdash;&nbsp;Home страницы, представлен на <a class="ref" href="filling-in-the-layout#fig-home_page_mockup">Рис.&nbsp;5.1</a>. Вы можете увидеть конечный результат на <a class="ref" href="filling-in-the-layout#fig-site_with_footer">Рис.&nbsp;5.7</a>. Он отличается в некоторых деталях, но это нормально, так как каркас и не должен быть абсолютно точным.</p>
 
@@ -41,14 +120,14 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.1.</span> <span class="description">Шаблон сайта с добавленными структурами. <br /> <code>app/views/layouts/application.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.1.</span> <span class="description">Шаблон сайта с добавленными структурами. <br /> <code>app/views/layouts/application.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
   <span class="nt">&lt;head&gt;</span>
     <span class="nt">&lt;title&gt;</span><span class="cp">&lt;%=</span> <span class="n">full_title</span><span class="p">(</span><span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">))</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
     <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
     <span class="c">&lt;!--[if lt IE 9]&gt;</span>
 <span class="c">    &lt;script src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&gt;&lt;/script&gt;</span>
@@ -78,23 +157,7 @@
 </div></div>
 
 
-<p>Первое что стоит отметить это переход от старого Ruby&nbsp;1.8&ndash;стиля хэшей к новому, Ruby&nbsp;1.9 - стилю (<a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Раздел&nbsp;4.3.3</a>). Здесь,</p>
-
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">:media</span> <span class="o">=&gt;</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
-</pre></div>
-</div>
-
-
-<p>было заменено на</p>
-
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
-</pre></div>
-</div>
-
-
-<p>Важно понимать что старый синтаксис хэшей имеет глубокие корни и вы должны уметь распознавать оба варианта.</p>
-
-<p>Давайте просмотрим другие новые элементы <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинга&nbsp;5.1</a>. Как вкратце отмечалось в <a class="ref" href="static-pages#sec-static_pages">Разделе&nbsp;3.1</a>, Rails&nbsp;3 по умолчанию использует HTML5 (о чем говорит doctype <code>&lt;!DOCTYPE html&gt;</code>); т.к. HTML5&nbsp;&mdash;&nbsp;новый стандарт и некоторые браузеры (особенно старые версии Internet Explorer) пока не полностью его поддерживают, мы включим JavaScript код (известный как &ldquo;<a href="http://code.google.com/p/html5shim/">HTML5 shim</a>&rdquo;) чтобы обойти это затруднение:</p>
+<p>Давайте просмотрим на новые элементы в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a> сверху вниз. Как вкратце отмечалось в <a class="ref" href="static-pages#sec-passing_title_tests">Разделе&nbsp;3.3.2</a>, Rails&nbsp;4 по умолчанию использует HTML5 (о чем говорит <tt>doctype</tt> <code>&lt;!DOCTYPE html&gt;</code>); т.к. HTML5&nbsp;&mdash;&nbsp;новый стандарт и некоторые браузеры (особенно старые версии Internet Explorer) пока не полностью его поддерживают, мы включим JavaScript код (известный как &ldquo;<a href="http://code.google.com/p/html5shim/">HTML5 shim</a>&rdquo;) чтобы обойти это затруднение:</p>
 
 <div class="code"><div class="highlight"><pre><span class="c">&lt;!--[if lt IE 9]&gt;</span>
 <span class="c">&lt;script src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&gt;&lt;/script&gt;</span>
@@ -108,7 +171,6 @@
 <div class="code"><div class="highlight"><pre><span class="c">&lt;!--[if lt IE 9]&gt;</span>
 </pre></div>
 </div>
-
 
 <p>включает закомментированную строку, только если версия Microsoft Internet Explorer&nbsp;(IE) ниже чем&nbsp;9 (<code>if lt IE 9</code>). Чудной <code>[if lt IE 9]</code> синтаксис <em>не</em> является частью Rails; это <a   href="http://ru.wikipedia.org/wiki/Условные_комментарии">условный комментарий</a> поддерживаемый браузерами Internet Explorer специально для подобных ситуаций. Это хорошая вещь, хотя бы потому, что это означает, что мы можем включить дополнительную таблицу стилей <em>только</em> для IE браузеров  версии менее 9, не затрагивая такие браузеры как Firefox, Chrome и Safari.</p>
 
@@ -166,7 +228,7 @@
 </div>
 
 
-<p>Этот список использует Rails хелпер <code>link_to</code> для создания ссылок (которые мы создавали непосредственно с якорным (анкорным) тегом&nbsp;<code>a</code> в <a class="ref" href="static-pages#sec-passing_title_tests">Разделе&nbsp;3.3.2</a>); первый аргумент в <code>link_to</code> это текст ссылки, а второй это URI. Мы заменим URI на <em>именованные маршруты</em> в <a class="ref" href="filling-in-the-layout#sec-named_routes">Разделе&nbsp;5.3.3</a>, но сейчас мы используем заглушки URI <code>&rsquo;#&rsquo;</code> обычно применяемые  в веб-дизайне. Третий аргумент это хэш опций, в данном случае добавление  CSS&nbsp;id <code>logo</code> для ссылки на пример приложения. (У остальных трех ссылок хэш опций отсутствует, и это нормально поскольку это необязательный аргумент.) Rails хелперы часто принимают хэш опций подобным образом, что дает нам возможность добавлять произвольные HTML опции оставаясь в рамках Rails.</p>
+<p>Здесь используется Rails хелпер <code>link_to</code> для создания ссылок (которые мы создавали непосредственно с якорным (анкорным) тегом&nbsp;<code>a</code> в <a class="ref" href="static-pages#sec-passing_title_tests">Разделе&nbsp;3.3.2</a>); первый аргумент в <code>link_to</code> это текст ссылки, а второй это URL. Мы заменим URL на <em>именованные маршруты</em> в <a class="ref" href="filling-in-the-layout#sec-named_routes">Разделе&nbsp;5.3.3</a>, но сейчас мы используем заглушки URL <code>&rsquo;#&rsquo;</code> обычно применяемые  в веб-дизайне. Третий аргумент это хэш опций, в данном случае добавление  CSS&nbsp;id <code>logo</code> для ссылки на пример приложения. (У остальных трех ссылок хэш опций отсутствует, и это нормально поскольку это необязательный аргумент.) Rails хелперы часто принимают хэш опций подобным образом, что дает нам возможность добавлять произвольные HTML опции оставаясь в рамках Rails.</p>
 
 <p>Второй элемент внутри дивов это список навигационных ссылок, созданный с помощью тега <em>ненумерованного списка</em> <code>ul</code>, совместно с тегом <em>элемента списка</em> <code>li</code>:</p>
 
@@ -240,6 +302,7 @@
 
 <p>Второй <code>link_to</code> показывает нам <code>image_tag</code> хелпер, который принимает в качестве аргумента путь к изображению и необязательный хэш опций, в данном случае, <code>alt</code> атрибут тега image с помощью символа. Чтобы внести некоторую ясность, давайте взглянем на HTML производимый этим тегом:<sup class="footnote" id="fnref-5_4"><a href="#fn-5_4">4</a></sup></p>
 
+
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;img</span> <span class="na">alt=</span><span class="s">&quot;Rails&quot;</span> <span class="na">src=</span><span class="s">&quot;/assets/rails.png&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
@@ -247,14 +310,14 @@
 
 <p><code>Alt</code> атрибут, это то, что будет отображаться, если нет изображения, также его используют читатели экрана для слабовидящих. Хотя люди иногда пренебрежительно относятся к включению атрибута <code>alt</code> для изображений, на самом деле его включенин требуется HTML стандартом. К счастью, Rails включает дефолтный атрибут <code>alt</code>; если вы не укажете его явно при вызове <code>image_tag</code>, Rails пропишет в него название файла изображения (за вычетом расширения). В данном случае мы все же явно установили <code>alt</code> текст для того чтобы капитализировать &ldquo;Rails&rdquo;.</p>
 
-<p>Теперь мы, наконец, готовы увидеть плоды наших трудов (<a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>). Говорите "Не впечатляет"? Может быть. К счастью, однако, мы проделали хорошую работу, прописав для наших HTML элементов внятные классы и идентификаторы, которые позволят нам отстилить наш сайт с помощью CSS.</p>
+<p>В предыдущих версиях Rails логотип <code>rails.png</code> включался автоматически в каждый проект, но в крайней версии он не генерируется при вызове команды <code>rails new</code>, так что вам следует загрузить его с главной страницы Ruby on Rails (<a href="http://rubyonrails.org/images/rails.png">http://rubyonrails.org/images/rails.png</a>) и поместить его в директорию <code>app/assets/images/</code>. (Вам, возможно, также потребуется создать эту директорию, или командой <code>mkdir</code> или с помощью графического менеджера файлов.) Поскольку мы использовали хелпер <code>image_tag</code> в <a class="ref" href="filling-in-the-layout#code-signup_button">Листинге&nbsp;5.2</a>, Rails автоматически будет находить любые изображения в этой директории с помощью файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>).</p>
 
-<p>Кстати, вы возможно были удивлены, обнаружив что изображение  <code>rails.png</code> уже существует. Откуда оно взялось? Оно бесплатно включено в каждое новое Rails приложение и вы найдете его в <code>app/assets/images/rails.png</code>. Поскольку мы используем хелпер <code>image_tag</code>, Rails находит его автоматически с помощью файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>).</p>
+<p>Теперь мы, наконец, готовы увидеть плоды наших трудов (<a class="ref" href="filling-in-the-layout#fig-layout_no_logo_or_custom_css">Рис.&nbsp;5.2</a>). Говорите "Не впечатляет"? Может быть. К счастью, однако, мы проделали хорошую работу, прописав для наших HTML элементов внятные классы и идентификаторы, которые позволят нам отстилить наш сайт с помощью CSS.</p>
 
 <div class="label" id="fig-layout_no_logo_or_custom_css"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/layout_no_logo_or_custom_css_bootstrap.png" alt="layout_no_logo_or_custom_css_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 5.2: </span><span class="description">Страница Home (<a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a>) без кастомного CSS.&nbsp;<a href="http://railstutorial.org/images/figures/layout_no_logo_or_custom_css_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/layout_no_logo_or_custom_css_bootstrap_rails_4.png" alt="layout_no_logo_or_custom_css_bootstrap_rails_4" /></span></div><div class="caption"><span class="header">Рис. 5.2: </span><span class="description">Страница Home (<a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a>) без кастомного CSS.&nbsp;<a href="http://railstutorial.org/images/figures/layout_no_logo_or_custom_css_bootstrap_rails_4-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -265,7 +328,7 @@
 <h3><a id="sec-5_1_2" href="filling-in-the-layout#sec-custom_css" class="heading"><span class="number">5.1.2</span> Bootstrap и кастомные CSS</a></h3>
 
 
-<p>В <a class="ref" href="filling-in-the-layout#sec-adding_to_the_layout">Разделе&nbsp;5.1.1</a> мы связали многие HTML элементы с CSS классами, которые дают нам большую гибкость при построении шаблона с помощью CSS. Как отмечалось в <a class="ref" href="filling-in-the-layout#sec-adding_to_the_layout">Разделе&nbsp;5.1.1</a>, многие из этих классов специфичны для <a href="http://twitter.github.com/bootstrap/">Bootstrap</a> - фреймворка от Twitter который делает легким создание приятного веб дизайна и элементов пользовательского интерфейса для HTML5 приложений. В этом разделе мы будем комбинировать Bootstrap с небольшим количеством кастомных CSS правил для того чтобы придать некоторый стиль примеру приложения.</p>
+<p>В <a class="ref" href="filling-in-the-layout#sec-adding_to_the_layout">Разделе&nbsp;5.1.1</a> мы связали многие HTML элементы с CSS классами, которые дают нам большую гибкость при построении шаблона с помощью CSS. Как отмечалось в <a class="ref" href="filling-in-the-layout#sec-adding_to_the_layout">Разделе&nbsp;5.1.1</a>, многие из этих классов специфичны для <a href="http://getbootstrap.com/">Bootstrap</a> - фреймворка от Twitter который делает легким создание приятного веб дизайна и элементов пользовательского интерфейса для HTML5 приложений. В этом разделе мы будем комбинировать Bootstrap с небольшим количеством кастомных CSS правил для того чтобы придать некоторый стиль примеру приложения.</p>
 
 <p>Нашим первым шагом будет добавление Bootstrap, что может быть сделано в Rails приложениях с помощью <tt>bootstrap-sass</tt> гема, как это показано в <a class="ref" href="filling-in-the-layout#code-bootstrap_sass">Листинге&nbsp;5.3</a>. Фреймворк Bootstrap изначально использует язык <a href="http://lesscss.org/">LESS CSS</a> для создания динамических таблиц стилей, но файлопровод в Rails по умолчанию поддерживает (очень похожий) язык Sass (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>), <tt>bootstrap-sass</tt> конвертирует LESS в Sass и делает все необходимые файлы Bootstrap доступными для текущего приложения.<sup class="footnote" id="fnref-5_5"><a href="#fn-5_5">5</a></sup></p>
 
@@ -273,12 +336,13 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.3.</span> <span class="description">Добавление гема <tt>bootstrap-sass</tt> в <code>Gemfile</code>.</span>
-</div>
+<div class="listing"><span class="header">Листинг 5.3.</span> <span class="description">Добавление гема <tt>bootstrap-sass</tt> в <code>Gemfile</code>.</span></div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
+<span class="n">ruby</span> <span class="s1">&#39;2.0.0&#39;</span>
+<span class="c1">#ruby-gemset=railstutorial_rails_4_0</span>
 
-<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;3.2.13&#39;</span>
-<span class="n">gem</span> <span class="s1">&#39;bootstrap-sass&#39;</span><span class="p">,</span> <span class="s1">&#39;2.1&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;rails&#39;</span><span class="p">,</span> <span class="s1">&#39;4.0.2&#39;</span>
+<span class="n">gem</span> <span class="s1">&#39;bootstrap-sass&#39;</span><span class="p">,</span> <span class="s1">&#39;2.3.2.0&#39;</span>
 <span class="o">.</span>
 <span class="o">.</span>
 <span class="o">.</span>
@@ -294,7 +358,27 @@
 </div>
 
 
-<p>Затем рестартуем веб-сервер для того чтобы изменения вступили в силу. (На большинстве систем рестарт сервера подразумевает нажатие <tt>Ctrl-C</tt> и последующий запуск <code>rails server</code>.)</p>
+<p>Затем рестартуем веб-сервер для того чтобы изменения вступили в силу. (На большинстве систем рестарт сервера подразумевает нажатие <tt>Ctrl-C</tt> и последующий запуск <code>rails server</code>.) Наконец, (для Rails&nbsp;4.0) нам нужно добавить одну строку в <code>config/application.rb</code> для того чтобы сделать <tt>bootstrap-sass</tt> совместимым с файлопроводом, как это показано в <a class="ref" href="filling-in-the-layout#code-bootstrap_config">Листинге&nbsp;5.4</a>.</p>
+
+<div class="label" id="code-bootstrap_config"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 5.4.</span> <span class="description">Добавление строки обеспечивающей совместимость с файлопроводом. <br /> <code>config/application.rb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="no">File</span><span class="o">.</span><span class="n">expand_path</span><span class="p">(</span><span class="s1">&#39;../boot&#39;</span><span class="p">,</span> <span class="bp">__FILE__</span><span class="p">)</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="k">module</span> <span class="nn">SampleApp</span>
+  <span class="k">class</span> <span class="nc">Application</span> <span class="o">&lt;</span> <span class="ss">Rails::Application</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="o">.</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">assets</span><span class="o">.</span><span class="n">precompile</span> <span class="o">+=</span> <span class="sx">%w(*.png *.jpg *.jpeg *.gif)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
 
 <p>Первый шаг в добавлении кастомных CSS к нашему приложению это создание файла для их хранения:</p>
 
@@ -303,45 +387,44 @@
 </div>
 
 
-<p>(Используйте ваш текстовый редактор или IDE для создания нового файла.) В данном случае важными являются и название директории и название файла. Директория</p>
+<p>Здесь важны как название директории так и название файла. Директория</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">app/assets/stylesheets</span>
 </pre></div>
 </div>
 
 
-<p>это часть файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>) и любые таблицы стилей в этой директории будут автоматически включены как часть файла <code>application.css</code> включенного в шаблон сайта. Кроме того, название файла <code>custom.css.scss</code> включает расширение <code>.css</code>, которое обозначает файл CSS, и расширение <code>.scss</code> которое указывает на то что это &ldquo;Sassy CSS&rdquo; файл и говорит файлопроводу что этот файл необходимо обрабатывать с помошью Sass. (Мы не будем использовать Sass до <a class="ref" href="filling-in-the-layout#sec-sass">Раздела&nbsp;5.2.2</a>, но сейчас он необходим <tt>bootstrap-sass</tt> гему.)</p>
+<p>является частью файлопровода (<a class="ref" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline">Раздел&nbsp;5.2</a>) и любые таблицы стилей в этой директории будут автоматически включены как часть файла <code>application.css</code> включенного в шаблон сайта. Кроме того, название файла <code>custom.css.scss</code> включает расширение <code>.css</code>, которое обозначает файл CSS, и расширение <code>.scss</code> которое указывает на то что это &ldquo;Sassy CSS&rdquo; файл и говорит файлопроводу что этот файл необходимо обрабатывать с помошью Sass. (Мы не будем использовать Sass до <a class="ref" href="filling-in-the-layout#sec-sass">Раздела&nbsp;5.2.2</a>, но сейчас он необходим <tt>bootstrap-sass</tt> гему.)</p>
 
-<p>После создания файла для кастомных CSS мы можем использовать функцию <code>@import</code> для включения Bootstrap, как это показано в <a class="ref" href="filling-in-the-layout#code-bootstrap_css">Листинге&nbsp;5.4</a>.</p>
+<p>Внутри файла для кастомных CSS мы можем использовать функцию <code>@import</code> для включения Bootstrap, как это показано в <a class="ref" href="filling-in-the-layout#code-bootstrap_css">Листинге&nbsp;5.5</a>.</p>
 
 <div class="label" id="code-bootstrap_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.4.</span> <span class="description">Добавление Bootstrap CSS. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
+<div class="listing"><span class="header">Листинг 5.5.</span> <span class="description">Добавление Bootstrap CSS. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
 </pre></div>
 </div></div>
 
 
-<p>Эта единственная строка включает весь Bootstrap CSS фреймворк, результат показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_only_bootstrap">Рис.&nbsp;5.3</a>. (Вам, возможно, придется рестартовать веб сервер. Стоит также отметить что скриншоты используют Bootstrap&nbsp;2.0, в то время как учебник использует Bootstrap&nbsp;2.1, так что могут быть небольшие отличия во внешнем виде, но это не повод для беспокойства.)  Текст расположен плохо и логотип оказался неотстиленым, но цвета и кнопка регистрации выглядят многообещающе.</p>
+<p>Эта единственная строка включает весь Bootstrap CSS фреймворк, результат показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_only_bootstrap">Рис.&nbsp;5.3</a>. (Вам, возможно, придется рестартовать веб сервер. Стоит также отметить что скриншоты используют Bootstrap&nbsp;2.0, в то время как учебник использует Bootstrap&nbsp;2.3, так что могут быть небольшие отличия во внешнем виде, но это не повод для беспокойства.)  Текст расположен плохо и логотип оказался неотстиленым, но цвета и кнопка регистрации выглядят многообещающе.</p>
 
 <div class="label" id="fig-sample_app_only_bootstrap"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_only_bootstrap.png" alt="sample_app_only_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 5.3: </span><span class="description">Пример приложения с Bootstrap CSS.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_only_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_only_bootstrap_4_0.png" alt="sample_app_only_bootstrap_4_0" /></span></div><div class="caption"><span class="header">Рис. 5.3: </span><span class="description">Пример приложения с Bootstrap CSS.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_only_bootstrap_4_0-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Затем мы добавим немного CSS который будет использован для стилизации шаблона и каждой отдельной страницы, как это показано в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.5</a>. В <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.5</a> довольно много правил; для того чтобы понять что делает  CSS правило, часто бывает полезным закомментировать его с помощью CSS комментариев, т.e., поместив его внутрь <code>/* &hellip; */</code> и посмотреть что изменилось.
-Результат CSS из <a class="ref" href="filling-in-the-layout#code-universal_css">Листинга&nbsp;5.5</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_universal">Рис.&nbsp;5.4</a>.</p>
+<p>Затем мы добавим немного CSS который будет использован для стилизации шаблона и каждой отдельной страницы, как это показано в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.6</a>. В <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.6</a> довольно много правил; для того чтобы понять что делает  CSS правило, часто бывает полезным закомментировать его с помощью CSS комментариев, т.e., поместив его внутрь <code>/* &hellip; */</code> и посмотреть что изменилось.
+Результат CSS из <a class="ref" href="filling-in-the-layout#code-universal_css">Листинга&nbsp;5.6</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_universal">Рис.&nbsp;5.4</a>.</p>
 
 <div class="label" id="code-universal_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.5.</span> <span class="description">Добавление CSS для придания некого универсального стиля применяемого ко всем страницам. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.6.</span> <span class="description">Добавление CSS для придания некого универсального стиля применяемого ко всем страницам. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
 
 <span class="cm">/* universal */</span>
@@ -378,10 +461,10 @@
 <div class="label" id="fig-sample_app_universal"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_universal.png" alt="sample_app_universal" /></span></div><div class="caption"><span class="header">Рис. 5.4: </span><span class="description">Добавление нескольких отступов и прочих универсальных стилей.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_universal-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_universal_4_0.png" alt="sample_app_universal_4_0" /></span></div><div class="caption"><span class="header">Рис. 5.4: </span><span class="description">Добавление нескольких отступов и прочих универсальных стилей.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_universal_4_0-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Обратите внимание что CSS в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.5</a> имеют последовательный вид. В целом, CSS правила относятся либо к классу, id, HTML тегу или к какой либо их комбинации за которыми идет список стилевых команд. Например,</p>
+<p>Обратите внимание что CSS в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.6</a> имеют последовательный вид. В целом, CSS правила относятся либо к классу, id, HTML тегу или к какой либо их комбинации за которыми идет список стилевых команд. Например,</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">body</span> <span class="p">{</span>
   <span class="na">padding-top</span><span class="o">:</span> <span class="mi">60</span><span class="kt">px</span><span class="p">;</span>
@@ -399,16 +482,15 @@
 </div>
 
 
-<p>связывает класс <code>center</code> со свойством <code>text-align: center</code>. Другими словами, точка <code>.</code> в <code>.center</code> указывает на то, что правило стилизует класс. (Как мы увидим в <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.7</a>, знак фунта <code>#</code> указывает на правило для стилизации CSS <em>id</em>.) Это означает что этот элемент внутри любого тега (такого как <code>div</code>) с классом <code>center</code> будет отцентрован на странице. (Мы увидим пример этого класса в <a class="ref" href="filling-in-the-layout#code-signup_button">Листинге&nbsp;5.2</a>.)</p>
+<p>связывает класс <code>center</code> со свойством <code>text-align: center</code>. Другими словами, точка <code>.</code> в <code>.center</code> указывает на то, что правило стилизует класс. (Как мы увидим в <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.8</a>, знак фунта <code>#</code> указывает на правило для стилизации CSS <em>id</em>.) Это означает что этот элемент внутри любого тега (такого как <code>div</code>) с классом <code>center</code> будет отцентрован на странице. (Мы увидим пример этого класса в <a class="ref" href="filling-in-the-layout#code-signup_button">Листинге&nbsp;5.2</a>.)</p>
 
-<p>Хотя Bootstrap поставляется с CSS правилами для приятной типографики, мы также добавим немного кастомных правил для представления текста на нашем сайте, как это показано в <a class="ref" href="filling-in-the-layout#code-typography_css">Листинге&nbsp;5.6</a>. (Не все эти правила применяются к странице Home page, но каждое правило будет использовано в какой-то части примера приложения.) Результат <a class="ref" href="filling-in-the-layout#code-typography_css">Листинга&nbsp;5.6</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_typography">Рис.&nbsp;5.5</a>.</p>
+<p>Хотя Bootstrap поставляется с CSS правилами для приятной типографики, мы также добавим немного кастомных правил для представления текста на нашем сайте, как это показано в <a class="ref" href="filling-in-the-layout#code-typography_css">Листинге&nbsp;5.7</a>. (Не все эти правила применяются к странице Home page, но каждое правило будет использовано в какой-то части примера приложения.) Результат <a class="ref" href="filling-in-the-layout#code-typography_css">Листинга&nbsp;5.7</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_typography">Рис.&nbsp;5.5</a>.</p>
 
 <div class="label" id="code-typography_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.6.</span> <span class="description">Добавление CSS для хорошей типографики. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.7.</span> <span class="description">Добавление CSS для хорошей типографики. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
 <span class="nc">.</span>
 <span class="nc">.</span>
@@ -428,7 +510,7 @@
 <span class="p">}</span>
 
 <span class="nt">h2</span> <span class="p">{</span>
-  <span class="na">font-size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.7</span><span class="kt">em</span><span class="p">;</span>
+  <span class="na">font-size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.2</span><span class="kt">em</span><span class="p">;</span>
   <span class="na">letter-spacing</span><span class="o">:</span> <span class="mi">-1</span><span class="kt">px</span><span class="p">;</span>
   <span class="na">margin-bottom</span><span class="o">:</span> <span class="mi">30</span><span class="kt">px</span><span class="p">;</span>
   <span class="na">text-align</span><span class="o">:</span> <span class="no">center</span><span class="p">;</span>
@@ -449,16 +531,16 @@
 <div class="label" id="fig-sample_app_typography"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_typography.png" alt="sample_app_typography" /></span></div><div class="caption"><span class="header">Рис. 5.5: </span><span class="description">Добавление нескольких стилей для типографики.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_typography-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_typography_4_0.png" alt="sample_app_typography_4_0" /></span></div><div class="caption"><span class="header">Рис. 5.5: </span><span class="description">Добавление нескольких стилей для типографики.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_typography_4_0-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Наконец, мы добавим несколько правил для придания стиля логотипу сайта, который представляет собой текст &ldquo;sample app&rdquo;. CSS в <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.7</a> конвертирует текст в верхний регистр и изменяет его размер, цвет и положение. (Мы использовали CSS&nbsp;id потому что предполагаем что логотип сайта будет на странице в единственном экземпляре, но вы можете использовать класс вместо него.)</p>
+<p>Наконец, мы добавим несколько правил для придания стиля логотипу сайта, который представляет собой текст &ldquo;sample app&rdquo;. CSS в <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.8</a> конвертирует текст в верхний регистр и изменяет его размер, цвет и положение. (Мы использовали CSS&nbsp;id потому что предполагаем что логотип сайта будет на странице в единственном экземпляре, но вы можете использовать класс вместо него.)</p>
 
 <div class="label" id="code-logo_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинге 5.7.</span> <span class="description">Добавление CSS для логотипа сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
+<div class="listing"><span class="header">Листинге 5.8.</span> <span class="description">Добавление CSS для логотипа сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
 <span class="nc">.</span>
@@ -487,12 +569,12 @@
 </div></div>
 
 
-<p>Здесь <code>color: #fff</code> изменяет цвет логотипа на белый. HTML цвета могут быть закодированы шестью base-16 (шестнадцатеричными) числами, по одному для каждого из основных цветов красного, зеленого и голубого (именно в этом порядке). Код <code>#ffffff</code> максимизирует все три цвета, приводя к чистому белому и <code>#fff</code> это сокращение для <code>#ffffff</code>. CSS стандарт также определяет большое количество синонимов для часто употребляемых <a href="http://www.w3schools.com/html/html_colornames.asp">HTML цветов</a>, включая <code>white</code> для <code>#fff</code>. Результат CSS из <a class="ref" href="filling-in-the-layout#code-logo_css">Листинга&nbsp;5.7</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_logo">Рис.&nbsp;5.6</a>.</p>
+<p>Здесь <code>color: #fff</code> изменяет цвет логотипа на белый. HTML цвета могут быть закодированы шестью base-16 (шестнадцатеричными) числами, по одному для каждого из основных цветов красного, зеленого и голубого (именно в этом порядке). Код <code>#ffffff</code> максимизирует все три цвета, приводя к чистому белому и <code>#fff</code> это сокращение для <code>#ffffff</code>. CSS стандарт также определяет большое количество синонимов для часто употребляемых <a href="http://www.w3schools.com/html/html_colornames.asp">HTML цветов</a>, включая <code>white</code> для <code>#fff</code>. Результат CSS из <a class="ref" href="filling-in-the-layout#code-logo_css">Листинга&nbsp;5.8</a> показан на <a class="ref" href="filling-in-the-layout#fig-sample_app_logo">Рис.&nbsp;5.6</a>.</p>
 
 <div class="label" id="fig-sample_app_logo"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_logo.png" alt="sample_app_logo" /></span></div><div class="caption"><span class="header">Рис. 5.6: </span><span class="description">Пример приложения с приятно отстиленным логотипом.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_logo-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/sample_app_logo_4_0.png" alt="sample_app_logo_4_0" /></span></div><div class="caption"><span class="header">Рис. 5.6: </span><span class="description">Пример приложения с приятно отстиленным логотипом.&nbsp;<a href="http://railstutorial.org/images/figures/sample_app_logo_4_0-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -503,20 +585,20 @@
 <h3><a id="sec-5_1_3" href="filling-in-the-layout#sec-partials" class="heading"><span class="number">5.1.3</span> Частичные шаблоны (partials)</a></h3>
 
 
-<p>Хотя шаблон в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a> и выполняет свою работу, но он становится немного суматошным. HTML shim занимает три строки и использует странный IE-специфичный синтаксис, и было бы хорошо вынести его в какое нибудь отдельное место. К тому же заголовок формирует отдельную логическую единицу и он весь должен быть упакован в одном месте. Мы можем достигнуть этого, используя удобное Rails-приспособление называемое <em>partials</em> (# партиалы, частичные шаблоны). Давайте сначала посмотрим, как шаблон выглядит после определения партиалов (<a class="ref" href="filling-in-the-layout#code-layout_with_partials">Листинг&nbsp;5.8</a>).</p>
+<p>Хотя шаблон в <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинге&nbsp;5.1</a> и выполняет свою работу, но он становится немного суматошным. HTML shim занимает три строки и использует странный IE-специфичный синтаксис, и было бы хорошо вынести его в какое нибудь отдельное место. К тому же заголовок формирует отдельную логическую единицу и он весь должен быть упакован в одном месте. Мы можем достигнуть этого, используя удобное Rails-приспособление называемое <em>partials</em> (<code># партиалы, частичные шаблоны</code>). Давайте сначала посмотрим, как шаблон выглядит после определения партиалов (<a class="ref" href="filling-in-the-layout#code-layout_with_partials">Листинг&nbsp;5.9</a>).</p>
 
 <div class="label" id="code-layout_with_partials"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.8.</span> <span class="description">Шаблон сайта с партиалами для таблицы стилей и header-а. <br /> <code>app/views/layouts/application.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.9.</span> <span class="description">Шаблон сайта с партиалами для таблицы стилей и header-а. <br /> <code>app/views/layouts/application.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
   <span class="nt">&lt;head&gt;</span>
     <span class="nt">&lt;title&gt;</span><span class="cp">&lt;%=</span> <span class="n">full_title</span><span class="p">(</span><span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">))</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
     <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
     <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">&#39;layouts/shim&#39;</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;/head&gt;</span>
@@ -530,23 +612,21 @@
 </pre></div>
 </div></div>
 
-
-<p>В <a class="ref" href="filling-in-the-layout#code-layout_with_partials">Листинге&nbsp;5.8</a> мы заменили HTML shim строки одним вызовом Rails помощника называемого <code>render</code>:</p>
+<p>В <a class="ref" href="filling-in-the-layout#code-layout_with_partials">Листинге&nbsp;5.9</a> мы заменили HTML shim строки одним вызовом Rails помощника называемого <code>render</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">&#39;layouts/shim&#39;</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
-
 <p>Эта строка приводит к поиску файла, называемого  <code>app/views/layouts/_shim.html.erb</code>, оценке его содержимого и вставке результата оценки в представление.<sup class="footnote" id="fnref-5_6"><a href="#fn-5_6">6</a></sup> (Напомним, что <tt class="verb">&lt;%= ... %&gt;</tt> это Embedded Ruby  синтаксис, необходимый для оценки выражения Ruby и последующей вставки результата в шаблон. Обратите внимание на символ подчеркивания в имени файла <code>_shim.html.erb</code>; это подчеркивание  - универсальное соглашение для именования частичных шаблонов, которое, среди прочего, позволяет идентифицировать все партиалы в каталоге с первого взгляда.</p>
 
-<p>Конечно, чтобы заполучить частичные шаблоны на работу, мы должны заполнить их чем-нибудь; в случае shim-партиала это просто три строки shim-кода из <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинга&nbsp;5.1</a>; результат представлен в <a class="ref" href="filling-in-the-layout#code-stylesheets_partial">Листинге&nbsp;5.9</a>.</p>
+<p>Конечно, чтобы заполучить частичные шаблоны на работу, мы должны заполнить их чем-нибудь; в случае shim-партиала это просто три строки shim-кода из <a class="ref" href="filling-in-the-layout#code-layout_new_structure">Листинга&nbsp;5.1</a>; результат представлен в <a class="ref" href="filling-in-the-layout#code-stylesheets_partial">Листинге&nbsp;5.10</a>.</p>
 
 <div class="label" id="code-stylesheets_partial"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.9.</span> <span class="description">Частичный шаблон для HTML shim. <br /> <code>app/views/layouts/_shim.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 5.10.</span> <span class="description">Частичный шаблон для HTML shim. <br /> <code>app/views/layouts/_shim.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="c">&lt;!--[if lt IE 9]&gt;</span>
 <span class="c">&lt;script src=&quot;http://html5shim.googlecode.com/svn/trunk/html5.js&quot;&gt;&lt;/script&gt;</span>
@@ -555,14 +635,13 @@
 </div></div>
 
 
-<p>Аналогичным образом, мы можем переместить материал header-а в частичный шаблон показанный в <a class="ref" href="filling-in-the-layout#code-header_partial">Листинге&nbsp;5.10</a> и вставить его в шаблон другим вызовом <code>render</code>.</p>
+<p>Аналогичным образом, мы можем переместить материал header-а в частичный шаблон показанный в <a class="ref" href="filling-in-the-layout#code-header_partial">Листинге&nbsp;5.11</a> и вставить его в шаблон другим вызовом <code>render</code>.</p>
 
 <div class="label" id="code-header_partial"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.10.</span> <span class="description">Партиал для header-а сайта. <br /> <code>app/views/layouts/_header.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.11.</span> <span class="description">Партиал для header-а сайта. <br /> <code>app/views/layouts/_header.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">&quot;navbar navbar-fixed-top navbar-inverse&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;navbar-inner&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
@@ -581,14 +660,13 @@
 </div></div>
 
 
-<p>Теперь, когда мы знаем как сделать частичные шаблоны, давайте добавим подвал (footer) для каждой страницы сайта, чтобы он шел вместе с шапкой (header). К этому моменту вы, вероятно, догадались, что мы будем называть его <code>_footer.html.erb</code> и поместим его в <code>layouts</code> каталог (<a class="ref" href="filling-in-the-layout#code-footer_partial">Листинг&nbsp;5.11</a>).<sup class="footnote" id="fnref-5_7"><a href="#fn-5_7">7</a></sup></p>
+<p>Теперь, когда мы знаем как сделать частичные шаблоны, давайте добавим подвал (footer) для каждой страницы сайта, чтобы он шел вместе с шапкой (header). К этому моменту вы, вероятно, догадались, что мы будем называть его <code>_footer.html.erb</code> и поместим его в <code>layouts</code> каталог (<a class="ref" href="filling-in-the-layout#code-footer_partial">Листинг&nbsp;5.12</a>).<sup class="footnote" id="fnref-5_7"><a href="#fn-5_7">7</a></sup></p>
 
 <div class="label" id="code-footer_partial"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.11.</span> <span class="description">Партиал для подвала сайта. <br /> <code>app/views/layouts/_footer.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.12.</span> <span class="description">Партиал для подвала сайта. <br /> <code>app/views/layouts/_footer.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">&quot;footer&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;small&gt;</span>
     <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://railstutorial.org/&quot;</span><span class="nt">&gt;</span>Rails Tutorial<span class="nt">&lt;/a&gt;</span>
@@ -605,23 +683,22 @@
 </pre></div>
 </div></div>
 
+<p>Как и в шапке (header), в подвале (footer) мы использовали <code>link_to</code> для внутренних ссылок на About и Contact страницы и заглушили URL-адреса символом <code>&rsquo;#&rsquo;</code> до лучших времен. (Как и <code>header</code>, <code>footer</code>  - новый, HTML5, тег.)</p>
 
-<p>Как и в шапке (header), в подвале (footer) мы использовали <code>link_to</code> для внутренних ссылок на About и Contact страницы и заглушили URI-адреса символом <code>&rsquo;#&rsquo;</code> до лучших времен. (Как и <code>header</code>, <code>footer</code>  - новый, HTML5, тег.)</p>
-
-<p>Мы можем вставить партиал подвала в шаблон тем же образом, что и shim и header партиалы (<a class="ref" href="filling-in-the-layout#code-layout_with_footer">Листинг&nbsp;5.12</a>).</p>
+<p>Мы можем вставить партиал подвала в шаблон тем же образом, что и shim и header партиалы (<a class="ref" href="filling-in-the-layout#code-layout_with_footer">Листинг&nbsp;5.13</a>).</p>
 
 <div class="label" id="code-layout_with_footer"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.12.</span> <span class="description">Шаблон сайта с партиалом подвала. <br /> <code>app/views/layouts/application.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.13.</span> <span class="description">Шаблон сайта с партиалом подвала. <br /> <code>app/views/layouts/application.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
   <span class="nt">&lt;head&gt;</span>
     <span class="nt">&lt;title&gt;</span><span class="cp">&lt;%=</span> <span class="n">full_title</span><span class="p">(</span><span class="k">yield</span><span class="p">(</span><span class="ss">:title</span><span class="p">))</span> <span class="cp">%&gt;</span><span class="nt">&lt;/title&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span>    <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span> <span class="cp">%&gt;</span>
-    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
+                                           <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
+    <span class="cp">&lt;%=</span> <span class="n">javascript_include_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="cp">%&gt;</span>
     <span class="cp">&lt;%=</span> <span class="n">csrf_meta_tags</span> <span class="cp">%&gt;</span>
     <span class="cp">&lt;%=</span> <span class="n">render</span> <span class="s1">&#39;layouts/shim&#39;</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;/head&gt;</span>
@@ -637,13 +714,13 @@
 </div></div>
 
 
-<p>Конечно, подвал будет уродливым, если его немного не отстилить (<a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.13</a>). Результаты представлены на <a class="ref" href="filling-in-the-layout#fig-site_with_footer">Рис.&nbsp;5.7</a>.</p>
+<p>Конечно, подвал будет уродливым, если его немного не отстилить (<a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.14</a>). Результаты представлены на <a class="ref" href="filling-in-the-layout#fig-site_with_footer">Рис.&nbsp;5.7</a>.</p>
 
 <div class="label" id="code-footer_css"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.13.</span> <span class="description">Добавление CSS для подвала сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
+<div class="listing"><span class="header">Листинг 5.14.</span> <span class="description">Добавление CSS для подвала сайта. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nc">.</span>
 <span class="nc">.</span>
@@ -688,7 +765,7 @@
 <div class="label" id="fig-site_with_footer"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/site_with_footer_bootstrap.png" alt="site_with_footer_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 5.7: </span><span class="description">Home страница (<a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a>) с добавленным подвалом.&nbsp;<a href="http://railstutorial.org/images/figures/site_with_footer_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/site_with_footer_bootstrap_4_0.png" alt="site_with_footer_bootstrap_4_0" /></span></div><div class="caption"><span class="header">Рис. 5.7: </span><span class="description">Home страница (<a href="http://localhost:3000/static_pages/home"><tt>/static_pages/home</tt></a>) с добавленным подвалом.&nbsp;<a href="http://railstutorial.org/images/figures/site_with_footer_bootstrap_4_0-full.png">(полный размер)</a></span></div></div>
 
 
 
@@ -699,7 +776,7 @@
 <h2><a id="sec-5_2" href="filling-in-the-layout#sec-sass_and_the_asset_pipeline" class="heading"><span class="number">5.2</span> Sass и файлопровод (asset pipeline)</a></h2>
 
 
-<p>Одним из наиболее заметных различий между Rails&nbsp;3.0 и более поздними версиями является файлопровод (asset pipeline), который значительно улучшает создание и управление статическими файлами (# assets, активы) такими как CSS, JavaScript и изображения. Этот раздел даст вам общее понимание файлопровода, а затем покажет как использовать удивительный инструмент для создания CSS называемый <em>Sass</em>, теперь уже по умолчанию включенный в Rails как часть файлопровода.</p>
+<p>Одним из наиболее значитильных нововведений в последних версиях Rails является файлопровод (asset pipeline), который значительно улучшает создание и управление статическими файлами (<code># assets, активы</code>) такими как CSS, JavaScript и изображения. Этот раздел даст вам общее понимание файлопровода, а затем покажет как использовать удивительный инструмент для создания CSS называемый <em>Sass</em>, теперь уже по умолчанию включенный в Rails как часть файлопровода.</p>
 
 <div class="label" id="sec-the_asset_pipeline"></div>
 
@@ -723,7 +800,7 @@
 
 <p>Файлы в этих директориях (даже в версиях после-3.0) автоматически выдаются через запрос к http://example.com/stylesheets, и т.д..</p>
 
-<p>Начиная с Rails 3.1, существуют <em>три</em> каноничные директории для статических ассетов, каждая со своим собственным назначением:</p>
+<p>Начиная с Rails 3.1 и продолжая в Rails&nbsp;4, существуют <em>три</em> каноничные директории для статических ассетов, каждая со своим собственным назначением:</p>
 
 <ul>
 <li><code>app/assets</code>: ассеты специфичные для данного приложения</li>
@@ -745,22 +822,22 @@
 <h4><a id="sec-5_2_1_2" href="filling-in-the-layout#sec-5_2_1_2" class="heading">Файлы-манифесты</a></h4>
 
 
-<p>После того как вы поместили ваши ассеты в предназначенные им директории, вы можете использовать <em>файлы-манифесты</em> для того, чтобы сказать Rails (с помошью гема <a href="https://github.com/sstephenson/sprockets#">Sprockets</a>) как скомбинировать их для того чтобы сформировать один единственный файл. (Это относится к CSS и JavaScript но не к изображениям.) В качестве примера, давайте взглянем на дефолтный манифест файл для таблиц стилей приложения (<a class="ref" href="filling-in-the-layout#code-app_css_manifest">Листинг&nbsp;5.14</a>).</p>
+<p>После того как вы поместили ваши ассеты в предназначенные им директории, вы можете использовать <em>файлы-манифесты</em> для того, чтобы сказать Rails (с помошью гема <a href="https://github.com/sstephenson/sprockets#">Sprockets</a>) как скомбинировать их для того чтобы сформировать один единственный файл. (Это относится к CSS и JavaScript но не к изображениям.) В качестве примера, давайте взглянем на дефолтный манифест файл для таблиц стилей приложения (<a class="ref" href="filling-in-the-layout#code-app_css_manifest">Листинг&nbsp;5.15</a>).</p>
 
 <div class="label" id="code-app_css_manifest"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.14.</span> <span class="description">Манифест файл для app-specific CSS. <br /> <code>app/assets/stylesheets/application.css</code></span>
+<div class="listing"><span class="header">Листинг 5.15.</span> <span class="description">Манифест файл для app-specific CSS. <br /> <code>app/assets/stylesheets/application.css</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cm">/*</span>
 <span class="cm"> * This is a manifest file that&#39;ll automatically include all the stylesheets</span>
 <span class="cm"> * available in this directory and any sub-directories. You&#39;re free to add</span>
 <span class="cm"> * application-wide styles to this file and they&#39;ll appear at the top of the</span>
-<span class="cm"> * compiled file, but it&#39;s generally better to create a new file per style </span>
+<span class="cm"> * compiled file, but it&#39;s generally better to create a new file per style</span>
 <span class="cm"> * scope.</span>
 <span class="cm"> *= require_self</span>
-<span class="cm"> *= require_tree . </span>
+<span class="cm"> *= require_tree .</span>
 <span class="cm">*/</span>
 </pre></div>
 </div></div>
@@ -773,18 +850,16 @@
 <span class="cm"> .</span>
 <span class="cm"> .</span>
 <span class="cm"> *= require_self</span>
-<span class="cm"> *= require_tree . </span>
+<span class="cm"> *= require_tree .</span>
 <span class="cm">*/</span>
 </pre></div>
 </div>
-
 
 <p>Здесь</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">*= require_tree .</span>
 </pre></div>
 </div>
-
 
 <p>обеспечивает включение всех CSS файлов из директории <code>app/assets/stylesheets</code> (в том числе вложенные субдиректории) в CSS приложения. Строка</p>
 
@@ -793,7 +868,7 @@
 </div>
 
 
-<p>гарантирует что также будут включены CSS из файла <code>application.css</code>.</p>
+<p>указывает где в загрузочной последовательности будет включен CSS код самого <code>application.css</code> файла.</p>
 
 <p>Rails поставляется с вполне вменяемыми дефолтными манифест-файлами и в <em>Rails Tutorial</em> мы не будем изменять их, но в случае если вам понадобится их изменить, см. <a href="http://rusrails.ru/asset-pipeline">(rus)Rails Guides введение в asset pipeline</a> чтобы узнать об этом подробнее.</p>
 
@@ -831,7 +906,7 @@
 <h4><a id="sec-5_2_2_1" href="filling-in-the-layout#sec-5_2_2_1" class="heading">Вложение</a></h4>
 
 
-<p>Общепринятым паттерном в написании таблиц стилей являются правила применяемые ко вложенным элементам. Например, в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.5</a> у нас есть правило применяемое и для <code>.center</code> и для <code>.center h1</code>:</p>
+<p>Общепринятым паттерном в написании таблиц стилей являются правила применяемые ко вложенным элементам. Например, в <a class="ref" href="filling-in-the-layout#code-universal_css">Листинге&nbsp;5.6</a> у нас есть правило применяемое и для <code>.center</code> и для <code>.center h1</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nc">.center</span> <span class="p">{</span>
   <span class="na">text-align</span><span class="o">:</span> <span class="no">center</span><span class="p">;</span>
@@ -858,7 +933,7 @@
 
 <p>Здесь вложенное правило <code>h1</code> наследует контекст правила <code>.center</code>.</p>
 
-<p>Здесь есть второй кандидат на вложение, который требует несколько иного синтаксиса. В <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.7</a>, мы имеем код</p>
+<p>Здесь есть второй кандидат на вложение, который требует несколько иного синтаксиса. В <a class="ref" href="filling-in-the-layout#code-logo_css">Листинге&nbsp;5.8</a>, мы имеем код</p>
 
 <div class="code"><div class="highlight"><pre><span class="nn">#logo</span> <span class="p">{</span>
   <span class="na">float</span><span class="o">:</span> <span class="no">left</span><span class="p">;</span>
@@ -903,7 +978,7 @@
 
 <p>Sass заменяет <code>&amp;:hover</code> на <code>#logo:hover</code> при конвертации из SCSS в CSS.</p>
 
-<p>Обе эти техники вложения элементов применяются в CSS подвала в  <a class="ref" href="filling-in-the-layout#code-footer_css">Листинге&nbsp;5.13</a>, который может быть трансформирован в следующее:</p>
+<p>Обе эти техники вложения элементов применяются в CSS подвала в  <a class="ref" href="filling-in-the-layout#code-footer_css">Листинге&nbsp;5.14</a>, который может быть трансформирован в следующее:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">footer</span> <span class="p">{</span>
   <span class="na">margin-top</span><span class="o">:</span> <span class="mi">45</span><span class="kt">px</span><span class="p">;</span>
@@ -932,12 +1007,12 @@
 </div>
 
 
-<p>Конвертирование <a class="ref" href="filling-in-the-layout#code-footer_css">Листинга&nbsp;5.13</a> вручную это хорошее упражнение и вы должны убедиться что CSS по прежнему работает как надо после преобразования.</p>
+<p>Конвертирование <a class="ref" href="filling-in-the-layout#code-footer_css">Листинга&nbsp;5.14</a> вручную это хорошее упражнение и вы должны убедиться что CSS по прежнему работает как надо после преобразования.</p>
 
 <h4><a id="sec-5_2_2_2" href="filling-in-the-layout#sec-5_2_2_2" class="heading">Переменные</a></h4>
 
 
-<p>Sass позволяет нам определять <em>переменные</em> для устранения дублирования и написания более выразительного кода. Для примера, взгляните на <a class="ref" href="filling-in-the-layout#code-typography_css">Листинг&nbsp;5.6</a> и <a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.13</a>, мы видим, что здесь есть повторяющийся вызов одного и того же цвета:</p>
+<p>Sass позволяет нам определять <em>переменные</em> для устранения дублирования и написания более выразительного кода. Для примера, взгляните на <a class="ref" href="filling-in-the-layout#code-typography_css">Листинг&nbsp;5.7</a> и <a class="ref" href="filling-in-the-layout#code-footer_css">Листинг&nbsp;5.14</a>, мы видим, что здесь есть повторяющийся вызов одного и того же цвета:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">h2</span> <span class="p">{</span>
   <span class="na">.</span>
@@ -1019,13 +1094,13 @@
 </div>
 
 
-<p>Применение Sass вложения и определения переменных ко всему SCSS файлу дает нам файл представленный в <a class="ref" href="filling-in-the-layout#code-refactored_scss">Листинге&nbsp;5.15</a>. Это использует Sass переменные (как определенные в Bootstrap) так и встроенные названия цветов (т.е., <code>white</code> для <code>#fff</code>). Обратите внимание, в частности, на кардинальное улучшение в правилах для тега <code>footer</code>.</p>
+<p>Применение Sass вложения и определения переменных ко всему SCSS файлу дает нам файл представленный в <a class="ref" href="filling-in-the-layout#code-refactored_scss">Листинге&nbsp;5.16</a>. Это использует Sass переменные (как определенные в Bootstrap) так и встроенные названия цветов (т.е., <code>white</code> для <code>#fff</code>). Обратите внимание, в частности, на кардинальное улучшение в правилах для тега <code>footer</code>.</p>
 
 <div class="label" id="code-refactored_scss"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.15.</span> <span class="description">Начальный SCSS сконвертированный для использования вложенностей и переменных. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
+<div class="listing"><span class="header">Листинг 5.16.</span> <span class="description">Начальный SCSS сконвертированный для использования вложенностей и переменных. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">@import</span> <span class="s2">&quot;bootstrap&quot;</span><span class="p">;</span>
 
@@ -1072,7 +1147,7 @@
 <span class="p">}</span>
 
 <span class="nt">h2</span> <span class="p">{</span>
-  <span class="na">font-size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.7</span><span class="kt">em</span><span class="p">;</span>
+  <span class="na">font-size</span><span class="o">:</span> <span class="mi">1</span><span class="mf">.2</span><span class="kt">em</span><span class="p">;</span>
   <span class="na">letter-spacing</span><span class="o">:</span> <span class="mi">-1</span><span class="kt">px</span><span class="p">;</span>
   <span class="na">margin-bottom</span><span class="o">:</span> <span class="mi">30</span><span class="kt">px</span><span class="p">;</span>
   <span class="na">text-align</span><span class="o">:</span> <span class="no">center</span><span class="p">;</span>
@@ -1133,7 +1208,7 @@
 </div></div>
 
 
-<p>Sass дает нам гораздо больше способов для упрощения наших таблиц стилей, но код в <a class="ref" href="filling-in-the-layout#code-refactored_scss">Листинге&nbsp;5.15</a> использует наиболее важные из них и дает нам хороший старт. Более подробно об этом см. на <a href="http://sass-lang.com/">сайте Sass</a>.</p>
+<p>Sass дает нам гораздо больше способов для упрощения наших таблиц стилей, но код в <a class="ref" href="filling-in-the-layout#code-refactored_scss">Листинге&nbsp;5.16</a> использует наиболее важные из них и дает нам хороший старт. Более подробно об этом см. на <a href="http://sass-lang.com/">сайте Sass</a>.</p>
 
 <div class="label" id="sec-layout_links"></div>
 
@@ -1148,32 +1223,31 @@
 </div>
 
 
-<p>но это не Rails Way.  Было бы хорошо, если бы URI для about страницы был <tt>/about</tt>, а не <tt>/pages/about</tt>; причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
+<p>но это не Rails Way.  Было бы хорошо, если бы URL для about страницы был <tt>/about</tt>, а не <tt>/pages/about</tt>. Причем, Rails конвенционально использует <em>named routes</em> (именованные маршруты), которые включают в себя код, подобный</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span> <span class="n">about_path</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Таким образом код обретает более прозрачный смысл и, к тому же, это более гибкий подход, поскольку мы можем изменить определение <code>about_path</code> и URI изменятся везде где используется <code>about_path</code>.</p>
+<p>Таким образом код обретает более прозрачный смысл и, к тому же, это более гибкий подход, поскольку мы можем изменить определение <code>about_path</code> и URL изменятся везде где используется <code>about_path</code>.</p>
 
-<p>Полный список наших запланированных ссылок представлен в <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблице&nbsp;5.1</a>, вместе с соответствием URI и маршрутов. Со временем, мы реализуем все ссылки, но предпоследнюю мы добавим только в конце этой главы, а последняя будет создана лишь в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;8</a>.</p>
+<p>Полный список наших запланированных ссылок представлен в <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблице&nbsp;5.1</a>, вместе с соответствием URL и маршрутов. Со временем, мы реализуем все ссылки, но предпоследнюю мы добавим только в конце этой главы, а последняя будет создана лишь в <a class="ref" href="sign-in-sign-out#top">Главе&nbsp;8</a>.</p>
 
 <div class="label" id="table-url_mapping"></div>
 
 
 <div class="table"><div class="center">
-<table class="tabular"><tr><th class="align_left"><strong>Page</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_right"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Таблица 5.1: </span><span class="description">Маршруты и соответствующие им URI для ссылок сайта.</span></div></div>
+<table class="tabular"><tr><th class="align_left"><strong>Page</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_right"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Таблица 5.1: </span><span class="description">Маршруты и соответствующие им URL для ссылок сайта.</span></div></div>
 
 
-<p>Прежде чем двигаться дальше, давайте добавим страницу Contact (было оставлено в качестве упражнения в  <a class="ref" href="static-pages#top">Главе&nbsp;3</a>). Тесты представлены в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.16</a>; они просто следуют модели из <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинга&nbsp;3.18</a>. Обратите внимание на то что в коде приложения в  <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.16</a> мы переключились на Ruby&nbsp;1.9 &ndash; стиль хэшей.</p>
+<p>Прежде чем двигаться дальше, давайте добавим страницу Contact (было оставлено в качестве упражнения в  <a class="ref" href="static-pages#top">Главе&nbsp;3</a>). Тесты представлены в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.17</a>; они просто следуют модели из <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинга&nbsp;3.19</a>.</p>
 
 <div class="label" id="code-contact_page_test"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.16.</span> <span class="description">Тесты для страницы Contact. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.17.</span> <span class="description">Тесты для страницы Contact. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
@@ -1182,36 +1256,63 @@
   <span class="o">.</span>
   <span class="n">describe</span> <span class="s2">&quot;Contact page&quot;</span> <span class="k">do</span>
 
-    <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Contact&#39;&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should have the content &#39;Contact&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="s1">&#39;/static_pages/contact&#39;</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Contact&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should have the title &#39;Contact&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="s1">&#39;/static_pages/contact&#39;</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                    <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App | Contact&quot;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App | Contact&quot;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
 
+<p>Для того чтобы убедиться что оба теста в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.17</a> не проходят, нам нужно раскомментировать &ldquo;Contact&rdquo; ссылку в подвале, как это показано в <a class="ref" href="filling-in-the-layout#code-comment_out_footer">Листинге&nbsp;5.18</a>.</p>
 
-<p>Вам следует проверить что эти тесты в красном:</p>
+<div class="label" id="code-comment_out_footer"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 5.18.</span> <span class="description">Закоментирование ссылки &ldquo;Contact&rdquo; в подвале. <br /> <code>app/views/layouts/_footer.html.erb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">&quot;footer&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;small&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://railstutorial.org/&quot;</span><span class="nt">&gt;</span>Rails Tutorial<span class="nt">&lt;/a&gt;</span>
+    by Michael Hartl
+  <span class="nt">&lt;/small&gt;</span>
+  <span class="nt">&lt;nav&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+      <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span>   <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%#</span><span class="c">= link_to &quot;Contact&quot;, &#39;#&#39; </span><span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://news.railstutorial.org/&quot;</span><span class="nt">&gt;</span>News<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+  <span class="nt">&lt;/nav&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+</pre></div>
+</div></div>
+
+
+<p>В <a class="ref" href="filling-in-the-layout#code-comment_out_footer">Листинге&nbsp;5.18</a> мы видим как выглядят коментирование кода в Embedded Ruby, что подразумевает помещение знака Ruby-комментария&nbsp;<code>#</code> сразу за знаком процента:</p>
+
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%#</span><span class="c">= link_to &quot;Contact&quot;, &#39;#&#39; </span><span class="cp">%&gt;</span>
+</pre></div>
+</div>
+
+<p>В этой точке тест из <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинга&nbsp;5.17</a> должен быть провальным:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
 </div>
 
-
-<p>Код приложения параллелен коду для добавления страницы About в <a class="ref" href="static-pages#sec-adding_a_page">Разделе&nbsp;3.2.2</a>: вначале мы обновляем маршруты (<a class="ref" href="filling-in-the-layout#code-contact_route">Листинг&nbsp;5.17</a>), затем добавляем <code>contact</code> действие в контроллер StaticPages (<a class="ref" href="filling-in-the-layout#code-contact_action">Листинг&nbsp;5.18</a>) и, наконец, мы создаем представление Contact (<a class="ref" href="filling-in-the-layout#code-contact_view">Листинг&nbsp;5.19</a>).</p>
+<p>Код приложения параллелен коду для добавления страницы About в <a class="ref" href="static-pages#sec-adding_a_page">Разделе&nbsp;3.2.2</a>: вначале мы обновляем маршруты (<a class="ref" href="filling-in-the-layout#code-contact_route">Листинг&nbsp;5.19</a>), затем добавляем <code>contact</code> действие в контроллер StaticPages (<a class="ref" href="filling-in-the-layout#code-contact_action">Листинг&nbsp;5.20</a>) и, наконец, мы создаем представление Contact (<a class="ref" href="filling-in-the-layout#code-contact_view">Листинг&nbsp;5.21</a>).</p>
 
 <div class="label" id="code-contact_route"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.17.</span> <span class="description">Добавление маршрута для страницы Contact. <br /> <code>config/routes.rb</code></span>
+<div class="listing"><span class="header">Листинг 5.19.</span> <span class="description">Добавление маршрута для страницы Contact. <br /> <code>config/routes.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">get</span> <span class="s2">&quot;static_pages/home&quot;</span>
@@ -1232,7 +1333,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.18.</span> <span class="description">Добавление действия для страницы Contact. <br /> <code>app/controllers/static_pages_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 5.20.</span> <span class="description">Добавление действия для страницы Contact. <br /> <code>app/controllers/static_pages_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">StaticPagesController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="o">.</span>
@@ -1251,8 +1352,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.19.</span> <span class="description">Представление для страницы Contact. <br /> <code>app/views/static_pages/contact.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.21.</span> <span class="description">Представление для страницы Contact. <br /> <code>app/views/static_pages/contact.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s1">&#39;Contact&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;h1&gt;</span>Contact<span class="nt">&lt;/h1&gt;</span>
 <span class="nt">&lt;p&gt;</span>
@@ -1262,14 +1362,34 @@
 </pre></div>
 </div></div>
 
-
 <p>Теперь убедитесь что тесты проходят:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
 </div>
 
+<p>В этой точке, пройдя через Красный-Зеленый цикл для того чтобы убедиться что мы тестируем правильные вещи, нам следует раскомментировать ссылку &ldquo;Contact&rdquo; в подвале (<a class="ref" href="filling-in-the-layout#code-uncomment_footer">Листинг&nbsp;5.22</a>). Это далеко не идеальное решение так как теперь наши тесты не смогут отловить регрессию если мы случайно удалим тег <code>h1</code> из <a class="ref" href="filling-in-the-layout#code-contact_view">Листинга&nbsp;5.21</a>. Исправление этой ошибки, требующее наприсания теста специально для содержимого <code>h1</code> оставлено в качестве упражнения (<a class="ref" href="filling-in-the-layout#sec-layout_exercises">Раздел&nbsp;5.6</a>).</p>
 
+<div class="label" id="code-uncomment_footer"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 5.22.</span> <span class="description">Раскоментирование ссылки &ldquo;Contact&rdquo; в подвале. <br /> <code>app/views/layouts/_footer.html.erb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">&quot;footer&quot;</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;small&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://railstutorial.org/&quot;</span><span class="nt">&gt;</span>Rails Tutorial<span class="nt">&lt;/a&gt;</span>
+    by Michael Hartl
+  <span class="nt">&lt;/small&gt;</span>
+  <span class="nt">&lt;nav&gt;</span>
+    <span class="nt">&lt;ul&gt;</span>
+      <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;About&quot;</span><span class="p">,</span>   <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;</span><span class="cp">&lt;%=</span> <span class="n">link_to</span> <span class="s2">&quot;Contact&quot;</span><span class="p">,</span> <span class="s1">&#39;#&#39;</span> <span class="cp">%&gt;</span><span class="nt">&lt;/li&gt;</span>
+      <span class="nt">&lt;li&gt;&lt;a</span> <span class="na">href=</span><span class="s">&quot;http://news.railstutorial.org/&quot;</span><span class="nt">&gt;</span>News<span class="nt">&lt;/a&gt;&lt;/li&gt;</span>
+    <span class="nt">&lt;/ul&gt;</span>
+  <span class="nt">&lt;/nav&gt;</span>
+<span class="nt">&lt;/footer&gt;</span>
+</pre></div>
+</div></div>
 
 
 <div class="label" id="sec-route_tests"></div>
@@ -1292,14 +1412,13 @@
 </div>
 
 
-<p>и так далее для остальных страниц. Результат представлен в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.20</a>.</p>
+<p>и так далее для остальных страниц. Результат представлен в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.23</a>.</p>
 
 <div class="label" id="code-route_tests"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.20.</span> <span class="description">Тесты для именованных маршрутов. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.23.</span> <span class="description">Тесты для именованных маршрутов. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
@@ -1308,18 +1427,17 @@
 
     <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">root_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should have the base title&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">root_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                        <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should not have a custom page title&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">root_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">not_to</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
@@ -1327,41 +1445,38 @@
 
     <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Help&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">help_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Help&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Help&#39;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should have the title &#39;Help&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">help_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                        <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App | Help&quot;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App | Help&quot;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;About page&quot;</span> <span class="k">do</span>
 
-    <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;About&#39;&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;About Us&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">about_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;About Us&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;About Us&#39;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should have the title &#39;About Us&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">about_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                    <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App | About Us&quot;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App | About Us&quot;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;Contact page&quot;</span> <span class="k">do</span>
 
-    <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Contact&#39;&quot;</span> <span class="k">do</span>
+    <span class="n">it</span> <span class="s2">&quot;should have the content &#39;Contact&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">contact_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Contact&#39;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should have the title &#39;Contact&#39;&quot;</span> <span class="k">do</span>
       <span class="n">visit</span> <span class="n">contact_path</span>
-      <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                    <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App | Contact&quot;</span><span class="p">)</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App | Contact&quot;</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -1376,7 +1491,7 @@
 </div>
 
 
-<p>Кстати, если код в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.20</a> удивляет вас своими повторениями и многословностью, вы не одиноки. Мы отрефакторим эту грязь в красивую драгоценность в <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Разделе&nbsp;5.3.4</a>.</p>
+<p>Кстати, если код в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.23</a> удивляет вас своими повторениями и многословностью, вы не одиноки. Мы отрефакторим эту грязь в красивую драгоценность в <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Разделе&nbsp;5.3.4</a>.</p>
 
 <div class="label" id="sec-rails_routes"></div>
 
@@ -1384,7 +1499,9 @@
 <h3><a id="sec-5_3_2" href="filling-in-the-layout#sec-rails_routes" class="heading"><span class="number">5.3.2</span> Rails маршруты</a></h3>
 
 
-<p>Теперь, когда у нас есть нужные нам тесты для URI, пришло время заставить их работать. Как отмечалось в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>, Rails использует для маршрутов файл <code>config/routes.rb</code>. Если вы посмотрите на дефолтный, файл routes.rb, вы увидите беспорядок, но это полезный беспорядок — полный закомментированных примеров маршрутов. Я советую почитать его как-нибудь, а также взглянуть на <a href="http://rusrails.ru/rails-routing">статью о маршрутах в (rus)Rails Guides</a> для более углубленного изучения маршрутов.</p>
+
+
+<p>Теперь, когда у нас есть нужные нам тесты для URL, пришло время заставить их работать. Как отмечалось в <a class="ref" href="static-pages#sec-static_pages">Разделе&nbsp;3.1</a>, Rails использует для маршрутов файл <code>config/routes.rb</code>. Если вы посмотрите на дефолтный, файл routes.rb, вы увидите беспорядок, но это полезный беспорядок — полный закомментированных примеров маршрутов. Я советую почитать его как-нибудь, а также взглянуть на <a href="http://rusrails.ru/rails-routing">статью о маршрутах в (rus)Rails Guides</a> для более углубленного изучения маршрутов.</p>
 
 <p>Для того чтобы определить именованные маршруты нам необходимо заменить такие маршруты как</p>
 
@@ -1395,25 +1512,24 @@
 
 <p>на</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span>
+<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
 </pre></div>
 </div>
 
 
-<p>Это дает нам два варианта возможных варианта написания пути к странице help: <code>/help</code> и именованный маршрут <code>help_path</code> который возвращает путь к этой странице. (На самом деле использование <code>get</code> вместо <code>match</code> даст тот же именованнный маршрут, но использование <code>match</code> более принято.)</p>
+<p>Это дает нам два варианта возможных варианта написания пути к странице help: <code>/help</code> (отвечающую на <tt>GET</tt> запросы) и именованный маршрут <code>help_path</code> который возвращает путь к этой странице. (На самом деле использование <code>get</code> вместо <code>match</code> даст тот же именованнный маршрут, но использование <code>match</code> более принято.)</p>
 
-<p>Применение этого паттерна к остальным статическим страницам приводит нас к <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листингу&nbsp;5.21</a>. Единственным исключением здесь является страница Home, о которой мы позаботимся в  <a class="ref" href="filling-in-the-layout#code-root_route">Листинге&nbsp;5.23</a>.</p>
+<p>Применение этого паттерна к остальным статическим страницам приводит нас к <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листингу&nbsp;5.24</a>. Единственным исключением здесь является страница Home, о которой мы позаботимся в  <a class="ref" href="filling-in-the-layout#code-root_route">Листинге&nbsp;5.26</a>.</p>
 
 <div class="label" id="code-static_page_routes"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.21.</span> <span class="description">Маршруты для статических страниц. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.24.</span> <span class="description">Маршруты для статических страниц. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
-  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span><span class="p">,</span>    <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span><span class="p">,</span>   <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1422,14 +1538,14 @@
 </div></div>
 
 
-<p>Если вы внимательно почитаете код в <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинге&nbsp;5.21</a>, вы возможно сможете понять что он делает; например, вы можете увидеть что</p>
+<p>Если вы внимательно почитаете код в <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинге&nbsp;5.24</a>, вы возможно сможете понять что он делает; например, вы можете увидеть что</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span>
+<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span><span class="p">,</span>  <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
 </pre></div>
 </div>
 
 
-<p>устанавливает соответствие между <code>&rsquo;/about&rsquo;</code> и именованным маршрутом, а также направляет его в <code>about</code> действие контроллера StaticPages. Прежде это было более очевидно: мы использовали</p>
+<p>устанавливает соответствие между <tt>GET</tt> запросом к <code>&rsquo;/about&rsquo;</code> и именованным маршрутом, а также направляет его в <code>about</code> действие контроллера StaticPages. Прежде это было более очевидно: мы использовали</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">get</span> <span class="s1">&#39;static_pages/about&#39;</span>
 </pre></div>
@@ -1437,13 +1553,13 @@
 
  <p> для того чтобы попасть в то же место, но <code>/about</code> более краток. В дополнение, как отмечалось выше, код <code>match &rsquo;/about&rsquo;</code> также автоматически создает <em>именованные маршруты</em> для использования в контроллерах и представлениях:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">about_path</span> <span class="o">=&gt;</span> <span class="s1">&#39;/about&#39;</span>
-<span class="n">about_url</span>  <span class="o">=&gt;</span> <span class="s1">&#39;http://localhost:3000/about&#39;</span>
+<div class="code"><div class="highlight"><pre><span class="n">about_path</span> <span class="o">-&gt;</span> <span class="s1">&#39;/about&#39;</span>
+<span class="n">about_url</span>  <span class="o">-&gt;</span> <span class="s1">&#39;http://localhost:3000/about&#39;</span>
 </pre></div>
 </div>
 
 
-<p>Обратите внимание, что <code>about_url</code> это <em>полный</em> URI <tt>http://localhost:3000/about</tt> (<code>localhost:3000</code> заменится на доменное имя, такое как <code>example.com</code>, для развернутого сайта). Как обсуждалось в <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a>, для того чтобы получить просто <tt>/about</tt>, вы используете <code>about_path</code>. (<em>Rails Tutorial</em> использует <code>path</code> форму по соглашению, но разница редко имеет значение на практике (т.е также возможно применение _url формы).)</p>
+<p>Обратите внимание, что <code>about_url</code> это <em>полный</em> URL <tt>http://localhost:3000/about</tt> (<code>localhost:3000</code> заменится на доменное имя, такое как <code>example.com</code>, для развернутого сайта). Как обсуждалось в <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a>, для того чтобы получить просто <tt>/about</tt>, вы используете <code>about_path</code>. (<em>Rails Tutorial</em> использует <code>path</code> форму по соглашению, но разница редко имеет значение на практике (т.е также возможно применение _url формы).)</p>
 
 <p>После определения этих маршрутов тесты для About, Contact, и Help страниц должны пройти:</p>
 
@@ -1456,26 +1572,24 @@
 
 <p>Для маршрута Home страницы мы <em>могли бы</em> использовать код вроде этого:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#home&#39;</span>
+<div class="code"><div class="highlight"><pre><span class="n">match</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#home&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
 </pre></div>
 </div>
 
 
-<p>Однако делать этого не придется; Rails имеет специальный маршрут для корневого URI&nbsp;<tt>/</tt> (&ldquo;слэш&rdquo;) расположенный внизу файла (<a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинг&nbsp;5.22</a>).</p>
+<p>Однако делать этого не придется; Rails имеет специальный маршрут для корневого URL&nbsp;<tt>/</tt> (&ldquo;слэш&rdquo;) расположенный внизу файла (<a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинг&nbsp;5.25</a>).</p>
 
 <div class="label" id="code-root_route_hint"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.22.</span> <span class="description">Закомментированная подсказка для определения root маршрута. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.25.</span> <span class="description">Закомментированная подсказка для определения root маршрута. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="c1"># You can have the root of your site routed with &quot;root&quot;</span>
-  <span class="c1"># just remember to delete public/index.html.</span>
-  <span class="c1"># root :to =&gt; &quot;welcome#index&quot;</span>
+  <span class="c1"># root &#39;welcome#index&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1484,20 +1598,18 @@
 </div></div>
 
 
-<p>Используя <a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинг&nbsp;5.22</a> как модель, мы приходим к <a class="ref" href="filling-in-the-layout#code-root_route">Листингу&nbsp;5.23</a> чтобы направить корневой URI&nbsp;<tt>/</tt> к Home странице.</p>
+<p>Используя <a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинг&nbsp;5.25</a> как модель, мы приходим к <a class="ref" href="filling-in-the-layout#code-root_route">Листингу&nbsp;5.26</a> чтобы направить корневой URL&nbsp;<tt>/</tt> к Home странице.</p>
 
 <div class="label" id="code-root_route"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.23.</span> <span class="description">Добавление соответствия для root маршрута. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.26.</span> <span class="description">Добавление соответствия для root маршрута. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
-  <span class="n">root</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#home&#39;</span>
-
-  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span>
+  <span class="n">root</span>  <span class="s1">&#39;static_pages#home&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span><span class="p">,</span>    <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span><span class="p">,</span>   <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1506,7 +1618,21 @@
 </div></div>
 
 
-<p>Этот код направляет корневой URI&nbsp;<tt>/</tt> к <tt>/static_pages/home</tt> и дает нам URI хелперы:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p>Этот код направляет корневой URL&nbsp;<tt>/</tt> к <tt>/static_pages/home</tt> и дает нам URL хелперы:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">root_path</span> <span class="o">=&gt;</span> <span class="s1">&#39;/&#39;</span>
 <span class="n">root_url</span>  <span class="o">=&gt;</span> <span class="s1">&#39;http://localhost:3000/&#39;</span>
@@ -1897,10 +2023,10 @@
 <div class="label" id="sec-signup_url"></div>
 
 
-<h3><a id="sec-5_4_2" href="filling-in-the-layout#sec-signup_url" class="heading"><span class="number">5.4.2</span> URI для регистрации</a></h3>
+<h3><a id="sec-5_4_2" href="filling-in-the-layout#sec-signup_url" class="heading"><span class="number">5.4.2</span> URL для регистрации</a></h3>
 
 
-<p>С кодом из <a class="ref" href="filling-in-the-layout#sec-users_controller">Раздела&nbsp;5.4.1</a> у нас уже есть рабочая страница для создания новых пользователей на <tt>/users/new</tt>, но вспомним из <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблицы&nbsp;5.1</a>, что вместо этого нам необходим URI <tt>/signup</tt>. Как и в <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a>, мы начнем с написания интеграционных тестов, которые мы сейчас сгенерируем:</p>
+<p>С кодом из <a class="ref" href="filling-in-the-layout#sec-users_controller">Раздела&nbsp;5.4.1</a> у нас уже есть рабочая страница для создания новых пользователей на <tt>/users/new</tt>, но вспомним из <a class="ref" href="filling-in-the-layout#table-url_mapping">Таблицы&nbsp;5.1</a>, что вместо этого нам необходим URL <tt>/signup</tt>. Как и в <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a>, мы начнем с написания интеграционных тестов, которые мы сейчас сгенерируем:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate integration_test user_pages
 </pre></div>
@@ -1962,7 +2088,7 @@
 
 <p>(Фактически, вы можете просто набрать <code>rake</code>; дефолтное поведение <code>rake</code> это запуск набора тестов.)</p>
 
-<p>По конструкции, контроллер Users уже имеет <code>new</code> действие, так что все что нам необходимо для прохождения тестов это правильные маршрут и контент представления. Мы будем следовать примерам из  <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинга&nbsp;5.21</a> и добавим <code>match &rsquo;/signup&rsquo;</code> правило для URI регистрации (<a class="ref" href="filling-in-the-layout#code-signup_route">Листинг&nbsp;5.32</a>).</p>
+<p>По конструкции, контроллер Users уже имеет <code>new</code> действие, так что все что нам необходимо для прохождения тестов это правильные маршрут и контент представления. Мы будем следовать примерам из  <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинга&nbsp;5.21</a> и добавим <code>match &rsquo;/signup&rsquo;</code> правило для URL регистрации (<a class="ref" href="filling-in-the-layout#code-signup_route">Листинг&nbsp;5.32</a>).</p>
 
 <div class="label" id="code-signup_route"></div>
 
@@ -2030,7 +2156,7 @@
 </div></div>
 
 
-<p>С этим работу над ссылками и именованными маршрутами можно считать законченной, по крайней мере до тех пор, пока мы не добавим маршрут для входа на сайт (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;8</a>). Получившаяся страница для регистрации пользователей (на URI <tt>/signup</tt>) представлена на <a class="ref" href="filling-in-the-layout#fig-new_signup_page">Рис.&nbsp;5.9</a>.</p>
+<p>С этим работу над ссылками и именованными маршрутами можно считать законченной, по крайней мере до тех пор, пока мы не добавим маршрут для входа на сайт (<a class="ref" href="sign-in-sign-out#top">Глава&nbsp;8</a>). Получившаяся страница для регистрации пользователей (на URL <tt>/signup</tt>) представлена на <a class="ref" href="filling-in-the-layout#fig-new_signup_page">Рис.&nbsp;5.9</a>.</p>
 
 <div class="label" id="fig-new_signup_page"></div>
 
