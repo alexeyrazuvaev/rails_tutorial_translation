@@ -159,6 +159,42 @@ THE SOFTWARE.
 
 <p>As in <a class="ref" href="beginning#sec-heroku_setup">Section&nbsp;1.4.1</a> and <a class="ref" href="a-demo-app#top">Chapter&nbsp;2</a>, we suppress the installation of production gems using the option <tt class="verb">--without</tt> <tt class="verb">production</tt>. This is a &ldquo;remembered option&rdquo;, which means that we don&rsquo;t have to include it in future invocations of Bundler. Instead, we can write simply <code>bundle install</code> and production gems will be ignored automatically.<sup class="footnote" id="fnref-3_2"><a href="#fn-3_2">2</a></sup></p>
 
+<p>Because the sample application is shared as a public repository, it’s important to update the so-called <em>secret token</em> used by Rails to encrypt session variables so that it is dynamically generated rather than hard-coded (<a class="ref" href="static-pages#code-secret_token">Listing&nbsp;3.2</a>). (The code in <a class="ref" href="static-pages#code-secret_token">Listing&nbsp;3.2</a> is fairly advanced for so early in the tutorial, but because it’s a potentially serious security issue I feel it’s important to include it even at this early stage.) Be sure to use the augmented <code>.gitignore</code> file from <a class="ref" href="beginning#code-gitignore">Listing&nbsp;1.7</a> so that the <code>.secret</code> key isn’t exposed in your repository.</p>
+
+<div class="label" id="code-secret_token"></div>
+
+<div class="codelisting">
+<div class="listing"><span class="header">Listing 3.2.</span> <span class="description">Dynamically generating a secret token. <br> <code>config/initializers/secret_token.rb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="c1"># Be sure to restart your server when you modify this file.</span>
+
+<span class="c1"># Your secret key is used for verifying the integrity of signed cookies.</span>
+<span class="c1"># If you change this key, all old signed cookies will become invalid!</span>
+
+<span class="c1"># Make sure the secret is at least 30 characters and all random,</span>
+<span class="c1"># no regular words or you'll be exposed to dictionary attacks.</span>
+<span class="c1"># You can use `rake secret` to generate a secure secret key.</span>
+
+<span class="c1"># Make sure your secret_key_base is kept private</span>
+<span class="c1"># if you're sharing your code publicly.</span>
+<span class="nb">require</span> <span class="s1">'securerandom'</span>
+
+<span class="k">def</span> <span class="nf">secure_token</span>
+  <span class="n">token_file</span> <span class="o">=</span> <span class="no">Rails</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="s1">'.secret'</span><span class="p">)</span>
+  <span class="k">if</span> <span class="no">File</span><span class="o">.</span><span class="n">exist?</span><span class="p">(</span><span class="n">token_file</span><span class="p">)</span>
+    <span class="c1"># Use the existing token.</span>
+    <span class="no">File</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">token_file</span><span class="p">)</span><span class="o">.</span><span class="n">chomp</span>
+  <span class="k">else</span>
+    <span class="c1"># Generate a new token and store it in token_file.</span>
+    <span class="n">token</span> <span class="o">=</span> <span class="no">SecureRandom</span><span class="o">.</span><span class="n">hex</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+    <span class="no">File</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">token_file</span><span class="p">,</span> <span class="n">token</span><span class="p">)</span>
+    <span class="n">token</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">secret_key_base</span> <span class="o">=</span> <span class="n">secure_token</span>
+</pre></div>
+</div></div>
+
 <p>Next, we need to configure Rails to use RSpec in place of <code>Test::Unit</code>. This can be accomplished with <code>rails generate rspec:install</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate rspec:install
