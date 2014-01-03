@@ -1,3 +1,11 @@
+#book_wrap #book {
+  font-size: 135%;
+}
+
+#book_wrap #book .code {
+  font-size: 89%;
+}
+
 p {
   cursor: context-menu;
 }
