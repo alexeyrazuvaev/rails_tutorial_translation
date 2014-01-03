@@ -431,7 +431,7 @@
 </div>
 
 
-<p>Булевы также могут быть объединены с помощью <code>&amp;&amp;</code> (&ldquo;И&rdquo;), <code>||</code> (&ldquo;ИЛИ&rdquo;), и <code>!</code> (&ldquo;НЕ&rdquo;) операторов:</p>
+<p>Булевы также могут быть объединены с помощью <code>&amp;&amp;</code> (&ldquo;и&rdquo;), <code>||</code> (&ldquo;или&rdquo;), и <code>!</code> (&ldquo;не&rdquo;) операторов:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="s2">&quot;foo&quot;</span>
 <span class="go">=&gt; &quot;foo&quot;</span>
@@ -620,7 +620,7 @@
 <p>Мы потратили много времени на понимание строк, и есть естественный способ перейти от строк к массивам, используя <code>split</code> метод:</p>
 
 
-<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span> <span class="s2">&quot;foo bar     baz&quot;</span><span class="o">.</span><span class="n">split</span>     <span class="c1"># Split a string into a three-element array.</span>
+<div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span> <span class="s2">&quot;foo bar     baz&quot;</span><span class="o">.</span><span class="n">split</span>     <span class="c1"># Разбиение строки на трех-элементный массив.</span>
 <span class="go">=&gt; [&quot;foo&quot;, &quot;bar&quot;, &quot;baz&quot;]</span>
 </pre></div>
 </div>
@@ -1088,7 +1088,7 @@
 
 <p>Во-вторых, <code>media</code> аргумент определенно выглядит как хэш, но где фигурные скобки?  Когда хэш&nbsp;&mdash;&nbsp;<em>последний</em> аргумент в вызове функции, фигурные скобки не являются обязательными; эти два выражения эквивалентны:</p>
 
-<div class="code"><div class="highlight"><pre><span class="c1"># Curly braces on final hash arguments are optional.</span>
+<div class="code"><div class="highlight"><pre><span class="c1"># Фигурные скобки необязательны если хэш является последним аргументом функции.</span>
 <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="p">{</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
                                      <span class="s2">&quot;data-turbolinks-track&quot;</span> <span class="o">=&gt;</span> <span class="kp">true</span> <span class="p">}</span>
 <span class="n">stylesheet_link_tag</span> <span class="s2">&quot;application&quot;</span><span class="p">,</span> <span class="ss">media:</span> <span class="s2">&quot;all&quot;</span><span class="p">,</span>
