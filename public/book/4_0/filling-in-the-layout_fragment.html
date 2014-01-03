@@ -1,82 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div id="top"></div>
 
 
@@ -1238,7 +1159,7 @@
 
 
 <div class="table"><div class="center">
-<table class="tabular"><tr><th class="align_left"><strong>Page</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_right"><strong>Named route</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Таблица 5.1: </span><span class="description">Маршруты и соответствующие им URL для ссылок сайта.</span></div></div>
+<table class="tabular"><tr><th class="align_left"><strong>Страница</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_right"><strong>Именованный маршрут</strong></th></tr><tr class="top_bar"><td class="align_left">Home</td><td class="align_left">/</td><td class="align_right"><code>root_path</code></td></tr><tr><td class="align_left">About</td><td class="align_left">/about</td><td class="align_right"><code>about_path</code></td></tr><tr><td class="align_left">Help</td><td class="align_left">/help</td><td class="align_right"><code>help_path</code></td></tr><tr><td class="align_left">Contact</td><td class="align_left">/contact</td><td class="align_right"><code>contact_path</code></td></tr><tr><td class="align_left">Sign up</td><td class="align_left">/signup</td><td class="align_right"><code>signup_path</code></td></tr><tr><td class="align_left">Sign in</td><td class="align_left">/signin</td><td class="align_right"><code>signin_path</code></td></tr></table></div><div class="caption"><span class="header">Таблица 5.1: </span><span class="description">Маршруты и соответствующие им URL для ссылок сайта.</span></div></div>
 
 
 <p>Прежде чем двигаться дальше, давайте добавим страницу Contact (было оставлено в качестве упражнения в  <a class="ref" href="static-pages#top">Главе&nbsp;3</a>). Тесты представлены в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.17</a>; они просто следуют модели из <a class="ref" href="static-pages#code-pages_controller_spec_title">Листинга&nbsp;3.19</a>.</p>
@@ -1270,7 +1191,7 @@
 </pre></div>
 </div></div>
 
-<p>Для того чтобы убедиться что оба теста в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.17</a> не проходят, нам нужно раскомментировать &ldquo;Contact&rdquo; ссылку в подвале, как это показано в <a class="ref" href="filling-in-the-layout#code-comment_out_footer">Листинге&nbsp;5.18</a>.</p>
+<p>Для того чтобы убедиться что оба теста в <a class="ref" href="filling-in-the-layout#code-contact_page_test">Листинге&nbsp;5.17</a> не проходят, нам нужно закомментировать &ldquo;Contact&rdquo; ссылку в подвале, как это показано в <a class="ref" href="filling-in-the-layout#code-comment_out_footer">Листинге&nbsp;5.18</a>.</p>
 
 <div class="label" id="code-comment_out_footer"></div>
 
@@ -1617,36 +1538,14 @@
 </pre></div>
 </div></div>
 
+<p>Этот код направляет корневой URL&nbsp;<tt>/</tt> к <tt>/static_pages/home</tt>, а это означает что <a href="http://localhost:3000/">http://localhost:3000/</a> наконец то покажет нечто иное нежели дефолтную Rails страницу из <a class="ref" href="beginning#fig-riding_rails">Рис.&nbsp;1.3</a>. Он также дает нам следующие URL хелперы:</p>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<p>Этот код направляет корневой URL&nbsp;<tt>/</tt> к <tt>/static_pages/home</tt> и дает нам URL хелперы:</p>
-
-<div class="code"><div class="highlight"><pre><span class="n">root_path</span> <span class="o">=&gt;</span> <span class="s1">&#39;/&#39;</span>
-<span class="n">root_url</span>  <span class="o">=&gt;</span> <span class="s1">&#39;http://localhost:3000/&#39;</span>
+<div class="code"><div class="highlight"><pre><span class="n">root_path</span> <span class="o">-&gt;</span> <span class="s1">&#39;/&#39;</span>
+<span class="n">root_url</span>  <span class="o">-&gt;</span> <span class="s1">&#39;http://localhost:3000/&#39;</span>
 </pre></div>
 </div>
 
-
-<p>Мы должны также прислушаться к коментарию в <a class="ref" href="filling-in-the-layout#code-root_route_hint">Листинге&nbsp;5.22</a> и удалить <code>public/index.html</code> чтобы предотвратить отображение дефолтной страницы (<a class="ref" href="beginning#fig-riding_rails_31">Рис.&nbsp;1.3</a>) при посещении&nbsp;<tt>/</tt>. Вы можете, конечно, просто удалить файл поместив его в корзину, но если вы используете Git для контроля версий, есть способ удалить файл и в тоже время сообщить Git об удалении&nbsp;&mdash;&nbsp;с помощью <code>git rm</code>:</p>
-
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> git rm public/index.html
-</pre></div>
-</div>
-
-<p>При этом, все маршруты для статических страниц работают, и тесты должны пройти:</p>
+<p>При этом, все маршруты для статических страниц работают и тесты должны пройти:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/static_pages_spec.rb
 </pre></div>
@@ -1676,14 +1575,16 @@
 
 <p>и так далее.</p>
 
-<p>Мы начнем с партиала <code>_header.html.erb</code> (<a class="ref" href="filling-in-the-layout#code-header_partial_links">Листинг&nbsp;5.24</a>), который содержит ссылки на Home и Help страницы. Пока мы здесь, мы также, следуя общей конвенции Сети, свяжем логотип с Home страницей.</p>
+<p>Мы начнем с партиала <code>_header.html.erb</code> (<a class="ref" href="filling-in-the-layout#code-header_partial_links">Листинг&nbsp;5.27</a>), который содержит ссылки на Home и Help страницы. Пока мы здесь, мы также, следуя общей конвенции Сети, свяжем логотип с Home страницей.</p>
 
 <div class="label" id="code-header_partial_links"></div>
 
 
+
+
+
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.24.</span> <span class="description">Партиал _header со ссылками. <br /> <code>app/views/layouts/_header.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.27.</span> <span class="description">Партиал _header со ссылками. <br /> <code>app/views/layouts/_header.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;header</span> <span class="na">class=</span><span class="s">&quot;navbar navbar-fixed-top navbar-inverse&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;navbar-inner&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;container&quot;</span><span class="nt">&gt;</span>
@@ -1704,13 +1605,13 @@
 
 <p>У нас не будет именованного маршрута для &ldquo;Sign in&rdquo; ссылки, до <a class="ref" href="sign-in-sign-out#top">Главы&nbsp;8</a>, поэтому мы пока оставили ее в виде&nbsp;<code>&rsquo;#&rsquo;</code>.</p>
 
-<p>Другим местом со ссылками является партиал подвала, <code>_footer.html.erb</code>, в котором есть ссылки для About и Contact страниц (<a class="ref" href="filling-in-the-layout#code-footer_partial_links">Листинг&nbsp;5.25</a>).</p>
+<p>Другим местом со ссылками является партиал подвала, <code>_footer.html.erb</code>, в котором есть ссылки для About и Contact страниц (<a class="ref" href="filling-in-the-layout#code-footer_partial_links">Листинг&nbsp;5.28</a>).</p>
 
 <div class="label" id="code-footer_partial_links"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.25.</span> <span class="description">Партиал _footer со ссылками. <br /> <code>app/views/layouts/_footer.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 5.28.</span> <span class="description">Партиал _footer со ссылками. <br /> <code>app/views/layouts/_footer.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;footer</span> <span class="na">class=</span><span class="s">&quot;footer&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;small&gt;</span>
@@ -1731,13 +1632,12 @@
 
 <p>Теперь наш макет имеет ссылки на все статические страницы созданные в <a class="ref" href="static-pages#top">Главе&nbsp;3</a>, так, например, <a href="http://localhost:3000/about"><tt>/about</tt></a> ведет к About  странице (<a class="ref" href="filling-in-the-layout#fig-about_page">Рис.&nbsp;5.8</a>).</p>
 
-<p>Кстати, стоит отметить, что мы на самом деле не протестировали на наличие ссылок в шаблоне, наши тесты будут провальными, только если маршруты не определены. Вы можете проверить это, закомментировав один из маршрутов в <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинге&nbsp;5.21</a> и выполнив тесты. Метод тестирования, который на самом деле обеспечивает уверенность что ссылки существуют и отправляют в правильные места, см. в <a class="ref" href="filling-in-the-layout#sec-layout_exercises">Разделе&nbsp;5.6</a>.</p>
+<p>Кстати, стоит отметить, что мы на самом деле не протестировали на наличие ссылок в шаблоне, наши тесты будут провальными, только если маршруты не определены. Вы можете проверить это, закомментировав один из маршрутов в <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинге&nbsp;5.24</a> и запустив ваш набор тестов. Метод тестирования который на самом деле обеспечивает уверенность что ссылки существуют и отправляют в правильные места, см. в <a class="ref" href="filling-in-the-layout#sec-layout_exercises">Разделе&nbsp;5.6</a>.</p>
 
 <div class="label" id="fig-about_page"></div>
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/about_page_styled.png" alt="about_page_styled" /></span></div><div class="caption"><span class="header">Рис. 5.8: </span><span class="description">About страница на  <a href="http://localhost:3000/about"><tt>/about</tt></a>.&nbsp;<a href="http://railstutorial.org/images/figures/about_page_styled-full.png">(полный размер)</a></span></div></div>
-
 
 
 
@@ -1747,26 +1647,25 @@
 <h3><a id="sec-5_3_4" href="filling-in-the-layout#sec-pretty_rspec" class="heading"><span class="number">5.3.4</span> Приятный RSpec</a></h3>
 
 
-<p>Мы отметили в <a class="ref" href="filling-in-the-layout#sec-route_tests">Разделе&nbsp;5.3.1</a> что тесты для статических страниц стали немного многословными и наполнились повторениями (<a class="ref" href="filling-in-the-layout#code-route_tests">Листинг&nbsp;5.20</a>). В этом разделе мы применим самые последние фишки RSpec для того чтобы сделать наши тесты более компактными и элегантными.</p>
+<p>Мы отметили в <a class="ref" href="filling-in-the-layout#sec-route_tests">Разделе&nbsp;5.3.1</a> что тесты для статических страниц стали немного многословными и наполнились повторениями (<a class="ref" href="filling-in-the-layout#code-route_tests">Листинг&nbsp;5.23</a>). В этом разделе мы применим самые последние фишки RSpec для того чтобы сделать наши тесты более компактными и элегантными.</p>
 
 <p>Давайте взглянем на пару примеров чтобы увидеть как они могут быть улучшены:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
 
-  <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
+  <span class="n">it</span> <span class="s2">&quot;should have the content &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
     <span class="n">visit</span> <span class="n">root_path</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="n">it</span> <span class="s2">&quot;should have the base title&quot;</span> <span class="k">do</span>
     <span class="n">visit</span> <span class="n">root_path</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                      <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="n">it</span> <span class="s2">&quot;should not have a custom page title&quot;</span> <span class="k">do</span>
     <span class="n">visit</span> <span class="n">root_path</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">not_to</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -1778,21 +1677,19 @@
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
   <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">root_path</span> <span class="p">}</span>
 
-  <span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
+  <span class="n">it</span> <span class="s2">&quot;should have the content &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="n">it</span> <span class="s2">&quot;should have the base title&quot;</span> <span class="k">do</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                      <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="n">it</span> <span class="s2">&quot;should not have a custom page title&quot;</span> <span class="k">do</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should_not</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">not_to</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</pre></div>
-</div>
+</pre></div
 
 
 <p>Здесь используется строка</p>
@@ -1806,14 +1703,14 @@
 
 <p>Есть еще один источник повторений в каждом примере; у нас есть</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="s2">&quot;should have the h1 &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="s2">&quot;should have the content &#39;Sample App&#39;&quot;</span> <span class="k">do</span>
 </pre></div>
 </div>
 
 
 <p>и</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
+<div class="code"><div class="highlight"><pre><span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 
@@ -1827,7 +1724,7 @@
 
 <p>а затем применив вариант метода <code>it</code> для того чтобы собрать код и описание (теста) в одну строку:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
+<div class="code"><div class="highlight"><pre><span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
 </pre></div>
 </div>
 
@@ -1841,30 +1738,28 @@
   <span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">root_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span>
-                        <span class="ss">text:</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_selector</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
 </pre></div>
 </div>
 
 
-<p>Этот код выглядит лучше, но тест заголовка по-прежнему длинноват. Кроме того, большая часть теста заголовка в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.20</a> содержит длиный текст заголовка вида</p>
+<p>Этот код выглядит лучше, но тест заголовка по-прежнему длинноват. Кроме того, большая часть теста заголовка в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.23</a> содержит длиный текст заголовка вида</p>
 
 <div class="code"><div class="highlight"><pre><span class="s2">&quot;Ruby on Rails Tutorial Sample App | About&quot;</span>
 </pre></div>
 </div>
 
 
-<p>Упражнение в <a class="ref" href="static-pages#sec-static_pages_exercises">Разделе&nbsp;3.5</a> предлагает вам устранить часть этого дублирования посредством определения переменной <code>base_title</code> и интерполяции строк (<a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинг&nbsp;3.30</a>). Мы можем сделать еще лучше, определив <code>full_title</code>, который является параллелью хелпера <code>full_title</code> из <a class="ref" href="rails-flavored-ruby#code-title_helper">Листинга&nbsp;4.2</a>. Мы сделаем это создав директорию <code>spec/support</code> и файл <code>utilities.rb</code> для RSpec-утилит (<a class="ref" href="filling-in-the-layout#code-rspec_utilities">Листинг&nbsp;5.26</a>).</p>
+<p>Упражнение в <a class="ref" href="static-pages#sec-static_pages_exercises">Разделе&nbsp;3.5</a> предлагает вам устранить часть этого дублирования посредством определения переменной <code>base_title</code> и интерполяции строк (<a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинг&nbsp;3.31</a>). Мы можем сделать еще лучше, определив <code>full_title</code>, который является параллелью хелпера <code>full_title</code> из <a class="ref" href="rails-flavored-ruby#code-title_helper">Листинга&nbsp;4.2</a>. Мы сделаем это создав директорию <code>spec/support</code> и файл <code>utilities.rb</code> для RSpec-утилит (<a class="ref" href="filling-in-the-layout#code-rspec_utilities">Листинг&nbsp;5.29</a>).</p>
 
 <div class="label" id="code-rspec_utilities"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.26.</span> <span class="description">Файл для утилит RSpec с функцией <code>full_title</code>. <br /> <code>spec/support/utilities.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.29.</span> <span class="description">Файл для утилит RSpec с функцией <code>full_title</code>. <br /> <code>spec/support/utilities.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">)</span>
   <span class="n">base_title</span> <span class="o">=</span> <span class="s2">&quot;Ruby on Rails Tutorial Sample App&quot;</span>
   <span class="k">if</span> <span class="n">page_title</span><span class="o">.</span><span class="n">empty?</span>
@@ -1886,21 +1781,21 @@
   <span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">root_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
 </pre></div>
-</div>
+</div></div>
 
 
-<p>Теперь мы можем упростить тесты для страниц Help, About и Contact используя теже методы что и для страницы Home. Результаты представлены в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.27</a>.</p>
+<p>Теперь мы можем упростить тесты для страниц Help, About и Contact используя теже методы что и для страницы Home. Результаты представлены в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.30</a>.</p>
 
 <div class="label" id="code-pretty_page_tests"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.27.</span> <span class="description">Улучшение тестов для статических страниц. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.30.</span> <span class="description">Улучшение тестов для статических страниц. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
@@ -1910,30 +1805,30 @@
   <span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">root_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_selector</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sample App&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;Help page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">help_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Help&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Help&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Help&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Help&#39;</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;About page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">about_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;About&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;About Us&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;About&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;About Us&#39;</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;Contact page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">contact_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Contact&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -1947,7 +1842,7 @@
 </div>
 
 
-<p>Стиль RSpec из <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинга&nbsp;5.27</a> намного более лаконичен нежели стиль в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.20</a>&mdash;однако, он может быть еще более лаконичным (<a class="ref" href="filling-in-the-layout#sec-layout_exercises">Раздел&nbsp;5.6</a>). При дальнейшей разработке примера приложения мы будем использовать этот более компактный стиль везде, где это только будет возможно.</p>
+<p>Стиль RSpec из <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинга&nbsp;5.30</a> намного более лаконичен нежели стиль в <a class="ref" href="filling-in-the-layout#code-route_tests">Листинге&nbsp;5.23</a>&mdash;однако, он может быть еще более лаконичным (<a class="ref" href="filling-in-the-layout#sec-layout_exercises">Раздел&nbsp;5.6</a>). При дальнейшей разработке примера приложения мы будем использовать этот более компактный стиль везде, где это только будет возможно.</p>
 
 <div class="label" id="sec-user_signup"></div>
 
@@ -1963,13 +1858,15 @@
 <h3><a id="sec-5_4_1" href="filling-in-the-layout#sec-users_controller" class="heading"><span class="number">5.4.1</span> Контроллер Users</a></h3>
 
 
-<p>Мы создали наш первый контроллер  - StaticPages -  еще в <a class="ref" href="static-pages#sec-static_pages_with_rails">Разделе&nbsp;3.1.2</a>. Пришло время создать второй&nbsp;&mdash;&nbsp;контроллер Users.  Как и прежде, мы будем использовать <code>generate</code> для создания простейшего контроллера, который отвечает нашим текущим потребностям, а именно, с одной страницей-заглушкой для регистрации новых пользователей. Следуя конвенции <a  href="http://ru.wikipedia.org/wiki/REST">REST архитектуры</a> предпочитаемой Рельсами, мы назовем действие для новых пользователей, <code>new</code> и передадим его в качестве аргумента в <code>generate controller</code> для создания его (действия) автоматически (<a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинг&nbsp;5.28</a>).</p>
+
+
+<p>Мы создали наш первый контроллер  - StaticPages -  еще в <a class="ref" href="static-pages#sec-static_pages">Разделе&nbsp;3.1</a>. Пришло время создать второй&nbsp;&mdash;&nbsp;контроллер Users.  Как и прежде, мы будем использовать <code>generate</code> для создания простейшего контроллера, который отвечает нашим текущим потребностям, а именно, с одной страницей-заглушкой для регистрации новых пользователей. Следуя конвенции <a  href="http://ru.wikipedia.org/wiki/REST">REST архитектуры</a> предпочитаемой Рельсами, мы назовем действие для новых пользователей, <code>new</code> и передадим его в качестве аргумента в <code>generate controller</code> для создания его (действия) автоматически (<a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинг&nbsp;5.31</a>).</p>
 
 <div class="label" id="code-generate_users_controller"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.28.</span> <span class="description">Генерация контроллера Users (с <code>new</code> действием).</span> </div>
+<div class="listing"><span class="header">Листинг 5.31.</span> <span class="description">Генерация контроллера Users (с <code>new</code> действием).</span> </div>
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> rails generate controller Users new --no-test-framework
 <span class="go">      create  app/controllers/users_controller.rb</span>
 <span class="go">       route  get &quot;users/new&quot;</span>
@@ -1987,13 +1884,13 @@
 </div></div>
 
 
-<p>Это создает контроллер Users с <code>new</code> действием (<a class="ref" href="filling-in-the-layout#code-initial_users_controller">Листинг&nbsp;5.29</a>) и заглушку представления (<a class="ref" href="filling-in-the-layout#code-initial_new_action">Листинг&nbsp;5.30</a>).</p>
+<p>Это создает контроллер Users с <code>new</code> действием (<a class="ref" href="filling-in-the-layout#code-initial_users_controller">Листинг&nbsp;5.32</a>) и заглушку представления (<a class="ref" href="filling-in-the-layout#code-initial_new_action">Листинг&nbsp;5.33</a>).</p>
 
 <div class="label" id="code-initial_users_controller"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.29.</span> <span class="description">Начальный контроллер Users с <code>new</code> действием. <br /> <code>app/controllers/users_controller.rb</code></span>
+<div class="listing"><span class="header">Листинг 5.32.</span> <span class="description">Начальный контроллер Users с <code>new</code> действием. <br /> <code>app/controllers/users_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="k">def</span> <span class="nf">new</span>
@@ -2010,7 +1907,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.30.</span> <span class="description">Начальное <code>new</code> действие для Users. <br /> <code>app/views/users/new.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 5.33.</span> <span class="description">Начальное <code>new</code> действие для Users. <br /> <code>app/views/users/new.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;h1&gt;</span>Users#new<span class="nt">&lt;/h1&gt;</span>
 <span class="nt">&lt;p&gt;</span>Find me in app/views/users/new.html.erb<span class="nt">&lt;/p&gt;</span>
@@ -2033,14 +1930,13 @@
 </div>
 
 
-<p>Затем, следуя модели спеков для статических страниц в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.27</a>, мы заполняем тесты для страниц пользователей кодом тестирующим содержимое <code>h1</code> и <code>title</code> тегов как это показано в <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинге&nbsp;5.31</a>.</p>
+<p>Затем, следуя модели спеков для статических страниц в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.30</a>, мы заполняем тесты для страниц пользователей кодом тестирующим содержимое <code>h1</code> и <code>title</code> тегов как это показано в <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинге&nbsp;5.34</a>.</p>
 
 <div class="label" id="code-user_pages_spec"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.31.</span> <span class="description">начальный спек для пользователей с тестом для страницы регистрации. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.34.</span> <span class="description">начальный спек для пользователей с тестом для страницы регистрации. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -2050,8 +1946,8 @@
   <span class="n">describe</span> <span class="s2">&quot;signup page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signup_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -2086,26 +1982,23 @@
 </div>
 
 
-<p>(Фактически, вы можете просто набрать <code>rake</code>; дефолтное поведение <code>rake</code> это запуск набора тестов.)</p>
+<p>(Фактически, вы можете просто набрать <code>rake</code>; дефолтное поведение <code>rake</code> это запуск набора тестов.) Единственное 'но' - использование <code>rake</code> для запуска тестов примера приложения в его текущем состоянии вызовет ошибку т.к. этой команде требуется правильно подготовленная тестовая база данных; этот шаг мы отложили до <a class="ref" href="modeling-users#sec-initial_user_tests">Раздела&nbsp;6.2.1</a>.</p>
 
-<p>По конструкции, контроллер Users уже имеет <code>new</code> действие, так что все что нам необходимо для прохождения тестов это правильные маршрут и контент представления. Мы будем следовать примерам из  <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинга&nbsp;5.21</a> и добавим <code>match &rsquo;/signup&rsquo;</code> правило для URL регистрации (<a class="ref" href="filling-in-the-layout#code-signup_route">Листинг&nbsp;5.32</a>).</p>
+<p>По конструкции, контроллер Users уже имеет <code>new</code> действие, так что все что нам необходимо для прохождения тестов это правильные маршрут и контент представления. Мы будем следовать примерам из  <a class="ref" href="filling-in-the-layout#code-static_page_routes">Листинга&nbsp;5.24</a> и добавим <code>match &rsquo;/signup&rsquo;</code> правило для URL регистрации (<a class="ref" href="filling-in-the-layout#code-signup_route">Листинг&nbsp;5.35</a>).</p>
 
 <div class="label" id="code-signup_route"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.32.</span> <span class="description">Маршрут для страницы регистрации. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.35.</span> <span class="description">Маршрут для страницы регистрации. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">get</span> <span class="s2">&quot;users/new&quot;</span>
 
-  <span class="n">root</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#home&#39;</span>
-
-  <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;users#new&#39;</span>
-
-  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span>
-  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span>
+  <span class="n">root</span>  <span class="s1">&#39;static_pages#home&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;users#new&#39;</span><span class="p">,</span>            <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/help&#39;</span><span class="p">,</span>    <span class="ss">to:</span> <span class="s1">&#39;static_pages#help&#39;</span><span class="p">,</span>    <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/about&#39;</span><span class="p">,</span>   <span class="ss">to:</span> <span class="s1">&#39;static_pages#about&#39;</span><span class="p">,</span>   <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/contact&#39;</span><span class="p">,</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#contact&#39;</span><span class="p">,</span> <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -2114,15 +2007,15 @@
 </div></div>
 
 
-<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерировано автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.28</a>. В настоящее время это правило необходимо для работы адреса <code>&rsquo;users/new&rsquo;</code>, но оно не соответствует REST конвенции (<a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблица&nbsp;2.2</a>) и мы избавимся от него в <a class="ref" href="sign-up#sec-a_users_resource">Разделе&nbsp;7.1.2</a>.</p>
+<p>Обратите внимание, мы сохранили правило  <code>get "users/new"</code>, которое было сгенерировано автоматически при создании Users контроллера в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.31</a>. В настоящее время это правило необходимо для работы адреса <code>&rsquo;users/new&rsquo;</code>, но оно не соответствует REST конвенции (<a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблица&nbsp;2.2</a>) и мы избавимся от него в <a class="ref" href="sign-up#sec-a_users_resource">Разделе&nbsp;7.1.2</a>.</p>
 
-<p>Теперь все что нам теперь необходимо для прохождения тестов это представление с заголовком браузера и заголовком первого уровня &ldquo;Sign up&rdquo; (<a class="ref" href="filling-in-the-layout#code-initial_signup_page">Листинг&nbsp;5.33</a>).</p>
+<p>Теперь все что нам теперь необходимо для прохождения тестов это представление с заголовком браузера и заголовком первого уровня &ldquo;Sign up&rdquo; (<a class="ref" href="filling-in-the-layout#code-initial_signup_page">Листинг&nbsp;5.36</a>).</p>
 
 <div class="label" id="code-initial_signup_page"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.33.</span> <span class="description">Начальная страница регистрации (заглушка). <br /> <code>app/views/users/new.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 5.36.</span> <span class="description">Начальная страница регистрации (заглушка). <br /> <code>app/views/users/new.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;h1&gt;</span>Sign up<span class="nt">&lt;/h1&gt;</span>
@@ -2131,13 +2024,13 @@
 </div></div>
 
 
-<p>Теперь тест страницы регистрации из <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинга&nbsp;5.31</a> должен пройти. Нам осталось лишь добавить соответствующую ссылку к кнопке на  Home странице. Как и с прочими маршрутами, <code>match &rsquo;/signup&rsquo;</code> дает нам именованный маршрут <code>signup_path</code>, который мы применяем в <a class="ref" href="filling-in-the-layout#code-home_page_signup_link">Листинге&nbsp;5.34</a>.</p>
+<p>Теперь тест страницы регистрации из <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинга&nbsp;5.34</a> должен пройти. Нам осталось лишь добавить соответствующую ссылку к кнопке на  Home странице. Как и с прочими маршрутами, <code>match &rsquo;/signup&rsquo;</code> дает нам именованный маршрут <code>signup_path</code>, который мы применяем в <a class="ref" href="filling-in-the-layout#code-home_page_signup_link">Листинге&nbsp;5.37</a>.</p>
 
 <div class="label" id="code-home_page_signup_link"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.34.</span> <span class="description">Добавление ссылки к кнопке Signup. <br /> <code>app/views/static_pages/home.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 5.37.</span> <span class="description">Добавление ссылки к кнопке Signup. <br /> <code>app/views/static_pages/home.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;center hero-unit&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;h1&gt;</span>Welcome to the Sample App<span class="nt">&lt;/h1&gt;</span>
@@ -2230,15 +2123,37 @@
 
 
 <ol>
+<li>Мы видели в <a class="ref" href="filling-in-the-layout#sec-layout_links">Разделе&nbsp;5.3</a> что Rspec-матчер <code>have_content</code> иногда работает <em>слишком</em> общО что приводит нас к временному закомментированию строки &ldquo;Contact&rdquo; в футере во избежание ошибочно-проходящего теста (<a class="ref" href="filling-in-the-layout#code-comment_out_footer">Листинг&nbsp;5.18</a>). Для того чтобы исправить это <a class="ref" href="filling-in-the-layout#code-contact_test_have_selector">Листинг&nbsp;5.38</a> вводит предоставляемый Capybara метод <code>have_selector</code> который позволяет нам тестировать наличие отдельных HTML тегов. Удаляя и возвращая на место &ldquo;Contact&rdquo; <code>h1</code> в <a class="ref" href="filling-in-the-layout#code-contact_view">Листинге&nbsp;5.21</a>, убедитесь что код в <a class="ref" href="filling-in-the-layout#code-contact_test_have_selector">Листинге&nbsp;5.38</a> выдает провальный тест даже если подвал не закомментирован.</li>
 
-<li>Код для тестирования статических страниц в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.27</a> компактен, но по прежнему имеет повторения. RSpec поддерживает возможность называемую <em>shared examples</em> предназначенную для устранения такого вида дублирования. Следуя примеру в <a class="ref" href="filling-in-the-layout#code-static_pages_spec_shared_example">Листинге&nbsp;5.35</a>, заполните пропущенные тесты для страниц Help, About и Contact. Обратите внимание, что команда <code>let</code> кратко обсуждаемая в <a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинге&nbsp;3.30</a>, создает локальную переменную с данным значением по запросу (т.е. при использовании переменной), в отличие от переменной экземпляра, которая создается в момент назначения.</li>
+<li>Код для тестирования статических страниц в <a class="ref" href="filling-in-the-layout#code-pretty_page_tests">Листинге&nbsp;5.30</a> компактен, но по прежнему имеет повторения. RSpec поддерживает возможность называемую <em>shared examples</em> предназначенную для устранения такого вида дублирования. Следуя примеру в <a class="ref" href="filling-in-the-layout#code-static_pages_spec_shared_example">Листинге&nbsp;5.39</a>, заполните пропущенные тесты для страниц Help, About и Contact. Обратите внимание - команда <code>let</code> кратко обсуждаемая в <a class="ref" href="static-pages#code-pages_controller_spec_exercise">Листинге&nbsp;3.31</a>, создает локальную переменную с данным значением по запросу (т.е. при использовании переменной), в отличие от переменной экземпляра, которая создается в момент назначения. (<a class="ref" href="filling-in-the-layout#code-static_pages_spec_shared_example">Листинг&nbsp;5.39</a> также использует <code>have_selector</code> из <a class="ref" href="filling-in-the-layout#code-contact_test_have_selector">Листинга&nbsp;5.38</a>.)</li>
 
-<li>Возможно вы заметили что наши тесты для ссылок шаблона тестируют маршруты, но на самом деле не проверяют, ведут ли ссылки к правильным страницам. Один из способов реализации этих испытаний заключается в использовании <code>visit</code> и <code>click_link</code> внутри RSpec интеграционного теста. Дополните код из <a class="ref" href="filling-in-the-layout#code-layout_links_test">Листинга&nbsp;5.36</a> чтобы проверить что все ссылки шаблона правильно определены.</li>
+<li>Возможно вы заметили что наши тесты для ссылок шаблона тестируют маршруты, но на самом деле не проверяют, ведут ли ссылки к правильным страницам. Один из способов реализации этих испытаний заключается в использовании <code>visit</code> и <code>click_link</code> внутри RSpec интеграционного теста. Дополните код из <a class="ref" href="filling-in-the-layout#code-layout_links_test">Листинга&nbsp;5.40</a> чтобы проверить что все ссылки шаблона правильно определены.</li>
 
-<li>Устраните необходимость в тестовом хелпере <code>full_title</code> в <a class="ref" href="filling-in-the-layout#code-rspec_utilities">Листинге&nbsp;5.26</a> написав тест для оригинального вспомогательного метода, как это показано в <a class="ref" href="filling-in-the-layout#code-full_title_helper_tests">Листинге&nbsp;5.37</a>. (Вам необходимо будет создать директорию <code>spec/helpers</code> и файл <code>application_helper_spec.rb</code>.) Затем <code>include</code> его в тест с помощью кода в  <a class="ref" href="filling-in-the-layout#code-rspec_utilities_simplified">Листинге&nbsp;5.38</a>.  Проверьте запустив тесты, что новый код работает. <em>Примечание</em>: <a class="ref" href="filling-in-the-layout#code-full_title_helper_tests">Листинг&nbsp;5.37</a> использует <em>регулярные выражения</em>, о которых мы узнаем больше в  <a class="ref" href="modeling-users#sec-format_validation">Разделе&nbsp;6.2.4</a>. (Спасибо <a href="http://alexchaffee.com/">Alex Chaffee</a> за совет и код используемый в этом упражнении.)</li>
+<li>Устраните необходимость в тестовом хелпере <code>full_title</code> в <a class="ref" href="filling-in-the-layout#code-rspec_utilities">Листинге&nbsp;5.29</a> написав тест для оригинального вспомогательного метода, как это показано в <a class="ref" href="filling-in-the-layout#code-full_title_helper_tests">Листинге&nbsp;5.41</a>. (Вам необходимо будет создать директорию <code>spec/helpers</code> и файл <code>application_helper_spec.rb</code>.) Затем <code>include</code> его в тест с помощью кода в  <a class="ref" href="filling-in-the-layout#code-rspec_utilities_simplified">Листинге&nbsp;5.42</a>. Проверьте, запустив тесты, что новый код работает. <em>Примечание</em>: <a class="ref" href="filling-in-the-layout#code-full_title_helper_tests">Листинг&nbsp;5.41</a> использует <em>регулярные выражения</em> о которых мы узнаем больше в  <a class="ref" href="modeling-users#sec-format_validation">Разделе&nbsp;6.2.4</a>. (Спасибо <a href="http://alexchaffee.com/">Alex Chaffee</a> за совет и код используемый в этом упражнении.)</li>
 
 </ol>
 
+
+<div class="label" id="code-contact_test_have_selector"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 5.38.</span> <span class="description">Более основательный тест для страницы Contact. <br /> <code>spec/requests/static_pages_spec.rb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
+
+<span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="n">describe</span> <span class="s2">&quot;Contact page&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">contact_path</span> <span class="p">}</span>
+
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Contact&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Contact&#39;</span><span class="p">))</span> <span class="p">}</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
 
 
 
@@ -2246,8 +2161,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.35.</span> <span class="description">Применение RSpec <em>shared example</em> для устранения дублирования в тестах. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.39.</span> <span class="description">Применение RSpec <em>shared example</em> для устранения дублирования в тестах. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
@@ -2255,8 +2169,8 @@
   <span class="n">subject</span> <span class="p">{</span> <span class="n">page</span> <span class="p">}</span>
 
   <span class="n">shared_examples_for</span> <span class="s2">&quot;all static pages&quot;</span> <span class="k">do</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="n">heading</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">))</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">heading</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="n">page_title</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;Home page&quot;</span> <span class="k">do</span>
@@ -2265,7 +2179,7 @@
     <span class="n">let</span><span class="p">(</span><span class="ss">:page_title</span><span class="p">)</span> <span class="p">{</span> <span class="s1">&#39;&#39;</span> <span class="p">}</span>
 
     <span class="n">it_should_behave_like</span> <span class="s2">&quot;all static pages&quot;</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_selector</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;| Home&#39;</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should_not</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;| Home&#39;</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;Help page&quot;</span> <span class="k">do</span>
@@ -2296,8 +2210,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.36.</span> <span class="description">Тест для ссылок в шаблоне. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.40.</span> <span class="description">Тест для ссылок в шаблоне. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
@@ -2307,16 +2220,16 @@
   <span class="n">it</span> <span class="s2">&quot;should have the right links on the layout&quot;</span> <span class="k">do</span>
     <span class="n">visit</span> <span class="n">root_path</span>
     <span class="n">click_link</span> <span class="s2">&quot;About&quot;</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span> <span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;About Us&#39;</span><span class="p">)</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;About Us&#39;</span><span class="p">))</span>
     <span class="n">click_link</span> <span class="s2">&quot;Help&quot;</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="c1"># fill in</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="c1"># заполнить</span>
     <span class="n">click_link</span> <span class="s2">&quot;Contact&quot;</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="c1"># fill in</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="c1"># заполнить</span>
     <span class="n">click_link</span> <span class="s2">&quot;Home&quot;</span>
     <span class="n">click_link</span> <span class="s2">&quot;Sign up now!&quot;</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="c1"># fill in</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="c1"># заполнить</span>
     <span class="n">click_link</span> <span class="s2">&quot;sample app&quot;</span>
-    <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="c1"># fill in</span>
+    <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="c1"># заполнить</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -2329,23 +2242,22 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.37.</span> <span class="description">Тесты для хелпера <code>full_title</code> из <code>application_helper.rb</code>. <br /> <code>spec/helpers/application_helper_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 5.41.</span> <span class="description">Тесты для хелпера <code>full_title</code> из <code>application_helper.rb</code>. <br /> <code>spec/helpers/application_helper_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="no">ApplicationHelper</span> <span class="k">do</span>
 
   <span class="n">describe</span> <span class="s2">&quot;full_title&quot;</span> <span class="k">do</span>
     <span class="n">it</span> <span class="s2">&quot;should include the page title&quot;</span> <span class="k">do</span>
-      <span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="o">=~</span> <span class="sr">/foo/</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">to</span> <span class="n">match</span><span class="p">(</span><span class="sr">/foo/</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should include the base title&quot;</span> <span class="k">do</span>
-      <span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should</span> <span class="o">=~</span> <span class="sr">/^Ruby on Rails Tutorial Sample App/</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;foo&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">to</span> <span class="n">match</span><span class="p">(</span><span class="sr">/^Ruby on Rails Tutorial Sample App/</span><span class="p">)</span>
     <span class="k">end</span>
 
     <span class="n">it</span> <span class="s2">&quot;should not include a bar for the home page&quot;</span> <span class="k">do</span>
-      <span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">should_not</span> <span class="o">=~</span> <span class="sr">/\|/</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">not_to</span> <span class="n">match</span><span class="p">(</span><span class="sr">/\|/</span><span class="p">)</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -2359,7 +2271,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 5.38.</span> <span class="description">Замена тестового хелпера <code>full_title</code> на простой <code>include</code>. <br /> <code>spec/support/utilities.rb</code></span>
+<div class="listing"><span class="header">Листинг 5.42.</span> <span class="description">Замена тестового хелпера <code>full_title</code> на простой <code>include</code>. <br /> <code>spec/support/utilities.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="kp">include</span> <span class="no">ApplicationHelper</span>
 </pre></div>
