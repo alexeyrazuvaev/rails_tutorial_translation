@@ -934,7 +934,8 @@
     <span class="k">def</span> <span class="nf">create_remember_token</span>
       <span class="nb">self</span><span class="o">.</span><span class="n">remember_token</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">encrypt</span><span class="p">(</span><span class="no">User</span><span class="o">.</span><span class="n">new_remember_token</span><span class="p">)</span>
     <span class="k">end</span>
-</pre></d
+</pre></div>
+</div>
 
 
 <p>Из-за способа которым Ruby обрабатывает назначения внутри объектов, без <code>self</code> назначение создаст <em>локальную</em> переменную с именем <code>remember_token</code>, а это совсем не то что нам нужно. Использование <code>self</code> обеспечивает установку назначением пользовательского <code>remember_token</code> таким образом, что он будет записан в базу данных вместе с другими атрибутами при сохранении пользователя. (Теперь вы знаете почему остальные <code>before_save</code> коллбэки из <a class="ref" href="modeling-users#code-email_downcase">Листинга&nbsp;6.20</a> используют <code>self.email</code> вместо просто <code>email</code>.)</p>
@@ -1011,7 +1012,7 @@
 
 <p>Здесь мы следуем избранной тактике: во-первых, создаем новый токен; во-вторых, помещаем зашифрованный токен в куки браузера; в-третьих, сохраняем зашифрованный токен в базе данных; в-четвертых, устанавливаем текущего пользователя равным данному пользователю (<a class="ref" href="sign-in-sign-out#sec-current_user">Раздел&nbsp;8.2.3</a>). Как мы увидим в <a class="ref" href="sign-in-sign-out#sec-current_user">Разделе&nbsp;8.2.3</a>, установка текущего пользователя равным <code>user</code> в данный момент не нужна из-за незамедлительного редиректа в <code>create</code> действии (<a class="ref" href="sign-in-sign-out#code-sign_in_success_not_yet_working">Листинг&nbsp;8.13</a>), но все же это хорошая идея - на тот случай если мы когда-нибудь захотим использовать <code>sign_in</code> без редиректа.</p>
 
-<p>В <a class="ref" href="sign-in-sign-out#code-sign_in_function">Листинге&nbsp;8.19</a> обратите внимание на использование <code>update_attribute</code> для сохранения токена. Как вкратце упоминалось в <a class="ref" href="modeling-users#sec-updating_user_objects">Разделе&nbsp;6.1.5</a>), этот метод позволяет обновлять один атрибут в обход валидаций &mdash; в данном случае это необходимо так как у нас нет пароля пользователя. <a class="ref" href="sign-in-sign-out#code-sign_in_function">Листинг&nbsp;8.19</a> также вводит утилиту <code>cookies</code> которая позволяет нам манипулировать куками браузера как если бы они были хэшем; каждый элемент в куки представляет из себя хэш из двух элементов: <code>value</code> и (необязательный) <code>expires</code> дата (<span class="c1"># дата истечения<span>). Например, мы могли бы осуществить вход пользователя путем размещения куки со значением, равным пользовательскому токену, которая истекает через 20 лет:</p>
+<p>В <a class="ref" href="sign-in-sign-out#code-sign_in_function">Листинге&nbsp;8.19</a> обратите внимание на использование <code>update_attribute</code> для сохранения токена. Как вкратце упоминалось в <a class="ref" href="modeling-users#sec-updating_user_objects">Разделе&nbsp;6.1.5</a>), этот метод позволяет обновлять один атрибут в обход валидаций &mdash; в данном случае это необходимо так как у нас нет пароля пользователя. <a class="ref" href="sign-in-sign-out#code-sign_in_function">Листинг&nbsp;8.19</a> также вводит утилиту <code>cookies</code> которая позволяет нам манипулировать куками браузера как если бы они были хэшем; каждый элемент в куки представляет из себя хэш из двух элементов: <code>value</code> и (необязательный) <code>expires</code> дата (<span class="c1"># дата истечения</span>). Например, мы могли бы осуществить вход пользователя путем размещения куки со значением, равным пользовательскому токену, которая истекает через 20 лет:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">cookies</span><span class="o">[</span><span class="ss">:remember_token</span><span class="o">]</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">value:</span>   <span class="n">remember_token</span><span class="p">,</span>
                              <span class="ss">expires:</span> <span class="mi">20</span><span class="o">.</span><span class="n">years</span><span class="o">.</span><span class="n">from_now</span><span class="o">.</span><span class="n">utc</span> <span class="p">}</span>
@@ -1286,9 +1287,9 @@
 <p>Смена ссылок в шаблоне сайта подразумевает использование если-иначе ветвящихся структур внутри Embedded Ruby:</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="n">signed_in?</span> <span class="cp">%&gt;</span>
-  # Ссылки для вошедших пользователей
+  <span class="c1"># Ссылки для вошедших пользователей</span>
 <span class="cp">&lt;%</span> <span class="k">else</span> <span class="cp">%&gt;</span>
-  # Ссылки для не вошедших пользователей
+  <span class="c1"># Ссылки для не вошедших пользователей</span>
 <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
 </pre></div>
 </div>
