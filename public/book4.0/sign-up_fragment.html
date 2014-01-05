@@ -38,8 +38,6 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_mockup_bootstrap.png" alt="profile_mockup_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.2: </span><span class="description">Набросок наших лучших ожиданий от конечной страницы профиля.&nbsp;<a href="http://railstutorial.org/images/figures/profile_mockup_bootstrap-full.png">(полный размер)</a></span></div></div>
 
 
-
-
 <div class="label" id="sec-rails_environments"></div>
 
 
@@ -134,15 +132,15 @@
 </div>
 
 
-<p>Мы еще раз применим эту примесь в <a class="ref" href="sign-up#sec-using_form_for">Разделе&nbsp;7.2.2</a>. Результат ее применения в контексте блока с отладочной информацией показан на  <a class="ref" href="sign-up#fig-home_page_with_debug_2nd_ed">Рис.&nbsp;7.3</a>.</p>
+<p>Мы еще раз применим эту примесь в <a class="ref" href="sign-up#sec-using_form_for">Разделе&nbsp;7.2.2</a>. Результат ее применения в контексте блока с отладочной информацией показан на  <a class="ref" href="sign-up#fig-home_page_with_debug">Рис.&nbsp;7.3</a>.</p>
 
-<div class="label" id="fig-home_page_with_debug_2nd_ed"></div>
-
-
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_page_with_debug_2nd_ed.png" alt="home_page_with_debug_2nd_ed" /></span></div><div class="caption"><span class="header">Рис. 7.3: </span><span class="description">Home страница примера приложения (<a href="http://localhost:3000/">/</a>) с отладочной информацией.&nbsp;<a href="http://railstutorial.org/images/figures/home_page_with_debug_2nd_ed-full.png">(полный размер)</a></span></div></div>
+<div class="label" id="fig-home_page_with_debug"></div>
 
 
-<p>Вывод отладочной информации на <a class="ref" href="sign-up#fig-home_page_with_debug_2nd_ed">Рис.&nbsp;7.3</a> дает потенциально полезную информацию об отображаемой в настоящий момент странице:</p>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/home_page_with_debug_4_0.png" alt="home_page_with_debug_4_0" /></span></div><div class="caption"><span class="header">Рис. 7.3: </span><span class="description">Home страница примера приложения (<a href="http://localhost:3000/">/</a>) с отладочной информацией.&nbsp;<a href="http://railstutorial.org/images/figures/home_page_with_debug_4_0-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Вывод отладочной информации на <a class="ref" href="sign-up#fig-home_page_with_debug">Рис.&nbsp;7.3</a> дает потенциально полезную информацию об отображаемой в настоящий момент странице:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nn">---</span>
 <span class="l-Scalar-Plain">controller</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">static_pages</span>
@@ -231,11 +229,11 @@
 <h3><a id="sec-7_1_2" href="sign-up#sec-a_users_resource" class="heading"><span class="number">7.1.2</span> Ресурс Users</a></h3>
 
 
-<p>В конце <a class="ref" href="modeling-users#top">Главы&nbsp;6</a> мы создали нового пользователя в базе данных. Как показано в <a class="ref" href="modeling-users#sec-creating_a_user">Разделе&nbsp;6.3.5</a>, этот пользователь имеет id&nbsp;<code>1</code> и наша цель теперь заключается в создании страницы для отображения информации этого пользователя. Мы будем следовать соглашениям REST архитектуры предпочитаемой в Rails приложениях (<a class="ref" href="a-demo-app#sidebar-REST">Блок&nbsp;2.2</a>), что означает представление данных в качестве <em>ресурсов</em> которые могут быть созданы, показаны, обновлены, или уничтожены &mdash; четыре действия, соответствующие четырем фундаментальным операциям <tt>POST</tt>, <tt>GET</tt>, <tt>PUT</tt> и <tt>DELETE</tt> определенным <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol">стандартом HTTP</a> (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.2</a>).</p>
+<p>В конце <a class="ref" href="modeling-users#top">Главы&nbsp;6</a> мы создали нового пользователя в базе данных. Как показано в <a class="ref" href="modeling-users#sec-creating_a_user">Разделе&nbsp;6.3.5</a>, этот пользователь имеет id&nbsp;<code>1</code> и наша цель теперь заключается в создании страницы для отображения информации этого пользователя. Мы будем следовать соглашениям REST архитектуры предпочитаемой в Rails приложениях (<a class="ref" href="a-demo-app#sidebar-REST">Блок&nbsp;2.2</a>), что означает представление данных в качестве <em>ресурсов</em> которые могут быть созданы, показаны, обновлены, или уничтожены &mdash; четыре действия, соответствующие четырем фундаментальным операциям <tt>POST</tt>, <tt>GET</tt>, <tt>PATCH</tt> и <tt>DELETE</tt> определенным <a href="http://ru.wikipedia.org/wiki/HTTP">стандартом HTTP</a> (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.3</a>).</p>
 
 <p>Следуя принципам REST, на ресурсы обычно ссылаются, используя имя ресурса и уникальный идентификатор. Что это означает в контексте пользователей &mdash; о которых мы теперь думаем, как о <em>ресурсе</em> Users&mdash;то, что мы должны показать пользователя с id&nbsp;<code>1</code> выдав <tt>GET</tt> запрос к URL <tt>/users/1</tt>. Здесь <code>show</code> действие <em>неявно</em> в типе запроса &mdash;когда Rails&rsquo; функции REST активированы, <tt>GET</tt> запросы автоматически обрабатываются <code>show</code> действием.</p>
 
-<p>Мы видели в <a class="ref" href="a-demo-app#sec-a_user_tour">Разделе&nbsp;2.2.1</a> что страница для пользователя с id&nbsp;<code>1</code> имеет URI /users/1. К сожалению, сейчас посещение этой страницы лишь выдает ошибку (<a class="ref" href="sign-up#fig-profile_routing_error">Рис.&nbsp;7.4</a>).</p>
+<p>Мы видели в <a class="ref" href="a-demo-app#sec-a_user_tour">Разделе&nbsp;2.2.1</a> что страница для пользователя с id&nbsp;<code>1</code> имеет URL /users/1. К сожалению, сейчас посещение этой страницы лишь выдает ошибку (<a class="ref" href="sign-up#fig-profile_routing_error">Рис.&nbsp;7.4</a>).</p>
 
 <div class="label" id="fig-profile_routing_error"></div>
 
@@ -256,14 +254,11 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.3.</span> <span class="description">Добавление ресурса Users в файл маршрутов. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.3.</span> <span class="description">Добавление ресурса Users в файл маршрутов. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">resources</span> <span class="ss">:users</span>
-
-  <span class="n">root</span> <span class="ss">to:</span> <span class="s1">&#39;static_pages#home&#39;</span>
-
-  <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;users#new&#39;</span>
+  <span class="n">root</span>  <span class="s1">&#39;static_pages#home&#39;</span>
+  <span class="n">match</span> <span class="s1">&#39;/signup&#39;</span><span class="p">,</span>  <span class="ss">to:</span> <span class="s1">&#39;users#new&#39;</span><span class="p">,</span>            <span class="ss">via:</span> <span class="s1">&#39;get&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -279,24 +274,24 @@
 </div>
 
 
-<p>последний раз замеченную в <a class="ref" href="filling-in-the-layout#code-signup_route">Листинге&nbsp;5.32</a>. Это связано с тем, что <code>resources :users</code> не просто добавляет работающий /users/1 URI; эта строка также обеспечивает наш пример приложения всеми действиями, необходимыми для RESTful (полностью REST) ресурса Users,<sup class="footnote" id="fnref-7_5"><a href="#fn-7_5">5</a></sup> наряду с большим количеством именованных маршрутов (<a class="ref" href="filling-in-the-layout#sec-named_routes">Раздел&nbsp;5.3.3</a>) для генерации URI пользователя. Получившееся  соответствие URI, действий и именованных маршрутов показано в <a class="ref" href="sign-up#table-RESTful_users">Таблице&nbsp;7.1</a>. (Сравните с <a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблицей&nbsp;2.2</a>.) В течение следующих трех глав, мы охватим остальные записи в <a class="ref" href="sign-up#table-RESTful_users">Таблице&nbsp;7.1</a> поскольку мы заполним все действия, необходимые, для того, чтобы сделать Users RESTful ресурсом.</p>
+<p>последний раз замеченную в <a class="ref" href="filling-in-the-layout#code-signup_route">Листинге&nbsp;5.35</a>. Это связано с тем, что <code>resources :users</code> не просто добавляет работающий /users/1 URL; эта строка также обеспечивает наш пример приложения всеми действиями, необходимыми для RESTful (полностью REST) ресурса Users,<sup class="footnote" id="fnref-7_5"><a href="#fn-7_5">5</a></sup> наряду с большим количеством именованных маршрутов (<a class="ref" href="filling-in-the-layout#sec-named_routes">Раздел&nbsp;5.3.3</a>) для генерации URL пользователя. Получившееся  соответствие URL, действий и именованных маршрутов показано в <a class="ref" href="sign-up#table-RESTful_users">Таблице&nbsp;7.1</a>. (Сравните с <a class="ref" href="a-demo-app#table-demo_RESTful_users">Таблицей&nbsp;2.2</a>.) В течение следующих трех глав, мы охватим остальные записи в <a class="ref" href="sign-up#table-RESTful_users">Таблице&nbsp;7.1</a> поскольку мы заполним все действия, необходимые, для того, чтобы сделать Users RESTful ресурсом.</p>
 
 <div class="label" id="table-RESTful_users"></div>
 
 
 <div class="table"><div class="center">
-<table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URI</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/users</td><td class="align_left"><code>index</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">страница показывающая список пользователей</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>show</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">страница показывающая пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/new</td><td class="align_left"><code>new</code></td><td class="align_left"><code>new_user_path</code></td><td class="align_left">страница для создания нового пользователя (signup)</td></tr><tr><td class="align_left"><tt>POST</tt></td><td class="align_left">/users</td><td class="align_left"><code>create</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">создание нового пользователя</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/edit</td><td class="align_left"><code>edit</code></td><td class="align_left"><code>edit_user_path(user)</code></td><td class="align_left">страница для редактирования пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>PUT</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>update</code></td><td class="align_left"><code>user_path(1)</code></td><td class="align_left">обновление пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>destroy</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">удаление пользователя с id <code>1</code></td></tr></table></div><div class="caption"><span class="header">Таблица 7.1: </span><span class="description">RESTful маршруты, обеспеченные ресурсом Users в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>.</span></div></div>
+<table class="tabular"><tr><th class="align_left"><strong>HTTP запрос</strong></th><th class="align_left"><strong>URL</strong></th><th class="align_left"><strong>Действие</strong></th><th class="align_left"><strong>Именованный маршрут</strong></th><th class="align_left"><strong>Назначение</strong></th></tr><tr class="top_bar"><td class="align_left"><tt>GET</tt></td><td class="align_left">/users</td><td class="align_left"><code>index</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">страница показывающая список всех пользователей</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>show</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">страница показывающая пользователя</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/new</td><td class="align_left"><code>new</code></td><td class="align_left"><code>new_user_path</code></td><td class="align_left">страница для создания нового пользователя (регистрация)</td></tr><tr><td class="align_left"><tt>POST</tt></td><td class="align_left">/users</td><td class="align_left"><code>create</code></td><td class="align_left"><code>users_path</code></td><td class="align_left">создание нового пользователя</td></tr><tr><td class="align_left"><tt>GET</tt></td><td class="align_left">/users/1/edit</td><td class="align_left"><code>edit</code></td><td class="align_left"><code>edit_user_path(user)</code></td><td class="align_left">страница для редактирования пользователя с id <code>1</code></td></tr><tr><td class="align_left"><tt>PATCH</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>update</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">обновление пользователя</td></tr><tr><td class="align_left"><tt>DELETE</tt></td><td class="align_left">/users/1</td><td class="align_left"><code>destroy</code></td><td class="align_left"><code>user_path(user)</code></td><td class="align_left">удаление пользователя</td></tr></table></div><div class="caption"><span class="header">Table 7.1: </span><span class="description">RESTful маршруты, обеспеченные ресурсом Users в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>.</span></div></div>
 
 
-<p>С кодом в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>, маршруты работают, но страница по-прежнему не существует (<a class="ref" href="sign-up#fig-user_show_unknown_action_31">Рис.&nbsp;7.5</a>). Для того чтобы исправить это, мы начнем с минималистичной версии страницы профиля, которую мы откормим в <a class="ref" href="sign-up#sec-a_gravatar_image">Разделе&nbsp;7.1.4</a>.</p>
+<p>С кодом в <a class="ref" href="sign-up#code-users_resource">Листинге&nbsp;7.3</a>, маршруты работают, но страница по-прежнему не существует (<a class="ref" href="sign-up#fig-user_show_unknown_action_4">Рис.&nbsp;7.5</a>). Для того чтобы исправить это, мы начнем с минималистичной версии страницы профиля, которую мы откормим в <a class="ref" href="sign-up#sec-a_gravatar_image">Разделе&nbsp;7.1.4</a>.</p>
 
-<div class="label" id="fig-user_show_unknown_action_31"></div>
-
-
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_show_unknown_action_31.png" alt="user_show_unknown_action_31" /></span></div><div class="caption"><span class="header">Рис. 7.5: </span><span class="description"> URI /users/1 с маршрутом, но без страницы.&nbsp;<a href="http://railstutorial.org/images/figures/user_show_unknown_action_31-full.png">(полный размер)</a></span></div></div>
+<div class="label" id="fig-user_show_unknown_action_4"></div>
 
 
-<p>Мы будем использовать стандартное Rails размещение для представления показывающего пользователя, которым является <code>app/views/users/show.html.erb</code>. В отличие от представления <code>new.html.erb</code>, которое мы создали с помощью генератора в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.28</a>, файл <code>show.html.erb</code> в данный момент не существует, так что нам необходимо создать его вручную и заполнить его содержимым  <a class="ref" href="sign-up#code-stub_user_view">Листинга&nbsp;7.4</a>.</p>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/user_show_unknown_action_4.png" alt="user_show_unknown_action_4" /></span></div><div class="caption"><span class="header">Рис. 7.5: </span><span class="description"> URL /users/1 с маршрутом, но без страницы.&nbsp;<a href="http://railstutorial.org/images/figures/user_show_unknown_action_4-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Мы будем использовать стандартное Rails размещение для представления показывающего пользователя, которым является <code>app/views/users/show.html.erb</code>. В отличие от представления <code>new.html.erb</code>, которое мы создали с помощью генератора в <a class="ref" href="filling-in-the-layout#code-generate_users_controller">Листинге&nbsp;5.31</a>, файл <code>show.html.erb</code> в данный момент не существует, так что нам необходимо создать его вручную и заполнить его содержимым  <a class="ref" href="sign-up#code-stub_user_view">Листинга&nbsp;7.4</a>.</p>
 
 <div class="label" id="code-stub_user_view"></div>
 
@@ -317,8 +312,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.5.</span> <span class="description">Контроллер Users с действием <code>show</code> action. <br /> <code>app/controllers/users_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.5.</span> <span class="description">Контроллер Users с действием <code>show</code> action. <br /> <code>app/controllers/users_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
 
   <span class="k">def</span> <span class="nf">show</span>
@@ -341,7 +335,7 @@
 
 <p>который мы видели в <a class="ref" href="modeling-users#sec-finding_user_objects">Разделе&nbsp;6.1.4</a>. (Технически, <code>params[:id]</code> является строкой&nbsp;<code>"1"</code>, но <code>find</code> достаточно умен, чтобы преобразовать это в целое число.)</p>
 
-<p>С представлением и определенным действием, URI <a href="http://localhost:3000/users/1">/users/1</a> работает замечательно (<a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a>). Обратите внимание что отладочная информация в <a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a> подтверждает значение <code>params[:id]</code>:</p>
+<p>С представлением и определенным действием, URL <a href="http://localhost:3000/users/1">/users/1</a> работает замечательно (<a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a>). Обратите внимание что отладочная информация в <a class="ref" href="sign-up#fig-user_show_rails_3">Рис.&nbsp;7.6</a> подтверждает значение <code>params[:id]</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nn">---</span>
 <span class="l-Scalar-Plain">action</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">show</span>
@@ -367,7 +361,6 @@
 
 
 
-
 <div class="label" id="sec-tests_with_factories"></div>
 
 
@@ -376,14 +369,13 @@
 
 <p>Теперь, когда у нас есть минимально рабочий профиль, пришло время поработать над версией из наброска на <a class="ref" href="sign-up#fig-profile_mockup_profile_name">Рис.&nbsp;7.1</a>. Как и в случае с созданием статических страниц (<a class="ref" href="static-pages#top">Глава&nbsp;3</a>) и моделью User (<a class="ref" href="modeling-users#top">Глава&nbsp;6</a>), мы сделаем это используя разработку через тестирование.</p>
 
-<p>Вспомните из <a class="ref" href="filling-in-the-layout#sec-signup_url">Раздела&nbsp;5.4.2</a> что мы избрали интеграционные тесты для страниц связанных с ресурсом Users. В случае со страницей регистрации, наш тест вначале посещает <code>signup_path</code> а затем проверяет правильность <code>h1</code> и <code>title</code> тегов, как это показано в <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинге&nbsp;5.31</a> и повторено в <a class="ref" href="sign-up#code-initial_signup_test">Листинге&nbsp;7.6</a>. (Обратите внимание, что мы опустили <code>full_title</code> хелпер из <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Раздела&nbsp;5.3.4</a> поскольку полный заголовок уже адекватно протестирован.)</p>
+<p>Вспомните из <a class="ref" href="filling-in-the-layout#sec-signup_url">Раздела&nbsp;5.4.2</a> что для страниц связанных с ресурсом Users мы приняли решение использовать интеграционные тесты. В случае со страницей регистрации, наш тест вначале посещает <code>signup_path</code> а затем проверяет правильность <code>h1</code> и <code>title</code> тегов, как это показано в <a class="ref" href="filling-in-the-layout#code-user_pages_spec">Листинге&nbsp;5.34</a> и повторено в <a class="ref" href="sign-up#code-initial_signup_test">Листинге&nbsp;7.6</a>. (Обратите внимание, что мы опустили <code>full_title</code> хелпер из <a class="ref" href="filling-in-the-layout#sec-pretty_rspec">Раздела&nbsp;5.3.4</a> поскольку полный заголовок уже адекватно протестирован.)</p>
 
 <div class="label" id="code-initial_signup_test"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.6.</span> <span class="description">Резюме начального спека страниц пользователя. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.6.</span> <span class="description">Резюме начального спека страниц пользователя. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -393,8 +385,8 @@
   <span class="n">describe</span> <span class="s2">&quot;signup page&quot;</span> <span class="k">do</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signup_path</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">))</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -403,18 +395,18 @@
 
 <p>Для того чтобы протестировать страницу показывающую пользователя, нам необходим объект модели User для того чтобы коду в действии <code>show</code> (<a class="ref" href="sign-up#code-user_show_action">Листинг&nbsp;7.5</a>) было что искать:</p>
 
-<div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;profile page&quot;</span> <span class="k">do</span>
-  <span class="c1"># Code to make a user variable</span>
+div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="s2">&quot;profile page&quot;</span> <span class="k">do</span>
+  <span class="c1"># Replace with code to make a user variable</span>
   <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">user_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">}</span>
 
-  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
-  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+  <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
 <span class="k">end</span>
 </pre></div>
 </div>
 
 
-<p>где нам нужно заполнить коментарий соответствующим кодом. Здесь используется именованный маршрут <code>user_path</code> (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>) для генерации пути к странице показывающей данного пользователя. Затем мы тестируем что <code>h1</code> и <code>title</code> теги содержат имя пользователя.</p>
+<p>где нам нужно заполнить коментарий соответствующим кодом. Здесь используется именованный маршрут <code>user_path</code> (<a class="ref" href="sign-up#table-RESTful_users">Таблица&nbsp;7.1</a>) для генерации пути к странице показывающей данного пользователя. Затем мы тестируем что и страница и тайтл содержат имя пользователя.</p>
 
 <p>Для того чтобы создать необходимый объект модели User, мы можем использовать Active Record для создания пользователя посредством <code>User.create</code>, но практика показывает, что пользовательские <em>фабрики</em> являются более удобным способом определения и вставки в базу данных объектов user. Мы будем использовать фабрики генерируемые <a href="http://github.com/thoughtbot/factory_girl">Factory Girl</a> - Ruby гемом который сделан хорошими людьми из <a href="http://thoughtbot.com/">thoughtbot</a>. Как и RSpec, Factory Girl определяет предметно-ориентированный язык в Ruby, в данном случае предназначенный для определения объектов Active Record. Синтаксис прост, опирается на  Ruby блоки и кастомные методы для определения атрибутов описываемого объекта. Для случаев вроде тех что мы увидим в этой главе, преимущество над Active Record может быть неочевидным, но мы будем использовать более продвинутые техники фабрик в последующих главах. Например, в <a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Разделе&nbsp;9.3.3</a> нам понадобится создать набор пользователей с уникальными адресами электронной почты и фабрики позволят нам проделать это с легкостью.</p>
 
@@ -424,22 +416,20 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.7.</span> <span class="description">Добавление Factory Girl в <code>Gemfile</code>.</span>
-</div>
+<div class="listing"><span class="header">Листинг 7.7.</span> <span class="description">Добавление Factory Girl в <code>Gemfile</code>.</span></div>
 <div class="code"><div class="highlight"><pre><span class="n">source</span> <span class="s1">&#39;https://rubygems.org&#39;</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
-  <span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
-    <span class="o">.</span>
-    <span class="o">.</span>
-    <span class="o">.</span>
-    <span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span><span class="p">,</span> <span class="s1">&#39;4.1.0&#39;</span>
-  <span class="k">end</span>
+<span class="n">group</span> <span class="ss">:test</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
+  <span class="n">gem</span> <span class="s1">&#39;factory_girl_rails&#39;</span><span class="p">,</span> <span class="s1">&#39;4.2.1&#39;</span>
 <span class="k">end</span>
+<span class="o">.</span>
+<span class="o">.</span>
+<span class="o">.</span>
 </pre></div>
 </div></div>
 
@@ -457,8 +447,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.8.</span> <span class="description">Фабрика для симуляции объектов модели User. <br /> <code>spec/factories.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.8.</span> <span class="description">Фабрика для симуляции объектов модели User. <br /> <code>spec/factories.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="no">FactoryGirl</span><span class="o">.</span><span class="n">define</span> <span class="k">do</span>
   <span class="n">factory</span> <span class="ss">:user</span> <span class="k">do</span>
     <span class="nb">name</span>     <span class="s2">&quot;Michael Hartl&quot;</span>
@@ -485,8 +474,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.9.</span> <span class="description">Тест для страницы показывающей пользователя. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.9.</span> <span class="description">Тест для страницы показывающей пользователя. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -497,12 +485,16 @@
     <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">user_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">}</span>
 
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h1&#39;</span><span class="p">,</span>    <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
   <span class="k">end</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
+
+  <span class="n">describe</span> <span class="s2">&quot;signup page&quot;</span> <span class="k">do</span>
+    <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signup_path</span> <span class="p">}</span>
+
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">))</span> <span class="p">}</span>
+  <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -536,23 +528,19 @@
 </div>
 
 
-<p>Вы быстро заметите что тесты с Factory Girl -  <em>медленные</em>. И это происходит не по вине Factory Girl и фактически это <em>фича</em>, а не баг. Проблема связана с тем, что алгоритм BCrypt используемый в <a class="ref" href="modeling-users#sec-an_encrypted_password">Разделе&nbsp;6.3.1</a> для создания хэша безопасного пароля является медленным по своей природе: именно низкая скорость BCrypt отчасти делает его таким сложным для взлома. К сожалению, это означает что создание пользователей может утопить набор тестов; к счастью, есть простой способ исправить это. BCrypt использует <em>фактор стоимости</em> для управления вычислительной сложностью создаваемого безопасного хэша. Дефолтное значение призвано обеспечить безопасность, а не скорость и для рабочих приложений это здорово, но в тестах наши потребности противоположны: мы хотим <em>быстрые</em> тесты и нас совершенно не тревожит безопасность хэшей паролей тестовых пользователей. Решением является добавление нескольких строк в файл конфигурации тестов, <code>config/environments/test.rb</code>, для переопределения фактора стоимости от его дефолтного безопасного значения к его минимально возможному значению, как это показано в <a class="ref" href="sign-up#code-test_bcrypt_cost_factor">Листинге&nbsp;7.11</a>. Даже для небольшого набора тестов, выигрыш в скорости от этого шага может быть весьма значительным и я настоятельно рекомендую включить <a class="ref" href="sign-up#code-test_bcrypt_cost_factor">Листинг&nbsp;7.11</a> в ваш <code>test.rb</code>.</p>
+<p>Вы быстро заметите что тесты с Factory Girl -  <em>медленные</em>. И это происходит не по вине Factory Girl и фактически это <em>фича</em>, а не баг. Проблема связана с тем, что алгоритм BCrypt используемый в <a class="ref" href="modeling-users#sec-an_encrypted_password">Разделе&nbsp;6.3.1</a> для создания хэша безопасного пароля является медленным по своей природе: именно низкая скорость BCrypt отчасти делает его таким сложным для взлома. К сожалению, это означает что создание пользователей может утопить набор тестов; к счастью, есть простой способ исправить это. Библиотека <tt>bcrypt-ruby</tt> использует <em>фактор стоимости</em> для управления вычислительной сложностью создаваемого безопасного хэша. Дефолтное значение призвано обеспечить безопасность, а не скорость и для рабочих приложений это здорово, но в тестах наши потребности противоположны: мы хотим <em>быстрые</em> тесты и нас совершенно не тревожит безопасность хэшей паролей тестовых пользователей. Решением будет добавление строки которая переопределит фактор стоимости от дефолтного безопасного значения к минимально возможному в файл конфигурации тестового окружения <code>config/environments/test.rb</code>, как это показано в <a class="ref" href="sign-up#code-test_bcrypt_cost_factor">Листинге&nbsp;7.11</a>. Даже для небольшого набора тестов выигрыш в скорости от этого шага может быть весьма значительным и я настоятельно рекомендую включить <a class="ref" href="sign-up#code-test_bcrypt_cost_factor">Листинг&nbsp;7.11</a> в ваш <code>test.rb</code> конфиг.</p>
 
 <div class="label" id="code-test_bcrypt_cost_factor"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.11.</span> <span class="description">Переопределение фактора стоимости BCrypt в тестовом окружении. <br /> <code>config/environments/test.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.11.</span> <span class="description">Переопределение фактора стоимости Bсrypt в тестовом окружении. <br /> <code>config/environments/test.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
-  <span class="c1"># Speed up tests by lowering BCrypt&#39;s cost function.</span>
-  <span class="nb">require</span> <span class="s1">&#39;bcrypt&#39;</span>
-  <span class="n">silence_warnings</span> <span class="k">do</span>
-    <span class="ss">BCrypt::Engine</span><span class="o">::</span><span class="no">DEFAULT_COST</span> <span class="o">=</span> <span class="ss">BCrypt::Engine</span><span class="o">::</span><span class="no">MIN_COST</span>
-  <span class="k">end</span>
+  <span class="c1"># Speed up tests by lowering bcrypt&#39;s cost function.</span>
+  <span class="ss">ActiveModel::SecurePassword</span><span class="o">.</span><span class="n">min_cost</span> <span class="o">=</span> <span class="kp">true</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -568,7 +556,7 @@
 
 <p>Определив базовую страницу пользователя в предыдущем разделе, теперь мы немного улучшим ее, добавив изображение пользователя и начальную реализацию боковой панели пользователя. При создании страницы мы сфокусируемся на ее внешнем виде, не особо заботясь о ее структуре, это означает, что (по крайней мере пока) мы не будем писать тесты. Когда мы подойдем к аспектам представления, более подверженным ошибкам, таким как пагинация (<a class="ref" href="updating-showing-and-deleting-users#sec-pagination">Раздел&nbsp;9.3.3</a>), мы продолжим разработку через тестирование.</p>
 
-<p>Мы начнем с добавления &ldquo;всемирно признанного аватара&rdquo; (также известного как <a href="http://gravatar.com/">Граватар</a>) к профилю пользователя.<sup class="footnote" id="fnref-7_6"><a href="#fn-7_6">6</a></sup> Изначально Граватар был создан Tom Preston-Werner (сооснователем <a href="http://github.com/">GitHub</a>), впоследствии его приобрела компания <a href="http://automattic.com/">Automattic</a> (создатели <a href="http://wordpress.com/">WordPress</a>), это бесплатный сервис который позволяет пользователям загружать изображения и связывать их с подконтрольными им адресами электронной почты. Gravatar это удобный способ добавить изображения пользователей не связываясь с проблемами загрузки изображений, их обрезкой и хранением; все что нам нужно, это создать правильный URI Gravatar изображения используя адрес электронной почты пользователя и соответствующее изображение Gravatar появится автоматически.<sup class="footnote" id="fnref-7_7"><a href="#fn-7_7">7</a></sup></p>
+<p>Мы начнем с добавления &ldquo;всемирно признанного аватара&rdquo; (также известного как <a href="http://gravatar.com/">Граватар</a>) к профилю пользователя.<sup class="footnote" id="fnref-7_6"><a href="#fn-7_6">6</a></sup> Автором Граватар является Tom Preston-Werner (сооснователь <a href="http://github.com/">GitHub</a>), впоследствии его (Граватар) приобрела компания <a href="http://automattic.com/">Automattic</a> (создатели <a href="http://wordpress.com/">WordPress</a>), это бесплатный сервис который позволяет пользователям загружать изображения и связывать их с подконтрольными им адресами электронной почты. Gravatar это удобный способ добавить изображения пользователей не связываясь с проблемами загрузки изображений, их обрезкой и хранением; все что нам нужно, это создать правильный URL Gravatar изображения используя адрес электронной почты пользователя и соответствующее изображение Gravatar появится автоматически.<sup class="footnote" id="fnref-7_7"><a href="#fn-7_7">7</a></sup></p>
 
 <p>Мы планируем определить вспомогательную функцию <code>gravatar_for</code> которая будет возвращать изображение Граватар для данного пользователя, как это показано в <a class="ref" href="sign-up#code-user_show_view_with_gravatar">Листинге&nbsp;7.12</a>.</p>
 
@@ -576,8 +564,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.12.</span> <span class="description">Представление показывающее пользователя с именем и Граватаром. <br /> <code>app/views/users/show.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.12.</span> <span class="description">Представление показывающее пользователя с именем и Граватаром. <br /> <code>app/views/users/show.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;h1&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">gravatar_for</span> <span class="vi">@user</span> <span class="cp">%&gt;</span>
@@ -596,7 +583,7 @@
 
 <p>Из-за того что метод <code>gravatar_for</code> неопределен, страница показывающая пользователя в настоящий момент не работает. (Отлов подобных ошибок это, возможно самый полезный аспект тестов представлений. Вот почему так важно наличие <em>хоть каких-то</em> тестов представлений, даже минималистичных.)</p>
 
-<p>По умолчанию, методы определеннные в любом файле хелпера является автоматически доступным в любом представлении, но для удобства мы поместим метод <code>gravatar_for</code> в файл для хелперов, связанных с контроллером Users. Как  <a href="http://en.gravatar.com/site/implement/hash/">отмечено на главной странице Граватар</a>, URI Граватара основывается на <a href="http://ru.wikipedia.org/wiki/MD5">MD5 хэше</a> адреса электронной почты пользователя. В Ruby, алгоритм MD5 хэширования реализутся с помощью метода <code>hexdigest</code>, который является частью библиотеки <code>Digest</code>:</p>
+<p>По умолчанию, методы определеннные в любом файле хелпера является автоматически доступным в любом представлении, но для удобства мы поместим метод <code>gravatar_for</code> в файл для хелперов, связанных с контроллером Users. Как  <a href="http://en.gravatar.com/site/implement/hash/">отмечено на главной странице Граватар</a>, URL Граватара основывается на <a href="http://ru.wikipedia.org/wiki/MD5">MD5 хэше</a> адреса электронной почты пользователя. В Ruby, алгоритм MD5 хэширования реализутся с помощью метода <code>hexdigest</code>, который является частью библиотеки <code>Digest</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;MHARTL@example.COM&quot;</span><span class="o">.</span>
 <span class="gp">&gt;&gt; </span><span class="ss">Digest::MD5</span><span class="o">::</span><span class="n">hexdigest</span><span class="p">(</span><span class="n">email</span><span class="o">.</span><span class="n">downcase</span><span class="p">)</span>
@@ -611,8 +598,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.13.</span> <span class="description">Определение вспомогательного метода <code>gravatar_for</code>. <br /> <code>app/helpers/users_helper.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.13.</span> <span class="description">Определение вспомогательного метода <code>gravatar_for</code>. <br /> <code>app/helpers/users_helper.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">UsersHelper</span>
 
   <span class="c1"># Returns the Gravatar (http://gravatar.com/) for the given user.</span>
@@ -633,12 +619,12 @@
 </div>
 
 
-<p>Страница профиля представленная на <a class="ref" href="sign-up#fig-profile_with_gravatar">Рис.&nbsp;7.7</a>, показывающая дефолтное изображение Граватара, выглядит подобным образом т.к. <code>user@example.com</code> это невалидный адрес email (домен <a href="http://example.com/">example.com</a> зарезервирован для примеров (examples).</p>
+<p>Страница профиля представленная на <a class="ref" href="sign-up#fig-profile_with_gravatar">Рис.&nbsp;7.7</a>, показывающая дефолтное изображение Граватара, выглядит подобным образом т.к. <code>user@example.com</code> это невалидный email адрес (домен <a href="http://example.com/">example.com</a> зарезервирован для примеров (examples).</p>
 
 <div class="label" id="fig-profile_with_gravatar"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_with_gravatar_bootstrap.png" alt="profile_with_gravatar_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.7: </span><span class="description">Страница профиля пользователя  <a href="http://localhost:3000/users/1">/users/1</a> с дефолтным Граватаром.&nbsp;<a href="http://railstutorial.org/images/figures/profile_with_gravatar_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_with_gravatar_bootstrap_4_0.png" alt="profile_with_gravatar_bootstrap_4_0" /></span></div><div class="caption"><span class="header">Рис. 7.7: </span><span class="description">Страница профиля пользователя  <a href="http://localhost:3000/users/1">/users/1</a> с дефолтным Граватаром.&nbsp;<a href="http://railstutorial.org/images/figures/profile_with_gravatar_bootstrap_4_0-full.png">(полный размер)</a></span></div></div>
 
 
 <p>Для того чтобы отобразить кастомный Граватар в нашем приложении, мы будем использовать <code>update_attributes</code> (<a class="ref" href="modeling-users#sec-updating_user_objects">Раздел&nbsp;6.1.5</a>) для обновления пользователя в базе данных:</p>
@@ -659,7 +645,7 @@
 <div class="label" id="fig-profile_custom_gravatar"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_custom_gravatar_bootstrap.png" alt="profile_custom_gravatar_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.8: </span><span class="description">Страница показывающая пользователя с кастомным Граватаром.&nbsp;<a href="http://railstutorial.org/images/figures/profile_custom_gravatar_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/profile_custom_gravatar_bootstrap_4_0.png" alt="profile_custom_gravatar_bootstrap_4_0" /></span></div><div class="caption"><span class="header">Рис. 7.8: </span><span class="description">Страница показывающая пользователя с кастомным Граватаром.&nbsp;<a href="http://railstutorial.org/images/figures/profile_custom_gravatar_bootstrap_4_0-full.png">(полный размер)</a></span></div></div>
 
 
 <p>Последний элемент, необходимый для завершения наброска из <a class="ref" href="sign-up#fig-profile_mockup_profile_name">Рис.&nbsp;7.1</a> это начальная версия пользовательской боковой панели. Мы реализуем ее с помощью тега <code>aside</code>, который используется для элементов (таких как сайдбары), которые дополняют страницу, но также могут быть использованы отдельно. Мы включаем <code>row</code> и <code>span4</code> классы, которые являются частью Bootstrap. Код для измененной страницы показывающей пользователя представлен в <a class="ref" href="sign-up#code-user_show_with_sidebar">Листинге&nbsp;7.14</a>.</p>
@@ -668,8 +654,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.14.</span> <span class="description">Добавление боковой панели к представлению user <code>show</code>. <br /> <code>app/views/users/show.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.14.</span> <span class="description">Добавление боковой панели к представлению user <code>show</code>. <br /> <code>app/views/users/show.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="vi">@user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;row&quot;</span><span class="nt">&gt;</span>
   <span class="nt">&lt;aside</span> <span class="na">class=</span><span class="s">&quot;span4&quot;</span><span class="nt">&gt;</span>
@@ -691,8 +676,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.15.</span> <span class="description">SCSS для стилизации страницы показывающей пользователя, включая боковую панель. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.15.</span> <span class="description">SCSS для стилизации страницы показывающей пользователя, включая боковую панель. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nc">.</span>
 <span class="nc">.</span>
 <span class="nc">.</span>
@@ -771,7 +755,7 @@
 
 <p>После очистки базы данных на некоторых системах также необходимо заново подготовить тестовую базу данных:</p>
 
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:test:prepare
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake <span class="nb">test</span>:prepare
 </pre></div>
 </div>
 
@@ -865,7 +849,7 @@
 <div class="code"><div class="highlight"><pre><span class="n">initial</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">count</span>
 <span class="n">click_button</span> <span class="s2">&quot;Create my account&quot;</span>
 <span class="n">final</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">count</span>
-<span class="n">initial</span><span class="o">.</span><span class="n">should</span> <span class="o">==</span> <span class="n">final</span>
+<span class="n">expect</span><span class="p">(</span><span class="n">initial</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">eq</span> <span class="n">final</span>
 </pre></div>
 </div>
 
@@ -877,7 +861,7 @@
 </div>
 
 
-<p>которая читается как естественный язык и является намного более компактной.</p>
+<p>которая читается как естественный язык и является намного более компактной (<code>eq</code> это RSpec метод для тестирования на равенство).</p>
 
 <p>Случай с валидными данными аналогичен, но вместо проверки того, что количество пользователей не изменилось, мы проверяем что клик по кнопке изменяет их количество на 1:</p>
 
@@ -901,8 +885,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.16.</span> <span class="description">Хорошие базовые тесты для регистрации пользователей. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.16.</span> <span class="description">Хорошие базовые тесты для регистрации пользователей. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -911,7 +894,7 @@
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
-  <span class="n">describe</span> <span class="s2">&quot;signup&quot;</span> <span class="k">do</span>
+  <span class="n">describe</span> <span class="s2">&quot;signup page&quot;</span> <span class="k">do</span>
 
     <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">signup_path</span> <span class="p">}</span>
 
@@ -958,7 +941,7 @@
 <h3><a id="sec-7_2_2" href="sign-up#sec-using_form_for" class="heading"><span class="number">7.2.2</span> Применение <tt>form_for</tt></a></h3>
 
 
-<p>Теперь, когда у нас есть хорошие провальные тесты для регистрации пользователя, мы начнем добиваться их прохождения, для начала создав <em>форму</em> для регистрации пользователей. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code>, который принимает объект Active Record и конструирует форму используя атрибуты объекта. Результат представлен в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>. (Читатели знакомые с  Rails&nbsp;2.x должны обратить внимание что <code>form_for</code> использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; там где Rails&nbsp;2.x используют <tt class="verb">&lt;% form_for ... %&gt;</tt>, Rails&nbsp;3 вместо этого используют <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
+<p>Теперь, когда у нас есть хорошие провальные тесты для регистрации пользователя, мы начнем добиваться их прохождения, для начала создав <em>форму</em> для регистрации пользователей. Мы можем сделать это в Rails с помощью вспомогательного метода <code>form_for</code> который принимает объект Active Record и конструирует форму используя атрибуты объекта. Результат представлен в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>. (Читатели знакомые с  Rails&nbsp;2.x должны обратить внимание что <code>form_for</code> использует &ldquo;процент-равно&rdquo; ERb синтаксис для вставки контента; там где Rails&nbsp;2.x использовали <tt class="verb">&lt;% form_for ... %&gt;</tt>, мы теперь используем <tt class="verb">&lt;%= form_for ... %&gt;</tt>.)</p>
 
 <div class="label" id="code-signup_form"></div>
 
@@ -1014,7 +997,7 @@
 
 <p>создает HTML необходимый для создания элемента маркированного текстового поля для назначения атрибута <code>name</code> модели User. (Мы взглянем на сам  HTML в <a class="ref" href="sign-up#sec-the_form_html">Разделе&nbsp;7.2.3</a>.)</p>
 
-<p>Для того чтобы увидеть это в действии нам необходимо посмотреть на HTML производимый этой формой, но здесь мы сталкиваемся с проблемой: страница в настоящее время сломана, поскольку мы не установили переменную <code>@user</code> &mdash; как все неопределенные переменные экземпляра (<a class="ref" href="rails-flavored-ruby#sec-a_user_class">Раздел&nbsp;4.4.5</a>), <code>@user</code> в настоящее время является <code>nil</code>. Соответственно, если вы запустите ваш набор тестов в этой точке, вы увидите что тесты структуры страницы регистрации из  <a class="ref" href="sign-up#code-initial_signup_test">Листинга&nbsp;7.6</a> (т.е., <code>h1</code> и <code>title</code>) сейчас провальны:</p>
+<p>Для того чтобы увидеть это в действии нам необходимо посмотреть на HTML производимый этой формой, но здесь мы сталкиваемся с проблемой: страница в настоящее время сломана, поскольку мы не установили переменную <code>@user</code> &mdash; как все неопределенные переменные экземпляра (<a class="ref" href="rails-flavored-ruby#sec-a_user_class">Раздел&nbsp;4.4.5</a>), <code>@user</code> в настоящее время является <code>nil</code>. Соответственно, если вы запустите ваш набор тестов в этой точке, вы увидите что тесты для содержимого страницы регистрации из  <a class="ref" href="sign-up#code-initial_signup_test">Листинга&nbsp;7.6</a> сейчас не проходят:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/user_pages_spec.rb -e <span class="s2">&quot;signup page&quot;</span>
 </pre></div>
@@ -1054,8 +1037,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.19.</span> <span class="description">CSS для формы регистрации. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.19.</span> <span class="description">CSS для формы регистрации. <br /> <code>app/assets/stylesheets/custom.css.scss</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nc">.</span>
 <span class="nc">.</span>
 <span class="nc">.</span>
@@ -1065,7 +1047,6 @@
 <span class="nt">input</span><span class="o">,</span> <span class="nt">textarea</span><span class="o">,</span> <span class="nt">select</span><span class="o">,</span> <span class="nc">.uneditable-input</span> <span class="p">{</span>
   <span class="na">border</span><span class="o">:</span> <span class="mi">1</span><span class="kt">px</span> <span class="no">solid</span> <span class="mh">#bbb</span><span class="p">;</span>
   <span class="na">width</span><span class="o">:</span> <span class="mi">100</span><span class="kt">%</span><span class="p">;</span>
-  <span class="na">padding</span><span class="o">:</span> <span class="mi">10</span><span class="kt">px</span><span class="p">;</span>
   <span class="na">margin-bottom</span><span class="o">:</span> <span class="mi">15</span><span class="kt">px</span><span class="p">;</span>
   <span class="k">@include</span><span class="nd"> box_sizing</span><span class="p">;</span>
 <span class="p">}</span>
@@ -1099,24 +1080,23 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.20.</span> <span class="description">HTML для формы на <a class="ref" href="sign-up#fig-signup_form">Рис.&nbsp;7.12</a>.</span>
-</div>
+<div class="listing"><span class="header">Листинг 7.20.</span> <span class="description">HTML для формы на <a class="ref" href="sign-up#fig-signup_form">Рис.&nbsp;7.12</a>.</span></div>
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">accept-charset=</span><span class="s">&quot;UTF-8&quot;</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span>
       <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
 
   <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_name&quot;</span><span class="nt">&gt;</span>Name<span class="nt">&lt;/label&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 
   <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_email&quot;</span><span class="nt">&gt;</span>Email<span class="nt">&lt;/label&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 
   <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_password&quot;</span><span class="nt">&gt;</span>Password<span class="nt">&lt;/label&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_password&quot;</span> <span class="na">name=</span><span class="s">&quot;user[password]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span>
+  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_password&quot;</span> <span class="na">name=</span><span class="s">&quot;user[password]&quot;</span>
          <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
 
   <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_password_confirmation&quot;</span><span class="nt">&gt;</span>Confirmation<span class="nt">&lt;/label&gt;</span>
   <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_password_confirmation&quot;</span>
-         <span class="na">name=</span><span class="s">&quot;user[password_confirmation]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
+         <span class="na">name=</span><span class="s">&quot;user[password_confirmation]&quot;</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
 
   <span class="nt">&lt;input</span> <span class="na">class=</span><span class="s">&quot;btn btn-large btn-primary&quot;</span> <span class="na">name=</span><span class="s">&quot;commit&quot;</span> <span class="na">type=</span><span class="s">&quot;submit&quot;</span>
          <span class="na">value=</span><span class="s">&quot;Create my account&quot;</span> <span class="nt">/&gt;</span>
@@ -1138,10 +1118,9 @@
 <p>производит HTML</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_name&quot;</span><span class="nt">&gt;</span>Name<span class="nt">&lt;/label&gt;</span>
-<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
-
 
 <p>и</p>
 
@@ -1154,7 +1133,7 @@
 <p>производит HTML</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_password&quot;</span><span class="nt">&gt;</span>Password<span class="nt">&lt;/label&gt;&lt;br</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_password&quot;</span> <span class="na">name=</span><span class="s">&quot;user[password]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_password&quot;</span> <span class="na">name=</span><span class="s">&quot;user[password]&quot;</span> <span class="na">type=</span><span class="s">&quot;password&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
 
@@ -1165,7 +1144,6 @@
 
 
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/filled_in_form_bootstrap.png" alt="filled_in_form_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.13: </span><span class="description">Заполненная форма с <code>text</code> и <code>password</code> полями.&nbsp;<a href="http://railstutorial.org/images/figures/filled_in_form_bootstrap-full.png">(полный размер)</a></span></div></div>
-
 
 <p>Как мы увидим в <a class="ref" href="sign-up#sec-signup_success">Разделе&nbsp;7.4</a>, ключом к созданию пользователя является специальный <code>name</code> атрибут в каждом <code>input</code>:</p>
 
@@ -1180,14 +1158,14 @@
 
 <p>Эти значения <code>name</code> позволяют Rails сконструировать хэш инициализации (через переменную <code>params</code>) для создания пользователей с использованием значений введеных пользователем, как мы это увидим в <a class="ref" href="sign-up#sec-signup_failure">Разделе&nbsp;7.3</a>.</p>
 
-<p>Второй важный элемент это сам тег <code>form</code>. Rails создает тег <code>form</code> используя объект <code>@user</code>: поскольку каждый объект в Ruby знает свой класс (<a class="ref" href="rails-flavored-ruby#sec-constructors">Раздел&nbsp;4.4.1</a>), Rails определяет что <code>@user</code> принадлежит к классу <code>User</code>; кроме того, поскольку <code>@user</code> это <em>новый</em> пользователь, Rails знает что необходимо построить форму с <code>post</code> методом, который является правильным глаголом для создания нового объекта (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.2</a>):</p>
+<p>Второй важный элемент это сам тег <code>form</code>. Rails создает тег <code>form</code> используя объект <code>@user</code>: поскольку каждый объект в Ruby знает свой класс (<a class="ref" href="rails-flavored-ruby#sec-constructors">Раздел&nbsp;4.4.1</a>), Rails определяет что <code>@user</code> принадлежит к классу <code>User</code>; кроме того, поскольку <code>@user</code> это <em>новый</em> пользователь, Rails знает что необходимо построить форму с <code>post</code> методом, который является правильным глаголом для создания нового объекта (<a class="ref" href="static-pages#sidebar-get_etc">Блок&nbsp;3.3</a>):</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span> <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Здесь атрибуты <code>class</code> и <code>id</code>, по большому счету, не имеют особого значения; более важными являются <code>action="/users"</code> и <code>method="post"</code>. Совместно они формируют инструкцию для отправки HTTP запроса <tt>POST</tt> на URI /users. В следующих двух разделах мы увидим к чему это приводит.</p>
+<p>Здесь атрибуты <code>class</code> и <code>id</code>, по большому счету, не имеют особого значения; более важными являются <code>action="/users"</code> и <code>method="post"</code>. Совместно они формируют инструкцию для отправки HTTP запроса <tt>POST</tt> на URL /users. В следующих двух разделах мы увидим к чему это приводит.</p>
 
 <div class="label" id="sec-signup_failure"></div>
 
@@ -1195,7 +1173,7 @@
 <h2><a id="sec-7_3" href="sign-up#sec-signup_failure" class="heading"><span class="number">7.3</span> Провальная регистрация</a></h2>
 
 
-<p>Хотя мы кратко рассмотрели HTML формы, показанной в <a class="ref" href="sign-up#fig-signup_form">Рис.&nbsp;7.12</a> (<a class="ref" href="sign-up#code-signup_form_html">Листинг&nbsp;7.20</a>), он (HTML) лучше всего понимается в контексте <em>сбоя регистрации</em>. В этом разделе мы создадим регистрационную форму которая принимает невалидные данные и вновь рендерит страницу регистрации со списком ошибок, как это показано на наброске <a class="ref" href="sign-up#fig-signup_failure_mockup">Рис.&nbsp;7.14</a>.</p>
+<p>Мы кратко рассмотрели HTML формы показанной на <a class="ref" href="sign-up#fig-signup_form">Рис.&nbsp;7.12</a> (<a class="ref" href="sign-up#code-signup_form_html">Листинг&nbsp;7.20</a>), теперь мы копнем эту тему чуть глубже. Так как HTML формы лучше всего понимается в контексте <em>сбоя регистрации</em>, в этом разделе мы создадим регистрационную форму которая принимает невалидные данные и вновь рендерит страницу регистрации со списком ошибок, как это показано на наброске <a class="ref" href="sign-up#fig-signup_failure_mockup">Рис.&nbsp;7.14</a>.</p>
 
 <div class="label" id="fig-signup_failure_mockup"></div>
 
@@ -1211,37 +1189,28 @@
 <h3><a id="sec-7_3_1" href="sign-up#sec-a_working_form" class="heading"><span class="number">7.3.1</span> Рабочая форма</a></h3>
 
 
-<p>Нашим первым шагом будет устранение ошибки которая в настоящий момент возникает при отправке формы, что вы можете проверить в вашем браузере или запустив тесты для регистрации с невалидными данными:</p>
-
-<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/user_pages_spec.rb <span class="se">\</span>
-<span class="go">-e &quot;signup with invalid information&quot;</span>
-</pre></div>
-</div>
-
-
-<p>Вспомните из <a class="ref" href="sign-up#sec-a_users_resource">Раздела&nbsp;7.1.2</a> что добавление <code>resources :users</code> в файл <code>routes.rb</code> (<a class="ref" href="sign-up#code-users_resource">Листинг&nbsp;7.3</a>) автоматически обеспечивает наше Rails приложение возможностью отвечать на RESTful URI из <a class="ref" href="sign-up#table-RESTful_users">Таблицы&nbsp;7.1</a>. В частности, это приводит к тому, что <tt>POST</tt> запрос к /users обрабатывается действием <code>create</code>. Наша стратегия для действия <code>create</code> зaключается в использовании отправки формы для создания объекта нового пользователя с помощью <code>User.new</code>, попытке (провальной) сохранить этого пользователя и последующем рендеринге страницы регистрации для возможной повторной отправки формы. Давайте начнем с того что еще раз взглянем на код для формы регистрации:</p>
+<p>Вспомните из <a class="ref" href="sign-up#sec-a_users_resource">Раздела&nbsp;7.1.2</a> что добавление <code>resources :users</code> в файл <code>routes.rb</code> (<a class="ref" href="sign-up#code-users_resource">Листинг&nbsp;7.3</a>) автоматически обеспечивает наше Rails приложение возможностью отвечать на RESTful URL из <a class="ref" href="sign-up#table-RESTful_users">Таблицы&nbsp;7.1</a>. В частности, это приводит к тому, что <tt>POST</tt> запрос к /users обрабатывается действием <code>create</code>. Наша стратегия для действия <code>create</code> зaключается в использовании отправки формы для создания объекта нового пользователя с помощью <code>User.new</code>, попытке (провальной) сохранить этого пользователя и последующем рендеринге страницы регистрации для возможной повторной отправки формы. Давайте начнем с того что еще раз взглянем на код для формы регистрации:</p>
 
 <div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span> <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
 </pre></div>
 </div>
 
 
-<p>Как было отмечено в <a class="ref" href="sign-up#sec-the_form_html">Разделе&nbsp;7.2.3</a>, этот HTML выдает <tt>POST</tt> запрос к /users URI.</p>
+<p>Как было отмечено в <a class="ref" href="sign-up#sec-the_form_html">Разделе&nbsp;7.2.3</a>, этот HTML выдает <tt>POST</tt> запрос к /users URL.</p>
 
-<p>Мы можем получить прохождение теста для невалидных данных из <a class="ref" href="sign-up#code-basic_signup_tests">Листинга&nbsp;7.16</a> с кодом из <a class="ref" href="sign-up#code-first_create_action">Листинга&nbsp;7.21</a>. Этот листинг включает второе использование метода <code>render</code>, который мы впервые видели в контексте партиалов (<a class="ref" href="filling-in-the-layout#sec-partials">Раздел&nbsp;5.1.3</a>); как вы можете видеть, <code>render</code> также работает и в действиях контроллера. Обратите внимание что мы воспользовались этой возможностью чтобы представить ветвящуюся структуру <code>if</code>-<code>else</code>, которая позволяет нам обрабатывать случаи сбоя и успеха раздельно, в зависимости от значения <code>@user.save</code>, которое (как мы видели в <a class="ref" href="modeling-users#sec-creating_user_objects">Разделе&nbsp;6.1.3</a>) может быть либо <code>true</code> либо <code>false</code> в зависимости от успешности сохранения.</p>
+<p>Нашим первым шагом на пути к зеленым тестам для невалидных данных из <a class="ref" href="sign-up#code-basic_signup_tests">Листинга&nbsp;7.16</a> будет добавление кода из <a class="ref" href="sign-up#code-first_create_action">Листинга&nbsp;7.21</a>. Этот листинг включает второе использование метода <code>render</code> который мы впервые видели в контексте партиалов (<a class="ref" href="filling-in-the-layout#sec-partials">Раздел&nbsp;5.1.3</a>); как вы можете видеть, <code>render</code> также работает и в действиях контроллера. Обратите внимание что мы воспользовались этой возможностью чтобы представить ветвящуюся структуру <code>if</code>-<code>else</code>, которая позволяет нам обрабатывать случаи сбоя и успеха раздельно, в зависимости от значения <code>@user.save</code>, которое (как мы видели в <a class="ref" href="modeling-users#sec-creating_user_objects">Разделе&nbsp;6.1.3</a>) может быть либо <code>true</code> либо <code>false</code> в зависимости от успешности сохранения.</p>
 
 <div class="label" id="code-first_create_action"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.21.</span> <span class="description">Действие <code>create</code> которое может обрабатывать провальную регистрацию (но не успешную). <br /> <code>app/controllers/users_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.21.</span> <span class="description">Действие <code>create</code> которое может обрабатывать провальную регистрацию (но не успешную). <br /> <code>app/controllers/users_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">create</span>
-    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>    <span class="c1"># Not the final implementation!</span>
     <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
       <span class="c1"># Handle a successful save.</span>
     <span class="k">else</span>
@@ -1253,54 +1222,52 @@
 </div></div>
 
 
-<p>Лучший способ понять, как работает код в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a> это <em>отправить</em> форму с некоторыми невалидными регистрационными данными; результаты представлены на <a class="ref" href="sign-up#fig-signup_failure_rails_3">Рис.&nbsp;7.15</a> и полная отладочная информация представлена на <a class="ref" href="sign-up#fig-signup_failure_rails_3_bootstrap_debug">Рис.&nbsp;7.16</a>.</p>
+<p>Обратите внимание на комментарий: это не конечная реализация, но этого достаточно для начала. Мы закончим реализацию в <a class="ref" href="sign-up#sec-strong_parameters">Разделе&nbsp;7.3.2</a>.</p>
 
-<div class="label" id="fig-signup_failure_rails_3"></div>
+<p>Лучший способ понять как работает код в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a> это <em>отправить</em> форму с какими-нибудь невалидными регистрационными данными; результат представлен на <a class="ref" href="sign-up#fig-signup_failure">Рис.&nbsp;7.15</a> и полная отладочная информация (с увеличенным размером шрифта) представлена на <a class="ref" href="sign-up#fig-signup_failure_rails_debug">Рис.&nbsp;7.16</a>.</p>
 
-
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_3_bootstrap.png" alt="signup_failure_rails_3_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.15: </span><span class="description">Сбой регистрации.&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_3_bootstrap-full.png">(полный размер)</a></span></div></div>
-
+<div class="label" id="fig-signup_failure"></div>
 
 
-
-<div class="label" id="fig-signup_failure_rails_3_bootstrap_debug"></div>
-
-
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_3_bootstrap_debug.png" alt="signup_failure_rails_3_bootstrap_debug" /></span></div><div class="caption"><span class="header">Рис. 7.16: </span><span class="description">Отладочная информация сбоя регистрации.&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_3_bootstrap_debug-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_4.png" alt="signup_failure_rails_4" /></span></div><div class="caption"><span class="header">Рис. 7.15: </span><span class="description">Сбой регистрации.&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_4-full.png">(полный размер)</a></span></div></div>
 
 
-<p>Чтобы получить более четкую картину того, как Rails обрабатывает предоставление регистрационных данных, давайте поближе познакомимся с хэшем <code>params</code> из отладочной информации (<a class="ref" href="sign-up#fig-signup_failure_rails_3_bootstrap_debug">Рис.&nbsp;7.16</a>):</p>
 
-<div class="code"><div class="highlight"><pre><span class="nn">---</span>
-<span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">name</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Foo Bar</span>
-  <span class="l-Scalar-Plain">password_confirmation</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">foo</span>
-  <span class="l-Scalar-Plain">password</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">bar</span>
-  <span class="l-Scalar-Plain">email</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">foo@invalid</span>
-<span class="l-Scalar-Plain">commit</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">Create my account</span>
-<span class="l-Scalar-Plain">action</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">create</span>
-<span class="l-Scalar-Plain">controller</span><span class="p-Indicator">:</span> <span class="l-Scalar-Plain">users</span>
+
+<div class="label" id="fig-signup_failure_rails_debug"></div>
+
+
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/signup_failure_rails_4_debug.png" alt="signup_failure_rails_4_debug" /></span></div><div class="caption"><span class="header">Рис. 7.16: </span><span class="description">Отладочная информация сбоя регистрации.&nbsp;<a href="http://railstutorial.org/images/figures/signup_failure_rails_4_debug-full.png">(полный размер)</a></span></div></div>
+
+
+<p>Чтобы получить более четкую картину того как Rails обрабатывает отправку регистрационных данных, давайте поближе познакомимся с <code>user</code> частью хэша параметров из отладочной информации (<a class="ref" href="sign-up#fig-signup_failure_rails_debug">Рис.&nbsp;7.16</a>):</p>
+
+<div class="code"><div class="highlight"><pre><span class="s2">&quot;user&quot;</span> <span class="o">=&gt;</span> <span class="p">{</span> <span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Foo Bar&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;email&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;foo@invalid&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;[FILTERED]&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;password_confirmation&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;[FILTERED]&quot;</span>
+          <span class="p">}</span>
 </pre></div>
 </div>
 
 
-<p>Мы видели, начиная с <a class="ref" href="sign-up#sec-a_users_resource">Раздела&nbsp;7.1.2</a> что хэш <code>params</code> содержит информацию о каждом запросе; в случае URI типа /users/1, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тегов <code>input</code> которые мы видели в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>; например, значение</p>
+<p>Этот хэш передается в контроллер Users в качестве <code>params</code> и мы видели, начиная с <a class="ref" href="sign-up#sec-a_users_resource">Раздела&nbsp;7.1.2</a>, что хэш <code>params</code> содержит информацию о каждом запросе. В случае URL типа /users/1, значение <code>params[:id]</code> это <code>id</code> соответствующего пользователя (<code>1</code>&nbsp;в этом примере). В случае отправки регистрационной формы, <code>params</code> вместо этого содержит хэш хэшей, конструкцию, которую мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Разделе&nbsp;4.3.3</a>, который представил стратегически названную <code>params</code> переменную в консольной сессии. Эта отладочная информация показывает, что предоставление (отправка) формы дает в результате <code>user</code> хэш с атрибутами, соответствующими предоставленным значениям, где ключи происходят от <code>name</code> атрибутов тегов <code>input</code> которые мы видели в <a class="ref" href="sign-up#code-signup_form">Листинге&nbsp;7.17</a>; например, значение</p>
 
-<div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_email&quot;</span> <span class="na">name=</span><span class="s">&quot;user[email]&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
 
 
 <p>с именем <code>"user[email]"</code> это именно <code>email</code> атрибут хэша <code>user</code>.</p>
 
-<p>Хотя хэш-ключи отображаются как строки в отладочном выводе, внутренне Rails использует символы, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователей, именно тех атрибутов, что необходимы в качестве аргумента для <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a>. Это означает, что строка</p>
+<p>Хотя хэш-ключи показаны в отладочном выводе в виде строк, в контроллер Users они передаются в виде символов, так что <code>params[:user]</code> на самом деле является хэшем атрибутов пользователя, именно тех атрибутов, что необходимы в качестве аргумента для <code>User.new</code>, как мы впервые видели в <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Разделе&nbsp;4.4.5</a> и как представлено в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a>. Это означает, что строка</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>эквивалентна</p>
+<p>практически эквивалентна</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Foo Bar&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;foo@invalid&quot;</span><span class="p">,</span>
                  <span class="ss">password:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="ss">password_confirmation:</span> <span class="s2">&quot;bar&quot;</span><span class="p">)</span>
@@ -1308,37 +1275,91 @@
 </div>
 
 
-<p>Конечно, инстанцирование такой переменной имеет значение для успешной регистрации &mdash; как мы увидим в <a class="ref" href="sign-up#sec-signup_success">Разделе&nbsp;7.4</a>, как только <code>@user</code> правильно определена, вызов <code>@user.save</code> это все, что необходимо для завершения регистрации &mdash; но это имеет свои последствия даже в случае сбоя регистрации, рассматриваемого здесь. Обратите внимание на то, что на <a class="ref" href="sign-up#fig-signup_failure_rails_3">Рис.&nbsp;7.15</a> поля <em>предварительно заполнены</em> данными из провальной отправки. Это происходит потому что <code>form_for</code> автоматически заполняет поля атрибутами объекта <code>@user</code>, так что, например, если <code>@user.name</code> это <code>"Foo"</code>, то</p>
+<p>В предыдущих версиях Rails использование</p>
 
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="vi">@user</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
-  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">label</span> <span class="ss">:name</span> <span class="cp">%&gt;</span>
-  <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">text_field</span> <span class="ss">:name</span> <span class="cp">%&gt;</span>
-  .
-  .
-  .
+<div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
 </pre></div>
 </div>
 
 
-<p>будет производить HTML</p>
-
-<div class="code"><div class="highlight"><pre><span class="nt">&lt;form</span> <span class="na">action=</span><span class="s">&quot;/users&quot;</span> <span class="na">class=</span><span class="s">&quot;new_user&quot;</span> <span class="na">id=</span><span class="s">&quot;new_user&quot;</span> <span class="na">method=</span><span class="s">&quot;post&quot;</span><span class="nt">&gt;</span>
-
-  <span class="nt">&lt;label</span> <span class="na">for=</span><span class="s">&quot;user_name&quot;</span><span class="nt">&gt;</span>Name<span class="nt">&lt;/label&gt;&lt;br</span> <span class="nt">/&gt;</span>
-  <span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;user_name&quot;</span> <span class="na">name=</span><span class="s">&quot;user[name]&quot;</span> <span class="na">size=</span><span class="s">&quot;30&quot;</span> <span class="na">type=</span><span class="s">&quot;text&quot;</span> <span class="na">value=</span><span class="s">&quot;Foo&quot;</span><span class="nt">/&gt;</span>
-  .
-  .
-  .
-</pre></div>
-</div>
-
-
-<p>Здесь <code>value</code> тега <code>input</code> это <code>"Foo"</code>, что и появляется в текстовом поле.</p>
-
-<p>Как вы возможно догадались, теперь, когда мы можем отправить форму без генерации ошибки, тест для провальной регистрации должен пройти:</p>
+<p>фактически работало, но было по умолчанию небезопасным, требовало особой тщательности при осуществлении довольно глючной процедуры имеющей своей целью защитить базу данных приложения от зловредных пользователей. В Rails&nbsp;4.0 этот код вызывает ошибку (как показано на <a class="ref" href="sign-up#fig-signup_failure">Рис.&nbsp;7.15</a> и <a class="ref" href="sign-up#fig-signup_failure_rails_debug">Рис.&nbsp;7.16</a> выше), что означает что он безопасен по умолчанию. Мы можем еще раз убедиться в этом проверив что соответствующие тесты не проходят:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/user_pages_spec.rb <span class="se">\</span>
-<span class="go">-e &quot;signup with invalid information&quot;</span>
+<span class="gp">&gt;</span> -e <span class="s2">&quot;signup with invalid information&quot;</span>
+</pre></div>
+</div>
+
+
+
+
+<div class="label" id="sec-strong_parameters"></div>
+
+
+<h3><a id="sec-7_3_2" href="sign-up#sec-strong_parameters" class="heading"><span class="number">7.3.2</span> Строгие параметры</a></h3>
+
+
+<p>В <a class="ref" href="rails-flavored-ruby#sec-a_user_class">Разделе&nbsp;4.4.5</a> мы коротко упомянули об идее <em>массового назначения</em>, которая подразумевает инициализацию Ruby-переменной с хэшем значений:</p>
+
+<div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>    <span class="c1"># Not the final implementation!</span>
+</pre></div>
+</div>
+
+
+<p>Комментарий включенный в <a class="ref" href="sign-up#code-first_create_action">Листинг&nbsp;7.21</a> и воспроизведенный выше указывает на то что это не финальная реализация. Причина по которой иниацилизация всего хэша <code>params</code> является <em>очень</em> опасной затеей заключается в том что это приводит к передаче в <code>User.new</code> <em>всех</em> данных отправленных пользователем. В частности, предположим что, в дополнение к текущим атрибутам, модель User включает в себя атрибут <code>admin</code> используемый для идентификации пользователей-администраторов сайта. (Мы реализуем именно такой атрибут в <a class="ref" href="updating-showing-and-deleting-users#sec-administrative_users">Разделе&nbsp;9.4.1</a>.) Способом присвоить этому атрибуту значение <code>true</code> является передача значения <code>admin=&rsquo;1&rsquo;</code> как части <code>params[:user]</code>, этого легко достичь с помощью такого консольного HTTP клиента как <tt>curl</tt>. Таким образом, передавая весь хэш <code>params</code> в <code>User.new</code>, мы тем самым позволяем любому пользователю сайта получить права администратора включив <code>admin=&rsquo;1&rsquo;</code> в веб-запрос.</p>
+
+<p>Для решения этой проблемы предыдущие версии Rails использовали метод <code>attr_accessible</code> на уровне <em>модели</em>, но в Rails&nbsp;4.0 более предпочтительной является техника с использованием так называемых <em>строгих параметров</em> на уровне контроллера. Это позваляет нам прописать какие именно параметры являются <em>обязательными</em>, а какие <em>разрешенными</em>. К тому же, передача чистого хэша <code>params</code> (как это было показано выше) приведет к ошибке, т.е. теперь Rails приложения невосприимчивы к уязвимостям массового назначиния по умолчанию.</p>
+
+<p>В данном случае мы хотим требовать от хэша <code>params</code> наличие атрибута <code>:user</code> и мы хотим позволить наличие атрибутов name, email, password и password_confirmation (но только их). Мы можем достигнуть этого следующим образом:</p>
+
+<div class="code"><div class="highlight"><pre><span class="n">params</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span> <span class="ss">:password_confirmation</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>Этот код вернет версию хэша <code>params</code> содержащего только разрешенные атрибуты (при этом будет вызвана ошибка если отсутствует атрибут <code>:user</code>).</p>
+
+<p>Для облегчения использования этих параметров, обычно вводят вспомогательный метод с названием <code>user_params</code> который возвращает соответствующий инициализационных хэш используемый вместо <code>params[:user]</code>:</p>
+
+<div class="code"><div class="highlight"><pre><span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+</pre></div>
+</div>
+
+
+<p>Поскольку <code>user_params</code> будет использоваться только внутри контроллера Users и нет никакой надобности открывать к нему доступ внешним пользователям через веб, мы сделаем его <em>приватным</em> используя ключевое слово <code>private</code>, как это показано в <a class="ref" href="sign-up#code-create_action_strong_parameters">Листинге&nbsp;7.22</a>. (Мы более детально обсудим <code>private</code> в <a class="ref" href="sign-in-sign-out#sec-remember_me">Разделе&nbsp;8.2.1</a>.)</p>
+
+<div class="label" id="code-create_action_strong_parameters"></div>
+
+
+<div class="codelisting">
+<div class="listing"><span class="header">Листинг 7.22.</span> <span class="description">Использование строгих параметров в действии <code>create</code>. <br /> <code>app/controllers/users_controller.rb</code></span> </div>
+<div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
+      <span class="c1"># Handle a successful save.</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">user_params</span>
+      <span class="n">params</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span>
+                                   <span class="ss">:password_confirmation</span><span class="p">)</span>
+    <span class="k">end</span>
+<span class="k">end</span>
+</pre></div>
+</div></div>
+
+
+<p>С кодом из <a class="ref" href="sign-up#code-create_action_strong_parameters">Листинга&nbsp;7.22</a> тесты отправки невалидных данных должны пройти:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/requests/user_pages_spec.rb <span class="se">\</span>
+<span class="gp">&gt;</span> -e <span class="s2">&quot;signup with invalid information&quot;</span>
 </pre></div>
 </div>
 
@@ -1351,7 +1372,7 @@
 <h3><a id="sec-7_3_2" href="sign-up#sec-signup_error_messages" class="heading"><span class="number">7.3.2</span> Сообщения об ошибках при регистрации</a></h3>
 
 
-<p>Хотя это и не является строго обязательным, все же полезно выводить сообщения об ошибках при сбое регистрации, чтобы указать на проблемы, которые помешали успешной регистрации пользователя. Rails предоставляет именно такие сообщения, основанные на валидациях модели User. Рассмотрим, например, попытку сохранения пользователя с неправильным адресом электронной почты и коротким паролем:</p>
+<p>В качестве финального шага в реализации провального создания пользователя мы добавим полезные сообщения об ошибках для указания на проблемы которые помешали регистрации. Rails автоматически предоставляет такие сообщения, основываясь на валидациях модели User. Рассмотрим, например, попытку сохранения пользователя с неправильным адресом электронной почты и коротким паролем:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span> <span class="s2">&quot;Foo Bar&quot;</span><span class="p">,</span> <span class="ss">email:</span> <span class="s2">&quot;foo@invalid&quot;</span><span class="p">,</span>
@@ -1366,13 +1387,13 @@
 
 <p>Здесь объект <code>errors.full_messages</code> (который мы видели кратко в <a class="ref" href="modeling-users#sec-presence_validation">Разделе&nbsp;6.2.2</a>) содержит массив сообщений об ошибках.</p>
 
-<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузере, мы рендерим партиал error_messages на странице user <code>new</code> как это показано в <a class="ref" href="sign-up#code-f_error_messages">Листинге&nbsp;7.22</a>. (Написание теста на сообщения об ошибках это хорошая идея и мы оставим эти тесты в качестве упражнения; см. <a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>.) Стоит отметить что этот партиал сообщений об ошибках лишь первая попытка; конечная версия представлена в <a class="ref" href="user-microposts#sec-creating_microposts">Разделе&nbsp;10.3.2</a>.</p>
+<p>Как и в консольной сессии выше, сбой сохранения в <a class="ref" href="sign-up#code-first_create_action">Листинге&nbsp;7.21</a> генерирует список сообщений об ошибках, связанных с объектом <code>@user</code>. Для отображения сообщения в браузере, мы рендерим партиал error_messages на странице user <code>new</code> как это показано в <a class="ref" href="sign-up#code-f_error_messages">Листинге&nbsp;7.23</a>. (Написание теста на сообщения об ошибках это хорошая идея и мы оставим эти тесты в качестве упражнения; см. <a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>.) Стоит отметить что этот партиал сообщений об ошибках лишь первая попытка; конечная версия представлена в <a class="ref" href="user-microposts#sec-creating_microposts">Разделе&nbsp;10.3.2</a>.</p>
 
 <div class="label" id="code-f_error_messages"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.22.</span> <span class="description">Код для отображения сообщений об ошибках в форме регистрации. <br /> <code>app/views/users/new.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 7.23.</span> <span class="description">Код для отображения сообщений об ошибках в форме регистрации. <br /> <code>app/views/users/new.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">provide</span><span class="p">(</span><span class="ss">:title</span><span class="p">,</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="cp">%&gt;</span>
 <span class="nt">&lt;h1&gt;</span>Sign up<span class="nt">&lt;/h1&gt;</span>
@@ -1391,13 +1412,13 @@
 </div></div>
 
 
-<p>Заметим здесь, что мы <code>render</code> партиал <code>&rsquo;shared/error_messages&rsquo;</code>; что отражает общую конвенцию Rails, которая помещает частичные шаблоны, которые мы планируем использовать во многих контроллерах, в специально отведенный каталог <code>shared/</code>. (Мы увидим что эти планы реализованы в <a class="ref" href="updating-showing-and-deleting-users#sec-edit_form">Разделе&nbsp;9.1.1</a>.) Это означает, что мы должны создать этот новый каталог вместе с файлом партиала <code>_error_messages.html.erb</code>. Сам партиал представлен в <a class="ref" href="sign-up#code-errors_partial">Листинге&nbsp;7.23</a>.</p>
+<p>Заметим здесь, что мы <code>render</code> партиал <code>&rsquo;shared/error_messages&rsquo;</code>; что отражает общую конвенцию Rails, которая предписывает размещение частичных шаблонов которые мы планируем использовать во многих контроллерах в специально отведенном каталоге <code>shared/</code>. Это означает, что мы должны создать этот новый каталог вместе с файлом партиала <code>_error_messages.html.erb</code>. Сам партиал представлен в <a class="ref" href="sign-up#code-errors_partial">Листинге&nbsp;7.24</a>.</p>
 
 <div class="label" id="code-errors_partial"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.23.</span> <span class="description">Партиал для отображения сообщений об ошибках отправки формы регистрации. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 7.24.</span> <span class="description">Партиал для отображения сообщений об ошибках отправки формы регистрации. <br /> <code>app/views/shared/_error_messages.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">errors</span><span class="o">.</span><span class="n">any?</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">&quot;error_explanation&quot;</span><span class="nt">&gt;</span>
@@ -1437,7 +1458,7 @@
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="kp">include</span> <span class="ss">ActionView::Helpers</span><span class="o">::</span><span class="no">TextHelper</span>
 <span class="gp">&gt;&gt; </span><span class="n">pluralize</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
-<span class="go">=&gt; &quot;1 error&quot; </span>
+<span class="go">=&gt; &quot;1 error&quot;</span>
 <span class="gp">&gt;&gt; </span><span class="n">pluralize</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;error&quot;</span><span class="p">)</span>
 <span class="go">=&gt; &quot;5 errors&quot;</span>
 </pre></div>
@@ -1463,7 +1484,7 @@
 
 <p>возвращает <code>"0 errors"</code>, <code>"1 error"</code>, <code>"2 errors"</code> и т.д., в зависимости от количества ошибок, тем самым позволяя нам избежать грамматически неверных фраз вроде <code>"1 errors"</code>.</p>
 
-<p>Обратите внимание: <a class="ref" href="sign-up#code-errors_partial">Листинг&nbsp;7.23</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в стилизации сообщений об ошибках. (Напомним, из <a class="ref" href="filling-in-the-layout#sec-custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилизации id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с SCSS показанным в <a class="ref" href="sign-up#code-error_messages_css">Листинге&nbsp;7.24</a>, который использует функцию Sass&rsquo; <code>@extend</code> для включения функциональности двух классов Bootstrap <code>control-group</code> и <code>error</code>. В результате чего, при провальной регистрации сообщения об ошибках окружены красным как это показано на <a class="ref" href="sign-up#fig-signup_error_messages">Рис.&nbsp;7.17</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты, или минимальной длине паролей.</p>
+<p>Обратите внимание: <a class="ref" href="sign-up#code-errors_partial">Листинг&nbsp;7.24</a> включает CSS&nbsp;id <code>error_explanation</code> для использования в стилизации сообщений об ошибках. (Напомним из <a class="ref" href="filling-in-the-layout#sec-custom_css">Раздела&nbsp;5.1.2</a> что CSS использует знак решетки <code>#</code> для стилизации id.) Кроме того, Rails автоматически помещает поля с ошибками в <code>div</code>ы с CSS классом <code>field_with_errors</code>. Эти метки затем позволят нам отредактироваь стиль сообщений об ошибках с SCSS показанным в <a class="ref" href="sign-up#code-error_messages_css">Листинге&nbsp;7.25</a>, который использует Sass функцию <code>@extend</code> для включения функциональности двух классов Bootstrap <code>control-group</code> и <code>error</code>. В результате чего, при провальной регистрации сообщения об ошибках окружены красным как это показано на <a class="ref" href="sign-up#fig-signup_error_messages">Рис.&nbsp;7.17</a>. Поскольку сообщения генерируются валидациями модели, они автоматически изменятся, если вы когда-нибудь поменяете свое мнение о, скажем, формате адресов электронной почты или минимальной длине паролей.</p>
 
 <div class="label" id="code-error_messages_css"></div>
 
@@ -1514,10 +1535,9 @@
 <div class="label" id="fig-blank_signup_password_digest"></div>
 
 
-<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/blank_signup_password_digest_bootstrap.png" alt="blank_signup_password_digest_bootstrap" /></span></div><div class="caption"><span class="header">Рис. 7.18: </span><span class="description">Результат посещения <a href="http://localhost:3000/signup">/signup</a> и клика на &ldquo;Create my account&rdquo;.&nbsp;<a href="http://railstutorial.org/images/figures/blank_signup_password_digest_bootstrap-full.png">(полный размер)</a></span></div></div>
+<div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/blank_signup_password_digest_bootstrap_4_0.png" alt="blank_signup_password_digest_bootstrap_4_0" /></span></div><div class="caption"><span class="header">Рис. 7.18: </span><span class="description">Результат посещения <a href="http://localhost:3000/signup">/signup</a> и клика по &ldquo;Create my account&rdquo;.&nbsp;<a href="http://railstutorial.org/images/figures/blank_signup_password_digest_bootstrap_4_0-full.png">(полный размер)</a></span></div></div>
 
 
-<p>К сожалению, в сообщениях об ошибках, показанных на <a class="ref" href="sign-up#fig-blank_signup_password_digest">Рис.&nbsp;7.18</a> есть небольшой недостаток: ошибка для отсутствующего пароля выводится как &ldquo;Password digest can&rsquo;t be blank&rdquo; вместо более уместного &ldquo;Password can&rsquo;t be blank&rdquo;. Это плата за валидацию наличия  password digest скрытую в <code>has_secure_password</code>, как это было вкратце отмечено в <a class="ref" href="modeling-users#sec-has_secure_password">Разделе&nbsp;6.3.4</a>. Исправление этой проблемы остается в качестве упражнения (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>).</p>
 
 <div class="label" id="sec-signup_success"></div>
 
@@ -1549,26 +1569,32 @@
 </div>
 
 
-<p>Это происходит потому что дефолтным поведением для Rails-действий является рендеринг соответствующего представления, но здесь нет (и не должно быть) представления соответствующего действию <code>create</code>. Вместо этого мы должны перенаправить на другую страницу и будет вполне логично если этой страницей будет профиль вновь созданного пользователя. Тестирование того что рендерится правильная страница оставлено в качестве упражнения (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>); код приложения представлен в <a class="ref" href="sign-up#code-user_create_action">Листинге&nbsp;7.25</a>.</p>
+<p>Это происходит из-за того что дефолтным поведением для Rails-действий является рендеринг соответствующего представления, но здесь нет (и не должно быть) представления соответствующего действию <code>create</code>. Вместо этого мы должны перенаправить на другую страницу и будет вполне логично если этой страницей будет профиль вновь созданного пользователя. Тестирование того что рендерится правильная страница оставлено в качестве упражнения (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>); код представлен в <a class="ref" href="sign-up#code-user_create_action">Листинге&nbsp;7.26</a>.</p>
 
 <div class="label" id="code-user_create_action"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.25.</span> <span class="description">Действие user <code>create</code> с сохранением и переадресацией. <br /> <code>app/controllers/users_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.26.</span> <span class="description">Действие user <code>create</code> с сохранением и переадресацией. <br /> <code>app/controllers/users_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">create</span>
-    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
     <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
       <span class="n">redirect_to</span> <span class="vi">@user</span>
     <span class="k">else</span>
       <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
     <span class="k">end</span>
   <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">user_params</span>
+      <span class="n">params</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span>
+                                   <span class="ss">:password_confirmation</span><span class="p">)</span>
+    <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -1576,7 +1602,7 @@
 
 <p>Обратите внимание на то что мы можем опустить <code>user_path</code> в редиректе, написав просто <code>redirect_to @user</code> для перенаправления на страницу показывающую пользователя.</p>
 
-<p>С кодом в  <a class="ref" href="sign-up#code-user_create_action">Листинге&nbsp;7.25</a> наша регистрационная форма отлично работает, что вы можете проверить запустив набор тестов:</p>
+<p>С кодом в  <a class="ref" href="sign-up#code-user_create_action">Листинге&nbsp;7.26</a> наша регистрационная форма отлично работает, что вы можете проверить запустив набор тестов:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rspec spec/
 </pre></div>
@@ -1591,7 +1617,7 @@
 <h3><a id="sec-7_4_2" href="sign-up#sec-the_flash" class="heading"><span class="number">7.4.2</span> Флэш</a></h3>
 
 
-<p>Перед отправкой валидной регистрации в браузер мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно появляется, а затем исчезает при перезагрузке страницы. (Если сейчас что-то непонятно, будьте терпеливы; Конкретный пример появится в ближайшее время) Rails-способ сделать это состоит в использовании специальной переменной <em>flash</em>, которая работает как <a   href="http://ru.wikipedia.org/wiki/Флэш-память">флэш-память</a> в том, что она хранит свои данные временно. Переменная <code>flash</code> это на самом деле хэш; и вы можете даже вспомнить консольный пример в <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели, как для перебора хэша использовался стратегически именованный хэш <code>flash</code>:</p>
+<p>Перед отправкой валидной регистрации в браузер мы собираемся немного отполировать ее, в соответствии с общепринятой в веб приложениях идеей: добавив сообщение, которое временно появляется на следующей странице (в данном случае, приветствуя нашего нового пользователя), а затем исчезает либо при посещении следующей страницы либо при перезагрузке текущей. Rails-способ сделать это состоит в использовании специальной переменной <em>flash</em> с которой мы можем обращаться как с обычным хэшем. Вы можете даже вспомнить консольный пример из <a class="ref" href="rails-flavored-ruby#sec-hashes_and_symbols">Разделе&nbsp;4.3.3</a>, где мы видели как для перебора хэша использовался стратегически именованный хэш <code>flash</code>:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="n">flash</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">success:</span> <span class="s2">&quot;It worked!&quot;</span><span class="p">,</span> <span class="ss">error:</span> <span class="s2">&quot;It failed.&quot;</span> <span class="p">}</span>
@@ -1608,14 +1634,13 @@
 </div>
 
 
-<p>Мы можем организовать отображение содержимого Флэш повсеместно на сайте, включив его в шаблон нашего приложения, как это показно в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.26</a>. (Этот код представляет из себя особенно уродливую комбинацию HTML и ERb; упражнение в <a class="ref" href="sign-up#sec-signup_exercises">Разделе&nbsp;7.6</a> показывает как сделать его более красивым.)</p>
+<p>Мы можем организовать отображение содержимого флэш повсеместно на сайте, включив его в шаблон нашего приложения, как это показно в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.27</a>. (Этот код представляет из себя особенно уродливую комбинацию HTML и ERb; упражнение в <a class="ref" href="sign-up#sec-signup_exercises">Разделе&nbsp;7.6</a> показывает как сделать его более красивым.)</p>
 
 <div class="label" id="code-layout_flash"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.26.</span> <span class="description">Добавление содержимого переменной <code>flash</code> в шаблон сайта. <br /> <code>app/views/layouts/application.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.27.</span> <span class="description">Добавление содержимого переменной <code>flash</code> в шаблон сайта. <br /> <code>app/views/layouts/application.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
   .
@@ -1640,7 +1665,7 @@
 </div></div>
 
 
-<p>Код в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.26</a> организует вставку каждого флэш элемента в <code>div</code> тег, с CSS классом, указывающим на тип сообщения. Например, если <code>flash[:success] = "Welcome to the Sample App!"</code>, то код</p>
+<p>Код в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.27</a> организует вставку каждого флэш элемента в <code>div</code> тег, с CSS классом, указывающим на тип сообщения. Например, если <code>flash[:success] = "Welcome to the Sample App!"</code>, то код</p>
 
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;%</span> <span class="n">flash</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="o">|</span> <span class="cp">%&gt;</span>
   <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">&quot;alert alert-</span><span class="cp">&lt;%=</span> <span class="n">key</span> <span class="cp">%&gt;</span><span class="s">&quot;</span><span class="nt">&gt;</span><span class="cp">&lt;%=</span> <span class="n">value</span> <span class="cp">%&gt;</span><span class="nt">&lt;/div&gt;</span>
@@ -1658,20 +1683,19 @@
 
 <p>(Обратите внимание: ключ <code>:success</code> является символом, но встроенный  Ruby автоматически конвертирует его в строку <code>"success"</code> перед вставкой в шаблон.) Причина, по которой мы перебираем все возможные пары ключ/значение заключается в том, что благодаря этому мы сможем включать другие виды флэш сообщений. Например, в <a class="ref" href="sign-in-sign-out#sec-rendering_with_a_flash_message">Разделе&nbsp;8.1.5</a> мы увидим <code>flash[:error]</code> используемое для индикации неудачной попытки входа на сайт.<sup class="footnote" id="fnref-7_10"><a href="#fn-7_10">10</a></sup></p>
 
-<p>Написание теста на правильное флэш сообщение оставлено в качестве упражнения (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>) и мы можем получить прохождение теста назначив <code>flash[:success]</code> приветственное сообщение в действии <code>create</code> как это показано в <a class="ref" href="sign-up#code-signup_flash">Листинге&nbsp;7.27</a>.</p>
+<p>Написание теста на правильное флэш сообщение оставлено в качестве упражнения (<a class="ref" href="sign-up#sec-signup_exercises">Раздел&nbsp;7.6</a>) и мы можем получить прохождение теста назначив <code>flash[:success]</code> приветственное сообщение в действии <code>create</code> как это показано в <a class="ref" href="sign-up#code-signup_flash">Листинге&nbsp;7.28</a>.</p>
 
 <div class="label" id="code-signup_flash"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.27.</span> <span class="description">Добавление флеш сообщения к успешной регистрации пользователя. <br /> <code>app/controllers/users_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.28.</span> <span class="description">Добавление флеш сообщения к успешной регистрации пользователя. <br /> <code>app/controllers/users_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">create</span>
-    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:user</span><span class="o">]</span><span class="p">)</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
     <span class="k">if</span> <span class="vi">@user</span><span class="o">.</span><span class="n">save</span>
       <span class="n">flash</span><span class="o">[</span><span class="ss">:success</span><span class="o">]</span> <span class="o">=</span> <span class="s2">&quot;Welcome to the Sample App!&quot;</span>
       <span class="n">redirect_to</span> <span class="vi">@user</span>
@@ -1679,6 +1703,13 @@
       <span class="n">render</span> <span class="s1">&#39;new&#39;</span>
     <span class="k">end</span>
   <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">user_params</span>
+      <span class="n">params</span><span class="o">.</span><span class="n">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span><span class="o">.</span><span class="n">permit</span><span class="p">(</span><span class="ss">:name</span><span class="p">,</span> <span class="ss">:email</span><span class="p">,</span> <span class="ss">:password</span><span class="p">,</span>
+                                   <span class="ss">:password_confirmation</span><span class="p">)</span>
+    <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -1711,9 +1742,9 @@
 <p>Теперь мы можем проверить нашу базу данных просто для того чтобы еще раз убедиться что новый пользователь действительно создан:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
-<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="s2">&quot;example@railstutorial.org&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt; </span><span class="no">User</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">email:</span> <span class="s2">&quot;example@railstutorial.org&quot;</span><span class="p">)</span>
 <span class="go">=&gt; #&lt;User id: 1, name: &quot;Rails Tutorial&quot;, email: &quot;example@railstutorial.org&quot;,</span>
-<span class="go">created_at: &quot;2011-12-13 05:51:34&quot;, updated_at: &quot;2011-12-13 05:51:34&quot;,</span>
+<span class="go">created_at: &quot;2013-03-12 05:51:34&quot;, updated_at: &quot;2013-03-12 05:51:34&quot;,</span>
 <span class="go">password_digest: &quot;$2a$10$A58/j7wwh3aAffGkMAO9Q.jjh3jshd.6akhDKtchAz/R...&quot;&gt;</span>
 </pre></div>
 </div>
@@ -1739,19 +1770,19 @@
 </div>
 
 
-<p>Для того чтобы задеплоить приложение, нам для начала нужно добавить строку инициирующую использование SSL в продакшен. Получившийся в результате конфигурационный файл продакшен окружения <code>config/environments/production.rb</code> представлен в <a class="ref" href="sign-up#code-ssl_in_production">Листинге&nbsp;7.28</a>.</p>
+<p>Для того чтобы задеплоить приложение, нам для начала нужно добавить строку инициирующую использование SSL в продакшен. Получившийся в результате конфигурационный файл продакшен окружения <code>config/environments/production.rb</code> представлен в <a class="ref" href="sign-up#code-ssl_in_production">Листинге&nbsp;7.29</a>.</p>
 
 <div class="label" id="code-ssl_in_production"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.28.</span> <span class="description">Конфигурирование приложения для использования SSL в продакшен. <br /> <code>config/environments/production.rb</code></span>
+<div class="listing"><span class="header">Листинг 7.29.</span> <span class="description">Конфигурирование приложения для использования SSL в продакшен. <br /> <code>config/environments/production.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">configure</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
-  <span class="c1"># Force all access to the app over SSL, use Strict-Transport-Security, </span>
+  <span class="c1"># Force all access to the app over SSL, use Strict-Transport-Security,</span>
   <span class="c1"># and use secure cookies.</span>
   <span class="n">config</span><span class="o">.</span><span class="n">force_ssl</span> <span class="o">=</span> <span class="kp">true</span>
   <span class="o">.</span>
@@ -1806,7 +1837,6 @@
 
 
 
-
 <h2><a id="sec-7_5" href="sign-up#sec-7_5" class="heading"><span class="number">7.5</span> Заключение</a></h2>
 
 
@@ -1822,15 +1852,13 @@
 
 <ol>
 
-<li>Проверьте что код в <a class="ref" href="sign-up#code-gravatar_option">Листинге&nbsp;7.29</a> позволяет хелперу <code>gravatar_for</code>, определенному в <a class="ref" href="sign-up#sec-a_gravatar_image">Разделе&nbsp;7.1.4</a> принимать опциональный параметр <code>size</code>, позволив код вроде <code>gravatar_for user, size: 40</code> в представлении.</li>
+<li>Проверьте что код в <a class="ref" href="sign-up#code-gravatar_option">Листинге&nbsp;7.30</a> позволяет хелперу <code>gravatar_for</code>, определенному в <a class="ref" href="sign-up#sec-a_gravatar_image">Разделе&nbsp;7.1.4</a> принимать опциональный параметр <code>size</code>, позволив код вроде <code>gravatar_for user, size: 40</code> в представлении.</li>
 
-<li>Напишите тесты для ошибок регистрации реализованных в <a class="ref" href="sign-up#code-f_error_messages">Листинге&nbsp;7.22</a>. Стартовые рекомендации представлены в <a class="ref" href="sign-up#code-error_messages_test">Листинге&nbsp;7.31</a>.</li>
+<li>Напишите тесты для ошибок регистрации реализованных в <a class="ref" href="sign-up#code-f_error_messages">Листинге&nbsp;7.23</a>. Стартовые рекомендации представлены в <a class="ref" href="sign-up#code-error_messages_test">Листинге&nbsp;7.31</a>.</li>
 
-<li>Используя код в <a class="ref" href="sign-up#code-password_digest_message_fix">Листинге&nbsp;7.30</a>, замените сообщение об ошибке для отсутствующего пароля &ldquo;Password digest can&rsquo;t be blank&rdquo; на более понятное &ldquo;Password can&rsquo;t be blank&rdquo;. (Здесь используется Rails поддержка интернационализации для реализации этого функционального, но немного грязноватого решения. Обратите особое внимание на необходимость использования пробелов, а не табов, т.к. <a href="http://www.yaml.org/faq.html">в формате YAML табы запрещены</a>.) Обратите внимание что, во избежание дупликации сообщений об ошибках, вам следует также удалить валидацию пароля <code>presence: true</code> в модели User.)</li>
+<li>Написав вначале тест или намеренно ломая, а затем исправляя код приложения, проверьте что тесты в <a class="ref" href="sign-up#code-after_save_tests">Листинге&nbsp;7.32</a> правильно описывают поведение после сохранения пользователя в действии <code>create</code>. <a class="ref" href="sign-up#code-after_save_tests">Листинг&nbsp;7.32</a> использует метов <code>have_selector</code> представленный в упражнениях <a class="ref" href="filling-in-the-layout#top">Главы&nbsp;5</a> (<a class="ref" href="filling-in-the-layout#sec-layout_exercises">Раздел&nbsp;5.6</a>). В данном случае мы используем <code>have_selector</code> для выбора определенных CSS классов вместе с конкретными HTML тегами.</li>
 
-<li>Написав вначале тест или намеренно ломая а затем исправляя код приложения, проверьте что тесты в <a class="ref" href="sign-up#code-after_save_tests">Листинге&nbsp;7.32</a> правильно описывают поведение после сохранения пользователя в действии <code>create</code>.</li>
-
-<li>Как было отмечено ранее, HTML флэша в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.26</a> уродлив. Проверьте, запустив набор тестов, что очищенный код в <a class="ref" href="sign-up#code-layout_flash_content_tag">Листинге&nbsp;7.33</a>, использующий Rails хелпер <code>content_tag</code>, тоже работает.</li>
+<li>Как было отмечено ранее, HTML флэша в <a class="ref" href="sign-up#code-layout_flash">Листинге&nbsp;7.27</a> уродлив. Проверьте, запустив набор тестов, что очищенный код в <a class="ref" href="sign-up#code-layout_flash_content_tag">Листинге&nbsp;7.33</a>, использующий Rails хелпер <code>content_tag</code>, тоже работает.</li>
 </ol>
 
 
@@ -1840,8 +1868,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.29.</span> <span class="description">Определение необязательного параметра <code>:size</code> для хелпера <code>gravatar_for</code>. <br /> <code>app/helpers/users_helper.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.30.</span> <span class="description">Определение необязательного параметра <code>:size</code> для хелпера <code>gravatar_for</code>. <br /> <code>app/helpers/users_helper.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">module</span> <span class="nn">UsersHelper</span>
 
   <span class="c1"># Returns the Gravatar (http://gravatar.com/) for the given user.</span>
@@ -1858,29 +1885,12 @@
 
 
 
-<div class="label" id="code-password_digest_message_fix"></div>
-
-
-<div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.30.</span> <span class="description">Хак улучшающий сообщение об ошибке для отсутствующего пароля. <br /> <code>config/locales/en.yml</code></span>
-</div>
-<div class="code"><div class="highlight"><pre><span class="l-Scalar-Plain">en</span><span class="p-Indicator">:</span>
-  <span class="l-Scalar-Plain">activerecord</span><span class="p-Indicator">:</span>
-    <span class="l-Scalar-Plain">attributes</span><span class="p-Indicator">:</span>
-      <span class="l-Scalar-Plain">user</span><span class="p-Indicator">:</span>
-        <span class="l-Scalar-Plain">password_digest</span><span class="p-Indicator">:</span> <span class="s">&quot;Password&quot;</span>
-</pre></div>
-</div></div>
-
-
-
 
 <div class="label" id="code-error_messages_test"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.31.</span> <span class="description">Рекомендуемые тесты для сообщений об ошибках. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.31.</span> <span class="description">Рекомендуемые тесты для сообщений об ошибках. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre>  <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1897,7 +1907,7 @@
       <span class="n">describe</span> <span class="s2">&quot;after submission&quot;</span> <span class="k">do</span>
         <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="n">submit</span> <span class="p">}</span>
 
-        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;Sign up&#39;</span><span class="p">)</span> <span class="p">}</span>
         <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_content</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">)</span> <span class="p">}</span>
       <span class="k">end</span>
       <span class="o">.</span>
@@ -1913,8 +1923,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.32.</span> <span class="description">Тесты описывающие поведение после сохранения в действии <code>create</code>. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.32.</span> <span class="description">Тесты описывающие поведение после сохранения в действии <code>create</code>. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre>    <span class="o">.</span>
     <span class="o">.</span>
     <span class="o">.</span>
@@ -1924,9 +1933,9 @@
       <span class="o">.</span>
       <span class="n">describe</span> <span class="s2">&quot;after saving the user&quot;</span> <span class="k">do</span>
         <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="n">submit</span> <span class="p">}</span>
-        <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by_email</span><span class="p">(</span><span class="s1">&#39;user@example.com&#39;</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">User</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">email:</span> <span class="s1">&#39;user@example.com&#39;</span><span class="p">)</span> <span class="p">}</span>
 
-        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
+        <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="p">}</span>
         <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;div.alert.alert-success&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Welcome&#39;</span><span class="p">)</span> <span class="p">}</span>
       <span class="k">end</span>
       <span class="o">.</span>
@@ -1942,8 +1951,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 7.33.</span> <span class="description">ERb для <code>flash</code> в шаблоне сайта использующий <code>content_tag</code>. <br /> <code>app/views/layouts/application.html.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 7.33.</span> <span class="description">ERb для <code>flash</code> в шаблоне сайта использующий <code>content_tag</code>. <br /> <code>app/views/layouts/application.html.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
       .
@@ -1972,11 +1980,11 @@
 <li id="fn-7_2">Гиппопотам был взят с <a href="http://www.flickr.com/photos/43803060@N00/24308857/">http://www.flickr.com/photos/43803060@N00/24308857/</a>.&nbsp;<a class="arrow" href="#fnref-7_2">&uarr;</a></li>
 <li id="fn-7_3">Rails <code>debug</code> информация показана как <a href="http://www.yaml.org/">YAML</a> (a <a href="http://catb.org/jargon/html/R/recursive-acronym.html">recursive acronym</a> (или <a href="http://ru.wikipedia.org/wiki/Рекурсивный_акроним">рекурсивный акроним)</a>)  обозначающий &ldquo;<a href="http://ru.wikipedia.org/wiki/YAML">YAML</a> Ain&rsquo;t Markup Language&rdquo;), который является дружественным форматом данных, разработанным так, чтобы быть удобочитаемым и для машин и для людей.&nbsp;<a class="arrow" href="#fnref-7_3">&uarr;</a></li>
 <li id="fn-7_4">Вы также можете определять собственные окружения; см. <a href="http://railscasts.com/episodes/72-adding-an-environment">RailsCast on adding an environment</a>.&nbsp;<a class="arrow" href="#fnref-7_4">&uarr;</a></li>
-<li id="fn-7_5">Это означает что <em>маршрутизация</em> работает, но соответствующие страницы необязательно должны работать в этой точке. Например, /users/1/edit правильно направляется к <code>edit</code> действию контроллера Users, но поскольку действие <code>edit</code> пока не существует, обращение к этому URI вернет ошибку.&nbsp;<a class="arrow" href="#fnref-7_5">&uarr;</a></li>
+<li id="fn-7_5">Это означает что <em>маршрутизация</em> работает, но соответствующие страницы необязательно должны работать в этой точке. Например, /users/1/edit правильно направляется к <code>edit</code> действию контроллера Users, но поскольку действие <code>edit</code> пока не существует, обращение к этому URL вернет ошибку.&nbsp;<a class="arrow" href="#fnref-7_5">&uarr;</a></li>
 <li id="fn-7_6">В индуизме, аватар это форма проявление божества в человеке или животном. В более широком смысле термин <em>avatar</em> обычно используется для обозначения  персонализации пользователя, особенно в виртуальной среде. Но вы уже видели <a href="http://www.imdb.com/title/tt0499549/">фильм</a>, и почти наверняка знаете об этом.&nbsp;<a class="arrow" href="#fnref-7_6">&uarr;</a></li>
 <li id="fn-7_7">Если вашему приложению потребуется обработка кастомных изображений или загрузки других файлов, я рекомендую использовать для этих целей гем <a href="http://github.com/thoughtbot/paperclip">Paperclip</a>.&nbsp;<a class="arrow" href="#fnref-7_7">&uarr;</a></li>
 <li id="fn-7_8">Странно, не правда ли? Я тоже этого не понимаю.&nbsp;<a class="arrow" href="#fnref-7_8">&uarr;</a></li>
-<li id="fn-7_9">Я выяснил это путем поиска <code>pluralize</code> в <a href="http://api.rubyonrails.org/v3.2.0/classes/ActionView/Helpers/TextHelper.html#method-i-pluralize">Rails API</a>.&nbsp;<a class="arrow" href="#fnref-7_9">&uarr;</a></li>
+<li id="fn-7_9">Я выяснил это путем поиска <code>pluralize</code> в <a href="http://api.rubyonrails.org/v4.0.0/classes/ActionView/Helpers/TextHelper.html#method-i-pluralize">Rails API</a>.&nbsp;<a class="arrow" href="#fnref-7_9">&uarr;</a></li>
 <li id="fn-7_10">На самом деле мы будем использовать тесно связанный <code>flash.now</code>, но мы отложим эти тонкости до тех пор пока они нам не понадобятся.&nbsp;<a class="arrow" href="#fnref-7_10">&uarr;</a></li>
 <li id="fn-7_11">Технически, SSL это теперь TLS, от Transport Layer Security, но все кого я знаю по-прежнему говорят &ldquo;SSL&rdquo;.&nbsp;<a class="arrow" href="#fnref-7_11">&uarr;</a></li>
 </ol>
