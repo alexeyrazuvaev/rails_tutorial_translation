@@ -1,6 +1,27 @@
+#book_wrap #book {
+  font-size: 135%;
+}
+
+#book_wrap #book .code {
+  font-size: 89%;
+}
+
+p {
+  cursor: context-menu;
+}
+
+p.clicked {
+  background-color: #fffacd;
+}
+
+.origin p {
+  cursor: default;
+}
+
 .origin {
   padding: 10px 10px 0 10px;
   border: 2px solid red;
+  margin-bottom: 20px;
 }
 
 body.book #sidebar #navtool .section .switcher .title {
@@ -22,6 +43,10 @@ body.book #sidebar #navtool .section .switcher .switcher_link.title a {
 
 p.align-right {
   text-align: right;
+}
+
+#book a.heading {
+  outline: none;
 }
 
 /*hack for this bug: http://support.mozilla.org/en-US/questions/882572*/

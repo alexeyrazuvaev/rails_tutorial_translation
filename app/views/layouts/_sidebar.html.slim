@@ -12,11 +12,11 @@
         = link_to image_tag("/images/buttons/sb_button_buy_screencasts_red.png"), "http://ruby.railstutorial.org/#buy"
         .section
           .switcher.custom
-            span class="switcher_link #{params[:version] ? '' : 'title round'}"
-              = link_to 'Rails 3.2', "/chapters/beginning"
-            '•
-            span class="switcher_link #{params[:version] ? 'title round' : ''}"
-              = link_to 'Rails 3.0', "/chapters/beginning?version=3.0"
+            span class="switcher_link #{params[:version] == '4_0' ? 'title round' : ''}"
+              = link_to 'Rails 4.0', "/chapters/4_0/beginning"
+            '&nbsp;•&nbsp;
+            span class="switcher_link #{params[:version] == '3_2' ? 'title round' : ''}"
+              = link_to 'Rails 3.2', "/chapters/3_2/beginning"
 
         a rel="nofollow" href="http://orphus.ru" id="orphus" target="_blank"
           img alt="Система Orphus" src="/images/orphus.gif" border="0" width="88" height="31"

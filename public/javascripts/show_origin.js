@@ -1,32 +1,45 @@
 $(document).ready(function(){
-  if (document.location.pathname =='/help') {
-    return;
-  }
+  if (document.location.pathname.split('/')[2] =='help') { return false; }
 
-  $("a").click(function (event) {
+  $('a').click(function (event) {
     event.stopPropagation();
   });
 
-  $("p").toggle(
-    function() {
-      $("p").css("background-color","");
+  $('p').click(function() {
+
+    if ($(this).hasClass('clicked')) {
+      clear_all_clicked();
+      return false;
+    };
+
+    clear_all_clicked();
+    $(this).addClass('clicked');
+
+    var refresh  = '?cache_refresher_1',
+        pathname = window.location.pathname,
+        index    = $('p').index(this),
+        version  = pathname.split('/')[2],
+        chapter  = pathname.split('/')[3] || 'beginning';
+
+    $(this).after('<div class="origin"> </div>');
+    $('div.origin')
+      .hide()
+      .load(p_for_load())
+      .show('fast');
+
+    // build loading path for paragraph from the given chapter with the given index
+    function p_for_load () {
+      var p_for_load = [
+        '/origin/', version, '/', chapter, '_fragment.html', refresh, ' p:eq(', index, ')'
+      ].join('');
+
+      return p_for_load;
+    };
+
+    function clear_all_clicked () {
       $('div.origin').remove();
-
-      var version = window.location.search.split('=')[1] || '';
-      var chapter = window.location.pathname.split('/')[2] || 'beginning';
-
-      var index = $("p").index(this);
-      var p_for_load = '/origin' + version + '/' + chapter + '_fragment.html p:eq(' + index + ')';
-
-      $(this).css("background-color","#fffacd");
-      $(this).after (function() { return ('<div class="origin"> </div>');});
-      $("div.origin").load(p_for_load);
-
-    },
-    function(){
-      $('div.origin').remove();
-      $(this).css("background-color","");
-    }
-  );
+      $('p').removeClass('clicked');
+    };
+  });
 });
 
