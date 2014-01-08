@@ -38,5 +38,8 @@ module RailsTutorialTranslation
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]
+
+    # fix for 'no implicit conversion of nil into String' error
+    ActionController::Base.config.relative_url_root = ''
   end
 end
