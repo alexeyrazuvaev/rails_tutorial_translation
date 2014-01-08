@@ -4,7 +4,7 @@
 <h1 class="chapter"><a id="sec-11" href="following-users#top" class="heading"><span class="number">Глава 11</span> Слежение за сообщениями  пользователей</a></h1>
 
 
-<p>В этой главе мы завершим ядро примера приложения, добавив социальный слой, что позволит пользователям читать (и не читать) сообщения других пользователей <sup class="footnote" id="fnref-11_17"><a href="#fn-11_17">17</a></sup>, в результате чего на главной странице каждого пользователя будет  отображаться список микросообщений тех пользователей, сообщения которых он читает. Мы также сделаем представления для отображения  читающих и читаемых пользователей. Мы узнаем, как смоделировать взаимоотношения между пользователями в <a class="ref" href="following-users#sec-the_relationship_model">Разделе&nbsp;11.1</a>, а затем сделаем веб-интерфейс в <a class="ref" href="following-users#sec-a_web_interface_for_following_and_followers">Разделе&nbsp;11.2</a> (включая введение в Ajax). Наконец, мы закончим, разработав полнофункциональный поток сообщений в <a class="ref" href="following-users#sec-the_status_feed">Разделе&nbsp;11.3</a>.</p>
+<p>В этой главе мы завершим ядро примера приложения, добавив социальный слой, что позволит пользователям читать (и не читать) сообщения других пользователей <sup class="footnote" id="fnref-11_15"><a href="#fn-11_15">17</a></sup>, в результате чего на главной странице каждого пользователя будет  отображаться список микросообщений тех пользователей, сообщения которых он читает. Мы также сделаем представления для отображения  читающих и читаемых пользователей. Мы узнаем, как смоделировать взаимоотношения между пользователями в <a class="ref" href="following-users#sec-the_relationship_model">Разделе&nbsp;11.1</a>, а затем сделаем веб-интерфейс в <a class="ref" href="following-users#sec-a_web_interface_for_following_and_followers">Разделе&nbsp;11.2</a> (включая введение в Ajax). Наконец, мы закончим, разработав полнофункциональный поток сообщений в <a class="ref" href="following-users#sec-the_status_feed">Разделе&nbsp;11.3</a>.</p>
 
 <p>Эта последняя глава содержит несколько из наиболее сложных материалов учебника, в том числе, сложные модели данных и несколько Ruby / SQL хитростей для создания потока сообщений. С помощью этих примеров вы увидите как Rails может обрабатывать даже весьма сложные модели данных, что должно вам пригодиться, так как вы двигаетесь к разработке собственных приложений с их собственными требованиями. Чтобы помочь с переходом от учебника к самостоятельной разработке, <a class="ref" href="following-users#sec-following_conclusion">Раздел&nbsp;11.4</a> содержит рекомендуемые расширения к ядру примера приложения, а также ссылки на более продвинутые ресурсы.</p>
 
@@ -71,14 +71,7 @@
 <h3><a id="sec-11_1_1" href="following-users#sec-a_problem_with_the_data_model" class="heading"><span class="number">11.1.1</span> Проблема с моделью данных (и ее решение)</a></h3>
 
 
-<p>В качестве первого шага на пути построения модели данных для слежения за сообщениями пользователей, давайте рассмотрим следующий типичный случай. Возьмем, в качестве примера, пользователя, который следит за сообщениями второго пользователя: мы могли бы сказать, что, например, Кальвин читает сообщения Гоббса, и Гоббс читается Кальвином, таким образом, Кальвин является <em>читателем</em>, а Гоббс является <em>читаемым</em>. При использовании дефолтной Rails&rsquo; плюрализации, множество таких читаемых пользователей называлось бы <em>followers</em>, и <code>user.followers</code> был бы массивом таких пользователей. К сожалению, реверс не сработает: по умолчанию, множество всех читаемых пользователей называлось бы <em>followeds</em>, что является безграмотной неуклюжестью. Мы могли бы назвать их <em>following</em>, но это тоже сомнительная идея: в нормальном английском, &ldquo;following&rdquo; это множество людей, следящих за <em>вами</em>, т.e., ваши последователи &mdash; с точностью до наоборот от предполагаемого значения. Хотя мы будем использовать &ldquo;following&rdquo; в качестве метки, как в &ldquo;50 following, 75 followers&rdquo;, мы будем использовать &ldquo;followed users&rdquo; для самих пользователей, с соответствующим массивом <code>user.followed_users</code>.<sup class="footnote" id="fnref-11_2"><a href="#fn-11_2">2</a></sup>
-
-
-
-
-
-
-</p>
+<p>В качестве первого шага на пути построения модели данных для слежения за сообщениями пользователей, давайте рассмотрим следующий типичный случай. Возьмем, в качестве примера, пользователя, который следит за сообщениями второго пользователя: мы могли бы сказать, что, например, Кальвин читает сообщения Гоббса, и Гоббс читается Кальвином, таким образом, Кальвин является <em>читателем</em>, а Гоббс является <em>читаемым</em>. При использовании дефолтной Rails&rsquo; плюрализации, множество таких читаемых пользователей называлось бы <em>followers</em>, и <code>user.followers</code> был бы массивом таких пользователей. К сожалению, реверс не сработает: по умолчанию, множество всех читаемых пользователей называлось бы <em>followeds</em>, что является безграмотной неуклюжестью. Мы могли бы назвать их <em>following</em>, но это тоже сомнительная идея: в нормальном английском, &ldquo;following&rdquo; это множество людей, следящих за <em>вами</em>, т.e., ваши последователи &mdash; с точностью до наоборот от предполагаемого значения. Хотя мы будем использовать &ldquo;following&rdquo; в качестве метки, как в &ldquo;50 following, 75 followers&rdquo;, мы будем использовать &ldquo;followed users&rdquo; для самих пользователей, с соответствующим массивом <code>user.followed_users</code>.<sup class="footnote" id="fnref-11_2"><a href="#fn-11_2">2</a></sup></p>
 
 <p>Это предполагает моделирование <em>читаемых</em> пользователей как на <a class="ref" href="following-users#fig-naive_user_has_many_following">Рис.&nbsp;11.6</a>, с <code>followed_users</code> таблицей и <code>has_many</code> ассоциацией. Поскольку <code>user.followed_users</code> должно быть массивом пользователей, каждая строка таблицы <code>followed_users</code> должна быть пользователем, идентифицируемым с помощью <code>followed_id</code>, совместно с <code>follower_id</code> для установления ассоциации.<sup class="footnote" id="fnref-11_3"><a href="#fn-11_3">3</a></sup> Кроме того, так как каждая строка является пользователем, мы должны были бы включить другие атрибуты пользователя, включая имя, пароль и т.д.</p>
 
@@ -88,8 +81,7 @@
 <div class="figure"><div class="center"><span class="graphic"><img src="/images/figures/naive_user_has_many_followed_users.png" alt="naive_user_has_many_followed_users" /></span></div><div class="caption"><span class="header">Рисунок 11.6: </span><span class="description">Наивная реализация слежения за сообщениями пользователя.</span></div></div>
 
 
-<p>Проблема модели данных из <a class="ref" href="following-users#fig-naive_user_has_many_following">Рис.&nbsp;11.6</a> в том, что она ужасно избыточна: каждая строка содержит не только id каждого читаемого пользователя, но и всю остальную информацию, <em>уже</em> содержащуюся в таблице <code>users</code>. Еще хуже то, что для моделирования <em>читателей</em> пользователя нам потребуется отдельная <code>followers</code> таблица. Наконец, эта модель данных кошмарно неудобна в эксплуатации, так как каждый раз, при изменении пользователем (скажем) своего имени, нам пришлось бы обновлять запись пользователя не только в <code>users</code> таблице, но также <em>каждую строку, содержащую этого пользователя</em>
-в обоих <code>followed_users</code> и <code>followers</code> таблицах.</p>
+<p>Проблема модели данных из <a class="ref" href="following-users#fig-naive_user_has_many_following">Рис.&nbsp;11.6</a> в том, что она ужасно избыточна: каждая строка содержит не только id каждого читаемого пользователя, но и всю остальную информацию, <em>уже</em> содержащуюся в таблице <code>users</code>. Еще хуже то, что для моделирования <em>читателей</em> пользователя нам потребуется отдельная <code>followers</code> таблица. Наконец, эта модель данных кошмарно неудобна в эксплуатации, так как каждый раз при изменении пользователем (скажем) своего имени, нам пришлось бы обновлять запись пользователя не только в <code>users</code> таблице, но также <em>каждую строку, содержащую этого пользователя</em> в обоих <code>followed_users</code> и <code>followers</code> таблицах.</p>
 
 <p>Проблема здесь в том, что нам не хватает лежащей в основе абстракции. Один из способов найти правильную абстракцию, это рассмотреть, как мы могли бы реализовать <em>чтение сообщений пользователя</em> в веб-приложении. Вспомним из <a class="ref" href="sign-up#sec-a_users_resource">Раздела&nbsp;7.1.2</a>, что REST архитектура включает в себя <em>ресурсы</em> которые создаются и уничтожаются. Это приводит нас к двум вопросам: Что создается, когда пользователь начинает читать сообщения другого пользователя? Что уничтожается, когда пользователь прекращает следить за сообщениями другого пользователя?</p>
 
@@ -117,14 +109,20 @@
 </div>
 
 
+<p>Возможно при этом была сгенерирована фабрика Relationship которую вам следует удалить:</p>
+
+<div class="code"><div class="highlight"><pre><span class="gp">$</span> rm -f spec/factories/relationship.rb
+</pre></div>
+</div>
+
+
 <p>Так как мы будем искать взаимоотношения по <code>follower_id</code> и по <code>followed_id</code>, мы должны добавить индекс на каждой колонке для повышения эффективности поиска, как показано в <a class="ref" href="following-users#code-relationships_migration">Листинге&nbsp;11.1</a>.</p>
 
 <div class="label" id="code-relationships_migration"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.1.</span> <span class="description">Добавление индексов для <code>relationships</code> таблицы. <br /> <code>db/migrate/[timestamp]_create_relationships.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.1.</span> <span class="description">Добавление индексов для <code>relationships</code> таблицы. <br /> <code>db/migrate/[timestamp]_create_relationships.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">CreateRelationships</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Migration</span>
   <span class="k">def</span> <span class="nf">change</span>
     <span class="n">create_table</span> <span class="ss">:relationships</span> <span class="k">do</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span>
@@ -133,7 +131,6 @@
 
       <span class="n">t</span><span class="o">.</span><span class="n">timestamps</span>
     <span class="k">end</span>
-
     <span class="n">add_index</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">:follower_id</span>
     <span class="n">add_index</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">:followed_id</span>
     <span class="n">add_index</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="o">[</span><span class="ss">:follower_id</span><span class="p">,</span> <span class="ss">:followed_id</span><span class="o">]</span><span class="p">,</span> <span class="ss">unique:</span> <span class="kp">true</span>
@@ -150,12 +147,12 @@
 </div>
 
 
-<p>(Сравните с индексом уникальности email из <a class="ref" href="modeling-users#code-email_uniqueness_index">Листинга&nbsp;6.22</a>.) Как мы увидим в <a class="ref" href="following-users#sec-following">Разделе&nbsp;11.1.4</a>, наш пользовательский интерфейс не позволит этому случиться, но добавление индекса уникальности позволит избежать ошибки в случае, если пользователь попытается дублировать взаимотношения любым другим способом (используя, например, инструмент командной строки, такой как <tt>curl</tt>). Мы могли бы также добавить валидацию уникальности к модели Relationship, но так как дублирование взаимоотношений  является ошибкой <em>всегда</em>, для наших целей  вполне достаточно индекса уникальности.</p>
+<p>(Сравните с индексом уникальности email из <a class="ref" href="modeling-users#code-email_uniqueness_index">Листинга&nbsp;6.19</a>.) Как мы увидим в <a class="ref" href="following-users#sec-following">Разделе&nbsp;11.1.4</a>, наш пользовательский интерфейс не позволит этому случиться, но добавление индекса уникальности позволит избежать ошибки в случае, если пользователь попытается дублировать взаимотношения любым другим способом (используя, например, инструмент командной строки, такой как <tt>curl</tt>). Мы могли бы также добавить валидацию уникальности к модели Relationship, но, так как дублирование взаимоотношений  является ошибкой <em>всегда</em>, для наших целей вполне достаточно индекса уникальности.</p>
 
 <p>Для создания таблицы <code>relationships</code>, мы мигрируем базу данных и подготавливаем тестовую бд, как обычно:</p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:migrate
-<span class="gp">$</span> bundle <span class="nb">exec </span>rake db:test:prepare
+<span class="gp">$</span> bundle <span class="nb">exec </span>rake <span class="nb">test</span>:prepare
 </pre></div>
 </div>
 
@@ -185,14 +182,13 @@
 </div>
 
 
-<p>Мы начнем с тестов, показанных в <a class="ref" href="following-users#code-relationship_create_test">Листинге&nbsp;11.2</a>, которые создают переменную <code>relationship</code>, проверяют что она валидна и убеждаются что <code>follower_id</code> не является доступным. (Если тест для доступных атрибутов не будет красным, убедитесь в том, что ваш <code>application.rb</code> был обновлен в соответствии с <a class="ref" href="user-microposts#code-application_whitelist">Листингом&nbsp;10.6</a>.)</p>
+<p>Мы начнем с базовых тестов валидации показанных в <a class="ref" href="following-users#code-relationship_create_test">Листинге&nbsp;11.2</a>.</p>
 
 <div class="label" id="code-relationship_create_test"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.2.</span> <span class="description">Тестирование создания Relationship и атрибутов. <br /> <code>spec/models/relationship_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.2.</span> <span class="description">Тестирование создания Relationship и атрибутов. <br /> <code>spec/models/relationship_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="no">Relationship</span> <span class="k">do</span>
@@ -204,18 +200,9 @@
   <span class="n">subject</span> <span class="p">{</span> <span class="n">relationship</span> <span class="p">}</span>
 
   <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">be_valid</span> <span class="p">}</span>
-
-  <span class="n">describe</span> <span class="s2">&quot;accessible attributes&quot;</span> <span class="k">do</span>
-    <span class="n">it</span> <span class="s2">&quot;should not allow access to follower_id&quot;</span> <span class="k">do</span>
-      <span class="n">expect</span> <span class="k">do</span>
-        <span class="no">Relationship</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">follower_id:</span> <span class="n">follower</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
-      <span class="k">end</span><span class="o">.</span><span class="n">to</span> <span class="n">raise_error</span><span class="p">(</span><span class="ss">ActiveModel::MassAssignmentSecurity</span><span class="o">::</span><span class="no">Error</span><span class="p">)</span>
-    <span class="k">end</span>
-  <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
-
 
 <p>Обратите внимание, что, в отличие от тестов для моделей User и Micropost, которые использовали <code>@user</code> и <code>@micropost</code>, соответственно, <a class="ref" href="following-users#code-relationship_create_test">Листинг&nbsp;11.2</a> использует <code>let</code> вместо переменных экземпляра. Отличия между ними редко имеют значение,<sup class="footnote" id="fnref-11_4"><a href="#fn-11_4">4</a></sup> но я считаю <code>let</code> более чистым решением, нежели переменные экземпляра. Ранее мы применяли переменные экземпляра из-за того что нам важно было как можно раньше ввести переменные экземпляра, а также потому что <code>let</code> является немного более продвинутой техникой.</p>
 
@@ -273,12 +260,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.4.</span> <span class="description">Реализация <code>has_many</code> ассоциации пользователь/взаимоотношение. <br /> <code>app/models/user.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.4.</span> <span class="description">Реализация <code>has_many</code> ассоциации пользователь/взаимоотношение. <br /> <code>app/models/user.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
   <span class="n">has_many</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">dependent:</span> <span class="ss">:destroy</span>
   <span class="n">has_many</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">foreign_key:</span> <span class="s2">&quot;follower_id&quot;</span><span class="p">,</span> <span class="ss">dependent:</span> <span class="ss">:destroy</span>
   <span class="o">.</span>
@@ -297,8 +280,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.5.</span> <span class="description">Тестирование <code>belongs_to</code> ассоциации пользователь/взаимоотношения. <br /> <code>spec/models/relationship_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.5.</span> <span class="description">Тестирование <code>belongs_to</code> ассоциации пользователь/взаимоотношения. <br /> <code>spec/models/relationship_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="n">describe</span> <span class="no">Relationship</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -306,8 +288,8 @@
   <span class="n">describe</span> <span class="s2">&quot;follower methods&quot;</span> <span class="k">do</span>
     <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:follower</span><span class="p">)</span> <span class="p">}</span>
     <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">respond_to</span><span class="p">(</span><span class="ss">:followed</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">its</span><span class="p">(</span><span class="ss">:follower</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="o">==</span> <span class="n">follower</span> <span class="p">}</span>
-    <span class="n">its</span><span class="p">(</span><span class="ss">:followed</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="o">==</span> <span class="n">followed</span> <span class="p">}</span>
+    <span class="n">its</span><span class="p">(</span><span class="ss">:follower</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span> <span class="n">follower</span> <span class="p">}</span>
+    <span class="n">its</span><span class="p">(</span><span class="ss">:followed</span><span class="p">)</span> <span class="p">{</span> <span class="n">should</span> <span class="n">eq</span> <span class="n">followed</span> <span class="p">}</span>
   <span class="k">end</span>
 <span class="k">end</span>
 </pre></div>
@@ -320,11 +302,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.6.</span> <span class="description">Добавление <code>belongs_to</code> ассоциаций к модели Relationship. <br /> <code>app/models/relationship.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.6.</span> <span class="description">Добавление <code>belongs_to</code> ассоциаций к модели Relationship. <br /> <code>app/models/relationship.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Relationship</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
-  <span class="n">attr_accessible</span> <span class="ss">:followed_id</span>
-
   <span class="n">belongs_to</span> <span class="ss">:follower</span><span class="p">,</span> <span class="ss">class_name:</span> <span class="s2">&quot;User&quot;</span>
   <span class="n">belongs_to</span> <span class="ss">:followed</span><span class="p">,</span> <span class="ss">class_name:</span> <span class="s2">&quot;User&quot;</span>
 <span class="k">end</span>
@@ -381,14 +360,10 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.8.</span> <span class="description">Добавление валидаций модели Relationship. <br /> <code>app/models/relationship.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.8.</span> <span class="description">Добавление валидаций модели Relationship. <br /> <code>app/models/relationship.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Relationship</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
-  <span class="n">attr_accessible</span> <span class="ss">:followed_id</span>
-
   <span class="n">belongs_to</span> <span class="ss">:follower</span><span class="p">,</span> <span class="ss">class_name:</span> <span class="s2">&quot;User&quot;</span>
   <span class="n">belongs_to</span> <span class="ss">:followed</span><span class="p">,</span> <span class="ss">class_name:</span> <span class="s2">&quot;User&quot;</span>
-
   <span class="n">validates</span> <span class="ss">:follower_id</span><span class="p">,</span> <span class="ss">presence:</span> <span class="kp">true</span>
   <span class="n">validates</span> <span class="ss">:followed_id</span><span class="p">,</span> <span class="ss">presence:</span> <span class="kp">true</span>
 <span class="k">end</span>
@@ -441,12 +416,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.10.</span> <span class="description">Добавление к модели User ассоциации <code>followed_users</code>.<br /> <code>app/models/user.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.10.</span> <span class="description">Добавление к модели User ассоциации <code>followed_users</code>.<br /> <code>app/models/user.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
-  <span class="o">.</span>
   <span class="n">has_many</span> <span class="ss">:microposts</span><span class="p">,</span> <span class="ss">dependent:</span> <span class="ss">:destroy</span>
   <span class="n">has_many</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">foreign_key:</span> <span class="s2">&quot;follower_id&quot;</span><span class="p">,</span> <span class="ss">dependent:</span> <span class="ss">:destroy</span>
   <span class="n">has_many</span> <span class="ss">:followed_users</span><span class="p">,</span> <span class="ss">through:</span> <span class="ss">:relationships</span><span class="p">,</span> <span class="ss">source:</span> <span class="ss">:followed</span>
@@ -464,8 +435,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.11.</span> <span class="description">Тесты для некоторых служебных методов &ldquo;following&rdquo;. <br /> <code>spec/models/user_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.11.</span> <span class="description">Тесты для некоторых служебных методов &ldquo;following&rdquo;. <br /> <code>spec/models/user_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
@@ -499,8 +469,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.12.</span> <span class="description">Служебные методы <code>following?</code> и <code>follow!</code>. <br /> <code>app/models/user.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.12.</span> <span class="description">Служебные методы <code>following?</code> и <code>follow!</code>. <br /> <code>app/models/user.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -512,7 +481,7 @@
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">following?</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
-    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">follow!</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
@@ -523,7 +492,6 @@
   <span class="o">.</span>
 <span class="k">end</span>
 </pre></div>
-</div></div>
 
 
 <p>Отметим, что в <a class="ref" href="following-users#code-following_p_follow_bang">Листинге&nbsp;11.12</a> мы опустили самого пользователя, написав просто</p>
@@ -542,7 +510,7 @@
 
 <p>Явное включение или невключение <code>self</code> в данном случае дело вкуса.</p>
 
-<p>Конечно, пользователи должны иметь возможность прекратить слежение за сообщениями других пользователей, что приводит нас к немного предсказуемому методу <code>unfollow!</code>, как показано в <a class="ref" href="following-users#code-user_unfollow_test">Листинге&nbsp;11.13</a>.<sup class="footnote" id="fnref-11_8"><a href="#fn-11_8">8</a></sup></p>
+<p>Конечно, пользователи должны иметь возможность прекратить слежение за сообщениями других пользователей, что приводит нас к немного предсказуемому методу <code>unfollow!</code>, как показано в <a class="ref" href="following-users#code-user_unfollow_test">Листинге&nbsp;11.13</a>.</p>
 
 <div class="label" id="code-user_unfollow_test"></div>
 
@@ -583,14 +551,13 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.14.</span> <span class="description">Прекращение слежения за сообщениями пользователя посредством уничтожения взаимоотношения. <br /> <code>app/models/user.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.14.</span> <span class="description">Прекращение слежения за сообщениями пользователя посредством уничтожения взаимоотношения. <br /> <code>app/models/user.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">User</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="k">def</span> <span class="nf">following?</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
-    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">follow!</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
@@ -598,7 +565,7 @@
   <span class="k">end</span>
 
   <span class="k">def</span> <span class="nf">unfollow!</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
-    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">destroy</span>
+    <span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="n">other_user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span><span class="o">.</span><span class="n">destroy!</span>
   <span class="k">end</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -756,14 +723,13 @@
 
 <p>Как и в предыдущих главах, нам удобно будет использовать Rake задачу для заполнения базы данных образцами взаимоотношений. Это позволит нам заняться в первую очередь внешним видом страниц, временно отложив серверную часть функциональности.</p>
 
-<p>Когда мы последний раз видели заполнитель образцов данных в <a class="ref" href="user-microposts#code-sample_microposts">Листинге&nbsp;10.23</a>, он был немного суматошным. Поэтому мы начнем с определения отдельных методов для создания пользователей и микросообщений, а затем добавим образцы данных взаимоотношений используя новый метод <code>make_relationships</code>. Результаты показаны в <a class="ref" href="following-users#code-sample_relationships">Листинге&nbsp;11.17</a>.</p>
+<p>Когда мы последний раз видели заполнитель образцов данных в <a class="ref" href="user-microposts#code-sample_microposts">Листинге&nbsp;10.20</a>, он был немного суматошным. Поэтому мы начнем с определения отдельных методов для создания пользователей и микросообщений, а затем добавим образцы данных взаимоотношений используя новый метод <code>make_relationships</code>. Результаты показаны в <a class="ref" href="following-users#code-sample_relationships">Листинге&nbsp;11.17</a>.</p>
 
 <div class="label" id="code-sample_relationships"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.17.</span> <span class="description">Добавление читатели/читаемые взаимоотношений в образцы данных. <br /> <code>lib/tasks/sample_data.rake</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.17.</span> <span class="description">Добавление читатели/читаемые взаимоотношений в образцы данных. <br /> <code>lib/tasks/sample_data.rake</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="n">namespace</span> <span class="ss">:db</span> <span class="k">do</span>
   <span class="n">desc</span> <span class="s2">&quot;Fill database with sample data&quot;</span>
   <span class="n">task</span> <span class="ss">populate:</span> <span class="ss">:environment</span> <span class="k">do</span>
@@ -777,8 +743,8 @@
   <span class="n">admin</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">create!</span><span class="p">(</span><span class="nb">name</span><span class="p">:</span>     <span class="s2">&quot;Example User&quot;</span><span class="p">,</span>
                        <span class="ss">email:</span>    <span class="s2">&quot;example@railstutorial.org&quot;</span><span class="p">,</span>
                        <span class="ss">password:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>
-                       <span class="ss">password_confirmation:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">)</span>
-  <span class="n">admin</span><span class="o">.</span><span class="n">toggle!</span><span class="p">(</span><span class="ss">:admin</span><span class="p">)</span>
+                       <span class="ss">password_confirmation:</span> <span class="s2">&quot;foobar&quot;</span><span class="p">,</span>
+                       <span class="ss">admin:</span> <span class="kp">true</span><span class="p">)</span>
   <span class="mi">99</span><span class="o">.</span><span class="n">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">n</span><span class="o">|</span>
     <span class="nb">name</span>  <span class="o">=</span> <span class="ss">Faker::Name</span><span class="o">.</span><span class="n">name</span>
     <span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;example-</span><span class="si">#{</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">@railstutorial.org&quot;</span>
@@ -809,7 +775,6 @@
 </pre></div>
 </div></div>
 
-
 <p>Здесь образцы взаимоотношений создаются с помощью кода</p>
 
 <div class="code"><div class="highlight"><pre><span class="k">def</span> <span class="nf">make_relationships</span>
@@ -830,7 +795,7 @@
 
 <div class="code"><div class="highlight"><pre><span class="gp">$</span> bundle <span class="nb">exec </span>rake db:reset
 <span class="gp">$</span> bundle <span class="nb">exec </span>rake db:populate
-<span class="gp">$</span> bundle <span class="nb">exec </span>rake db:test:prepare
+<span class="gp">$</span> bundle <span class="nb">exec </span>rake <span class="nb">test</span>:prepare
 </pre></div>
 </div>
 
@@ -859,8 +824,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.18.</span> <span class="description">Добавление действий  <code>following</code> и <code>followers</code> в контроллер Users. <br /> <code>config/routes.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.18.</span> <span class="description">Добавление действий  <code>following</code> и <code>followers</code> в контроллер Users. <br /> <code>config/routes.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="ss">SampleApp::Application</span><span class="o">.</span><span class="n">routes</span><span class="o">.</span><span class="n">draw</span> <span class="k">do</span>
   <span class="n">resources</span> <span class="ss">:users</span> <span class="k">do</span>
     <span class="n">member</span> <span class="k">do</span>
@@ -901,11 +865,10 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.19.</span> <span class="description">Тестирование статистики читатели/читаемые на Home странице. <br /> <code>spec/requests/static_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.19.</span> <span class="description">Тестирование статистики читатели/читаемые на Home странице. <br /> <code>spec/requests/static_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
-<span class="n">describe</span> <span class="s2">&quot;StaticPages&quot;</span> <span class="k">do</span>
+<span class="n">describe</span> <span class="s2">&quot;Static pages&quot;</span> <span class="k">do</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -924,7 +887,7 @@
 
       <span class="n">it</span> <span class="s2">&quot;should render the user&#39;s feed&quot;</span> <span class="k">do</span>
         <span class="n">user</span><span class="o">.</span><span class="n">feed</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">item</span><span class="o">|</span>
-          <span class="n">page</span><span class="o">.</span><span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s2">&quot;li#</span><span class="si">#{</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+          <span class="n">expect</span><span class="p">(</span><span class="n">page</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">have_selector</span><span class="p">(</span><span class="s2">&quot;li#</span><span class="si">#{</span><span class="n">item</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">item</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
         <span class="k">end</span>
       <span class="k">end</span>
 
@@ -1008,7 +971,7 @@
 </div>
 
 
-<p>Сравните это с подсчетом количества микросообщений из <a class="ref" href="user-microposts#code-user_show_microposts">Листинга&nbsp;10.20</a>, где мы писали</p>
+<p>Сравните это с подсчетом количества микросообщений из <a class="ref" href="user-microposts#code-user_show_microposts">Листинга&nbsp;10.17</a>, где мы писали</p>
 
 <div class="code"><div class="highlight"><pre><span class="vi">@user</span><span class="o">.</span><span class="n">microposts</span><span class="o">.</span><span class="n">count</span>
 </pre></div>
@@ -1141,7 +1104,7 @@
 </div></div>
 
 
-<p>Этот партиал ничего не делает кроме перекладывания реальной работы на <code>follow</code> и <code>unfollow</code> партиалы, которым нужен новый файл маршрутов чьи правила для ресурса Relationships, следуют примеру ресурса Microposts (<a class="ref" href="user-microposts#code-microposts_resource">Листинг&nbsp;10.25</a>), как показано в  <a class="ref" href="following-users#code-relationships_resource">Листинге&nbsp;11.24</a>.</p>
+<p>Этот партиал ничего не делает кроме перекладывания реальной работы на <code>follow</code> и <code>unfollow</code> партиалы, которым нужен новый файл маршрутов чьи правила для ресурса Relationships, следуют примеру ресурса Microposts (<a class="ref" href="user-microposts#code-microposts_resource">Листинг&nbsp;10.22</a>), как показано в  <a class="ref" href="following-users#code-relationships_resource">Листинге&nbsp;11.24</a>.</p>
 
 <div class="label" id="code-relationships_resource"></div>
 
@@ -1186,9 +1149,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.26.</span> <span class="description">Форма для отписки от сообщений пользователя. <br /> <code>app/views/users/_unfollow.html.erb</code></span>
-</div>
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="vi">@user</span><span class="p">),</span>
+<div class="listing"><span class="header">Листинг 11.26.</span> <span class="description">Форма для отписки от сообщений пользователя. <br /> <code>app/views/users/_unfollow.html.erb</code></span></div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="vi">@user</span><span class="p">),</span>
              <span class="ss">html:</span> <span class="p">{</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:delete</span> <span class="p">})</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">submit</span> <span class="s2">&quot;Unfollow&quot;</span><span class="p">,</span> <span class="ss">class:</span> <span class="s2">&quot;btn btn-large&quot;</span> <span class="cp">%&gt;</span>
 <span class="cp">&lt;%</span> <span class="k">end</span> <span class="cp">%&gt;</span>
@@ -1196,10 +1158,10 @@
 </div></div>
 
 
-<p>Обе эти формы используют <code>form_for</code> для манипуляций с объектом модели Relationship; основное отличие между ними заключается в том, что <a class="ref" href="following-users#code-follow_form">Листинг&nbsp;11.25</a> строит <em>новое</em> взаимоотношение, тогда как <a class="ref" href="following-users#code-unfollow_form">Листинг&nbsp;11.26</a> ищет существующее взаимоотношение. Естественно, первый отправляет <tt>POST</tt> запрос к контроллеру Relationships для <code>create</code> взаимоотношения, в то время как последний отправляет <tt>DELETE</tt> запрос для <code>destroy</code> взаимоотношения. (Мы напишем эти действия в <a class="ref" href="following-users#sec-a_working_follow_button_the_standard_way">Разделе&nbsp;11.2.4</a>.) Наконец, отметьте, что форма follow/unfollow не содержит никакого контента кроме кнопки, но нам все еще необходимо отправить <code>followed_id</code>, чего мы можем добиться с помощью <code>hidden_field</code>; который производит HTML вида</p>
+<p>Обе эти формы используют <code>form_for</code> для манипуляций с объектом модели Relationship; основное отличие между ними заключается в том, что <a class="ref" href="following-users#code-follow_form">Листинг&nbsp;11.25</a> строит <em>новое</em> взаимоотношение, тогда как <a class="ref" href="following-users#code-unfollow_form">Листинг&nbsp;11.26</a> ищет существующее взаимоотношение. Естественно, первый отправляет <tt>POST</tt> запрос к контроллеру Relationships для <code>create</code> взаимоотношения, в то время как последний отправляет <tt>DELETE</tt> запрос для <code>destroy</code> взаимоотношения. (Мы напишем эти действия в <a class="ref" href="following-users#sec-a_working_follow_button_the_standard_way">Разделе&nbsp;11.2.4</a>.) Наконец, отметьте что форма follow/unfollow не содержит никакого контента кроме кнопки, но нам все еще необходимо отправить <code>followed_id</code>, чего мы можем добиться с помощью метода <code>hidden_field</code> из <a class="ref" href="following-users#code-follow_form">Листинга&nbsp;11.25</a>; который производит HTML вида</p>
 
-<div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;followed_relationship_followed_id&quot;</span>
-<span class="na">name=</span><span class="s">&quot;followed_relationship[followed_id]&quot;</span>
+<div class="code"><div class="highlight"><pre><span class="nt">&lt;input</span> <span class="na">id=</span><span class="s">&quot;relationship_followed_id&quot;</span>
+<span class="na">name=</span><span class="s">&quot;relationship[followed_id]&quot;</span>
 <span class="na">type=</span><span class="s">&quot;hidden&quot;</span> <span class="na">value=</span><span class="s">&quot;3&quot;</span> <span class="nt">/&gt;</span>
 </pre></div>
 </div>
@@ -1285,8 +1247,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.28.</span> <span class="description">Тестирование авторизации страниц читаемых и читателей. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.28.</span> <span class="description">Тестирование авторизации страниц читаемых и читателей. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
@@ -1304,12 +1265,12 @@
         <span class="o">.</span>
         <span class="n">describe</span> <span class="s2">&quot;visiting the following page&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">following_user_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">}</span>
-          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
 
         <span class="n">describe</span> <span class="s2">&quot;visiting the followers page&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">visit</span> <span class="n">followers_user_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span> <span class="p">}</span>
-          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="s1">&#39;Sign in&#39;</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
       <span class="k">end</span>
       <span class="o">.</span>
@@ -1334,8 +1295,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.29.</span> <span class="description">Тесты для <code>followed_users</code> и <code>followers</code> страниц. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.29.</span> <span class="description">Тесты для <code>followed_users</code> и <code>followers</code> страниц. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -1353,7 +1313,7 @@
         <span class="n">visit</span> <span class="n">following_user_path</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
       <span class="k">end</span>
 
-      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Following&#39;</span><span class="p">))</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Following&#39;</span><span class="p">))</span> <span class="p">}</span>
       <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h3&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Following&#39;</span><span class="p">)</span> <span class="p">}</span>
       <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="n">other_user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">user_path</span><span class="p">(</span><span class="n">other_user</span><span class="p">))</span> <span class="p">}</span>
     <span class="k">end</span>
@@ -1364,7 +1324,7 @@
         <span class="n">visit</span> <span class="n">followers_user_path</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span>
       <span class="k">end</span>
 
-      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Followers&#39;</span><span class="p">))</span> <span class="p">}</span>
+      <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_title</span><span class="p">(</span><span class="n">full_title</span><span class="p">(</span><span class="s1">&#39;Followers&#39;</span><span class="p">))</span> <span class="p">}</span>
       <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;h3&#39;</span><span class="p">,</span> <span class="ss">text:</span> <span class="s1">&#39;Followers&#39;</span><span class="p">)</span> <span class="p">}</span>
       <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_link</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="ss">href:</span> <span class="n">user_path</span><span class="p">(</span><span class="n">user</span><span class="p">))</span> <span class="p">}</span>
     <span class="k">end</span>
@@ -1380,10 +1340,9 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.30.</span> <span class="description">Действия <code>following</code> и <code>followers</code>. <br /> <code>app/controllers/users_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.30.</span> <span class="description">Действия <code>following</code> и <code>followers</code>. <br /> <code>app/controllers/users_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="n">before_filter</span> <span class="ss">:signed_in_user</span><span class="p">,</span>
+  <span class="n">before_action</span> <span class="ss">:signed_in_user</span><span class="p">,</span>
                 <span class="ss">only:</span> <span class="o">[</span><span class="ss">:index</span><span class="p">,</span> <span class="ss">:edit</span><span class="p">,</span> <span class="ss">:update</span><span class="p">,</span> <span class="ss">:destroy</span><span class="p">,</span> <span class="ss">:following</span><span class="p">,</span> <span class="ss">:followers</span><span class="o">]</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1401,6 +1360,8 @@
     <span class="vi">@users</span> <span class="o">=</span> <span class="vi">@user</span><span class="o">.</span><span class="n">followers</span><span class="o">.</span><span class="n">paginate</span><span class="p">(</span><span class="ss">page:</span> <span class="n">params</span><span class="o">[</span><span class="ss">:page</span><span class="o">]</span><span class="p">)</span>
     <span class="n">render</span> <span class="s1">&#39;show_follow&#39;</span>
   <span class="k">end</span>
+
+  <span class="kp">private</span>
   <span class="o">.</span>
   <span class="o">.</span>
   <span class="o">.</span>
@@ -1475,14 +1436,13 @@
 <h3><a id="sec-11_2_4" href="following-users#sec-a_working_follow_button_the_standard_way" class="heading"><span class="number">11.2.4</span> Стандартный способ реализации кнопки "читать" (follow)</a></h3>
 
 
-<p>Теперь когда наши представления в порядке, пришло время получить рабочие follow/unfollow кнопки. Тесты для этих кнопок комбинируют множество техник тестирования о которых было рассказано в этом учебнике и представляют собой хорошее упражнение в чтении кода. Изучайте <a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинг&nbsp;11.32</a> до тех пор пока не убедитесь что вы понимаете что и почему мы тестируем. (Есть одно небольшое упущение в безопасности; посмотрим, сможете ли вы выявить его. Мы скоро расскажем о нем.)</p>
+<p>Теперь, когда наши представления в порядке, пришло время получить рабочие follow/unfollow кнопки. Тесты для этих кнопок комбинируют множество техник тестирования о которых было рассказано в этом учебнике и представляют из себя хорошее упражнение в чтении кода. Изучайте <a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинг&nbsp;11.32</a> до тех пор пока не убедитесь что вы понимаете что и почему мы тестируем. (<a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинг&nbsp;11.32</a> содержит одно небольшое упущение в безопасности; посмотрим, сможете ли вы выявить его. Мы скоро расскажем о нем.) Особенно обратите внимание на использование метода <code>have_xpath</code> использующего продвинутую и мощную технику <a href="http://ru.wikipedia.org/wiki/XPath">XPath</a> для навигации по XML документам (включая HTML5). Вы можете узнать больше о XPath с помощью поискового запроса <a href="http://www.w3schools.com/xpath/xpath_syntax.asp">XPath syntax</a>.</p>
 
 <div class="label" id="code-follow_unfollow_button_tests"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.32.</span> <span class="description">Тесты для Follow/Unfollow кнопки. <br /> <code>spec/requests/user_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.32.</span> <span class="description">Тесты для Follow/Unfollow кнопки. <br /> <code>spec/requests/user_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;User pages&quot;</span> <span class="k">do</span>
@@ -1515,7 +1475,7 @@
 
         <span class="n">describe</span> <span class="s2">&quot;toggling the button&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="s2">&quot;Follow&quot;</span> <span class="p">}</span>
-          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="ss">value:</span> <span class="s1">&#39;Unfollow&#39;</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_xpath</span><span class="p">(</span><span class="s2">&quot;//input[@value=&#39;Unfollow&#39;]&quot;</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
       <span class="k">end</span>
 
@@ -1539,7 +1499,7 @@
 
         <span class="n">describe</span> <span class="s2">&quot;toggling the button&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">click_button</span> <span class="s2">&quot;Unfollow&quot;</span> <span class="p">}</span>
-          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_selector</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="ss">value:</span> <span class="s1">&#39;Follow&#39;</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">it</span> <span class="p">{</span> <span class="n">should</span> <span class="n">have_xpath</span><span class="p">(</span><span class="s2">&quot;//input[@value=&#39;Follow&#39;]&quot;</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
       <span class="k">end</span>
     <span class="k">end</span>
@@ -1551,15 +1511,13 @@
 </pre></div>
 </div></div>
 
-
-<p><a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинг&nbsp;11.32</a> тестирует кнопки кликая по ним и проверяя соответствующее поведение. Написание реализации подразумевает чуть более глубокое погружения в вопрос: following и unfollowing включает <em>создание</em> и <em>уничтожение</em> взаимоотношений, что означает необходимость создания <code>create</code> и <code>destroy</code> действий в контроллере Relationships (который нам еще нужно создать). Хотя кнопки появляются только для вошедших пользователей, что дает нам безопасность верхнего уровня, тесты в <a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинге&nbsp;11.32</a> упускают из виду безопасность на уровне контроллера, а именно: сами <code>create</code> и <code>destroy</code> должны быть доступны только для вошедших пользователей. (Это та самая уязвимость о которой мы говорили выше.) <a class="ref" href="following-users#code-relationships_controller_authorization_test">Листинг&nbsp;11.33</a> выражает эти требования с помощью <code>post</code> и <code>delete</code> методов вызывающих эти действия напрямую.</p>
+<p><a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинг&nbsp;11.32</a> тестирует кнопки кликая по ним и проверяя соответствующее поведение. Написание реализации подразумевает чуть более глубокое погружения в тему: following и unfollowing включает <em>создание</em> и <em>уничтожение</em> взаимоотношений, что означает необходимость определения <code>create</code> и <code>destroy</code> действий в контроллере Relationships (который нам еще нужно создать). Хотя кнопки появляются только для вошедших пользователей, что дает нам безопасность верхнего уровня, тесты в <a class="ref" href="following-users#code-follow_unfollow_button_tests">Листинге&nbsp;11.32</a> упускают из виду безопасность на уровне контроллера, а именно: сами <code>create</code> и <code>destroy</code> должны быть доступны только для вошедших пользователей. (Это та самая уязвимость о которой мы говорили выше.) <a class="ref" href="following-users#code-relationships_controller_authorization_test">Листинг&nbsp;11.33</a> выражает эти требования с помощью <code>post</code> и <code>delete</code> методов вызывающих эти действия напрямую.</p>
 
 <div class="label" id="code-relationships_controller_authorization_test"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.33.</span> <span class="description">Тестирование авторизации контроллера Relationships. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.33.</span> <span class="description">Тестирование авторизации контроллера Relationships. <br /> <code>spec/requests/authentication_pages_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="s2">&quot;Authentication&quot;</span> <span class="k">do</span>
@@ -1576,12 +1534,12 @@
       <span class="n">describe</span> <span class="s2">&quot;in the Relationships controller&quot;</span> <span class="k">do</span>
         <span class="n">describe</span> <span class="s2">&quot;submitting to the create action&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">post</span> <span class="n">relationships_path</span> <span class="p">}</span>
-          <span class="n">specify</span> <span class="p">{</span> <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">specify</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
 
         <span class="n">describe</span> <span class="s2">&quot;submitting to the destroy action&quot;</span> <span class="k">do</span>
           <span class="n">before</span> <span class="p">{</span> <span class="n">delete</span> <span class="n">relationship_path</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">}</span>
-          <span class="n">specify</span> <span class="p">{</span> <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
+          <span class="n">specify</span> <span class="p">{</span> <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">redirect_to</span><span class="p">(</span><span class="n">signin_path</span><span class="p">)</span> <span class="p">}</span>
         <span class="k">end</span>
       <span class="k">end</span>
       <span class="o">.</span>
@@ -1609,10 +1567,9 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.34.</span> <span class="description">Контроллер Relationships. <br /> <code>app/controllers/relationships_controller.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.34.</span> <span class="description">Контроллер Relationships. <br /> <code>app/controllers/relationships_controller.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">RelationshipsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="n">before_filter</span> <span class="ss">:signed_in_user</span>
+  <span class="n">before_action</span> <span class="ss">:signed_in_user</span>
 
   <span class="k">def</span> <span class="nf">create</span>
     <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:relationship</span><span class="o">][</span><span class="ss">:followed_id</span><span class="o">]</span><span class="p">)</span>
@@ -1629,8 +1586,7 @@
 </pre></div>
 </div></div>
 
-
-<p>В <a class="ref" href="following-users#code-relationships_controller">Листинге&nbsp;11.34</a> мы можем видеть почему уязвимость отмеченная выше является незначительной: если невошедший пользователь попробовал бы обратиться к любому из действий напрямую (например, с помощью инструмента командной строки), <code>current_user</code> был бы <code>nil</code> и в обоих случаях вторая строка действий вызвала бы исключение, что привело бы к ошибке, но не нанесло бы вреда приложению или его данным. Однако лучше на это не полагаться, так что мы предприняли дополнительный шаг и добавили дополнительный уровень безопасности.</p>
+<p>В <a class="ref" href="following-users#code-relationships_controller">Листинге&nbsp;11.34</a> мы можем видеть почему уязвимость отмеченная выше является незначительной: если невошедший пользователь попробовал бы обратиться к любому из действий напрямую (например, с помощью инструмента командной строки вроде <tt>curl</tt>), <code>current_user</code> был бы <code>nil</code> и в обоих случаях вторая строка действий вызвала бы исключение, что привело бы к ошибке, но не нанесло бы вреда приложению или его данным. Однако лучше на это не полагаться, так что мы предприняли дополнительный шаг и добавили дополнительный уровень безопасности.</p>
 
 <p>С этим ядро функциональности follow/unfollow завершено, и любой пользователь может читать (или не читать) сообщения любого другого пользователя, что вам стоит проверить и в вашем браузере и запустив набор тестов:</p>
 
@@ -1649,7 +1605,7 @@
 
 <p>Хотя наша реализация слежения за сообщениями пользователей является законченной и в своем нынешнем виде, нам осталось совсем немного подправить ее прежде чем заняться потоком сообщений. Вы могли заметить в <a class="ref" href="following-users#sec-a_working_follow_button_the_standard_way">Разделе&nbsp;11.2.4</a> что оба <code>create</code> и <code>destroy</code> действия в контроллере Relationships просто перенаправляют <em>обратно</em> к исходному профилю. Другими словами, пользователь начинает на странице профиля, подписывается на сообщения пользователя и немедленно перенаправляется на исходную страницу. Резонный вопрос - почему пользователь вообще должен покидать эту страницу?</p>
 
-<p>Именно эту проблему решает <em>Ajax</em>, который позволяет веб страницам отправлять асинхронные запросы на сервер не покидая страницы.<sup class="footnote" id="fnref-11_9"><a href="#fn-11_9">9</a></sup> Поскольку практика добавления  Ajax в веб формы является довольно распространенной, Rails делает реализацию Ajax легкой. Действительно, обновление партиалов формы  follow/unfollow тривиально: просто заменим</p>
+<p>Именно эту проблему решает <em>Ajax</em>, который позволяет веб страницам отправлять асинхронные запросы на сервер не покидая страницы.<sup class="footnote" id="fnref-11_8"><a href="#fn-11_8">8</a></sup> Поскольку практика добавления  Ajax в веб формы является довольно распространенной, Rails делает реализацию Ajax легкой. Действительно, обновление партиалов формы  follow/unfollow тривиально: просто заменим</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">form_for</span>
 </pre></div>
@@ -1663,7 +1619,7 @@
 </div>
 
 
-<p>и Rails <a href="http://catb.org/jargon/html/A/automagically.html">автомагически</a> будет использовать Ajax.<sup class="footnote" id="fnref-11_10"><a href="#fn-11_10">10</a></sup> Обновленные партиалы представлены в <a class="ref" href="following-users#code-follow_form_ajax">Листинге&nbsp;11.35</a> и <a class="ref" href="following-users#code-unfollow_form_ajax">Листинге&nbsp;11.36</a>.</p>
+<p>и Rails <a href="http://catb.org/jargon/html/A/automagically.html">автомагически</a> будет использовать Ajax.<sup class="footnote" id="fnref-11_9"><a href="#fn-11_9">9</a></sup> Обновленные партиалы представлены в <a class="ref" href="following-users#code-follow_form_ajax">Листинге&nbsp;11.35</a> и <a class="ref" href="following-users#code-unfollow_form_ajax">Листинге&nbsp;11.36</a>.</p>
 
 <div class="label" id="code-follow_form_ajax"></div>
 
@@ -1686,9 +1642,8 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.36.</span> <span class="description">Форма для прекращения чтения сообщений пользователя использующая Ajax. <br /> <code>app/views/users/_unfollow.html.erb</code></span>
-</div>
-<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="vi">@user</span><span class="p">),</span>
+<div class="listing"><span class="header">Листинг 11.36.</span> <span class="description">Форма для прекращения чтения сообщений пользователя использующая Ajax. <br /> <code>app/views/users/_unfollow.html.erb</code></span></div>
+<div class="code"><div class="highlight"><pre><span class="cp">&lt;%=</span> <span class="n">form_for</span><span class="p">(</span><span class="n">current_user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="vi">@user</span><span class="p">),</span>
              <span class="ss">html:</span> <span class="p">{</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:delete</span> <span class="p">},</span>
              <span class="ss">remote:</span> <span class="kp">true</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">f</span><span class="o">|</span> <span class="cp">%&gt;</span>
   <span class="cp">&lt;%=</span> <span class="n">f</span><span class="o">.</span><span class="n">submit</span> <span class="s2">&quot;Unfollow&quot;</span><span class="p">,</span> <span class="ss">class:</span> <span class="s2">&quot;btn btn-large&quot;</span> <span class="cp">%&gt;</span>
@@ -1711,14 +1666,13 @@
 
 <p>Это устанавливает переменную <code>data-remote="true"</code> внутри тега формы, что говорит Rails о том, что форма будет обрабатываться JavaScript. Используя простое свойство HTML вместо вставки полного JavaScript кода (как в предыдущих версиях  Rails), Rails&nbsp;3 следует философии <a href="http://railscasts.com/episodes/205-unobtrusive-javascript"><em>ненавязчивого JavaScript</em></a>.</p>
 
-<p>После обновления формы нам нужно уговорить контроллер Relationships отвечать на Ajax запросы. Тестирование Ajax является довольно сложным, и тщательное делание этого является большой темой со своими собственными правилами, но мы можем начать с кодом в <a class="ref" href="following-users#code-relationships_controller_spec_ajax">Листинге&nbsp;11.37</a>. Это использует <code>xhr</code> метод (от &ldquo;XmlHttpRequest&rdquo;) для выдачи Ajax запроса; сравните с <code>get</code>, <code>post</code>, <code>put</code> и <code>delete</code> методами в предыдущих тестах. Затем мы проверяем что  <code>create</code> и <code>destroy</code> действия делают правильные вещи когда вызываются Ajax запросом. (Для написания более основательного набора тестов для насыщенных Ajax-ом приложений, взгляните на <a href="http://seleniumhq.org/">Selenium</a> и <a href="http://watir.com/">Watir</a>.)</p>
+<p>После обновления формы нам нужно уговорить контроллер Relationships отвечать на Ajax запросы. Тестирование Ajax является довольно сложным, и тщательное делание этого является большой темой со своими собственными правилами, но мы можем начать с кодом в <a class="ref" href="following-users#code-relationships_controller_spec_ajax">Листинге&nbsp;11.37</a>. Это использует <code>xhr</code> метод (от &ldquo;XmlHttpRequest&rdquo;) для выдачи Ajax запроса; сравните с <code>get</code>, <code>post</code>, <code>patch</code> и <code>delete</code> методами в предыдущих тестах. Затем мы проверяем что  <code>create</code> и <code>destroy</code> действия делают правильные вещи когда вызываются Ajax запросом. (Для написания более основательного набора тестов для насыщенных Ajax-ом приложений, взгляните на <a href="http://seleniumhq.org/">Selenium</a> и <a href="http://watir.com/">Watir</a>.)</p>
 
 <div class="label" id="code-relationships_controller_spec_ajax"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.37.</span> <span class="description">Тесты для ответов контроллера Relationships на Ajax запросы. <br /> <code>spec/controllers/relationships_controller_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.37.</span> <span class="description">Тесты для ответов контроллера Relationships на Ajax запросы. <br /> <code>spec/controllers/relationships_controller_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="no">RelationshipsController</span> <span class="k">do</span>
@@ -1726,7 +1680,7 @@
   <span class="n">let</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
   <span class="n">let</span><span class="p">(</span><span class="ss">:other_user</span><span class="p">)</span> <span class="p">{</span> <span class="no">FactoryGirl</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="ss">:user</span><span class="p">)</span> <span class="p">}</span>
 
-  <span class="n">before</span> <span class="p">{</span> <span class="n">sign_in</span> <span class="n">user</span> <span class="p">}</span>
+  <span class="n">before</span> <span class="p">{</span> <span class="n">sign_in</span> <span class="n">user</span><span class="p">,</span> <span class="ss">no_capybara:</span> <span class="kp">true</span> <span class="p">}</span>
 
   <span class="n">describe</span> <span class="s2">&quot;creating a relationship with Ajax&quot;</span> <span class="k">do</span>
 
@@ -1738,14 +1692,14 @@
 
     <span class="n">it</span> <span class="s2">&quot;should respond with success&quot;</span> <span class="k">do</span>
       <span class="n">xhr</span> <span class="ss">:post</span><span class="p">,</span> <span class="ss">:create</span><span class="p">,</span> <span class="ss">relationship:</span> <span class="p">{</span> <span class="ss">followed_id:</span> <span class="n">other_user</span><span class="o">.</span><span class="n">id</span> <span class="p">}</span>
-      <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">be_success</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">be_success</span>
     <span class="k">end</span>
   <span class="k">end</span>
 
   <span class="n">describe</span> <span class="s2">&quot;destroying a relationship with Ajax&quot;</span> <span class="k">do</span>
 
     <span class="n">before</span> <span class="p">{</span> <span class="n">user</span><span class="o">.</span><span class="n">follow!</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span> <span class="p">}</span>
-    <span class="n">let</span><span class="p">(</span><span class="ss">:relationship</span><span class="p">)</span> <span class="p">{</span> <span class="n">user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by_followed_id</span><span class="p">(</span><span class="n">other_user</span><span class="p">)</span> <span class="p">}</span>
+    <span class="n">let</span><span class="p">(</span><span class="ss">:relationship</span><span class="p">)</span> <span class="p">{</span> <span class="n">user</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">find_by</span><span class="p">(</span><span class="ss">followed_id:</span> <span class="n">other_user</span><span class="p">)</span> <span class="p">}</span>
 
     <span class="n">it</span> <span class="s2">&quot;should decrement the Relationship count&quot;</span> <span class="k">do</span>
       <span class="n">expect</span> <span class="k">do</span>
@@ -1755,7 +1709,7 @@
 
     <span class="n">it</span> <span class="s2">&quot;should respond with success&quot;</span> <span class="k">do</span>
       <span class="n">xhr</span> <span class="ss">:delete</span><span class="p">,</span> <span class="ss">:destroy</span><span class="p">,</span> <span class="nb">id</span><span class="p">:</span> <span class="n">relationship</span><span class="o">.</span><span class="n">id</span>
-      <span class="n">response</span><span class="o">.</span><span class="n">should</span> <span class="n">be_success</span>
+      <span class="n">expect</span><span class="p">(</span><span class="n">response</span><span class="p">)</span><span class="o">.</span><span class="n">to</span> <span class="n">be_success</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
@@ -1781,7 +1735,7 @@
 <div class="listing"><span class="header">Листинг 11.38.</span> <span class="description">Ответ на  Ajax запросы в контроллере Relationships. <br /> <code>app/controllers/relationships_controller.rb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">RelationshipsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="n">before_filter</span> <span class="ss">:signed_in_user</span>
+  <span class="n">before_action</span> <span class="ss">:signed_in_user</span>
 
   <span class="k">def</span> <span class="nf">create</span>
     <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">params</span><span class="o">[</span><span class="ss">:relationship</span><span class="o">][</span><span class="ss">:followed_id</span><span class="o">]</span><span class="p">)</span>
@@ -1841,8 +1795,7 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.39.</span> <span class="description">JavaScript Embedded Ruby для создания взаимоотношения при чтении сообщений другого пользователя. <br /> <code>app/views/relationships/create.js.erb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.39.</span> <span class="description">JavaScript Embedded Ruby для создания взаимоотношения при чтении сообщений другого пользователя. <br /> <code>app/views/relationships/create.js.erb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#follow_form&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s2">&quot;&lt;%= escape_javascript(render(&#39;users/unfollow&#39;)) %&gt;&quot;</span><span class="p">)</span>
 <span class="nx">$</span><span class="p">(</span><span class="s2">&quot;#followers&quot;</span><span class="p">).</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;&lt;%= @user.followers.count %&gt;&#39;</span><span class="p">)</span>
 </pre></div>
@@ -1911,14 +1864,13 @@
 </div>
 
 
-<p>Хотя мы пока не знаем как реализовать его, мы уже можем написать тесты для его функциональности. Ключевым моментом является проверка всех трех требований к потоку: микросообщения читаемых пользователей и самого пользователя должны быт включены в поток, но в него не должны попадать сообщения пользователей, от чтения которых пользователь отписался. Первые два требования уже представлены в наших тестах: <a class="ref" href="user-microposts#code-feed_specs">Листинг&nbsp;10.38</a> проверяет что собственные микросообщения пользователя представлены в потоке, в то время как микросообщений отписанных пользователей быть не должно. Теперь, когда мы знаем как следить за сообщениями пользователей, мы можем добавить третий тип тестов, в этот раз проверяющих что микросообщения читаемых пользователей представлены в потоке, как это показано в <a class="ref" href="following-users#code-full_feed_specs">Листинге&nbsp;11.41</a>.</p>
+<p>Хотя мы пока не знаем как реализовать его, мы уже можем написать тесты для его функциональности. Ключевым моментом является проверка всех трех требований к потоку: микросообщения читаемых пользователей и самого пользователя должны быт включены в поток, но в него не должны попадать сообщения пользователей, от чтения которых пользователь отписался. Первые два требования уже представлены в наших тестах: <a class="ref" href="user-microposts#code-feed_specs">Листинг&nbsp;10.35</a> проверяет что собственные микросообщения пользователя представлены в потоке, в то время как микросообщений отписанных пользователей быть не должно. Теперь, когда мы знаем как следить за сообщениями пользователей, мы можем добавить третий тип тестов, в этот раз проверяющих что микросообщения читаемых пользователей представлены в потоке, как это показано в <a class="ref" href="following-users#code-full_feed_specs">Листинге&nbsp;11.41</a>.</p>
 
 <div class="label" id="code-full_feed_specs"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.41.</span> <span class="description">Финальные тесты для потока сообщений. <br /> <code>spec/models/user_spec.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.41.</span> <span class="description">Финальные тесты для потока сообщений. <br /> <code>spec/models/user_spec.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="nb">require</span> <span class="s1">&#39;spec_helper&#39;</span>
 
 <span class="n">describe</span> <span class="no">User</span> <span class="k">do</span>
@@ -1957,6 +1909,9 @@
       <span class="k">end</span>
     <span class="k">end</span>
   <span class="k">end</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
+  <span class="o">.</span>
 <span class="k">end</span>
 </pre></div>
 </div></div>
@@ -2005,7 +1960,7 @@
 
 <p>При написании этого кода мы предположили, что SQL поддерживает ключевое слово <code>IN</code>, что позволяет нам протестировать множественное включение. (К счастью это так.)</p>
 
-<p>Вспомним из предварительной реализации потока в <a class="ref" href="user-microposts#sec-a_proto_feed">Разделе&nbsp;10.3.3</a> что Active Record использует <code>where</code> метод для осуществления вида выбора, показанного выше, что иллюстрирует <a class="ref" href="user-microposts#code-proto_status_feed">Листинг&nbsp;10.39</a>. Там наша выборка была очень простой; мы просто взяли все микросообщения с user id соответствующим текущему пользователю:</p>
+<p>Вспомним из предварительной реализации потока в <a class="ref" href="user-microposts#sec-a_proto_feed">Разделе&nbsp;10.3.3</a> что Active Record использует <code>where</code> метод для осуществления вида выбора, показанного выше, что иллюстрирует <a class="ref" href="user-microposts#code-proto_status_feed">Листинг&nbsp;10.36</a>. Там наша выборка была очень простой; мы просто взяли все микросообщения с user id соответствующим текущему пользователю:</p>
 
 <div class="code"><div class="highlight"><pre><span class="no">Micropost</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="s2">&quot;user_id = ?&quot;</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
 </pre></div>
@@ -2021,7 +1976,7 @@
 
 <p>(Здесь мы в состоянии использовать, согласно Rails конвенции, <code>user</code> вместо <code>user.id</code>; Rails автоматически использует&nbsp;<code>id</code>. Мы также опустили впереди идущую часть <code>Micropost.</code> поскольку мы ожидаем что этот метод будет жить в самой модели Micropost.)</p>
 
-<p>Мы видим из этих условий, что нам нужен массив  id пользователей, читаемых данным пользователем (или какой-то эквивалент). Один из способов сделать это заключается в использовании Ruby метода <code>map</code>, доступного на любом &ldquo;перечисляемом&rdquo; объекте, т.е., любом объекте (таком как Массив или Хэш), который состоит из коллекции элементов.<sup class="footnote" id="fnref-11_11"><a href="#fn-11_11">11</a></sup> Мы видели пример этого метода в <a class="ref" href="rails-flavored-ruby#sec-blocks">Разделе&nbsp;4.3.2</a>; он работает следующим образом:</p>
+<p>Мы видим из этих условий, что нам нужен массив  id пользователей, читаемых данным пользователем (или какой-то эквивалент). Один из способов сделать это заключается в использовании Ruby метода <code>map</code>, доступного на любом &ldquo;перечисляемом&rdquo; объекте, т.е., любом объекте (таком как Массив или Хэш), который состоит из коллекции элементов.<sup class="footnote" id="fnref-11_10"><a href="#fn-11_10">10</a></sup> Мы видели пример этого метода в <a class="ref" href="rails-flavored-ruby#sec-blocks">Разделе&nbsp;4.3.2</a>; он работает следующим образом:</p>
 
 <div class="code"><div class="highlight"><pre><span class="go">$ rails console</span>
 <span class="gp">&gt;&gt; </span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">i</span><span class="o">.</span><span class="n">to_s</span> <span class="p">}</span>
@@ -2030,7 +1985,7 @@
 </div>
 
 
-<p>Ситуации, подобные той, что показана выше, где такой же метод (например, <code>to_s</code>) вызывается на каждый элемент, настолько обычная вещь, что есть сокращенная запись, использующая <em>ампресанд</em>&nbsp;<code>&amp;</code> и символ, соответствующий методу:<sup class="footnote" id="fnref-11_12"><a href="#fn-11_12">12</a></sup></p>
+<p>Ситуации, подобные той, что показана выше, где такой же метод (например, <code>to_s</code>) вызывается на каждый элемент, настолько обычная вещь, что есть сокращенная запись, использующая <em>ампресанд</em>&nbsp;<code>&amp;</code> и символ, соответствующий методу:<sup class="footnote" id="fnref-11_11"><a href="#fn-11_11">11</a></sup></p>
 
 <div class="code"><div class="highlight"><pre><span class="gp">&gt;&gt; </span><span class="o">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="o">].</span><span class="n">map</span><span class="p">(</span><span class="o">&amp;</span><span class="ss">:to_s</span><span class="p">)</span>
 <span class="go">=&gt; [&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;]</span>
@@ -2204,7 +2159,7 @@
 </div>
 
 
-<p>Этот подзапрос организует всю логику для отправки в базу данных, что является более эффективным.<sup class="footnote" id="fnref-11_13"><a href="#fn-11_13">13</a></sup></p>
+<p>Этот подзапрос организует всю логику для отправки в базу данных, что является более эффективным.<sup class="footnote" id="fnref-11_12"><a href="#fn-11_12">12</a></sup></p>
 
 <p>С этим фундаментом мы готовы к эффективной релизации потока сообщений, как видно в <a class="ref" href="following-users#code-from_users_followed_by_final">Листинге&nbsp;11.45</a>. Обратите внимание, что, так как теперь это чистый SQL, <code>followed_user_ids</code> является <em>интерполированным</em>, а не маскированным. (На самом деле рабочими являются оба варианта, но мне кажется более логичным интерполировать в данном контексте.)</p>
 
@@ -2212,17 +2167,14 @@
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 11.45.</span> <span class="description">Финальная реализация <code>from_users_followed_by</code>. <br /> <code>app/models/micropost.rb</code></span>
-</div>
+<div class="listing"><span class="header">Листинг 11.45.</span> <span class="description">Финальная реализация <code>from_users_followed_by</code>. <br /> <code>app/models/micropost.rb</code></span></div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Micropost</span> <span class="o">&lt;</span> <span class="ss">ActiveRecord::Base</span>
-  <span class="n">attr_accessible</span> <span class="ss">:content</span>
   <span class="n">belongs_to</span> <span class="ss">:user</span>
-
-  <span class="n">validates</span> <span class="ss">:user_id</span><span class="p">,</span> <span class="ss">presence:</span> <span class="kp">true</span>
+  <span class="n">default_scope</span> <span class="o">-&gt;</span> <span class="p">{</span> <span class="n">order</span><span class="p">(</span><span class="s1">&#39;created_at DESC&#39;</span><span class="p">)</span> <span class="p">}</span>
   <span class="n">validates</span> <span class="ss">:content</span><span class="p">,</span> <span class="ss">presence:</span> <span class="kp">true</span><span class="p">,</span> <span class="ss">length:</span> <span class="p">{</span> <span class="ss">maximum:</span> <span class="mi">140</span> <span class="p">}</span>
+  <span class="n">validates</span> <span class="ss">:user_id</span><span class="p">,</span> <span class="ss">presence:</span> <span class="kp">true</span>
 
-  <span class="n">default_scope</span> <span class="ss">order:</span> <span class="s1">&#39;microposts.created_at DESC&#39;</span>
-
+  <span class="c1"># Returns microposts from the users being followed by the given user.</span>
   <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">from_users_followed_by</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
     <span class="n">followed_user_ids</span> <span class="o">=</span> <span class="s2">&quot;SELECT followed_id FROM relationships</span>
 <span class="s2">                         WHERE follower_id = :user_id&quot;</span>
@@ -2234,7 +2186,7 @@
 </div></div>
 
 
-<p>Этот код представляет собой внушительную комбинацию Rails, Ruby, и SQL, но он делает свою работу и делает ее хорошо. (Конечно же, даже подзапрос не является универсальным решением для масштабирования. Для бОльших сайтов, вам, вероятно, потребуется генерировать поток асинхронно с помощью фонового процесса. Такие тонкости масштабирования выходят за рамки данного руководства, но скринкасты <a href="http://railslab.newrelic.com/scaling-rails">Scaling Rails</a> являются хорошим местом для старта.)</p>
+<p>Этот код представляет собой внушительную комбинацию Rails, Ruby, и SQL, но он делает свою работу и делает ее хорошо. (Конечно же, даже подзапрос не является универсальным решением для масштабирования. Для бОльших сайтов, вам, вероятно, потребуется генерировать поток асинхронно с помощью фонового процесса. Такие тонкости масштабирования выходят за рамки данного руководства.)</p>
 
 <div class="label" id="sec-the_new_status_feed"></div>
 
@@ -2242,7 +2194,7 @@
 <h3><a id="sec-11_3_4" href="following-users#sec-the_new_status_feed" class="heading"><span class="number">11.3.4</span> Новый поток сообщений</a></h3>
 
 
-<p>С кодом в <a class="ref" href="following-users#code-from_users_followed_by_final">Листинге&nbsp;11.45</a>, наш поток сообщений завершен. Напомним, что код для Home страницы, представлен в <a class="ref" href="following-users#code-real_feed_instance_variable">Листинге&nbsp;11.46</a>; этот код создает пагинированный поток соответствущих микросообщений для использования в представлении, как видно в <a class="ref" href="following-users#fig-home_page_with_feed">Рис.&nbsp;11.20</a>.<sup class="footnote" id="fnref-11_14"><a href="#fn-11_14">14</a></sup> Отметим, что <code>paginate</code> метод фактически достигает цели в методе модели  Micropost в <a class="ref" href="following-users#code-from_users_followed_by_final">Листинге&nbsp;11.45</a>, организуя вытягивание только&nbsp;30 микросообщений за раз из базы данных. (Вы можете проверить это изучив SQL выражения в логах сервера разработки.)</p>
+<p>С кодом в <a class="ref" href="following-users#code-from_users_followed_by_final">Листинге&nbsp;11.45</a>, наш поток сообщений завершен. Напомним, что код для Home страницы, представлен в <a class="ref" href="following-users#code-real_feed_instance_variable">Листинге&nbsp;11.46</a>; этот код создает пагинированный поток соответствущих микросообщений для использования в представлении, как видно в <a class="ref" href="following-users#fig-home_page_with_feed">Рис.&nbsp;11.20</a>.<sup class="footnote" id="fnref-11_13"><a href="#fn-11_13">13</a></sup> Отметим, что <code>paginate</code> метод фактически достигает цели в методе модели  Micropost в <a class="ref" href="following-users#code-from_users_followed_by_final">Листинге&nbsp;11.45</a>, организуя вытягивание только&nbsp;30 микросообщений за раз из базы данных. (Вы можете проверить это изучив SQL выражения в логах сервера разработки.)</p>
 
 <div class="label" id="code-real_feed_instance_variable"></div>
 
@@ -2305,7 +2257,6 @@
 </div>
 
 
-<p></p>
 
 <div class="label" id="sec-extensions_to_the_sample_application"></div>
 
@@ -2315,7 +2266,7 @@
 
 <p>Рекомендуемые расширения в этом разделе в основном вдохновлены основными функциями, общепринятыми для веб-приложений, такими как напоминание пароля и подтверждение адреса электронной почты, или функции характерные для нашего типа примера приложения, такие как поиск, ответы, обмен сообщениями. Реализация одного или более расширений приложения поможет вам сделать переход от выполнения примеров учебника к написанию собственных оригинальных приложений.</p>
 
-<p>Не удивляйтесь, если по началу будет непросто; чистый лист новой функции может быть немного пугающим. Чтобы помочь вам начать, я могу дать две большие рекомендации. Во-первых, пежде чем добавлять какую-либо функцию к  Rails приложению, взгляните на <a href="http://railscasts.com/episodes/archive">RailsCasts archive</a> чтобы посмотреть, не рассказал ли уже об этом Ryan Bates.<sup class="footnote" id="fnref-11_15"><a href="#fn-11_15">15</a></sup> Если он это сделал, просмотр соответствующего Railscast сэкономит вам массу времени. Во-вторых, всегда делайте обширный поиск в  Google по вашей предполагаемой функции, чтобы найти соответствующее сообщения в блогах и пособиях. Разработка веб приложений это непростое дело и это поможет вам учиться на чужом опыте (и ошибках).</p>
+<p>Не удивляйтесь, если по началу будет непросто; чистый лист новой фичи может быть немного пугающим. Чтобы помочь вам начать, я могу дать две большие рекомендации. Во-первых, пежде чем добавлять какую-либо функцию к  Rails приложению, взгляните на <a href="http://railscasts.com/episodes/archive">RailsCasts archive</a> чтобы посмотреть, не рассказал ли уже об этом Ryan Bates.<sup class="footnote" id="fnref-11_14"><a href="#fn-11_14">14</a></sup> Если он это сделал, просмотр соответствующего Railscast сэкономит вам массу времени. Во-вторых, всегда делайте обширный поиск в Google по вашей предполагаемой функции, чтобы найти соответствующее сообщения в блогах и пособиях. Разработка веб приложений это непростое дело и это поможет вам учиться на чужом опыте (и ошибках).</p>
 
 <p>Многие из следующих функций являются довольно непростыми задачами, и я дал несколько подсказок по поводу средств, которые могут  вам понадобиться для их реализации. Даже с подсказками, они являются <em>намного</em> более трудными чем упражнения, которые приводились в конце каждой главы учебника, так что не расстраивайтесь, если вы не можете решить их без значительных усилий. Из-за нехватки времени я недоступен для личной помощи, но если есть достаточный интерес я мог бы выпустить автономную статью/скринкаст охватывающий эти расширения в будущем; перейдите на основной сайт Rails Tutorial <a href="http://railstutorial.org/">http://railstutorial.org/</a> и подпишитесь на ленту новостей, чтобы быть в курсе последних обновлений.</p>
 
@@ -2398,9 +2349,7 @@
 
 <li><a href="http://railscasts.com/">RailsCasts</a>: трудно переоценить важность ресурса Railscasts, я советую начать с посещения <a href="http://railscasts.com/episodes/archive">архива эпизодов Railscasts</a> и клика по любой зацепившей вас теме.</li>
 
-<li><a href="http://railslab.newrelic.com/scaling-rails">Масштабирование Rails</a>: Одна тема в <em>Ruby on Rails Tutorial</em> осталась почти нетронутой: производительность, оптимизация и масштабирование. К счастью, большинство сайтов никогда не столкнется с серьезными проблемами масштабирования, и использование чего-либо кроме простого Rails для оптимизации вероятно будет преждевременным. Если вы столкнулись с проблемами производительности, <a href="http://railslab.newrelic.com/scaling-rails">Scaling Rails</a> серия от Gregg Pollack из <a href="http://envylabs.com/">Envy Labs</a> является прекрасным местом для старта. Я также рекомендую исследовать приложения для мониторинга сайтов <a href="http://scoutapp.com/">Scout</a> и <a href="http://www.newrelic.com/">New Relic</a>.<sup class="footnote" id="fnref-11_16"><a href="#fn-11_16">16</a></sup> И, как вы к этому времени можете подозревать, существуют RailsCasts по множествам тем касающихся масштабирования, включая профилирование, кэширование и фоновые процессы.</li>
-
-<li>Ruby и Rails книги: я рекомендую <a href="http://www.amazon.com/gp/product/1430223634"><em>Beginning Ruby</em></a> Петера Купера, <a href="http://www.amazon.com/gp/product/1933988657"><em>The Well-Grounded Rubyist</em></a> by David&nbsp;A. Black и <a href="http://www.amazon.com/gp/product/0672328844"><em>The Ruby Way</em></a> Хэла Фултона для дальнейшего изучения Ruby, и <a href="http://www.amazon.com/gp/product/0321601661"><em>The Rails&nbsp;3 Way</em></a> Оби Фернандеса, и <em>Rails&nbsp;3 in Action</em> (подождите второго издания) Ryan Bigg и Yehuda Katz для изучения Rails.</li>
+<li>Ruby и Rails книги: я рекомендую <a href="http://www.amazon.com/gp/product/1430223634"><em>Beginning Ruby</em></a> Петера Купера, <a href="http://www.amazon.com/gp/product/1933988657"><em>The Well-Grounded Rubyist</em></a> David&nbsp;A. Black, <a href="http://www.amazon.com/Eloquent-Ruby-Addison-Wesley-Professional-Series/dp/0321584104/"><em>Eloquent Ruby</em></a> Russ Olsen и <a href="http://www.amazon.com/gp/product/0672328844"><em>The Ruby Way</em></a> Хэла Фултона для дальнейшего изучения Ruby, и <a href="http://www.amazon.com/gp/product/0321601661"><em>The Rails&nbsp;3 Way</em></a> Оби Фернандеса, и <em>Rails&nbsp;3 in Action</em> (подождите второго издания) Ryan Bigg и Yehuda Katz для изучения Rails.</li>
 
 <li><a href="http://peepcode.com/">PeepCode</a> и <a href="http://codeschool.com/">Code School</a>: скринкасты от PeepCode и интерактивные курсы в Code School неизменно высокого качества и я горячо рекомендую их.</li>
 
@@ -2418,7 +2367,8 @@
 
 
 <ol>
-<li>Добавьте тесты для уничтожения взаимоотношений связанных с данным пользователем (т.e., к реализации <code>dependent :destroy</code> в <a class="ref" href="following-users#code-user_relationships_association">Листинге&nbsp;11.4</a> и <a class="ref" href="following-users#code-user_reverse_relationships">Листинге&nbsp;11.16</a>). <em>Подсказка</em>: следуйте примеру в <a class="ref" href="user-microposts#code-micropost_dependency_test">Листинге&nbsp;10.15</a>.</li>
+<li>Добавьте тесты для уничтожения взаимоотношений связанных с данным пользователем (т.e., к реализации <code>dependent :destroy</code> в <a class="ref" href="following-users#code-user_relationships_association">Листинге&nbsp;11.4</a> и <a class="ref" href="following-users#code-user_reverse_relationships">Листинге&nbsp;11.16</a>). <em>Подсказка</em>: следуйте примеру в <a class="ref" href="user-microposts#code-micropost_dependency_test">Листинге&nbsp;10.12</a>.</li>
+
 <li>Метод <code>respond_to</code> виденый в <a class="ref" href="following-users#code-relationships_controller_ajax">Листинге&nbsp;11.38</a> на самом деле может быть поднят из действий в сам контроллер Relationships, и <code>respond_to</code> блоки могут быть заменены на  Rails метод <code>respond_with</code>. Подтвердите, что результирующий код, показаный в <a class="ref" href="following-users#code-compact_respond_to">Листинге&nbsp;11.47</a>, является корректным, проверив что набор тестов все еще проходит. (Подробнее об этом методе см в Google поиске &ldquo;rails respond_with&rdquo;.)</li>
 <li>Сделайте рефакторинг <a class="ref" href="following-users#code-show_follow_view">Листинга&nbsp;11.31</a> добавив партиалы для кода общего для страниц following/followers, страницы Home, и страницы показывающей пользователя.</li>
 <li>Следуя модели в <a class="ref" href="following-users#code-stats_view_test">Листинге&nbsp;11.19</a>, напишите тесты для статистики на странице профиля.</li>
@@ -2434,7 +2384,7 @@
 <div class="listing"><span class="header">Листинг 11.47.</span> <span class="description">Компактный рефакторинг <a class="ref" href="following-users#code-relationships_controller_ajax">Листинга&nbsp;11.38</a>.</span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="k">class</span> <span class="nc">RelationshipsController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
-  <span class="n">before_filter</span> <span class="ss">:signed_in_user</span>
+  <span class="n">before_action</span> <span class="ss">:signed_in_user</span>
 
   <span class="n">respond_to</span> <span class="ss">:html</span><span class="p">,</span> <span class="ss">:js</span>
 
@@ -2466,15 +2416,13 @@
 <li id="fn-11_5">Технически, Rails использует <code>underscore</code> метод для преобразования имени класса в id. Например, <code>"FooBar".underscore</code> является <code>"foo_bar"</code>, поэтому внешним ключом для объекта <code>FooBar</code> будет <code>foo_bar_id</code>. (Кстати, инверсией <code>underscore</code> является <code>camelize</code>, который конвертирует <code>camel_case</code> в <code>CamelCase</code>.)&nbsp;<a class="arrow" href="#fnref-11_5">&uarr;</a></li>
 <li id="fn-11_6">Если вы заметили что <code>followed_id</code> также идентифицирует пользователя, и обеспокоены ассиметричным обращением с читателями и читаемыми, вы готовы к любым неожиданностям. Мы займемся этим вопросом в <a class="ref" href="following-users#sec-followers">Разделе&nbsp;11.1.5</a>.&nbsp;<a class="arrow" href="#fnref-11_6">&uarr;</a></li>
 <li id="fn-11_7">Если у вас есть большой опыт моделирования конкретной предметной области, вы зачастую можете предугадать такие вспомогательные методы, и даже если нет, вы часто обнаруживаете себя за их написанием с целью почистить тесты. Однако в данном случае нормально если вы не угадали их. Разработка програмного обеспечения это обычно итеративный процесс &mdash; вы пишете код до тех пор пока он не начинает становиться уродливым, а затем вы рефакторите его &mdash; но, для краткости, изложение в учебнике немного сглажено.&nbsp;<a class="arrow" href="#fnref-11_7">&uarr;</a></li>
-<li id="fn-11_8">Метод <code>unfollow!</code> <em>не</em> вызывает исключения при неудаче&nbsp;&mdash;&nbsp;фактически я даже не знаю как Rails указывает на провальное уничтожение&nbsp;&mdash;&nbsp;но мы используем восклицательный знак для поддержания <code>follow!</code>/<code>unfollow!</code> симметрии.&nbsp;<a class="arrow" href="#fnref-11_8">&uarr;</a></li>
-<li id="fn-11_9">Так как номинально это является акронимом <em>asynchronous JavaScript and XML</em>, Ajax иногда ошибочно пишут как &ldquo;AJAX&rdquo;, хотя на протяжении всей <a href="http://www.adaptivepath.com/ideas/essays/archives/000385.php">оригинальной Ajax статьи</a> используется написание  &ldquo;Ajax&rdquo;.&nbsp;<a class="arrow" href="#fnref-11_9">&uarr;</a></li>
-<li id="fn-11_10">Это работает, только если JavaScript включен в браузере, но изящно деградирует, работая в точности как в <a class="ref" href="following-users#sec-a_working_follow_button_the_standard_way">Разделе&nbsp;11.2.4</a> если JavaScript отключен.&nbsp;<a class="arrow" href="#fnref-11_10">&uarr;</a></li>
-<li id="fn-11_11">Основное требование заключается в том, что перечисляемые объекты должны реализовывать <code>each</code> метод для перебора коллекции.&nbsp;<a class="arrow" href="#fnref-11_11">&uarr;</a></li>
-<li id="fn-11_12">Эта запись фактически началась, как расширение Rails, внесенное в ядро ​​языка Ruby; она была настолько полезной, что в настоящее время она включена в сам Ruby. Замечательно, правда?&nbsp;<a class="arrow" href="#fnref-11_12">&uarr;</a></li>
-<li id="fn-11_13">Для более продвинутых способов создания необходимых подзапросов, см. сообщение в блоге <a href="http://pivotallabs.com/users/jsusser/blog/articles/567-hacking-a-subselect-in-activerecord">&ldquo;Hacking a subselect in ActiveRecord&rdquo;.</a>&nbsp;<a class="arrow" href="#fnref-11_13">&uarr;</a></li>
-<li id="fn-11_14">Для того чтобы сделать поток сообщений на <a class="ref" href="following-users#fig-home_page_with_feed">Рис.&nbsp;11.20</a> более привлекательным, я добавил несколько дополнительных микросообщений вручную используя Rails консоль.&nbsp;<a class="arrow" href="#fnref-11_14">&uarr;</a></li>
-<li id="fn-11_15">Единственная моя оговорка по поводу Railscasts&nbsp;&mdash;&nbsp;они обычно опускают тесты. Это, вероятно, необходимо для сохранения  красоты и краткости эпизодов, но у вас может сформироваться неправильное представление о важности тестов. После просмотра соответствующего Railscast для получения представления о процессе, я советую писать новую фнкцию используя разработку через тестирование. (В этом контексте я рекомендую взглянуть на <a href="http://railscasts.com/episodes/275-how-i-test">the RailsCast on &ldquo;How I test&rdquo;</a>. Вы увидите, что Ryan Bates сам обычно использует TDD для разработки в реальной жизни и что, фактически, его стиль тестирования совпадает со стилем используемым в данном учебнике.)&nbsp;<a class="arrow" href="#fnref-11_15">&uarr;</a></li>
-<li id="fn-11_16">В дополнение к тому что выглядящая умной фраза &mdash; <em>новая реликвия</em> является противоречивым термином &mdash; New Relic это также анаграмма имени основателя компании, Lew Cirne.&nbsp;<a class="arrow" href="#fnref-11_16">&uarr;</a></li>
-<li id="fn-11_17"><span class="c1"># позволю себе небольшой комментарий к переводу этой главы. В тексте очень часто употребляются различные формы слова follow (following, follower, followers и т.п.) в дословном переводе это означает "следовать" (слежение, следящий, следящие соответственно). Однако Twitter, (клоном которого является пример приложения, рассматриваемый в этом учебнике) вместо дословного перевода,  использует термины "Читает" (для following) и "Читают" (для followers) и лично мне термин "Читатели" вместо возможного дословного перевода (следователи, последователи и т.п.) нравится больше. И, несмотря на несколько казусов с этим связанных, в  оставшейся части учебника  я постараюсь придерживаться именно этого варианта. <br/> P.s. Надеюсь данный комментарий не запутал вас окончательно. :)   </span>&nbsp;<a class="arrow" href="#fnref-11_17">&uarr;</a></li>
+<li id="fn-11_8">Так как номинально это является акронимом <em>asynchronous JavaScript and XML</em>, Ajax иногда ошибочно пишут как &ldquo;AJAX&rdquo;, хотя на протяжении всей <a href="http://www.adaptivepath.com/ideas/essays/archives/000385.php">оригинальной Ajax статьи</a> используется написание  &ldquo;Ajax&rdquo;.&nbsp;<a class="arrow" href="#fnref-11_8">&uarr;</a></li>
+<li id="fn-11_9">Это работает только если JavaScript включен в браузере, но изящно деградирует, работая в точности как в <a class="ref" href="following-users#sec-a_working_follow_button_the_standard_way">Разделе&nbsp;11.2.4</a> если JavaScript отключен.&nbsp;<a class="arrow" href="#fnref-11_9">&uarr;</a></li>
+<li id="fn-11_10">Основное требование заключается в том, что перечисляемые объекты должны реализовывать <code>each</code> метод для перебора коллекции.&nbsp;<a class="arrow" href="#fnref-11_10">&uarr;</a></li>
+<li id="fn-11_11">На самом деле такая нотация на самом деле изначально была расширением которое Rails вносил в ядро ​​языка Ruby; она была настолько полезной, что в настоящее время она включена в сам Ruby. Замечательно, правда?&nbsp;<a class="arrow" href="#fnref-11_11">&uarr;</a></li>
+<li id="fn-11_12">Для более продвинутых способов создания необходимых подзапросов, см. сообщение в блоге <a href="http://pivotallabs.com/users/jsusser/blog/articles/567-hacking-a-subselect-in-activerecord">&ldquo;Hacking a subselect in ActiveRecord&rdquo;.</a>&nbsp;<a class="arrow" href="#fnref-11_12">&uarr;</a></li>
+<li id="fn-11_13">Для того чтобы сделать поток сообщений на <a class="ref" href="following-users#fig-home_page_with_feed">Рис.&nbsp;11.20</a> более привлекательным, я добавил несколько дополнительных микросообщений вручную используя Rails консоль.&nbsp;<a class="arrow" href="#fnref-11_13">&uarr;</a></li>
+<li id="fn-11_14">Единственная моя оговорка по поводу Railscasts&nbsp;&mdash;&nbsp;они обычно опускают тесты. Это, вероятно, необходимо для сохранения красоты и краткости эпизодов, но у вас может сформироваться неправильное представление о важности тестов. После просмотра соответствующего Railscast для получения представления о процессе, я советую писать новую фнкцию используя разработку через тестирование. (В этом контексте я рекомендую взглянуть на <a href="http://railscasts.com/episodes/275-how-i-test">the RailsCast on &ldquo;How I test&rdquo;</a>. Вы увидите, что Ryan Bates сам обычно использует TDD для разработки в реальной жизни и что, фактически, его стиль тестирования совпадает со стилем используемым в данном учебнике.)&nbsp;<a class="arrow" href="#fnref-11_14">&uarr;</a></li>
+<li id="fn-11_15"><span class="c1"># позволю себе небольшой комментарий к переводу этой главы. В тексте очень часто употребляются различные формы слова follow (following, follower, followers и т.п.) в дословном переводе это означает "следовать" (слежение, следящий, следящие соответственно). Однако Twitter, (клоном которого является пример приложения, рассматриваемый в этом учебнике) вместо дословного перевода использует термины "Читает" (для following) и "Читают" (для followers) и лично мне термин "Читатели" вместо возможного дословного перевода (следователи, последователи и т.п.) нравится больше. И, несмотря на несколько казусов с этим связанных, в оставшейся части учебника  я постараюсь придерживаться именно этого варианта. <br/> P.s. Надеюсь данный комментарий не запутал вас окончательно. :)   </span>&nbsp;<a class="arrow" href="#fnref-11_15">&uarr;</a></li>
 </ol>
 </div>
