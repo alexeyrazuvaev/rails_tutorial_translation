@@ -7,7 +7,7 @@ html lang='ru' xml:lang='ru' xmlns='http://www.w3.org/1999/xhtml'
       #content
         = render 'layouts/sidebar'
         #main class=@main_class
-          #book_menu = link_to 'пропустить содержание', "#main_content"
+          #book_menu = link_to 'пропустить содержание', "#top"
           = yield
         = render 'layouts/vendor_parts/reformal'
         .orphus.center: script type="text/javascript" src="/javascripts/orphus.js"

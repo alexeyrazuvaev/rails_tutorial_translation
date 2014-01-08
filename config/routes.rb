@@ -1,8 +1,7 @@
 RailsTutorialTranslation::Application.routes.draw do
-  resources :chapters, :only => ['show']
-  match '/chapters/4_0/:id', to: 'chapters#show_4_0', via: :get
-  match '/' => redirect('/chapters/beginning')
-  match '/help' => 'pages#help'
+  match '/chapters/:version/:id', to: 'chapters#show', via: :get
+  match '/' => redirect('/chapters/4_0/beginning')
+  match '/:version/help' => 'pages#help', via: :get
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

@@ -12,9 +12,9 @@
     .box
       span= link_to 'Оригинал', "http://ruby.railstutorial.org/"
       span.division |
-      span= link_to 'Содержание', "/chapters/beginning#{params[:version] ? '?version=3.0' : ''}"
+      span= link_to 'Содержание', "/chapters/#{params[:version]}/beginning"
       span.division |
-      span= link_to 'Помощь', help_path
+      span= link_to 'Помощь', "/#{params[:version]}/help"
 
 
 

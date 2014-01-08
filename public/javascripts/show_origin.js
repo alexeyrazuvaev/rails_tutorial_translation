@@ -1,5 +1,5 @@
 $(document).ready(function(){
-  if (document.location.pathname =='/help') { return false; }
+  if (document.location.pathname.split('/')[2] =='help') { return false; }
 
   $('a').click(function (event) {
     event.stopPropagation();
@@ -13,33 +13,24 @@ $(document).ready(function(){
     };
 
     clear_all_clicked();
-
-    var refresh  = '?cache_refresher_0',
-        pathname = window.location.pathname,
-        is_4_0   = pathname.split('/')[2] === '4_0',
-        index    = $('p').index(this),
-        version, chapter, paragraph;
-
-    if (is_4_0) {
-      chapter   = pathname.split('/')[3] || 'beginning';
-      paragraph = p_for_load('/origin/4_0/', index);
-    } else {
-      version   = window.location.search.split('=')[1] || '';
-      chapter   = pathname.split('/')[2] || 'beginning';
-      paragraph = p_for_load('/origin' + version + '/', index);
-    }
-
     $(this).addClass('clicked');
+
+    var refresh  = '?cache_refresher_1',
+        pathname = window.location.pathname,
+        index    = $('p').index(this),
+        version  = pathname.split('/')[2],
+        chapter  = pathname.split('/')[3] || 'beginning';
+
     $(this).after('<div class="origin"> </div>');
     $('div.origin')
       .hide()
-      .load(paragraph)
+      .load(p_for_load())
       .show('fast');
 
     // build loading path for paragraph from the given chapter with the given index
-    function p_for_load (path_to_fragment, index) {
+    function p_for_load () {
       var p_for_load = [
-        path_to_fragment, chapter, '_fragment.html', refresh, ' p:eq(', index, ')'
+        '/origin/', version, '/', chapter, '_fragment.html', refresh, ' p:eq(', index, ')'
       ].join('');
 
       return p_for_load;
