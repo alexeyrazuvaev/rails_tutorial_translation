@@ -719,14 +719,14 @@
 </ul>
 
 
-<p>Файлы в этих директориях (даже в версиях после-3.0) автоматически выдаются через запрос к http://example.com/stylesheets, и т.д..</p>
+<p>Файлы в этих директориях (даже в версиях "после 3.0") автоматически выдаются через запрос к http://example.com/stylesheets, и т.д..</p>
 
 <p>Начиная с Rails 3.1 и продолжая в Rails&nbsp;4, существуют <em>три</em> каноничные директории для статических ассетов, каждая со своим собственным назначением:</p>
 
 <ul>
-<li><code>app/assets</code>: ассеты специфичные для данного приложения</li>
-<li><code>lib/assets</code>: ассеты для библиотек написанных вашей командой разработчиков</li>
-<li><code>vendor/assets</code>: ассеты сторонних поставщиков (програмного обеспечения)</li>
+<li><code>app/assets</code>: ассеты специфичные для данного приложения;</li>
+<li><code>lib/assets</code>: ассеты для библиотек написанных вашей командой разработчиков;</li>
+<li><code>vendor/assets</code>: ассеты сторонних поставщиков (програмного обеспечения);</li>
 </ul>
 
 
@@ -738,7 +738,7 @@
 </div>
 
 
-<p>Теперь мы в состоянии понять причины по которым мы поместили файл <code>custom.css.scss</code> в директорию app/assets в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>: <code>custom.css.scss</code> специфичен для примера приложения, поэтому он отправляется в <code>app/assets/stylesheets</code>.</p>
+<p>Теперь мы в состоянии понять причины, по которым мы поместили файл <code>custom.css.scss</code> в директорию app/assets в <a class="ref" href="filling-in-the-layout#sec-custom_css">Разделе&nbsp;5.1.2</a>: <code>custom.css.scss</code> специфичен для примера приложения, поэтому он отправляется в <code>app/assets/stylesheets</code>.</p>
 
 <h4><a id="sec-5_2_1_2" href="filling-in-the-layout#sec-5_2_1_2" class="heading">Файлы-манифесты</a></h4>
 
@@ -796,7 +796,7 @@
 <h4><a id="sec-5_2_1_3" href="filling-in-the-layout#sec-5_2_1_3" class="heading">Препроцессоры</a></h4>
 
 
-<p>После того как вы собрали ваши активы, Rails подготавливает их для шаблона сайта, прогоняя их через несколько препроцессоров и комбинирует их с помощью манифест-файлов для доставки в браузер. Мы говорим Rails какой препроцессор использовать с помощью расширения файла; наиболее употребительными являются <code>.scss</code> для Sass, <code>.coffee</code> для CoffeeScript и <code>.erb</code> для встроенного Ruby (ERb). Мы впервые рассказыали о  ERb в <a class="ref" href="static-pages#sec-embedded_ruby">Разделе&nbsp;3.3.3</a> и о Sass в <a class="ref" href="filling-in-the-layout#sec-sass">Разделе&nbsp;5.2.2</a>. В этом учебнике нам не понадобится CoffeeScript. Если вам интересно узнать об
+<p>После того как вы собрали ваши активы, Rails подготавливает их для шаблона сайта, прогоняя их через несколько препроцессоров и комбинирует их с помощью манифест-файлов для доставки в браузер. Мы говорим Rails какой препроцессор использовать с помощью расширения файла; наиболее употребительными являются <code>.scss</code> для Sass, <code>.coffee</code> для CoffeeScript и <code>.erb</code> для встроенного Ruby (ERb). Мы впервые рассказывали о  ERb в <a class="ref" href="static-pages#sec-embedded_ruby">Разделе&nbsp;3.3.3</a> и о Sass в <a class="ref" href="filling-in-the-layout#sec-sass">Разделе&nbsp;5.2.2</a>. В этом учебнике нам не понадобится CoffeeScript. Если вам интересно узнать об
 этом элегантном маленьком языке который компилируется в JavaScript, советую начать с <a href="http://railscasts.com/episodes/267-coffeescript-basics">RailsCast on CoffeeScript basics</a>.</p>
 
 <p>Препроцессоры могут быть сцеплены, например</p>
@@ -987,7 +987,7 @@
 </div>
 
 
-<p>Поскольку названия переменных, такие как <code>$lightGray</code> являются более говорящими, нежели <code>#999</code>, часто бывает полезным определять переменные даже для не повторяющихся значений. Действительно, фреймворк Bootstrap определяет большое количество переменных для цветов, вы можете ознакомиться с ними онлайн на странице <a href="http://twitter.github.com/bootstrap/less.html#variables">LESS variables</a>. Эта страница определяеет переменные используя LESS, а не Sass, но гем <tt>bootstrap-sass</tt> обеспечивает нас их Sass эквивалентами. Угадать соответствие несложно; там где LESS использует знак &ldquo;at&rdquo; (&nbsp;<code>@</code>), Sass использует знак доллара&nbsp;<code>$</code>. Глядя на страницу Bootstrap с переменными, мы видим, что переменная для светло-серого цвета уже существует:</p>
+<p>Поскольку названия переменных, такие как <code>$lightGray</code> являются более говорящими, нежели <code>#999</code>, часто бывает полезным определять переменные даже для не повторяющихся значений. Действительно, фреймворк Bootstrap определяет большое количество переменных для цветов, вы можете ознакомиться с ними онлайн на странице <a href="http://bootstrapdocs.com/v2.0.4/docs/less.html">LESS variables</a>. Эта страница определяеет переменные используя LESS, а не Sass, но гем <tt>bootstrap-sass</tt> обеспечивает нас их Sass эквивалентами. Угадать соответствие несложно; там где LESS использует знак &ldquo;at&rdquo; (&nbsp;<code>@</code>), Sass использует знак доллара&nbsp;<code>$</code>. Глядя на страницу Bootstrap с переменными, мы видим, что переменная для светло-серого цвета уже существует:</p>
 
 <div class="code"><div class="highlight"><pre> <span class="k">@grayLight</span><span class="nd">:</span> <span class="nn">#999</span><span class="o">;</span>
 </pre></div>

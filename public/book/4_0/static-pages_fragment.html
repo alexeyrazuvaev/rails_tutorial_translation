@@ -63,7 +63,7 @@
 </div></div>
 
 
-<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис, совместно с <a href="http://docs.seleniumhq.org/projects/webdriver/">Selenium</a>, одной из зависимостей Capybara&rsquo;.<sup class="footnote" id="fnref-3_1"><a href="#fn-3_1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить <tt>pg</tt> и <tt>rails_12factor</tt> гемы в <em>production</em> для развертывания на Heroku:</p>
+<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> , таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис, совместно с <a href="http://docs.seleniumhq.org/projects/webdriver/">Selenium</a>, одной из зависимостей Capybara&rsquo;.<sup class="footnote" id="fnref-3_1"><a href="#fn-3_1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить <tt>pg</tt> и <tt>rails_12factor</tt> гемы в <em>production</em> для развертывания на Heroku:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">group</span> <span class="ss">:production</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;pg&#39;</span><span class="p">,</span> <span class="s1">&#39;0.15.1&#39;</span>
@@ -1078,7 +1078,7 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </div>
 
 
-<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных Contact и Help тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code-help_view_full_html">Листинга&nbsp;3.21</a> и <a class="ref" href="static-pages#code-about_view_full_html">Листинга&nbsp;3.22</a>.</p>
+<p>Как результат, тесты для Home страницы теперь должны пройти. Мы все еще в Красном из-за провальных About и Help тестов, и мы можем попасть в Зеленый с кодом из <a class="ref" href="static-pages#code-help_view_full_html">Листинга&nbsp;3.21</a> и <a class="ref" href="static-pages#code-about_view_full_html">Листинга&nbsp;3.22</a>.</p>
 
 <div class="label" id="code-help_view_full_html"></div>
 

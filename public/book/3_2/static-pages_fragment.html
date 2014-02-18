@@ -59,7 +59,7 @@
 </div></div>
 
 
-<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис.<sup class="footnote" id="fnref-3_1"><a href="#fn-3_1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить PostgreSQL гем в <em>production</em> для развертывания на Heroku:</p>
+<p>Это включает <tt>rspec-rails</tt> в <em>development mode</em> , таким образом мы получаем доступ к  RSpec-специфичным генераторам и это включает его в <em>test mode</em> где он нужен для запуска тестов. Нам нет надобности устанавливать сам RSpec, поскольку он является зависимостью гема <tt>rspec-rails</tt> и поэтому он будет установлен автоматически. Мы также включили <a href="https://github.com/jnicklas/capybara#">гем Capybara</a>, который позволит нам симулировать взаимодействие пользователя с нашим примером приложения используя понятный Англоподобный синтаксис.<sup class="footnote" id="fnref-3_1"><a href="#fn-3_1">1</a></sup> Как и в <a class="ref" href="a-demo-app#top">Главе&nbsp;2</a>, мы также должны включить PostgreSQL гем в <em>production</em> для развертывания на Heroku:</p>
 
 <div class="code"><div class="highlight"><pre><span class="n">group</span> <span class="ss">:production</span> <span class="k">do</span>
   <span class="n">gem</span> <span class="s1">&#39;pg&#39;</span><span class="p">,</span> <span class="s1">&#39;0.12.2&#39;</span>
@@ -1303,13 +1303,13 @@ by [Майкл Хартл](http://michaelhartl.com/).
 </pre></div></div>
 
 
-<p>Получившийся макет представлен в <a class="ref" href="static-pages#code-application_layout">Листинге&nbsp;3.25</a>.</p>
+<p>Получившийся макет представлен в <a class="ref" href="static-pages#code-application_layout">Листинге&nbsp;3.26</a>.</p>
 
 <div class="label" id="code-application_layout"></div>
 
 
 <div class="codelisting">
-<div class="listing"><span class="header">Листинг 3.25.</span> <span class="description">Макет сайта примера приложения. <br /> <code>app/views/layouts/application.html.erb</code></span>
+<div class="listing"><span class="header">Листинг 3.26.</span> <span class="description">Макет сайта примера приложения. <br /> <code>app/views/layouts/application.html.erb</code></span>
 </div>
 <div class="code"><div class="highlight"><pre><span class="cp">&lt;!DOCTYPE html&gt;</span>
 <span class="nt">&lt;html&gt;</span>
