@@ -15,7 +15,7 @@ $(document).ready(function(){
     clear_all_clicked();
     $(this).addClass('clicked');
 
-    var refresh  = '?cache_refresher_1',
+    var refresh  = '?cache_refresher_3',
         pathname = window.location.pathname,
         index    = $('p').index(this),
         version  = pathname.split('/')[2],
